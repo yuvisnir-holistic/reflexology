@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>מפת הגוף | יובל שניר</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#2C5F5B;
+    --forest-dark:#1E4744;
+    --cream:#F7F1E6;
+    --cream-soft:#FBF7EF;
+    --sage:#AEBFAE;
+    --ink:#28312E;
+    --fire:#A8442B;
+    --fire-bg:#F3E3DD;
+    --water:#2F6690;
+    --water-bg:#DFE8ED;
+    --air:#A9821F;
+    --air-bg:#F1E9D2;
+    --earth:#5C6B3F;
+    --earth-bg:#E4E7D9;
+    --sefirah:#7A5C8E;
+    --sefirah-bg:#E9E2ED;
+    --reflect:#6C7A5E;
+    --reflect-bg:#EDEFE3;
+    --practice:#8A6D3B;
+    --practice-bg:#F2E8D5;
+    --radius:18px;
+    --shadow: 0 2px 14px rgba(44,95,91,0.10);
+  }
+  *{box-sizing:border-box;}
+  html{font-size:19px;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Assistant',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:60px;
+  }
+  h1,h2,h3,.display{font-family:'Frank Ruhl Libre',serif;}
+
+  header{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(180deg, var(--forest) 0%, var(--forest-dark) 100%);
+    color:var(--cream-soft);
+    padding:22px 20px 16px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.18);
+    text-align:center;
+  }
+  header h1{font-size:1.75rem;margin:0 0 6px;font-weight:900;letter-spacing:0.5px;color:#FDFBF5;}
+  .leaf-divider{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 8px;opacity:0.85;}
+  .leaf-divider .line{height:1px;width:34px;background:var(--sage);}
+  header .sub{font-size:1rem;color:var(--sage);font-weight:500;letter-spacing:0.3px;margin-bottom:16px;}
+  .search-wrap{position:relative;max-width:520px;margin:0 auto;}
+  #search{
+    width:100%;padding:12px 44px 12px 16px;border-radius:999px;border:none;
+    font-size:1rem;font-family:'Assistant',sans-serif;background:var(--cream-soft);color:var(--ink);outline:none;
+  }
+  #search::placeholder{color:#8a9490;}
+  .search-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);opacity:0.55;pointer-events:none;}
+  #clearSearch{
+    position:absolute;left:12px;top:50%;transform:translateY(-50%);background:none;border:none;
+    color:#8a9490;font-size:1.2rem;cursor:pointer;display:none;line-height:1;
+  }
+
+  .tabnav{
+    display:flex;gap:8px;max-width:520px;margin:14px auto 0;
+    background:rgba(255,255,255,0.12);border-radius:999px;padding:4px;
+  }
+  .tabnav button{
+    flex:1;border:none;background:transparent;color:var(--cream-soft);
+    padding:10px 6px;border-radius:999px;font-family:'Assistant',sans-serif;
+    font-weight:700;font-size:0.95rem;cursor:pointer;opacity:0.75;transition:all .15s ease;
+  }
+  .tabnav button.active{background:var(--cream-soft);color:var(--forest-dark);opacity:1;}
+
+  .legend{display:flex;gap:8px;flex-wrap:wrap;padding:14px 20px 4px;max-width:900px;margin:0 auto;justify-content:center;}
+  .legend-chip{display:flex;align-items:center;gap:6px;font-size:0.84rem;padding:6px 12px;border-radius:999px;font-weight:600;white-space:nowrap;}
+  .legend-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .chip-fire{background:var(--fire-bg);color:var(--fire);} .chip-fire .legend-dot{background:var(--fire);}
+  .chip-water{background:var(--water-bg);color:var(--water);} .chip-water .legend-dot{background:var(--water);}
+  .chip-air{background:var(--air-bg);color:var(--air);} .chip-air .legend-dot{background:var(--air);}
+  .chip-earth{background:var(--earth-bg);color:var(--earth);} .chip-earth .legend-dot{background:var(--earth);}
+  .chip-sefirah{background:var(--sefirah-bg);color:var(--sefirah);} .chip-sefirah .legend-dot{background:var(--sefirah);border-radius:2px;}
+
+  main{max-width:900px;margin:0 auto;padding:10px 16px 40px;}
+
+  #systemsGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px;}
+  @media(min-width:640px){#systemsGrid{grid-template-columns:repeat(3,1fr);}}
+  .system-card{
+    background:var(--cream-soft);border-radius:var(--radius);padding:18px 14px;text-align:center;
+    cursor:pointer;box-shadow:var(--shadow);border:1px solid rgba(44,95,91,0.08);transition:transform .15s ease;
+  }
+  .system-card:active{transform:scale(0.97);}
+  .system-card .emoji{font-size:1.8rem;display:block;margin-bottom:8px;}
+  .system-card h3{font-size:0.95rem;margin:0 0 4px;color:var(--forest-dark);}
+  .system-card .count{font-size:0.82rem;color:#7d8a85;font-weight:500;}
+
+  .backbar{display:flex;align-items:center;gap:8px;margin:14px 0 6px;cursor:pointer;color:var(--forest);font-weight:600;font-size:0.95rem;}
+  .backbar svg{width:16px;height:16px;}
+
+  .system-title{display:flex;align-items:center;gap:10px;margin:6px 0 4px;}
+  .system-title .emoji{font-size:1.6rem;}
+  .system-title h2{font-size:1.35rem;margin:0;color:var(--forest-dark);}
+  .system-desc{font-size:0.92rem;color:#586961;margin:0 0 16px;line-height:1.7;}
+
+  .organ-card{
+    background:var(--cream-soft);border-radius:var(--radius);margin-bottom:12px;
+    box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(44,95,91,0.08);
+  }
+  .organ-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;gap:10px;}
+  .organ-head h3{font-size:1.08rem;margin:0;color:var(--forest-dark);font-weight:700;}
+  .organ-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+  .tag{font-size:0.76rem;padding:4px 10px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+  .caret{flex-shrink:0;transition:transform .2s ease;color:var(--forest);opacity:0.6;}
+  .organ-card.open .caret{transform:rotate(180deg);}
+  .organ-body{max-height:0;overflow:hidden;transition:max-height .25s ease;padding:0 18px;}
+  .organ-card.open .organ-body{max-height:3000px;padding:0 18px 18px;}
+  .organ-section{margin-bottom:12px;}
+  .organ-section:last-child{margin-bottom:0;}
+  .organ-section .label{font-size:0.85rem;font-weight:700;color:var(--forest);margin-bottom:4px;display:block;}
+  .organ-section p{margin:0;font-size:0.92rem;line-height:1.75;color:#3a433f;}
+  .organ-section.pathology{background:var(--fire-bg);border-radius:12px;padding:10px 12px;}
+  .organ-section.pathology .label{color:var(--fire);}
+  .organ-section.balanced{background:var(--earth-bg);border-radius:12px;padding:10px 12px;}
+  .organ-section.balanced .label{color:var(--earth);}
+  .organ-section.reflect{background:var(--reflect-bg);border-radius:12px;padding:10px 12px;}
+  .organ-section.reflect .label{color:var(--reflect);}
+  .organ-section.practice{background:var(--practice-bg);border-radius:12px;padding:10px 12px;}
+  .organ-section.practice .label{color:var(--practice);}
+  .sides{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+  .side-box{background:var(--water-bg);border-radius:12px;padding:10px 12px;}
+  .side-box.right{background:var(--fire-bg);}
+  .side-box .side-label{font-size:0.8rem;font-weight:800;margin-bottom:3px;display:block;}
+  .side-box.right .side-label{color:var(--fire);}
+  .side-box.left .side-label{color:var(--water);}
+  .side-box p{font-size:0.85rem;margin:0;line-height:1.6;}
+
+  #resultsList .organ-meta{font-size:0.84rem;color:#7d8a85;margin-top:2px;}
+  .empty-state{text-align:center;padding:60px 20px;color:#7d8a85;}
+
+  .element-hero{border-radius:var(--radius);padding:20px;margin-bottom:14px;color:#fff;}
+  .element-hero h2{font-size:1.3rem;margin:0 0 4px;}
+  .element-hero .tagline{font-size:0.9rem;opacity:0.95;margin:0;}
+  .element-grid-select{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+  .element-select-btn{
+    border:none;border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;
+    font-family:'Assistant',sans-serif;font-weight:700;font-size:0.85rem;
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+  }
+  .element-select-btn .dot{width:16px;height:16px;border-radius:50%;}
+  .element-detail-section{margin-bottom:14px;}
+  .element-detail-section .label{font-size:0.82rem;font-weight:800;margin-bottom:4px;display:block;}
+  .element-detail-section p{margin:0;font-size:0.92rem;line-height:1.75;color:#3a433f;}
+  .element-card-body{
+    background:var(--cream-soft);border-radius:var(--radius);padding:18px;
+    box-shadow:var(--shadow);border:1px solid rgba(44,95,91,0.08);
+  }
+  .balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+  .balance-box{border-radius:12px;padding:10px 12px;}
+  .balance-box p{margin:0;font-size:0.86rem;line-height:1.65;}
+  .balance-box .side-label{font-size:0.8rem;font-weight:800;margin-bottom:3px;display:block;}
+  .practice-box{background:var(--practice-bg);border-radius:12px;padding:12px 14px;}
+  .practice-box .label{color:var(--practice);font-size:0.82rem;font-weight:800;margin-bottom:4px;display:block;}
+  .practice-box p{margin:0;font-size:0.9rem;line-height:1.75;color:#3a433f;}
+
+  .ref-section{
+    background:var(--cream-soft);border-radius:var(--radius);padding:18px;margin-bottom:14px;
+    box-shadow:var(--shadow);border:1px solid rgba(44,95,91,0.08);
+  }
+  .ref-section h3{margin:0 0 4px;font-size:1.1rem;color:var(--forest-dark);}
+  .ref-section .hint{font-size:0.9rem;color:#7d8a85;margin:0 0 14px;line-height:1.65;}
+
+  .invasion-item{border-radius:14px;margin-bottom:10px;overflow:hidden;border:1px solid rgba(44,95,91,0.08);}
+  .invasion-item.self-item{border:1.5px solid rgba(44,95,91,0.25);}
+  .invasion-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;font-weight:700;font-size:0.95rem;}
+  .invasion-head .arrow-icon{opacity:0.6;transition:transform .2s ease;margin-right:auto;}
+  .invasion-item.open .arrow-icon{transform:rotate(180deg);}
+  .invasion-body{max-height:0;overflow:hidden;transition:max-height .25s ease;padding:0 14px;background:var(--cream-soft);}
+  .invasion-item.open .invasion-body{max-height:800px;padding:2px 14px 14px;}
+  .invasion-body p{margin:0;font-size:0.9rem;line-height:1.75;color:#3a433f;}
+  .invasion-section-label{font-size:0.78rem;font-weight:800;color:#7d8a85;margin:14px 0 8px;}
+
+  .sefirah-tree-legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;justify-content:center;}
+  .line-chip{font-size:0.84rem;font-weight:700;padding:6px 13px;border-radius:999px;}
+  .line-right{background:var(--fire-bg);color:var(--fire);}
+  .line-left{background:var(--water-bg);color:var(--water);}
+  .line-mid{background:var(--sefirah-bg);color:var(--sefirah);}
+  .color-swatch{width:14px;height:14px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,0.15);vertical-align:middle;margin-left:5px;}
+
+  footer{text-align:center;font-size:0.78rem;color:#8a9490;padding:30px 20px 10px;}
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--sage);border-radius:8px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>מפת הגוף</h1>
+  <div class="leaf-divider"><span class="line"></span>🌿<span class="line"></span></div>
+  <div class="sub">מסע פנימי אל תוך הגוף, היסודות והספירות · יובל שניר</div>
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="חיפוש איבר, מערכת, יסוד או ספירה...">
+    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <button id="clearSearch">✕</button>
+  </div>
+  <div class="tabnav" id="tabnav">
+    <button data-tab="systems" class="active">מערכות גוף</button>
+    <button data-tab="elements">יסודות</button>
+    <button data-tab="sefirot">ספירות</button>
+  </div>
+</header>
+
+<div class="legend" id="legend">
+  <span class="legend-chip chip-fire"><span class="legend-dot"></span>אש</span>
+  <span class="legend-chip chip-water"><span class="legend-dot"></span>מים</span>
+  <span class="legend-chip chip-air"><span class="legend-dot"></span>אוויר</span>
+  <span class="legend-chip chip-earth"><span class="legend-dot"></span>אדמה</span>
+  <span class="legend-chip chip-sefirah"><span class="legend-dot"></span>ספירה</span>
+</div>
+
+<main>
+
+  <div id="homeView">
+    <div id="systemsGrid"></div>
+  </div>
+
+  <div id="systemView" style="display:none;">
+    <div class="backbar" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      חזרה למערכות
+    </div>
+    <div class="system-title"><span class="emoji" id="sysEmoji"></span><h2 id="sysTitle"></h2></div>
+    <p class="system-desc" id="sysDesc"></p>
+    <div id="organsList"></div>
+  </div>
+
+  <div id="elementsView" style="display:none;">
+    <div class="element-grid-select" id="elementSelect"></div>
+    <div id="elementDetail"></div>
+    <div class="ref-section" style="margin-top:18px;">
+      <h3>כשהיסוד הזה יוצא מאיזון</h3>
+      <p class="hint">השורה הראשונה מראה מה קורה כשהיסוד עודף או חסר בתחום שלו עצמו. שלוש השורות שאחריה מראות מה קורה כשהוא פולש ו"תופס מקום" בתחום של יסוד אחר, כי חסר בו. לחצו על שורה כדי לפתוח אותה.</p>
+      <div id="invasionsList"></div>
+    </div>
+  </div>
+
+  <div id="sefirotView" style="display:none;">
+    <p class="system-desc" style="margin-top:6px;">עשר הספירות, ועימן ספירת הדעת המחברת, הן עשרה כוחות שדרכם מתגלה האור בעולם ובאדם. כל ספירה נושאת תכונה גלויה ופנימיות עדינה יותר, מיקום בגוף, וכשהיא באיזון או יוצאת מאיזון היא מתבטאת בדפוס נפשי מוכר.</p>
+    <div class="sefirah-tree-legend">
+      <span class="line-chip line-right">קו ימין · חסד ונתינה</span>
+      <span class="line-chip line-mid">קו אמצע · איזון</span>
+      <span class="line-chip line-left">קו שמאל · דין וגבול</span>
+    </div>
+    <div id="sefirotList"></div>
+  </div>
+
+  <div id="searchView" style="display:none;">
+    <div class="backbar" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      חזרה
+    </div>
+    <div id="resultsList"></div>
+  </div>
+
+</main>
+
+<footer>נבנה מתוך החומר הטיפולי של יובל שניר · לשימוש אישי בקליניקה</footer>
+
+<script>
+/* ===================== DATA: ELEMENTS ===================== */
+
+const ELEMENTS = {
+  fire:{
+    name:"אש", color:"var(--fire)", bg:"var(--fire-bg)", solid:"#A8442B",
+    tagline:"הרצון, הפעולה וההוצאה לפועל",
+    essence:"יסוד גברי וחיצוני, תנועתו כלפי מעלה בלבד, יושב בכף הרגל באזור הכריות שמתחת לבהונות. מוביל את המעבר לגיל ההתבגרות, ומדבר על רצונות, בחירות, עשייה ושליטה, כלפי חוץ וכלפי פנים. הלב, מרכז אזור האש, נחשב למושב האהבה המותנית ויושב בגבול שבין עולם הרוח לעולם החומר.",
+    balanced:"מרקם עור גמיש וחם יותר מהאדמה, גוון אדמדם, טונוס שריר החזק והגמיש בו זמנית, גידים גמישים במידה.",
+    positive:"התלהבות, שאפתנות ויצירתיות, יכולת להוציא רצונות לפועל ולפעול מהלב.",
+    excess:"עודף שליטה, מתח מתמיד, עיסוק במה שחושבים עליי, שריפת אנרגיה מתמדת, מהירות, לחימה והשתלטות על תחום האחר.",
+    deficiency:"אזור קר וחיוור, טונוס שריר גמיש מדי וחסר חוזק, קושי להוציא רצונות ובחירות לפועל, קושי בביטוי ובנוכחות, חוסר חיוניות והתלהבות.",
+    pathologies:"דלקת ודימום הם הביטוי הגופני המרכזי של האש: הדם עצמו נושא את תכונות האש. כל כאב שורף, לחץ דם גבוה, פריחות אדומות, צרבת וחומציות שייכים לעודף אש, ולחץ דם נמוך וחיוורון שייכים לחוסרה. התגובה הפתולוגית האופיינית היא בעירה, פיצוץ והרס, ולכן אנשים עם עודף אש מתארים 'הראש שלי מתפוצץ' או 'שורף לי בקיבה'.",
+    defense:"מנגנון ההגנה של האש הוא התקפה ומלחמה, הדלקת שבה מערכת החיסון נלחמת בגורם מזיק.",
+    practice:"העבודה על איזון האש עוברת דרך פיתוח ענווה אמיתית, ההכרה שכל מה שיש לנו הוא מתנה ולא רק תוצר של מאמץ עצמי, לצד תרגול סבלנות והכלה כלפי מי שפועל אחרת מאיתנו. השאלה המנחה: האם אני פועל מתוך רצון בוער, או מתוך צורך לשלוט?",
+    self:"עודף אש באזור האש עצמו מתבטא באזור חם ואדום, שריר חזק ונפוח, גידים מתוחים שאינם מאפשרים גמישות, מתח שרירים, בעיות לב עד כדי התקפי לב, ולחץ דם גבוה. חוסר אש מתבטא באזור קר וחיוור, שריר גמיש מדי וחסר חוזק, וקושי להוציא רצונות ובחירות לפועל."
+  },
+  water:{
+    name:"מים", color:"var(--water)", bg:"var(--water-bg)", solid:"#2F6690",
+    tagline:"הרגש, הזרימה וההכלה",
+    essence:"יסוד כבד וצפוף, תנועתו פנימית ולא כלפי חוץ. יושב בכף הרגל באזור הבטן. מוביל את ההתפתחות מגיל הילדות ועד ההתבגרות, ומלמד הכלה רגשית עצמית. הכליות, האיבר המרכזי שלו, מדברות על כוח החיות וכוח הרגש כאחד. יסוד המים מדבר על תענוג ואהבה, על זרימה, גמישות, הסתגלות והתמסרות.",
+    balanced:"מרקם העור הדק והעדין ביותר בכף הרגל, גוון לבן ובהיר, האזור היחיד שבו לחות מסוימת היא תקינה, טמפרטורה קרירה, טונוס שריר רך וגמיש במידה.",
+    positive:"גמישות והסתגלות, כמו שהמים מתאימים עצמם לכל כלי, אדם בריא עם מים מאוזנים גמיש ומסתגל.",
+    excess:"הצפה רגשית, פסיביות, ריצוי מוגזם וקושי להתעקש על דעה, ותרנות יתר וקושי להחזיק גבולות מול הזולת.",
+    deficiency:"לחות במקום הלא נכון או יובש קיצוני, קושי להכיל רגשות, ריחוק מהעולם הפנימי, נוקשות וקושי 'לזרום' עם המציאות.",
+    pathologies:"נזלת, הזעת יתר, יובש בעור, בצקות וצבירת נוזלים, תדירות או קושי במתן שתן, צמא מוגבר או נעדר, שלשול או עצירות. התגובה הפתולוגית האופיינית היא תקיעות, הפרשה ויובש.",
+    defense:"מנגנון ההגנה של המים הוא הפרשה החוצה, שטיפה וניקוי, כמו דמעות שמסלקות זר מהעין או שלשול שמסלק מזון מקולקל.",
+    practice:"העבודה על איזון המים כוללת לימוד לזהות ולעבד רגשות בלי לדכא אותם ובלי להיסחף בהם, בניית גבולות רגשיים בריאים שמאפשרים להיות פתוחים מבלי להיבלע, ותרגול קבוע של הכרת תודה על הטוב שכבר קיים בחיים.",
+    self:"עודף מים באזור המים עצמו מתבטא בעצירות, בנפיחות ובכבדות בבטן, וברגשית בהצפה רגשית, ברגשנות ובאיטיות בעיכול חוויות. חוסר מים מתבטא בקושי להכיל רגשות, בריחוק מהעולם הפנימי ובנוקשות."
+  },
+  air:{
+    name:"אוויר", color:"var(--air)", bg:"var(--air-bg)", solid:"#A9821F",
+    tagline:"המחשבה, התקשורת וההבחנה",
+    essence:"יסוד גברי, מודע ואקטיבי, מתפשט לכל הכיוונים בשונה מהאש שעולה כלפי מעלה בלבד. יושב בכף הרגל באזור הבהונות. הפחות חומרי מכל היסודות, מושב החושים, האחראי על זיכרון, ידע, תכנון וריכוז, ומחבר אותנו לרוחניות ולשאלת מי אני. נוטה להיות תמיד קרוב לחוסר איזון בעולם המודרני העמוס בגירויים.",
+    balanced:"בהונות ישרות במבט קדימה, רווח קל ביניהן, ציפורניים נקיות, מרקם עור דק ועדין, גמישות במפרקים, טמפרטורה קרירה לבנה ויבשה.",
+    positive:"תנועתיות, חיות והתפתחות, בהירות מחשבה, יכולת תקשורת ויצירתיות זורמת.",
+    excess:"אי שקט, ריבוי תנועה ומחשבה, פיזור דעת, ריבוי משימות בלי סיום, ניתוק מהגוף ומההווה.",
+    deficiency:"חולשה, חוסר אנרגיה, תשישות, אדם מרחף ומנותק מהחוויה הישירה, כל חוויית החיים עוברת דרך פילטר מחשבתי.",
+    pathologies:"אלרגיה, ניוון וגידול הם שלוש הפתולוגיות המרכזיות של האוויר: אלרגיה היא עודף תגובתיות, גידול הוא צמיחה בלתי מרוסנת, וניוון הוא חוסר תנועה וקמילה. חרדה שייכת גם היא לקלקול יסוד האוויר.",
+    defense:"מנגנון ההגנה של האוויר הוא תגובה ואזהרה, אלרגיה או תגובת יתר לגירוי, כמו התעטשות שמסלקת גורם זר.",
+    practice:"הדרך המאזנת ליסוד האוויר היא להעביר כל מחשבה דרך הלב, ולבדוק את התשובות שעולות לא רק דרך השכל אלא גם דרך התחושה הרגשית שהן מעוררות. יסוד האוויר נוטה להיות תמיד קרוב לחוסר איזון בעולם גדוש הגירויים של ימינו, כך שההקפדה על תרגול זה חשובה במיוחד.",
+    self:"עודף אוויר בכל כף הרגל מתבטא בחולשה, בחוסר אנרגיה, בתשישות, בחוסר שקט ובפיזור, וברובד הרגשי באדם שכאילו מרחף, מנותק מהגוף ומההווה, עסוק מאוד בראש ובמחשבות."
+  },
+  earth:{
+    name:"אדמה", color:"var(--earth)", bg:"var(--earth-bg)", solid:"#5C6B3F",
+    tagline:"היציבות, המבנה והצורך",
+    essence:"היסוד הבסיסי, הצפוף והכבד מכולם, נוכח כבר מתקופת התינוקות ונותן את הבסיס ההישרדותי שעליו נבנים שאר היסודות. יושב בכף הרגל באזור העקב. מדבר על צורך, על מה שאין ברירה לגביו, ועל המימוש הפיזי בפועל של רעיונות בעולם החומר.",
+    balanced:"מרקם העור העבה, הצפוף והחזק ביותר בכף הרגל, גוון חום אדמדם, טמפרטורה חמימה, יובש מתון, טונוס שריר חזק ויציב, גמישות מתונה בגיד אכילס.",
+    positive:"יציבות, סדר וקביעות, בסיס איתן לפעולה ולבחירות בחיים.",
+    excess:"קיבעון וכבדות, היצמדות לעבר, קושי לשנות ולהסתגל, עיסוק כפייתי בצרכים של כסף, מיניות, בריאות וגוף.",
+    deficiency:"חולשה בתחושת הביטחון הבסיסי, קושי בייצוב ובחיבור לצרכים הפיזיים, לרוב לצד סימני פלישה של יסוד אחר למקום שהיה אמור להיות יציב.",
+    pathologies:"כיב, קרע ושבר הם הפתולוגיות האופייניות לאדמה, מצבים שבהם נשבר המבנה או הרקמה. גם חוסר ברזל ואוסטאופורוזיס, דלדול הבסיס הערכי והחכמה המצטברת, שייכים לחוסר יסוד האדמה.",
+    defense:"מנגנון ההגנה של האדמה הוא התקשות וחיזוק, כמו שהעצם או העור מתחזקים כתגובה למכה, שמירה בסיסית שמייצבת את המבנה.",
+    practice:"העבודה על איזון האדמה היא עבודה של התמדה וסבלנות, בנייה איטית ויציבה של הרגלים בריאים ומבנים תומכים, ולא שינוי חד ומהיר. יסוד האדמה הוא הבסיס לכל שאר היסודות, ולכן כשמתגלה חוסר איזון בכל יסוד אחר, תמיד כדאי לבדוק קודם מה קורה באדמה.",
+    self:"עודף אדמה בתוך אזור האדמה עצמו מתבטא בנוקשות ובהגבלת תנועה בגב התחתון, בפריון מופחת, בנטייה לקרישיות יתר, באיטיות בהתרוקנות הגוף, ולעיתים בעייפות ובדיכאון. חוסר אדמה מתבטא בחולשה בתחושת הביטחון הבסיסי ובקושי בייצוב ובחיבור לצרכים הפיזיים."
+  }
+};
+
+const ELEMENT_ORDER = ["fire","water","air","earth"];
+
+const INVASIONS = {
+  fire:{
+    earth:"נוקשות ותפיסת שרירים בגוף התחתון, עצירות, אי פריון על רקע מתח, כאבי מחזור, חוסר שקט, בעיות שינה, טחורים. ברגש: עיסוק כפייתי כמעט אובססיבי בצרכי אדמה, כסף, גוף ובריאות, שגרה מתוכננת בקפידה שאינה מאפשרת מנוחה.",
+    water:"עצירות, נפיחות בבטן, דלקות במעיים, מעי רגיז, כאבי בטן. ברגש: התנגדות להרגיש, רצון לקצר את משך החוויה הרגשית, איפוק ושמירת רגש בבטן עד שהוא מתפרץ.",
+    air:"כאבי ראש, בעיות שינה, עודף חשיבה. ברגש: התנגדות בחשיבה ובהקשבה, חשיבה מוגברת בנושאי אש, מהירות ולחץ מתמשכים בתהליכי החשיבה, קושי לקבל דעות של אחרים."
+  },
+  water:{
+    earth:"כאבי ברכיים, חולשה ברגליים, עייפות, חולשה חיסונית, בצקות ברגליים. ברגש: פחד הישרדותי, חוסר יציבות, פחד לעשות שינוי, קיפאון במצבים שדורשים תגובה.",
+    fire:"ליחה, חולשת שרירים, כבדות בכתפיים ובידיים, נטייה להתקררויות וחולשה חיסונית נשימתית. ברגש: הססנות בעשייה, פסיביות, ביישנות, ותרנות, בלבול וחוסר החלטיות.",
+    air:"אלרגיות, דלקות ודמעת בעיניים, נזלת, סינוסיטיס, כאבי ראש. ברגש: חשיבה שמונעת מרגשות במקום משכל, עיסוק מוגזם ברגשות, בלבול ועירפול מחשבתי, פחד מרעיונות חדשים."
+  },
+  air:{
+    earth:"בעיות שינה, חוסר מנוחה, חולשה בחלק התחתון של הגוף, אי פריון, עצמות חלשות. ברגש: מחשבה על צרכים בסיסיים במקום דאגה ממשית להם, תחושת חוסר שייכות, קושי להתחייב.",
+    water:"גזים, מעי רגיז, חולשה חיסונית במערכת העיכול, נפיחות בבטן. ברגש: מחשבה על רגשות במקום הרגשתם בפועל, ניתוח יתר של רגשות, ריחוק רגשי.",
+    fire:"טונוס שריר נמוך, חולשה פיזית, לחץ דם נמוך או בעיה בזרימת דם. ברגש: מחשבות שמפריעות לעשייה, ריחוק וקרירות ביחסים, עשייה מפוזרת, חוסר מוטיבציה, בחירות מהשכל בלבד ולא מהלב."
+  },
+  earth:{
+    water:"איטיות וכבדות במערכת העיכול, נטייה להיווצרות אבנים בכליות. ברגש: החלפת רגש בצורך, סודות ומשקעים, קושי לעכל חוויות רגשיות עד תום.",
+    fire:"קוצר נשימה, יבלות על מיתרי הקול, שיעול יבש, כתף קפואה, הסתיידות שרירים, נוקשות והגבלה בתנועה, טרשת עורקים. ברגש: החלפת רצון בצורך, עושה כי חייב ולא כי בוחר, נוקשות וחשבונאות ביחסים, סגירות והסתרה.",
+    air:"כבדות וכאבי ראש, נוקשות באזור העורף, כבדות ועייפות בעיניים, איטיות במערכת ההורמונלית כמו תת פעילות של בלוטת התריס. ברגש: דפוסי חשיבה מקובעים, חשיבה הישרדותית ופרקטית, חוסר דמיון, היצמדות למוכר, קושי לבטא ולדבר."
+  }
+};
+
+/* ===================== DATA: SEFIROT ===================== */
+/* Colors are included ONLY where explicitly documented in source material (חסד, תפארת). All others left uncolored rather than guessed. */
+
+const SEFIROT = [
+  {name:"כתר", line:"mid", quality:"הרצון הטהור שמעבר להגדרה", inner:"אמונה, תענוג, רצון", force:"על־מודע, המניע לכל", body:"הרמה הנסתרת ביותר, מעבר לאיבר ספציפי",
+    balanced:"חיבור שקט לרצון הפנימי הטהור ולאמונה פשוטה, מעבר לכל נימוק והסבר, מניע פנימי צלול שמתוכו נובעת כל פעולה אחרת.",
+    imbalance:"פגיעה באמונה מתבטאת כחרדה, ניתוק מהרצון הטהור והמניע הפנימי.",
+    note:"הספירה הנסתרת ביותר, שממנה נובעים כל שאר הכוחות, מעבר להגדרה או לתפיסה ישירה. משויכת לרמה הרוחנית הגבוהה ביותר, זו שמעבר לכל צבע וגוון ספציפי, כמו אור לבן שמכיל בתוכו את כל הצבעים אך אינו מוגדר על ידי אף אחד מהם."},
+  {name:"חכמה", line:"right", quality:"הברק הראשוני של ההשראה", inner:"ביטול", force:"הארה, הבנה עמוקה", body:"אונה ימין של המוח, עין ימין",
+    balanced:"קליטה פתאומית של תובנה חדשה, הברקה שמגיעה בבת אחת, ומנוחה שקטה של הדעת כשהיא נפתחת מול משהו גדול ממנה.",
+    imbalance:"חוסר קליטה, אין רעיונות, אין מנוחה. הפנימיות של חכמה היא ביטול ומנוחה, וכשהיא נפגעת אין שקט פנימי.",
+    note:"ראש קו ימין, קו החסד וההשפעה. קשורה לתענוג, לדמיון ולרחמים, ומתוארת לעיתים כבחינת ה'אבא' הרוחני."},
+  {name:"בינה", line:"left", quality:"כוח הפיתוח וההבנה העמוקה", inner:"שמחה", force:"פירוט וניתוח", body:"אונה שמאל של המוח",
+    balanced:"הבנה מעמיקה ומפורטת של דברים, יכולת לפרק רעיון לפרטיו ולבנות אותו מחדש, ושמחה אמיתית שנובעת מהבנה שלמה.",
+    imbalance:"קשיי הבנה, האדם אינו מבין, ובפנימיות, שהיא השמחה, אין שמחה.",
+    note:"ראש קו שמאל, קו הדין והצמצום. קשורה לרצון, לטבע ולאינטואיציה, ומתוארת לעיתים כבחינת ה'אמא' הרוחנית."},
+  {name:"דעת", line:"mid", quality:"הגשר בין החכמה לבינה, ריכוז ומודעות", inner:"ייחוד", force:"ריכוז ומודעות", body:"גרון, צוואר, גזע המוח",
+    balanced:"ריכוז ומודעות ברורה, חיבור אמיתי בין מה שהשכל מבין למה שהלב מרגיש, נוכחות מלאה ברגע הנתון.",
+    imbalance:"חוסר מודעות, או לחלופין מודעות יתר לפרטים ופיזור דעת.",
+    note:"אינה נספרת בעשר הספירות הבסיסיות אך עומדת בנקודת חיבור מכרעת בין חכמה לבינה, בדיוק כמו שגזע המוח מחבר בין שתי ההמיספרות. יחד עם חכמה ובינה יוצרת את מערכת חב״ד. קשורה למחלות מערכת העצבים."},
+  {name:"חסד", line:"right", quality:"כוח האהבה והנתינה", inner:"אהבה", force:"נתינה, אהבה", body:"יד ימין, מערכת הלימפה, עין ימין", color:"#FFFFFF", colorName:"לבן", elementTag:"water",
+    balanced:"אהבה, השפעה ונתינה חופשית וחמה, פתיחות טבעית כלפי הזולת בלי לספור חשבונות. חסד מאוזן יודע מתי לתת ומתי לעצור, מתי לחבק ומתי לתת מרחב, ומבין שלעיתים האהבה הגדולה ביותר מתבטאת דווקא באמירת 'לא' או במניעת נזק בטווח הארוך.",
+    excess:"קושי להציב גבולות, נתינה כפייתית שפוגעת גם בנותן וגם במקבל, כמו הורה שמפנק עד כדי פגיעה בהתפתחות הילד, או אדם שנותן מכל מה שיש לו עד שהוא מרוקן את עצמו. חסד מוגזם עלול להפוך לחולשה שמזמינה ניצול ותלות לא בריאה.",
+    deficiency:"קושי לתת, קמצנות רגשית או חומרית, קושי לחוות אמפתיה אמיתית. תחושה שאינו אהוב ולבד, קרירות רגשית, וראייה בכל בקשת עזרה כאיום או כנטל.",
+    imbalance:"התמסרות יתר, נתינה כפייתית הפוגעת גם בנותן וגם במקבל, או תחושה שאינו אהוב ולבד, ולעיתים אהבה שאינה במקום הנכון.",
+    note:"קו ימין, ההשפעה והפתיחות. שייך ליסוד המים היורדים ומזינים. בעולם הצבעים משויך ללבן, הצבע המכיל את כל הצבעים ומבטא טוהר וחסד ללא גבולות. פועל בשיתוף עם ספירת הגבורה הסמוכה לו, המספקת את הגבולות הנחוצים לו כדי לפעול בצורה בונה.",
+    practice:"בעודף חסד: לבדוק בכל מעשה נתינה מהו המניע האמיתי, האם הוא משרת את מי שמקבל או בעיקר את הצורך שלי להרגיש נדיב, ולתרגל אמירת 'לא' מתוך אהבה. בחוסר חסד: לתרגל נתינה קטנה ויומיומית שאינה מצפה לתמורה, ולשים לב לרגעים שבהם אפשר להקשיב באמת בלי לתקן או לשפוט."},
+  {name:"גבורה", line:"left", quality:"כוח הצמצום והגבולות", inner:"יראה", force:"התאפקות", body:"יד שמאל, מערכת החיסון והדם, עין שמאל", elementTag:"fire",
+    balanced:"צדק, דין, משמעת וריסון עצמי, יכולת לומר לא במקום הנכון, יראה בריאה שמכבדת גבול ואינה מפחידה, אומץ לעמוד באמת שלי גם מול לחץ חברתי.",
+    excess:"הקפדה יתרה, ביקורתיות וגבולות נוקשים מדי, קושי לקבל מהחוץ, אהבה, מחמאות או עזרה, ולעיתים חוסר איפוק והרסנות כלפי מי שמעורר בי כעס.",
+    deficiency:"חוסר גבולות, קושי לומר לא, חדירת גבולות מכל סוג, תחושת חולשה מול היצר ומול דמויות סמכות, וקושי בשליטה עצמית ודחיית סיפוקים.",
+    imbalance:"קמצנות, הקפדה יתרה וביקורתיות, ולחלופין חוסר איפוק והרסנות.",
+    note:"קו שמאל, הדין והסלקטיביות. שייכת ליסוד האש, הבעירה וההרס, בניגוד גמור לחסד. הפחד הוא הפנימיות של הגבורה, ולכן יש לו תמיד מרכיב של אש.",
+    practice:"בחוסר גבורה: לקבוע גבולות קטנים וברי השגה ולבנות עליהם בהדרגה, וליצור משמעת קבועה, כמו זמן שקט או לימוד יומי, כתרגול טיפול עצמי. בעודף גבורה: לרכך כל ביטוי של שיפוט בחביבות, להתחיל ולסיים ביקורת באישור, ולזכור שפרפקציוניזם מסתיר לא פעם פחד מפגיעות."},
+  {name:"תפארת", line:"mid", quality:"האיזון והיופי המושלם", inner:"רחמים", force:"איזון, הרמוניה", body:"בית החזה, גזע הגוף, הלב, הגב, מערכת העיכול ומערכת הנשימה", color:"linear-gradient(135deg,#8CC084,#F0D84A)", colorName:"ירוק-צהוב (ויש האומרים ורוד עדין)", elementTag:"air",
+    balanced:"יופי, הרמוניה, רחמים והזדהות עם האחר, יכולת לאזן בין נתינה לגבול מתוך מרכז יציב ורגוע. אדם שהתפארת שלו פועלת בריאות מרגיש שהוא פועל 'מהלב', לא מרגשנות מוגזמת אלא מאמת פנימית שמחברת בין מחשבה, הרגשה ופעולה, ורואה את התמונה השלמה בלי לאבד את הפרטים.",
+    excess:"נטייה להתערב בכל סכסוך מתוך רצון 'לאזן', בעוד שבפועל קשה לו לסבול מתח וחוסר ודאות. קושי לקבל החלטות ברורות ומהירות כשהמצב דורש זאת, מתוך ראיית כל הצדדים עד כדי שיתוק, ולעיתים תחושת צדקנות עדינה שרק אני מבין את המורכבות.",
+    deficiency:"נטייה לקיצוניות רגשית, או חסד רך ומפנק בלבד או גבורה קשוחה ובלתי מתפשרת בלבד, בלי דרך אמצע. מתבטא בזוגיות שבה נותנים הכל ומקריבים את עצמם, או מתנתקים לגמרי, ובקושי ליצור יחסים יציבים ועמוקים.",
+    imbalance:"הזדהות יתר עם רגשות האחר, או לחלופין אכזריות ואדישות, מיעוט הזדהות.",
+    note:"מרכז קו האמצע, מאזנת בין חסד לגבורה, ומתבטאת בגוף בלב ובחזה, ובעמוד השדרה שדרכו היא מגיעה אליו. שייכת ליסוד האוויר, המקיים איזון בין האש הבוערת של הגבורה למים הקרירים של החסד. שמה מכיל את השורש 'רפא', ואכן זו הספירה המרפאת את הקרעים שבין הקצוות.",
+    practice:"לשאול בכל החלטה משמעותית: האם אני רואה את התמונה המלאה בלי לאבד את הפרטים החשובים? ולבדוק אם קיימת נטייה קבועה לצד אחד, רק לתת או רק להציב גבול, במקום למצוא את נקודת האמצע המתאימה לרגע הנתון."},
+  {name:"נצח", line:"right", quality:"הנחישות וההתמדה", inner:"ביטחון", force:"התגברות על מכשול", body:"רגל ימין, כליה ימין, שחלה או אשך ימין, אוזן שמאל", elementTag:"water",
+    balanced:"התמדה, חוזק, ארגון וניהול, ביטחון פנימי שמאפשר לעמוד באתגר לאורך זמן בלי להישבר וגם בלי להתעקש שלא לצורך. קשורה גם ליושר ויושרה, וליכולת לקחת יוזמה.",
+    excess:"עבודה ללא הפסקה, שאיפה לשליטה מוחלטת וחוסר נכונות לקבל כישלון או מגבלה, עד כדי שחיקה, חרדה וחוסר שמחה. מאבקים מיותרים, צורך תמידי לנצח ולהגיד את המילה האחרונה.",
+    deficiency:"ותרנות יתר, פסיביות מוחלטת ותחושה שאין לי יכולת להשפיע על חיי. קושי לקחת יוזמה, תחושת ריקנות שאין לי מה לתת, וחוסר ביטחון עצמי, כלכלי או חברתי.",
+    imbalance:"עקשנות יתר, מאבקים מיותרים, קשיי זרימה, בעיות ארגון, חוסר ביטחון, ולעיתים ותרנות יתר. בחוסר איזון עמוק: קושי לקחת יוזמה, תחושת ריקנות שאין לאדם מה לתת, והתמכרויות שמבטאות דבקות ברע.",
+    note:"קשורה למחלות הורמונליות, שכן תפקיד ההורמונים לזרום ולהתאים עצמם למציאות כמו מים. יושבת על הכליה הימנית ונותנת כוח לרגל ימין כולה. נצח שייכת לצד הימני, הזכרי, של קו ימין.",
+    practice:"לשאול בכל מאבק אם ההתמדה עדיין משרתת מטרה אמיתית או שהיא כבר עקשנות שלא לצורך. בעודף נצח: לתרגל עצירה ומנוחה מלאה בלי אשמה. בחוסר נצח: לבחור החלטה קטנה אחת ולהתמיד בה יום אחר יום."},
+  {name:"הוד", line:"left", quality:"ההודיה והענווה", inner:"תמימות", force:"הודיה, הכרת תודה", body:"רגל שמאל, כליה שמאל, שחלה או אשך שמאל, נחיר ימין", elementTag:"fire",
+    balanced:"קבלה, תמימות, הדר, וידוי, הודאה ותודה, יכולת לראות את המציאות כפי שהיא ולהודות גם כשהאמת אינה נוחה. תכונות אלה חשובות במיוחד כדי לעבור בשלום את המשברים שנקרים בדרכנו.",
+    excess:"פסיביות יתר, חוסר יוזמה, ותחושת חוסר ערך עצמי. ויתור קל מדי על חלומות ושאיפות, והתמסרות להכנעה שאינה בריאה, עד כדי חיים תחת המגבלות שאחרים מציבים.",
+    deficiency:"כפיות טובה, חוסר הכרת האמת, כעס וגאווה, תחושה שהכל מגיע לי בלי הכרת תודה. קושי לקבל ביקורת או להודות בטעות, אחיזה בתחושת קורבנות, והצדקה עצמית של הרגלים שליליים.",
+    imbalance:"כפיות טובה, חוסר הכרת האמת, כעס וגאווה, האדם אינו מבין שהכל מלמעלה ולטובה. אחיזה בתחושת קורבנות, התנגדות למציאות, והצדקה עצמית של הרגלים שליליים.",
+    note:"קשורה למחלות אוטואימוניות, כשראיית המציאות נפגעת ואיננו מבחינים מה אויב ומה אנחנו. יושבת בכליה השמאלית ונותנת כוח לרגל שמאל, לעולם הפנימי ולעבודה הפנימית העמוקה. אם רגל ימין לוקחת צעד קדימה, רגל שמאל היא זו שיודעת לקחת צעד אחורה, לעצור ולהתבונן.",
+    practice:"בעודף הוד: לתרגל נקיטת עמדה או יוזמה קטנה גם כשאין ודאות בתוצאה. בחוסר הוד: לתרגל קבלת הערה או ביקורת אחת ביום בלי להתגונן מיד, ולשאול מה יש בה שאפשר ללמוד ממנו."},
+  {name:"יסוד", line:"mid", quality:"כוח החיבור והמימוש", inner:"אמת", force:"ביטוי ומיצוי העצמי", body:"מערכת המין, נחיר שמאל", elementTag:"air",
+    balanced:"חיבור והטמעה, אמת פנימית עקבית, יכולת לקחת את כל מה שנאסף למעלה, בנצח ובהוד, ולבטא אותו בביטוי עצמי מדויק וכן. יכולת ליצור שלום ואחדות, לגשר בין קטבים.",
+    imbalance:"קושי להוציא אל הפועל, וכן חיבורים לא נכונים וסטיות מיניות.",
+    note:"לוקח את כל הכוחות שמעליו ומעבירם למלכות כדי שיבואו לידי ביטוי במציאות, כמו תוכנית אדריכלית שנמסרת לביצוע. כינויו חותם האמת, שכן הוא מאמת את כל הכוחות העליונים על ידי דבקותו במטרה."},
+  {name:"מלכות", line:"mid", quality:"המימוש הסופי בעולם המעשה", inner:"שפלות", force:"גילוי במציאות", body:"כפות הרגליים, הפה, ואצל הגבר העטרה (ואצל האישה הדגדן)", elementTag:"earth",
+    balanced:"שליטה ומנהיגות מתוך שפלות בריאה, נוכחות פשוטה ומלאה בעולם המעשה, תחושת ישות מדויקת בלי צורך להתנפח.",
+    imbalance:"תחושת ישות מוגזמת, שתלטנות, ועצבות מיסוד העפר.",
+    note:"מקבלת את כל ההשפעה שרוכזה למעלה ומורידה אותה אל המציאות החיצונית ממש. אין לה כלום משלה, כמו הירח המקבל את אורו מהשמש, ולכן היא גם נקראת האיבר הנמוך ביותר בגוף, זה שדורך ישירות על הקרקע ונושא את כל הגוף עליו."}
+];
+
+/* ===================== DATA: SYSTEMS / ORGANS ===================== */
+
+const SYSTEMS = [
+  {
+    id:"movement", name:"מערכת התנועה (שלד ושרירים)", emoji:"🦴",
+    desc:"השלד והשרירים פועלים תמיד יחד: השלד מגן על האיברים הפנימיים, מייצר תאי דם במח העצם ומהווה מאגר מינרלים, בעוד השרירים מספקים את הכוח שמניע אותו. השלד שייך ליסוד האדמה, הצד היציב והפסיבי, והשרירים ליסוד האש, הצד הפעיל שמוציא את התנועה לפועל. יחד הם מדברים על התמיכה, המבנה, הערכים שעליהם אנחנו עומדים, וכוח הרצון להוציא אותם לפועל.",
+    organs:[
+      {name:"עצמות ומינרלים (כללי)", elements:["earth"],
+        func:"מאגר למינרלים כמו סידן וזרחן, מספקות מבנה ותמיכה לכל הגוף. בתוך העצמות הגדולות שוכן מח העצם, מקור כל תאי הדם בגוף.",
+        meaning:"משקפות את היכולת לאצור ולשמור על הידע והחכמה שרכשנו בחיים. כשעצם נשברת, מעבר לפגיעה הפיזית, כדאי לבדוק גם מה קורה לתנועה ולתחושת ההגנה של האזור שנפגע.",
+        pathologies:"אוסטאופורוזיס משקף דלדול של הבסיס הערכי והחכמה המצטברת, וחוסר ברזל כרוני שייך גם הוא לפתולוגיית חוסר של יסוד האדמה.",
+        reflect:"האם אני סומך על הידע והניסיון שצברתי בחיים, או שאני מרגיש שאני מתחיל כל פעם מאפס?"},
+      {name:"שרירי השלד (כללי)", elements:["fire","earth"], sefirah:"גבורה (כוח), חסד (גמישות)",
+        func:"מחוברים לעצמות באמצעות גידים, מאפשרים תנועה רצונית ומגנים על איברים פנימיים, כמו שריר הקרקפת המגן על הגולגולת והמוח. עובדים בעיקר עם המערכת הסימפתטית, זו שמפעילה אותנו להילחם, לברוח או לקפוא.",
+        meaning:"מייצגים את כוח הרצון שלנו, את היכולת להוציא לפועל את רצונותינו ולהתמודד עם אתגרי החיים. מערכת שרירים מאוזנת משקפת איזון בין כוח לגמישות, בין רצון לקבלה.",
+        pathologies:"שריר תפוס מעיד על תקיעות של הכלי הפיזי, לעיתים בשל תנועה לא נכונה או חוסר הקשבה לגוף, ולעיתים על עומס, מאמץ יתר, חוסר הקשבה רגשית, ניתוק, קושי להרפות שליטה או התנגדות למציאות. שרירים תפוסים באזור הצוואר או השכמות מצביעים לרוב על מגננות רגשיות סביב אהבה עצמית, עקשנות וכעסים אל מול המציאות.",
+        reflect:"היכן בגוף אני מרגיש תפוס או מכווץ, ומה אני לא מאפשר לעצמי לבטא באותו מקום?"},
+      {name:"גולגולת", elements:["air"], sefirah:"כתר, חכמה, בינה",
+        func:"מגנה על המוח ועל מבני הראש הפנימיים.",
+        meaning:"משקפת את ההגנה על הידע, המחשבות והרעיונות שלנו. מקושרת לספירות העליונות.",
+        reflect:"על אילו מחשבות או רעיונות אני מרגיש צורך להגן יותר מדי? האם אני פתוח לקבל ידע חדש?"},
+      {name:"קרקפת ושיער", elements:["earth"], sefirah:"מלכות, דעת",
+        func:"השכבה העליונה של הגולגולת, מהווה גם גבול פיזי בין הראש לעולם החיצון.",
+        meaning:"השיער מסמל את החיבור לנשמה ואת היכולת לחיות משמעות רוחנית דרך המעשים בעולם, וגם כוח חיים וכוח רצון, אנרגיית חיים שמניעה אותנו לפעול. מסמל גם קשר חברתי וסביבתי, המקום שבו אנחנו נפגשים עם העולם ומגינים על הראש. שיער ארוך מבטא לעיתים גדילה והתפתחות, אך גם צורך להיאחז במוכר. קיצוץ שיער מסמל התחדשות ורגע של שחרור מהעבר.",
+        pathologies:"נשירת שיער או קשקשים עשויים לשקף ניתוק מכוח החיים, חוסר מוטיבציה, או קושי ליצור חיץ בריא בין הפנימי לחיצוני.",
+        reflect:"כמה כוח רצון וחיוניות אני מרגיש כלפי החיים שלי כרגע? האם אני מחובר למשמעות שמעבר לשגרה?"},
+      {name:"שיניים", elements:["earth"],
+        func:"פירוק ראשוני של המזון, חלק ממערכת השלד מבחינת המבנה המינרלי שלהן.",
+        meaning:"מסמלות שליטה בחיים, נחישות ויכולת לפרק מצבים ורעיונות לנתחים קטנים יותר. בעיות שיניים עשויות לשקף חוסר נחישות, חוסר ביטחון או קושי בעיבוד חוויות. ביטויים כמו לא עיכל את הרעיון וקשה לעיכול מבטאים את אותה סימבוליקה.",
+        reflect:"יש החלטה שאני דוחה כי קשה לי 'לנגוס' בה?"},
+      {name:"צוואר", elements:["air","fire"], sefirah:"דעת",
+        func:"מחבר בין הראש לגוף, מכיל את חוליות הצוואר, קנה הנשימה, הוושט, בלוטת התריס וכלי הדם המרכזיים המזינים את המוח. מאפשר את תנועת הראש לכל הכיוונים.",
+        meaning:"מסמל את הגמישות שבין המחשבה, שיושבת בראש, לפעולה, שמתרחשת בגוף. גם את היכולת להסתכל לצדדים ולראות זוויות שונות של אותו מצב.",
+        pathologies:"נוקשות בצוואר עשויה לשקף עקשנות מחשבתית, קושי לראות נקודת מבט שאינה שלנו, או נשיאה של עומס מחשבתי כבד מדי.",
+        reflect:"האם אני מוכן להסתכל על המצב מזווית שונה משלי? מה מונע ממני להיות גמיש יותר, גם בצוואר וגם במחשבה?"},
+      {name:"עצם החזה (סטרנום)", elements:["fire"], sefirah:"תפארת",
+        func:"מגנה על הלב והריאות, מהווה את החלק הקדמי של כלוב הצלעות.",
+        meaning:"משקפת את ההגנה על האהבה (הלב) ועל הרוח (הריאות). מסמלת את המגן האמצעי של האדם.",
+        reflect:"עד כמה אני מרשה לאהבה ולרוח שלי לזרום החוצה, ועד כמה אני שומר עליהן סגורות מאחורי מגן?"},
+      {name:"כתפיים", elements:["fire"],
+        func:"מאפשרות תנועת הזרועות ונשיאת משא.",
+        meaning:"מסמלות אחריות ונשיאה בנטל. כאבי כתפיים מסמלים אובדן שליטה או עצמאות, ותחושת עול כבד מדי. כתפיים מוטות קדימה מצביעות על רצון להגן על הלב, וכתפיים משוכות אחורה משקפות דריכות או ניסיון להפגין ביטחון.",
+        reflect:"כמה עוד אני יכול לשאת לפני שאני מבקש עזרה?"},
+      {name:"ידיים וזרועות", elements:["fire"],
+        func:"מאפשרות אחיזה, פעולה והבעה גופנית, המבצעות בפועל את מה שהלב מרגיש.",
+        meaning:"מבצעות את תחושות הלב, מחבקות ומבטאות אהבה. הזרועות מסמלות הגנה, כוח ועזרה. חולשה בידיים עשויה לשקף חוסר יכולת להוציא לפועל את רצונותינו, או התנתקות מהרגשות במישור המעשי. ביטויים כמו בא לידי ביצוע, ביד רחבה והושיט יד משקפים את הקשר הזה.",
+        reflect:"מה אני רוצה להוציא לפועל ועדיין לא עשיתי? האם אני מרשה לעצמי לגעת ולהיות נוכח רגשית?"},
+      {name:"מרפקים", elements:["water","fire"],
+        func:"מפרק המאפשר כיפוף וישור הזרוע, מחוברים למקלעת השמש, מרכז העיכול הרגשי.",
+        meaning:"מסמלים התמודדות רגשית ואת תרגום הרגשות המודחקים לעשייה בפועל, את הרגע שבו רגש הופך לפעולה. מסמלים גם את הטריטוריה המקצועית והחברתית, המרחב שאדם צריך כדי לעשות ולהתקדם, ולכן מאבק על מרחב העשייה עלול להתבטא בבעיות במרפק.",
+        reflect:"האם יש לי מספיק מרחב לפעול ולהתקדם במקום שבו אני נמצא כרגע?"},
+      {name:"כפות ידיים", elements:["earth","fire"],
+        func:"הקשר המעשי שלנו עם העולם החיצון, מבצעות עשייה ומגע ישיר.",
+        meaning:"מייצגות את ההתייחסות המעשית לחיים, העשייה וההתמודדות, בדיוק כפי שכפות הרגליים מייצגות את הקשר שלנו עם האדמה.",
+        pathologies:"יובש או חספוס מעידים על תקיעות רגשית וקושי לתת ביטוי מעשי לרגש. יבלות מעידות על עקשנות ועל נקודה שחוזרים אליה שוב ושוב בלי להרפות.",
+        reflect:"האם אני נותן ביטוי מעשי לרגשות שלי, או שאני נשאר רק במחשבה עליהם?"},
+      {name:"עמוד השדרה", elements:["water","earth"], sefirah:"תפארת (ציר מרכזי)",
+        func:"הציר המרכזי של הגוף, מגן על חוט השדרה ומאפשר תנועה, יציבה וזקיפות. מאחד את הקוטביות שבין ימין ושמאל, רגש ומחשבה.",
+        meaning:"מסמל תמיכה ונשיאת עול בחיי האדם. משקף את היכולת לעמוד זקוף מול אתגרים ואת הגמישות בהתמודדות עם שינויים. ביטויים כמו לתת גב ותקוע סכין בגב ממחישים את הקשר.",
+        reflect:"איפה בחיים אני נושא או נושאת עול כבד מדי לבד? האם אני מאפשר לעצמי להתכופף ולהתגמש כשהמציאות משתנה, או שאני מתעקש לעמוד זקוף בכל מחיר?"},
+      {name:"גב עליון", elements:["fire"],
+        func:"אזור הכתפיים והחלק העליון של עמוד השדרה, נושא את תנועת הזרועות.",
+        meaning:"קשור לתנועת הכתפיים, נשיאת אחריות, ויכולת הנתינה והקבלה. קשור לביטחון, לדימוי גוף ולביטוי שאיפות. כאב באזור זה עשוי לשקף עומס אחריות או קושי בהבעת רגשות.",
+        reflect:"איזו אחריות אני נושא כרגע, ומי עוזר לי לשאת אותה? האם אני מאפשר לעצמי גם לקבל, ולא רק לתת?"},
+      {name:"גב אמצעי", elements:["water","fire"],
+        func:"אזור הצלעות התחתונות, סמוך למקלעת השמש.",
+        meaning:"קשור למקלעת השמש ולגבול בין יסודות המים והאש. משקף איזון במרכז הגוף, הגנה על הרגשות, וסגירות או פתיחות רגשית. כאב עשוי לשקף חוסר תמיכה רגשית או קושי בהכלת רגשות.",
+        reflect:"מתי לאחרונה הרגשתי נתמך רגשית, ומתי הרגשתי שאני צריך להגן על עצמי מבפנים?"},
+      {name:"גב תחתון", elements:["water","earth"], sefirah:"תפארת, יסוד",
+        func:"האזור התחתון של עמוד השדרה, סמוך לאגן, נושא חלק גדול ממשקל הגוף.",
+        meaning:"קשור לאופן שבו אדם מושרש, ליכולת ההיאחזות שלו בחיים וליכולת ההישרדותית. באיזון מבטא יציבות, עבודה פנימית רציפה, אינטליגנציה רגשית וחיבור למיניות הטבעית. בחוסר איזון קשור לטראומות ילדות, לכל מה שקשור למיניות, לזוגיות, לשלום בית ולמערכת היחסים עם ההורים.",
+        pathologies:"כאבים כרוניים בגב התחתון קשורים לרוב לחוסר תמיכה בצרכים הבסיסיים, לבדידות במאבק, או לקושי בנשיאת עול.",
+        reflect:"מה עדיין לא מעובד אצלי מהעבר, שממשיך למשוך אותי אחורה? האם אני מרשה לעצמי לנוע קדימה גם כשאין ביטחון מלא?"},
+      {name:"עצם הזנב (קוקסיס)", elements:["earth"], sefirah:"מלכות",
+        func:"שריד של הזנב האבולוציוני, בסיס עמוד השדרה.",
+        meaning:"משקפת את הקשר שלנו לעבר האבולוציוני ולאינסטינקטים הבסיסיים.",
+        reflect:"מה אני יודע על השורשים והמקורות שלי, ואיך זה משפיע על תחושת הביטחון שלי היום?"},
+      {name:"אגן", elements:["water","earth"], sefirah:"יסוד",
+        func:"ערוץ ראשי לאנרגיות של שער הבסיס, יצירתיות והפריה.",
+        meaning:"מסמל את היכולת שלנו להכיל, לקבל ולהגיב לשינויים שעוברים אנשים קרובים אלינו. בעיות כרוניות באזור עשויות להעיד על אנרגיות שמתקשות לעבור, או על תחמנות והעמדת פנים.",
+        sides:{right:"כאב בצד ימין של האגן מסמל התמודדות עם גבר הקרוב לנו.", left:"כאב בצד שמאל מסמל התמודדות עם אישה הקרובה לנו."},
+        reflect:"מה אני מוכן להכיל מהאנשים הקרובים אליי, ומה אני מתקשה לקבל מהם?"},
+      {name:"ירכיים", elements:["earth","fire"],
+        func:"מפרק גדול המחבר את הרגל לאגן, נושא חלק ניכר ממשקל הגוף בהליכה.",
+        meaning:"מסמלות ציפיות, בעיקר לקרבה: נאמנות, קרבה להורים, חברים ובני זוג. כאשר לא משחררים כעס, כאב או תסכול בתחום זה, עשוי להצטבר שומן על הירכיים כמנגנון הגנה.",
+        sides:{right:"כאב בירך ימין מסמל ציפיות לאינטימיות מבן או בת הזוג.", left:""},
+        reflect:"אילו ציפיות לקרבה אני נושא, ומהן אני עדיין לא משחרר?"},
+      {name:"ברכיים", elements:["earth"],
+        func:"מפרק המאפשר כפיפה, ישור והתקדמות בהליכה.",
+        meaning:"מסמלות את היכולת שלנו להתמודד עם שינויים, את הדחף לתחרותיות ואת הגמישות הנפשית. מייצגות גם את היכולת שלנו לכרוע ברך, להיכנע, להודות ולהתגמש.",
+        reflect:"איך אני מגיב כשמשהו משתנה בלי אזהרה מראש? האם אני יודע להתכופף בלי להישבר?"},
+      {name:"קרסוליים", elements:["earth","air"],
+        func:"נקודת המפגש בין כף הרגל לשוק, נושאת את משקל הגוף.",
+        meaning:"נקודת המפגש בין הרוחני והארצי. שבר או נקע בקרסול מסמן לאדם שעליו להתייחס לעניינים של הרוח. מייצג גמישות במעבר בין הרוחני לארצי.",
+        reflect:"האם אני נותן מקום לעניינים הרוחניים בחיי, לצד המעשיים והיומיומיים?"},
+      {name:"כפות רגליים", elements:["earth"],
+        func:"נושאות את משקל הגוף ומחברות אותו לקרקע, ומהוות את מפת ההשתקפות המרכזית ברפלקסולוגיה.",
+        meaning:"מסמלות ערכים, תפיסות ועקרונות, ואת היכולת לעמוד עליהם. מייצגות את הקשר שלנו לאדמה ולצד החומרי. העקב מסמל את ההיבט הרגשי, והחלק הפנימי של כף הרגל מסמל את ההיבט הנפשי.",
+        sides:{right:"רגל ימין מקושרת לספירת נצח.", left:"רגל שמאל מקושרת לספירת הוד."},
+        reflect:"על אילו ערכים אני עומד, ומה קורה בי כשמישהו מערער אותם?"}
+    ]
+  },
+  {
+    id:"nervous", name:"מערכת העצבים", emoji:"🧠",
+    desc:"רשת התקשורת של הגוף, מעבירה מידע בין המוח לשאר הגוף ואחראית על תנועה, תחושה, חשיבה ורגש. ברוחניות קשורה לתודעה, לחכמה ולעולם הפנימי שלנו.",
+    organs:[
+      {name:"מוח", elements:["air"], sefirah:"כתר, חכמה, בינה",
+        func:"מערכת ההפעלה שלנו, המתרגמת את מה שקורה בהוויה שלנו אל הגוף הפיזי, פועלת באמצעות זרמים חשמליים, קליטה ושידור. אחראי על תחושה, הכרה, קטלוג, זיכרון ודמיון. ברפלקסולוגיה יושב בבוהן הראשונה, בחיבור שבין בסיס הגולגולת לצוואר.",
+        meaning:"מסמל את האספקטים הגבוהים של התודעה. אחראי על קבלת השראה מהעולמות העליונים, על תובנה, הבנה וידע. משקף את יכולת ההבחנה שלנו ואת הזהות העצמית. עובדים על אזור המוח כשרוצים לעורר מודעות וזיכרון, או להוציא החוצה דברים שקיימים בפנים.",
+        reflect:"אילו זיכרונות או תובנות מנסים לעלות אצלי לאחרונה, ואיך אני מתייחס אליהם?"},
+      {name:"היפותלמוס", elements:["air","water"],
+        func:"מקשר בין מערכת העצבים למערכת ההורמונלית, מבצע בקרה בין תחושות, רגשות ושכל, ומאפשר לגוף את כוח ההישרדות הפיזית ואת היכולת לתפקד במצבי חירום.",
+        meaning:"עובדים עליו כשקיים חוסר איזון בין הרגשות של האדם למה שקורה במציאות, כשהוא נעלב מדי או תגובתי מדי מבחינה רגשית. קשור גם לוויסות חום הגוף, למיניות וליצר המיני, ולקרקוע האדם מנטלית.",
+        pathologies:"בחוסר איזון עלול לגרום להתמוטטות רגשית או פיזית כתוצאה מהתארגנות יתר, עייפות ובעיות בוויסות חום הגוף.",
+        reflect:"עד כמה התגובות הרגשיות שלי תואמות את מה שבאמת קורה במציאות?"},
+      {name:"היפופיזה (בלוטת יותרת המוח)", elements:["water"],
+        func:"מורכבת משתי אונות, אחת מעבירה הורמונים כמות שהם לשאר הגוף, והשנייה יוצרת הורמונים חדשים בתגובה למה שהיא קולטת. קשורה לתהליכים מיניים, להיריון, לזיכרון, ללמידה, לריכוז, לאינטואיציה ולתיאום תנועות.",
+        meaning:"נחשבת נציגה ישירה של אהבה טהורה ברמת הנשמה, אהבה מופשטת ובלתי מותנית, ואחראית על הדימוי העצמי ועל האהבה העצמית שלנו.",
+        pathologies:"עובדים עליה במצבים של פגיעה בדימוי העצמי, וכן באפתיה, באדישות ובדיכאון.",
+        reflect:"איך נראית האהבה העצמית שלי היום? האם אני מדבר אל עצמי כפי שהייתי מדבר אל מישהו שאני אוהב?"},
+      {name:"האצטרובל (בלוטת האצטרובל)", elements:["air"],
+        func:"בלוטה קטנה במוח הרגישה לאור, משפיעה על מקצבי שינה וערות.",
+        meaning:"מדברת על ההסתכלות פנימה ועל הקשר לעולם הרוחני, מתוך ההנחה שכל מה שאנחנו צריכים כבר קיים בתוכנו. עובדים עליה עם אנשים שזקוקים ללמוד לא רק ידע כללי אלא גם ללמוד את עצמם, ועם אנשים שמתקשים בחיבור למציאות.",
+        reflect:"כמה זמן אני מקדיש להסתכל פנימה, מול הזמן שאני מקדיש להסתכל החוצה?"},
+      {name:"חוט השדרה", elements:["water","air"], sefirah:"דעת",
+        func:"מוליך מידע בין המוח לשאר הגוף, הציר המרכזי המחבר את שתי המיספרות המוח.",
+        meaning:"הגשר בין המוח (האינטלקט) ללב (הרגש), מסמל את היכולת לתרגם רעיונות להרגשה ולפעולה. הדעת מסמלת את העולם הפנימי ואת יכולתו של האדם להתפתח רגשית ושכלית.",
+        pathologies:"בחוסר איזון: קושי להאמין בעצמו או בבורא, מחשבה שלילית, פיזור דעת, ריבוי משימות בלי סיום, ניתוק מהרגשות. ספירת הדעת קשורה כללית למחלות מערכת העצבים.",
+        reflect:"האם אני מאמין ביכולת שלי, ברעיונות שלי ובדרך שבחרתי?"}
+    ]
+  },
+  {
+    id:"senses", name:"מערכת החושים והעור", emoji:"👁️",
+    desc:"כוללת את חמשת החושים והעור, האיבר הגדול ביותר בגוף. מספקת למוח מידע על הסביבה ומהווה את הגבול בין הפנימי לחיצוני.",
+    organs:[
+      {name:"עיניים", elements:["fire","air"], sefirah:"חכמה",
+        func:"איברי הראייה, ברפלקסולוגיה ממוקמות בבהונות שתיים ושלוש. נחשבות ברפואה הסינית לצוהר החיצוני של הכבד, שתפקידו לתכנן ולראות מהלכים קדימה, כמו גנרל צבאי.",
+        meaning:"ראי הנפש, משקפות את היכולת לראות אמת, לפתח חזון ולתכנן קדימה. קוצר ראייה עשוי לשקף קושי בהתמודדות עם העולם החיצוני, ורוחק ראייה עשוי לשקף התמקדות יתר בעתיד. ביטויים כמו אחיזת עיניים ובעיני רוחו ממחישים את הקשר.",
+        extra:"כיוון המבט מספר גם הוא סיפור: מבט כלפי מטה מחפש ביטחון בקרקע, מבט כלפי מעלה עשוי לשקף חלימה או שאיפה מעבר לגבולות המציאות, ורק מבט ישר קדימה רואה את המציאות כפי שהיא.",
+        reflect:"לאיזה כיוון אני מביט בחיים שלי, קדימה, אחורה, למעלה או למטה, ומה זה אומר לי על עצמי?"},
+      {name:"אוזניים", elements:["water","air"], sefirah:"בינה",
+        func:"איברי השמיעה.",
+        meaning:"מייצגות את יכולת ההקשבה הפנימית והחיצונית, ואת קבלת ההדרכה וההבנה העמוקה. בעיות שמיעה עשויות לשקף קושי בהקשבה לאחרים או לקול הפנימי.",
+        reflect:"למי או למה אני מתקשה להקשיב, בי או בסביבה שלי?"},
+      {name:"אף", elements:["air"], sefirah:"תפארת",
+        func:"השער הראשי למערכת הנשימה, מכיל קולטנים ושערות שעוזרים לנטרל רעלים מהאוויר.",
+        meaning:"מייצג את האיזון בין העולמות, את חוש האבחנה (להריח מצבים), ואת הקשר בין פנים לחוץ דרך הנשימה.",
+        reflect:"האם אני סומך על תחושת הבטן שלי, על יכולת ההבחנה שלי בין מה שטוב לי למה שלא?"},
+      {name:"לשון ופה (חוש הטעם)", elements:["water"], sefirah:"מלכות",
+        func:"מאפשרים אכילה, טעימה וביטוי בדיבור.",
+        meaning:"מייצגים את היכולת לטעום את החיים, להבחין בין אמת לשקר ולבטא את עצמנו. אובדן טעם עשוי לשקף אובדן טעם בחיים, וטעם מר עשוי לשקף מרירות פנימית.",
+        reflect:"עדיין יש טעם בחיים שלי? יש דברים שאני צריך לבטא במילים ועוד לא אמרתי?"},
+      {name:"עור (חוש המגע)", elements:["earth"], sefirah:"מלכות",
+        func:"הגבול הפיזי הגדול ביותר בגוף בין הפנים לחוץ, מכיל את קולטני המגע והחום.",
+        meaning:"מהווה את הגבול בין הפנימי לחיצוני, מגן על הפנימיות שלנו ומשקף את היחס שלנו לסביבה.",
+        pathologies:"מחלות עור עשויות להעיד על קושי בגבולות אישיים, על רגישות יתר לסביבה או על קונפליקט בין פנים לחוץ.",
+        reflect:"האם הגבולות שלי מול הסביבה ברורים לי, והאם הם מכובדים על ידי מי שסביבי?"}
+    ]
+  },
+  {
+    id:"endocrine", name:"המערכת ההורמונלית והרגשית", emoji:"⚖️",
+    desc:"בלוטות ההפרשה הפנימית ומרכזי העצבים המווסתים בין השכל לרגש, בין הפנים לחוץ. שלושת האיברים המרכזיים כאן, וגוס, מקלעת שמש ואדרנל, מכונים ברפלקסולוגיה 'המערכת הרגשית' ונעבדים לרוב יחד ברצף אחד, לצד עוטף הלב-תימוס, כדי לאסוף את האדם חזרה פנימה.",
+    organs:[
+      {name:"בלוטת התריס והפאראתריס", elements:["air","fire"],
+        func:"יושבות בגרון, מווסתות חילוף חומרים, טמפרטורת גוף וקצב לב.",
+        meaning:"מהוות אזור מעבר וגשר בין העולמות, בין המוח ללב, בין השכל לרגש, בין מה שאני מכניס פנימה לבין מה שאני מוציא כלפי חוץ. רגיש במיוחד אצל אנשים עם קושי בביטוי רגשי או יצירתי. יושבת על צ'אקרת הגרון, צ'אקרת הביטוי היצירתי והביטחון להגיד את מה שיש לנו להגיד.",
+        reflect:"עד כמה קל לי לבטא את מה שיש לי להגיד, גם כשזה לא נוח לשומע?"},
+      {name:"בלוטת האדרנל", elements:["fire","water"],
+        func:"יושבת מעל הכליות, מפרישה קורטיזול המשפיע על המערכת החיסונית והפחתת דלקות, ואדרנלין המופרש במצבי לחץ ומייצר שלושה דפוסי תגובה מול איום: קיפאון, בריחה או לחימה.",
+        meaning:"קשורה בעיקר לתגובתיות ולפרשנות הרגשית שאנו נותנים למציאות. אצל רוב בני האדם בחיים המודרניים המערכת אינה מגיבה על סכנת חיים אמיתית אלא על פרשנות רגשית, ומתח כרוני, כמו דאגות פרנסה מתמשכות, יכול להפעיל אותה בדיוק כמו איום ממשי. כשהיא פעילה מדי, רוב המשאבים החיוניים של הגוף מגויסים להגנה ולשרידה, ופחות אנרגיה נותרת לבריאות הכללית.",
+        pathologies:"רגישות שונה בין רגל ימין לשמאל היא סימן לחוסר איזון, ולעיתים גם רגישות דומה בשתי הרגליים אך מכל צד אחר. עודף רגישות עד כאב מדבר על מתח פנימי מתמשך, וחוסר רגישות מוחלט יכול לדבר על ניתוק וחוסר תשומת לב.",
+        reflect:"מהו דפוס התגובה שלי מול לחץ, קיפאון, בריחה או לחימה? והאם הוא מתאים למה שבאמת קורה עכשיו?"},
+      {name:"בלוטת התימוס (עוטף הלב-תימוס)", elements:["fire"], sefirah:"תפארת",
+        func:"אחראית על התפתחות תאי חיסון. לקראת גיל ההתבגרות מפסיקה להפריש חלק גדול מהורמוניה, מעבר המקביל לאיזון רגשי חדש ובוגר יותר. ברפלקסולוגיה נעבדת יחד עם אזור עוטף הלב, כחלק אחד מהמערכת הרגשית.",
+        meaning:"מקושרת לצ׳אקרת הלב ולאהבה עצמית, לאותנטיות ולהגנה על העצמי האמיתי. קשורה ליכולת להבחין בין המזין ללא-מזין מבחינה נפשית ורוחנית.",
+        pathologies:"חריץ אורכי על אזור הטימוס מדבר על אדם שתמיד ממהר ומרגיש שאין לו מספיק זמן. חריץ רוחבי מדבר על עיכוב בזמנים ועל קצב איטי מהמצופה.",
+        reflect:"האם אני נאמן לעצמי האמיתי, גם כשזה לא נוח או לא פופולרי?"},
+      {name:"מקלעת השמש", elements:["water","fire"],
+        func:"מרכז עצבי גדול הממוקם בבטן העליונה, קשור למערכת העצבים האוטונומית, ומהווה קו הגבול בין המרכזים האנרגטיים התחתונים, החומריים יותר, לבין המרכזים העליונים, הרוחניים יותר.",
+        meaning:"מסמלת את האגו, העצמי, הערך העצמי, הביטחון העצמי והחיבור לאני הפנימי. קשורה ליסוד האדמה, וכשמבקשים לחזק תמיכה ויציבות אצל מטופל אפשר לעבוד גם עליה וגם על האדמה עצמה. חלק מהמערכת הרגשית, יחד עם הוואגוס והאדרנל.",
+        reflect:"היכן אני זקוק ליותר תמיכה ויציבות כרגע?"},
+      {name:"מקלעת מותני", elements:["earth","water"],
+        func:"יושבת באזור השקע שמתחת לעצם המקבילה למרפק או לברך, באזור האגן.",
+        meaning:"מדברת על היכולת לתת לעצמי ולקבל תמיכה, במיוחד במצבי מצוקה, פחד, חרדה או טראומה, כשהעולם הפנימי מתערער והאדם אינו יודע עוד באיזה מקום לאחוז. יושבת בדיוק על הגבול שבין יסוד האדמה ליסוד המים, ואם האדמה מספקת תמיכה פיזית, מקלעת מותני מספקת תמיכה רגשית. קשורה גם לתנועה ולפעולה, שכן רק כשיש תחושת תמיכה אפשר לצאת ממנה אל פעולה בעולם.",
+        reflect:"במי או במה אני נשען כשהעולם הפנימי שלי מתערער?"},
+      {name:"עצב הוואגוס", elements:["water"],
+        func:"העצב הקרניאלי הארוך ביותר בגוף, יוצא מהראש ומתפצל לשני צדדים עד אזור האגן. עצב המערכת הפאראסימפתטית, מערכת הרוגע והשלווה. מרפה שרירים, מרגיע חושים, מפעיל נשימות עמוקות ומאפשר למערכת העיכול לפרק ולספוג כראוי.",
+        meaning:"מדבר על אמון, אהבה, יכולת קבלה והרפיה. עובדים עליו כשרוצים להרגיע ולהרפות, במקרי עצירות, ואצל אנשים עם גמגום, חוסר ביטחון או מתח מתמיד.",
+        pathologies:"חשוב לעבוד עליו תמיד בעדינות רבה, שכן עבודה חזקה מדי עלולה לגרום לבחילה או סחרחורת.",
+        reflect:"כמה אני מאפשר לעצמי לנוח ולהרפות, בלי צורך מתמיד לפעול או לשלוט?"}
+    ]
+  },
+  {
+    id:"immune", name:"מערכת החיסון והלימפה", emoji:"🛡️",
+    desc:"אחראית על הגנת הגוף מפני איומים חיצוניים ופנימיים, ועל ניקוי וסינון של נוזלי הגוף. ברוחניות מדברת על היכולת ללמוד את השיעור החיובי מכל חוויה, גם השליליות שבהן. בלוטת התימוס, שגם היא חלק ממערכת החיסון, מפורטת תחת המערכת ההורמונלית והרגשית, לצד שאר איברי אותה מערכת ברפלקסולוגיה.",
+    organs:[
+      {name:"הטחול", elements:["earth","water"], sefirah:"הוד",
+        func:"מסנן דם, ממחזר תאי דם אדומים, וחלק ממערכת החיסון. ברפואה הסינית משויך פיזית ליסוד האדמה, אך מבחינה רגשית ליסוד המים.",
+        meaning:"מקושר ליכולת להכיר באמת, לקבל ולהודות, ולסנן מה שייך ומה זר לנו. מבטא עצב מתמשך ותחושת אשמה, לרוב הפנמה של רגש בניגוד לכעס של הכבד שיוצא כלפי חוץ. קשור גם ללידה של רעיונות ומחשבות חדשות, ולשיעור החיובי (ההמתקה) שהאדם לומד מכל חוויה.",
+        pathologies:"עייפות, ליחה, חולשה כללית, חולשה חיסונית, אנמיה, הפרעות אכילה ומצבי בצקת עשויים להצביע על עבודה נדרשת על הטחול.",
+        reflect:"יש משהו שאני עדיין לא הודיתי בו, כלפי עצמי או כלפי מישהו אחר?"},
+      {name:"מערכת הלימפה", elements:["water"],
+        func:"מנקזת נוזלים ותומכת בתגובה החיסונית, מערכת פסיבית לחלוטין הנעה בעזרת שרירי הגוף, זרימת הדם ומערכת הנשימה. אחראית על שטיפת תאי הדם הלבנים ותזונת תאי הגוף מבפנים.",
+        meaning:"קשורה לניקוי רגשי, לזרימה רגשית ולהתחדשות פנימית. מייצגת את היכולת לשחרר ולטהר רגשות ודפוסים ישנים.",
+        pathologies:"בצקות והצטברות נוזלים משקפות עומס רגשי ותקיעות אנרגטית.",
+        extra:"בלוטות צוואריות קשורות לביטוי ולתקשורת. בלוטות בית השחי קשורות לזרימת רגשות ביחסים. בלוטות מפשעה קשורות למיניות וליצירתיות. בלוטות בטניות קשורות לעיכול רגשי של חוויות ויחסים.",
+        reflect:"אילו רגשות או דפוסים ישנים אני מוכן סוף סוף לשחרר?"}
+    ]
+  },
+  {
+    id:"cardio", name:"מערכת הלב וכלי הדם", emoji:"❤️",
+    desc:"מזרימה דם, חמצן וחומרים מזינים לכל תא בגוף. שייכת גם ליסוד המים וגם ליסוד האש. הלב הוא המשכן הרוחני המרכזי, ומכאן שלמערכת יש קשר עמוק לאהבה, לקשרים ולזרימת החיים.",
+    organs:[
+      {name:"הלב", elements:["fire","water"], sefirah:"תפארת",
+        func:"המשאבה המרכזית, מזרימה דם לכל חלקי הגוף. שריר מעורב, יחיד מסוגו, המשלב שרירים חלקים ואדומים, רצוניים ובלתי רצוניים גם יחד, וכמעט אינו נח לעולם. יש לו קוצבים חשמליים משלו, לא רק הוראות מהמוח. ביהדות נחשב הלב גם למרכז המחשבה, ולכן עבודה עליו יכולה להפעיל גם את השכל.",
+        meaning:"המקדש הפנימי של האדם, מקום הסליחה והאהבה, ומרכז החיבור בין הגוף לנשמה, נחשב למושב האהבה המותנית. מסמל אהבה, חמלה וקשר עמוק. מדבר גם על הפרדה בין עיקר לתפל, לא כל דבר ראוי שנכניס אליו, ולכן מי שמכניס ללב כל דבר קטן וטריוויאלי, עובדים אצלו גם על הלב וגם על המעי הדק. באיזון, הלב הוא החיבור לנקודת האמת של האדם, לערך העצמי שלו ללא תנאי, הידיעה שהוא אהוב ומוערך רק בזכות היותו, בלי צורך להוכיח דבר.",
+        pathologies:"דופק לא סדיר מסמל קושי בהבעת אהבה באופן עקבי, אי יציבות רגשית ופחדים עמוקים. התקף לב מסמל חסימה בזרימת האהבה ולב סגור, קריאה דרמטית לפתוח את הלב. גמגום, שאינו בעיה פיזית אלא רגשית של חוסר ביטחון, מכוון גם הוא לעבודה על הלב.",
+        extra:"עובדים על הלב כשרוצים לעורר אומץ, בקשיי בהירות מחשבתית או זרימה רגשית, בבעיות שינה, ואצל אנשים שקשה להם לסלוח או להיות במרכז חייהם שלהם. מערכת הלב וכלי הדם מדברת גם על מערכות היחסים המשפחתיות, ולעיתים דווקא מי שמרגיש מודר או חלש יותר במשפחתו יסבול מבעיה כמו אנמיה.",
+        reflect:"כמה מקום אני נותן לאהבה לזרום בחיי, ומה סוגר אותי? האם אני יודע שאני שווה ואהוב גם בלי לעשות דבר כדי להוכיח את זה?"},
+      {name:"עוטף הלב (פריקרד)", elements:["fire","earth"],
+        func:"השריר העוטף ומגן על הלב, כמו חומה סביב מקדש, ממש כפי שיסוד האדמה מגן ומכיל את יסוד האש.",
+        meaning:"משקף את האיזון העדין בין פתיחות לסגירות רגשית. מטפלים בו בעדינות מיוחדת, בתנועות סיבוביות רציפות ולא בלחיצה עמוקה, אצל מי שחווה פריצה של גבולותיו, פיזית או רגשית, כמו בגידת אמון, אבל, או ידיעה קשה ששברה את הלב. מסייע לאסוף את האדם בחזרה פנימה ולבנות מחדש את תחושת ההגנה הפנימית. ברפלקסולוגיה נעבד לרוב יחד עם בלוטת התימוס, כאזור אחד במערכת הרגשית.",
+        reflect:"יש גבול שנפרץ אצלי לאחרונה, ועדיין לא החלים כמו שצריך?"},
+      {name:"כלי הדם", elements:["fire","water"],
+        func:"מובילים דם מהלב ואליו, לכל תא בגוף.",
+        meaning:"מקושרים לזרימת החיים ולקשר למערכות היחסים המשפחתיות. העורקים מובילים דם מהלב ומייצגים נתינה, הוורידים מחזירים דם ללב ומייצגים קבלה.",
+        pathologies:"לחץ דם גבוה עשוי לשקף לחץ רגשי מתמשך וקושי בשחרור. בעיות מחזור דם משקפות קושי בזרימה עם החיים ותקיעות אנרגטית.",
+        reflect:"אני יותר בצד הנותן או בצד המקבל במערכות היחסים שלי? מה קורה לי כשאני צריך לקבל?"},
+      {name:"הדם", elements:["fire","water"],
+        func:"נושא חמצן וחומרים מזינים, מסלק פסולת, סופג מזון מהמעי הדק ומפזר אותו בגוף, ומחמם את הגוף.",
+        meaning:"שילוב של אש ומים, מסמל את החיים עצמם ואת החיוניות, ומדבר על זרימת מערכות היחסים שלנו. כדוריות אדומות מסמלות הפצת חיות וחמצון. כדוריות לבנות מסמלות הבחנה, הגנה ומנגנוני הגנה פסיכולוגיים. טסיות דם מסמלות ריפוי, סגירה והחלמה מפגיעות.",
+        pathologies:"אנמיה מסמלת חוסר חיוניות ועייפות רגשית ופיזית. קושי בזרימת דם למקום מסוים בגוף עשוי לדבר על קושי בהזנה וביחסים עם האיבר שנמצא שם.",
+        reflect:"מאיפה אני שואב חיוניות בחיי, ואיפה אני מרגיש מרוקן?"}
+    ]
+  },
+  {
+    id:"respiratory", name:"מערכת הנשימה", emoji:"🫁",
+    desc:"אחראית על חילופי חמצן ופחמן דו חמצני, ומהווה את הקשר שלנו לעולם החיצוני, מה שאנחנו מכניסים פנימה ומוציאים החוצה. שייכת גם ליסוד האש וגם ליסוד האוויר.",
+    organs:[
+      {name:"קנה הנשימה", elements:["air"],
+        func:"צינור סחוסי המחבר בין הגרון לריאות, מוליך אוויר פנימה והחוצה, ומוגן מפני שכיבה מלאה בעזרת טבעות סחוס שמחזיקות אותו פתוח תמיד.",
+        meaning:"מסמל את ערוץ המעבר הישיר בין מה שאנחנו רוצים לבטא לבין האוויר שיוצא בפועל דרך הגרון והפה, קו הביטוי הישיר שלנו כלפי חוץ.",
+        pathologies:"תחושת חנק, גירוד או קוצר נשימה באזור זה עשויים לשקף קושי לתת ביטוי חופשי לצרכים ולרגשות.",
+        reflect:"יש משהו שאני 'נחנק' ממנו לומר בקול?"},
+      {name:"ריאות", elements:["air","water"], sefirah:"תפארת",
+        func:"סופגות חמצן ומוציאות פחמן דו חמצני, חללים ריקים ששואפים תמיד להתמלא. מוגנות על ידי הצלעות, מחממות את האוויר הקר שאנו נושמים ומשמשות כגבול ותקשורת בין הפנים לחוץ.",
+        meaning:"הקשר שלנו לעולם החיצוני, המקום שממנו אנחנו מכניסים את העולם פנימה ומוציאים אותו החוצה. מדברות על הגבולות שלנו מול העולם ועל היכולת לקבל ולהכיל שפע, וגם על השחרור, הביטוי כלפי חוץ, והשאיפות שלנו בחיים. קשורות ליכולת לנטרל מחשבות ורגשות שליליים ולהציב להם גבול, וליכולת לקבל את הטוב ולהיפתח לעולם.",
+        pathologies:"בעיות נשימה קשורות לעיתים קרובות לדמות האב או לדמות הגברית בחיינו. עובדים על הריאות כשיש קושי בביטוי, בנשימה מלאה או בסבלנות.",
+        sides:{right:"ריאה ימין קשורה לספירת חסד.", left:"ריאה שמאל קשורה לספירת גבורה."},
+        reflect:"כמה מקום אני מרשה לעצמי לתפוס בעולם? האם אני נותן לעצמי לשאוף שפע ולנשוף את מה שכבר לא משרת אותי?"}
+    ]
+  },
+  {
+    id:"digestive", name:"מערכת העיכול", emoji:"🌿",
+    desc:"אחראית על פירוק המזון, ספיגת חומרים מזינים וסילוק פסולת. ברוחניות זהו תהליך העיכול הרגשי, האופן שבו אנו מעבדים חוויות ורגשות מהמציאות: הכנעה בקיבה, הבדלה במעי, החלטה בכבד, והמתקה בטחול.",
+    organs:[
+      {name:"קיבה", elements:["earth","water"], sefirah:"תפארת",
+        func:"פירוק ראשוני של המזון, קולטת ומחליטה מה טוב לה ומה לפלוט מהגוף.",
+        meaning:"קשורה ליכולת לעכל חוויות ורעיונות חדשים, לתחושת שביעות רצון ולקבלת המציאות. השלב הראשון הרגשי המקביל הוא הכנעה, קבלת הרגש כפי שהוא בלי לשפוט אותו.",
+        pathologies:"קשיי עיכול, צרבת וכאבי בטן עשויים לשקף קושי בעיכול מצבי חיים, התנגדות למציאות וכעסים מודחקים.",
+        reflect:"האם אני מאפשר לעצמי לחוות רגש בלי לשפוט אותו מיד?"},
+      {name:"ושט", elements:["water"],
+        func:"מחבר בין הפה לקיבה, מעביר מזון פנימה.",
+        meaning:"מסמל את היכולת להעביר מידע ורעיונות פנימה, להפנים חוויות ולעבד אותן.",
+        pathologies:"תחושת חנק או לחץ בושט עשויה לשקף קושי בקבלת רעיונות או חוויות חדשות.",
+        reflect:"יש רעיון או חוויה חדשה שאני מתקשה לקבל לתוכי כרגע?"},
+      {name:"מעי דק", elements:["earth","water"], sefirah:"תפארת",
+        func:"ממשיך את הפירוק לאחר הקיבה, הכבד, הלבלב והתריסריון, וסופג את רוב החומרים המזינים. בדופנו יושבים גופים לימפתיים המונעים חדירת חיידקים לזרם הדם. מסייע ללב לפרק עודפי חום ולפזר את המזון לכל הגוף, ולכן נחשב יחד עם עוטף הלב לשני קווי ההגנה על הלב.",
+        meaning:"מפריד בין העיקר לתפל, מה שראוי שהגוף יספוג ומה שראוי שיפלט כפסולת. ברמה הרגשית, לא כל מה שאנחנו סופגים מהעולם ומהיחסים שלנו צריך להיכנס פנימה ולהזין אותנו. השלב הרגשי המקביל הוא הבדלה, בירור בין טוב לרע, נחוץ ומקדם.",
+        reflect:"מה אני סופג מהעולם שבאמת מזין אותי, ומה כדאי לי לשחרר החוצה בלי להיכנס פנימה?"},
+      {name:"כבד", elements:["fire"], sefirah:"תפארת",
+        func:"מסנן את הדם מרעלים, עושה סלקציה אחרונה של חומרים, מייצר מרה ומאזן חומרים. ברפלקסולוגיה נחשב לצוהר החיצוני שלנו, כמו גנרל המתכנן מהלכים קדימה.",
+        meaning:"קשור לכוח החיים, לרצון לחיות ולשרוד, ולרגשות כמו תשוקה, כעס, נקם וקנאה. מסמל את היכולת היצירתית והתכנונית ואת החכמה המצטברת מניסיון החיים. השלב הרגשי המקביל הוא הבדלה סופית וקבלת החלטה, בין טוב לרע.",
+        pathologies:"בעיות בכבד עשויות לשקף כעסים שלא עובדו, קושי בסליחה, נוקשות מחשבתית וטינה. בצורתו המתוקנת הכבד מבטא ענווה, צניעות ושליטה בתגובות אימפולסיביות.",
+        reflect:"יש כעס ישן שעוד לא עיבדתי, ועדיין נושא אותי במקום שאני נושא אותו?"},
+      {name:"כיס המרה", elements:["fire"],
+        func:"מאחסן מרה ומשחרר אותה לעיכול שומנים.",
+        meaning:"מסמל את היכולת שלנו לעמוד על שלנו, את האומץ להיות מי שאנחנו, ואת יכולת קבלת ההחלטות.",
+        pathologies:"אבנים בכיס המרה עשויות לשקף התנהגות של אדם שמנסה להיות בסדר עם כולם אך מתפרץ במקומות ציבוריים, מתח בין הרצון לרצות אחרים לצורך להיות אותנטי.",
+        reflect:"עד כמה אני מוכן לעמוד על שלי, גם כשזה לא נוח לאחרים?"},
+      {name:"לבלב ותריסריון", elements:["earth"],
+        func:"הלבלב מפריש אינסולין הישר אל הדם ומסייע לסוכר להיכנס לתאים, ומפריש גם גלוקגון המשחרר סוכר מהכבד בשעת חירום. התריסריון ממשיך את פירוק המזון בעזרת נוזלים ואנזימים, ומקבל חומציות מהקיבה לצד בסיסיות מהכבד ומהלבלב.",
+        meaning:"מייצגים את תחושת המתיקות שיש לנו מהחיים, את היכולת ליהנות ואת האיזון בין מה שאנחנו נותנים למה שאנחנו מקבלים בחזרה.",
+        pathologies:"סוכרת עשויה לשקף אדם שצורך מהחיים יותר משהוא נותן, ובכל זאת לא חש שמתוק לו. איזון מופר בין חומציות לבסיסיות בתריסריון עלול ליצור כיב, ביטוי של אדם שאוכל את עצמו.",
+        reflect:"אני נותן לעצמי ליהנות מהחיים באותה מידה שאני נותן לאחרים?"},
+      {name:"התוספתן (אפנדיקס)", elements:["earth","water"],
+        func:"יושב בחיבור שבין המעי הדק למעי הגס, מכיל בחלקו התחתון ריכוז גדול של פרוביוטיקה ובחלקו העליון תאים לבנים.",
+        meaning:"מהווה סוג של שומר גבול בין העולם החיצוני, שממנו עלולים להיכנס טפילים או חיידקים, לבין המערכת הפנימית, ומהווה גם מאגר חירום לתאים פרוביוטיים. מדגיש את חשיבותם של תהליכים טבעיים כמו לידה נרתיקית.",
+        reflect:"מה עוזר לי לשמור על תחושת ביטחון פנימית מול מה שמגיע מבחוץ?"},
+      {name:"קנדידה (כתופעה)", elements:["earth","water","air"], sefirah:"תפארת",
+        func:"פטריית שמר הנמצאת באופן טבעי במעיים, משגשגת על חשבון הגוף כשמאבד איזון.",
+        meaning:"קשורה למקומות של שאיבת אנרגיה רגשית או פיזית, לחוסר ערך עצמי ולקושי בהצבת גבולות בין הפנים לחוץ, למקומות שבהם העזרה שלנו מנוצלת בלי הכרה בערך שלנו.",
+        pathologies:"כאבי בטן, נפיחות בקיבה, שלשול, עצירות, גזים, עייפות כבדה ודיכאון.",
+        reflect:"יש מקום שבו אני מרגיש מנוצל בלי שמכירים בערך שלי שם?"}
+    ]
+  },
+  {
+    id:"urinary", name:"מערכת השתן", emoji:"💧",
+    desc:"אחראית על סינון הדם וויסות הנוזלים בגוף. ברמה הרגשית מדברת על היכולת שלנו לסנן רגשות ומחשבות ולשמור רק את מה שמשרת אותנו.",
+    organs:[
+      {name:"כליות", elements:["water"], sefirah:"תפארת, נצח, הוד",
+        func:"מסננות את הדם ומווסתות נוזלים, האיבר המרכזי של אזור המים.",
+        meaning:"מדברות על כוח החיות ועל כוח הרגש כאחד, על היכולת להתמיד רגשית ולהיות חזקים מול פחדים פנימיים וחיצוניים. באיזון מבטאות סינון רגשי בריא, יש לנו רגשות חיוביים ושליליים אך אנחנו יודעים ללמוד מהם ולשחרר אותם בלי להיאחז בהם, כמו סינון הדם שהכליות עושות בגוף.",
+        pathologies:"אבנים בכליות עשויות לשקף קושי לעכל חוויות רגשיות עד תום.",
+        sides:{right:"כליה ימין מקושרת לספירת נצח.", left:"כליה שמאל מקושרת לספירת הוד."},
+        reflect:"האם אני מאפשר לעצמי לחוש פחד בלי להיסחף בו? מהם הפחדים שאני עדיין נושא איתי?"},
+      {name:"שלפוחית השתן", elements:["water","earth"],
+        func:"אוגרת שתן ומשחררת אותו, אוגרת בתוכה גם זיכרונות ורגשות רבים ששוכנים בתת המודע.",
+        meaning:"מסמלת את הטריטוריה האישית, הגופנית והנפשית, הגבול של האדם עם עצמו, ממש כפי שבעלי חיים מסמנים טריטוריה דרך השתן.",
+        pathologies:"כשחודרים לשטח האישי של אדם, בהטרדות ובחציית גבולות מכל סוג, עלולות להופיע דלקות בדרכי השתן. סימפטומים כמו איבוד שתן, דלקות ודחיפות מזמינים בירור בנושא הטריטוריה האישית והחדירה לגבולות.",
+        reflect:"הגבולות האישיים שלי ברורים לי? מי לאחרונה חצה אותם, ואיך הגבתי?"}
+    ]
+  }
+];
+
+/* ===================== RENDER: shared helpers ===================== */
+
+function elementTag(key){
+  const e = ELEMENTS[key];
+  if(!e) return '';
+  return `<span class="tag" style="background:${e.bg};color:${e.color};">${e.name}</span>`;
+}
+function sefirahTag(text){
+  if(!text) return '';
+  return `<span class="tag" style="background:var(--sefirah-bg);color:var(--sefirah);">ספירת ${text}</span>`;
+}
+
+function organCardHTML(o, sysName){
+  const tags = [...(o.elements||[]).map(elementTag), sefirahTag(o.sefirah)].join('');
+  const sidesHTML = o.sides ? `
+    <div class="organ-section">
+      <span class="label">משמעות לפי צד</span>
+      <div class="sides">
+        ${o.sides.right ? `<div class="side-box right"><span class="side-label">צד ימין</span><p>${o.sides.right}</p></div>` : ''}
+        ${o.sides.left ? `<div class="side-box left"><span class="side-label">צד שמאל</span><p>${o.sides.left}</p></div>` : ''}
+      </div>
+    </div>` : '';
+  const pathologyHTML = o.pathologies ? `
+    <div class="organ-section pathology">
+      <span class="label">פתולוגיות אופייניות</span>
+      <p>${o.pathologies}</p>
+    </div>` : '';
+  const reflectHTML = o.reflect ? `
+    <div class="organ-section reflect">
+      <span class="label">שאלות להתבוננות</span>
+      <p>${o.reflect}</p>
+    </div>` : '';
+  return `
+    <div class="organ-card" data-name="${o.name}">
+      <div class="organ-head" onclick="this.parentElement.classList.toggle('open')">
+        <div>
+          <h3>${o.name}</h3>
+          ${sysName ? `<div class="organ-meta">${sysName}</div>` : ''}
+          <div class="organ-tags">${tags}</div>
+        </div>
+        <svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="organ-body">
+        <div class="organ-section"><span class="label">תפקיד פיזי</span><p>${o.func}</p></div>
+        <div class="organ-section"><span class="label">משמעות רוחנית ורגשית</span><p>${o.meaning}</p></div>
+        ${pathologyHTML}
+        ${o.extra ? `<div class="organ-section"><span class="label">להעמקה</span><p>${o.extra}</p></div>` : ''}
+        ${sidesHTML}
+        ${reflectHTML}
+      </div>
+    </div>`;
+}
+
+/* ===================== SYSTEMS TAB ===================== */
+
+const grid = document.getElementById('systemsGrid');
+
+function renderSystemsGrid(){
+  grid.innerHTML = SYSTEMS.map(s => `
+    <div class="system-card" onclick="openSystem('${s.id}')">
+      <span class="emoji">${s.emoji}</span>
+      <h3>${s.name}</h3>
+      <div class="count">${s.organs.length} איברים</div>
+    </div>
+  `).join('');
+}
+
+function openSystem(id){
+  const sys = SYSTEMS.find(s=>s.id===id);
+  document.getElementById('sysEmoji').textContent = sys.emoji;
+  document.getElementById('sysTitle').textContent = sys.name;
+  document.getElementById('sysDesc').textContent = sys.desc;
+  document.getElementById('organsList').innerHTML = sys.organs.map(o=>organCardHTML(o)).join('');
+  showView('systemView');
+  window.scrollTo(0,0);
+}
+
+/* ===================== ELEMENTS TAB ===================== */
+
+let currentElement = 'fire';
+
+function renderElementSelect(){
+  const el = document.getElementById('elementSelect');
+  el.innerHTML = ELEMENT_ORDER.map(key=>{
+    const e = ELEMENTS[key];
+    const active = key===currentElement;
+    return `<button class="element-select-btn" style="background:${active? e.solid : e.bg};color:${active?'#fff':e.color};" onclick="selectElement('${key}')">
+      <span class="dot" style="background:${active?'#fff':e.solid};"></span>${e.name}
+    </button>`;
+  }).join('');
+}
+
+function selectElement(key){
+  currentElement = key;
+  renderElementSelect();
+  renderElementDetail();
+  renderInvasionsList();
+}
+
+function renderElementDetail(){
+  const e = ELEMENTS[currentElement];
+  const el = document.getElementById('elementDetail');
+  el.innerHTML = `
+    <div class="element-hero" style="background:${e.solid};">
+      <h2>${e.name}</h2>
+      <p class="tagline">${e.tagline}</p>
+    </div>
+    <div class="element-card-body">
+      <div class="element-detail-section">
+        <span class="label" style="color:${e.color};">מהות היסוד</span>
+        <p>${e.essence}</p>
+      </div>
+      <div class="element-detail-section">
+        <span class="label" style="color:${e.color};">איך זה נראה במאוזן</span>
+        <p>${e.balanced}</p>
+      </div>
+      <div class="element-detail-section">
+        <span class="label" style="color:${e.color};">תכונה חיובית במידה נכונה</span>
+        <p>${e.positive}</p>
+      </div>
+      <div class="element-detail-section">
+        <span class="label" style="color:${e.color};">עודף וחוסר</span>
+        <div class="balance-grid">
+          <div class="balance-box" style="background:${e.bg};"><span class="side-label" style="color:${e.color};">עודף</span><p>${e.excess}</p></div>
+          <div class="balance-box" style="background:#eee;"><span class="side-label" style="color:#888;">חוסר</span><p>${e.deficiency}</p></div>
+        </div>
+      </div>
+      <div class="element-detail-section">
+        <span class="label" style="color:${e.color};">פתולוגיות אופייניות</span>
+        <p>${e.pathologies}</p>
+      </div>
+      <div class="element-detail-section">
+        <span class="label" style="color:${e.color};">מנגנון ההגנה</span>
+        <p>${e.defense}</p>
+      </div>
+      <div class="practice-box">
+        <span class="label">תרגול לאיזון היסוד</span>
+        <p>${e.practice}</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderInvasionsList(){
+  const wrap = document.getElementById('invasionsList');
+  const others = ELEMENT_ORDER.filter(k=>k!==currentElement);
+  const fromE = ELEMENTS[currentElement];
+  let html = `
+    <div class="invasion-item self-item">
+      <div class="invasion-head" style="background:${fromE.bg};color:${fromE.color};" onclick="this.parentElement.classList.toggle('open')">
+        <span>${fromE.name} בתחום ${fromE.name} עצמו (עודף וחוסר)</span>
+        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="invasion-body"><p>${fromE.self}</p></div>
+    </div>
+    <div class="invasion-section-label">כש${fromE.name} פולש לתחום של יסוד אחר</div>`;
+  html += others.map(toKey=>{
+    const toE = ELEMENTS[toKey];
+    const text = INVASIONS[currentElement][toKey];
+    return `
+      <div class="invasion-item">
+        <div class="invasion-head" style="background:${toE.bg};color:${toE.color};" onclick="this.parentElement.classList.toggle('open')">
+          <span>${fromE.name} פולש לתחום ${toE.name}</span>
+          <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="invasion-body"><p>${text}</p></div>
+      </div>`;
+  }).join('');
+  wrap.innerHTML = html;
+}
+
+/* ===================== SEFIROT TAB ===================== */
+
+function sefirahCardHTML(s){
+  const lineClass = s.line==='right' ? 'line-right' : s.line==='left' ? 'line-left' : 'line-mid';
+  const lineLabel = s.line==='right' ? 'קו ימין' : s.line==='left' ? 'קו שמאל' : 'קו אמצע';
+  const colorSwatch = s.color ? `<span class="color-swatch" style="background:${s.color};" title="${s.colorName}"></span>${s.colorName}` : '';
+  return `
+    <div class="organ-card">
+      <div class="organ-head" onclick="this.parentElement.classList.toggle('open')">
+        <div>
+          <h3>${s.name}</h3>
+          <div class="organ-tags">
+            <span class="tag line-chip ${lineClass}">${lineLabel}</span>
+            ${s.elementTag ? elementTag(s.elementTag) : ''}
+            ${s.body ? `<span class="tag" style="background:var(--sefirah-bg);color:var(--sefirah);">${s.body}</span>` : ''}
+          </div>
+        </div>
+        <svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="organ-body">
+        <div class="organ-section"><span class="label">המהות</span><p>${s.quality}</p></div>
+        <div class="organ-section"><span class="label">הפנימיות</span><p>${s.inner}</p></div>
+        <div class="organ-section"><span class="label">הכוח שבנפש</span><p>${s.force}</p></div>
+        ${s.color ? `<div class="organ-section"><span class="label">צבע (כפי שמופיע במקורות)</span><p>${colorSwatch}</p></div>` : ''}
+        <div class="organ-section balanced"><span class="label">כשבאיזון</span><p>${s.balanced}</p></div>
+        ${(s.excess && s.deficiency) ? `
+        <div class="organ-section">
+          <span class="label">עודף וחוסר</span>
+          <div class="balance-grid">
+            <div class="balance-box" style="background:var(--fire-bg);"><span class="side-label" style="color:var(--fire);">עודף</span><p>${s.excess}</p></div>
+            <div class="balance-box" style="background:#eee;"><span class="side-label" style="color:#888;">חוסר</span><p>${s.deficiency}</p></div>
+          </div>
+        </div>` : `<div class="organ-section pathology"><span class="label">בחוסר איזון</span><p>${s.imbalance}</p></div>`}
+        ${s.note ? `<div class="organ-section"><span class="label">להעמקה</span><p>${s.note}</p></div>` : ''}
+        ${s.practice ? `<div class="organ-section practice"><span class="label">כיווני עבודה לאיזון</span><p>${s.practice}</p></div>` : ''}
+      </div>
+    </div>`;
+}
+
+function renderSefirot(){
+  document.getElementById('sefirotList').innerHTML = SEFIROT.map(sefirahCardHTML).join('');
+}
+
+/* ===================== VIEW / TAB SWITCHING ===================== */
+
+function showView(id){
+  ['homeView','systemView','elementsView','sefirotView','searchView'].forEach(v=>{
+    document.getElementById(v).style.display = (v===id) ? 'block' : 'none';
+  });
+}
+
+document.getElementById('tabnav').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  document.querySelectorAll('#tabnav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  searchInput.value='';
+  clearBtn.style.display='none';
+  const tab = btn.dataset.tab;
+  if(tab==='systems') showView('homeView');
+  if(tab==='elements') showView('elementsView');
+  if(tab==='sefirot') showView('sefirotView');
+});
+
+function goHome(){
+  const activeTab = document.querySelector('#tabnav button.active').dataset.tab;
+  document.getElementById('search').value='';
+  document.getElementById('clearSearch').style.display='none';
+  if(activeTab==='systems') showView('homeView');
+  if(activeTab==='elements') showView('elementsView');
+  if(activeTab==='sefirot') showView('sefirotView');
+}
+
+/* ===================== SEARCH ===================== */
+
+const searchInput = document.getElementById('search');
+const clearBtn = document.getElementById('clearSearch');
+const resultsList = document.getElementById('resultsList');
+
+function normalize(str){ return (str||'').toLowerCase(); }
+
+function runSearch(q){
+  q = normalize(q.trim());
+  if(!q){ goHome(); return; }
+  clearBtn.style.display='block';
+  showView('searchView');
+
+  let matches = [];
+  SYSTEMS.forEach(sys=>{
+    sys.organs.forEach(o=>{
+      const hay = normalize([
+        o.name, o.func, o.meaning, o.extra||'', o.pathologies||'', o.reflect||'', o.sefirah||'',
+        ...(o.elements||[]).map(k=>ELEMENTS[k].name),
+        sys.name,
+        o.sides ? (o.sides.right+o.sides.left) : ''
+      ].join(' '));
+      if(hay.includes(q)) matches.push({html: organCardHTML(o, sys.name)});
+    });
+  });
+  SEFIROT.forEach(s=>{
+    const hay = normalize([s.name, s.quality, s.inner, s.force, s.balanced||'', s.imbalance, s.excess||'', s.deficiency||'', s.practice||'', s.note||'', s.body||''].join(' '));
+    if(hay.includes(q)) matches.push({html: sefirahCardHTML(s)});
+  });
+
+  if(matches.length===0){
+    resultsList.innerHTML = `<div class="empty-state">לא נמצאו תוצאות עבור "${q}"</div>`;
+  } else {
+    resultsList.innerHTML = `<p style="color:#7d8a85;font-size:0.85rem;margin:6px 0 14px;">${matches.length} תוצאות</p>` +
+      matches.map(m=>m.html).join('');
+  }
+}
+
+searchInput.addEventListener('input', e=> runSearch(e.target.value));
+clearBtn.addEventListener('click', ()=>{ searchInput.value=''; goHome(); });
+
+/* ===================== INIT ===================== */
+renderSystemsGrid();
+renderElementSelect();
+renderElementDetail();
+renderInvasionsList();
+renderSefirot();
+</script>
+</body>
+</html>
