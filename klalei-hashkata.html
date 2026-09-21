@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="כללי ההשקטה">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,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">
+<title>כללי ההשקטה</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Heebo:wght@300;400;500;600&display=swap');
+:root {
+  --bg: #f3ecdb; --surface: #fbf8f0; --surface2: #f0e8d4;
+  --border: #e2d7bb; --border2: #d3c5a2;
+  --deep: #1e3d31; --deep-light: #35594a; --deep-dim: #4a6b5c;
+  --text: #1c2e26; --text-dim: #5c6c62; --text-faint: #93a094;
+  --gold: #1e3d31; --gold-light: #35594a; --gold-dim: #4a6b5c;
+  --blue: #1e3d31; --blue-light: #35594a; --blue-bg: #f0e8d4;
+  --green: #1e3d31; --green-light: #35594a; --green-bg: #f0e8d4;
+  --rose: #1e3d31; --rose-light: #35594a; --rose-bg: #f0e8d4;
+  --purple: #1e3d31; --purple-light: #35594a; --purple-bg: #f0e8d4;
+  --teal: #1e3d31; --teal-bg: #f0e8d4;
+  --amber: #1e3d31; --amber-light: #35594a; --amber-bg: #f0e8d4;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:var(--bg); color:var(--text); font-family:'Heebo',sans-serif; font-weight:300; min-height:100vh; overflow-x:hidden; -webkit-text-size-adjust:100%; }
+.app { max-width:480px; margin:0 auto; min-height:100vh; position:relative; }
+.header { padding:52px 0 0; text-align:center; background:var(--deep); border-bottom:none; position:sticky; top:0; z-index:50; width:100%; }
+.header-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:36px; color:#f4ede0; }
+.header-sub { font-size:13px; color:rgba(244,237,224,0.55); margin-top:3px; letter-spacing:0.04em; }
+.view { display:none; animation:fadeIn 0.25s ease; }
+.view.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.page-content { padding:0 16px 110px; }
+.section-head { display:flex; align-items:center; gap:10px; padding:20px 0 14px; border-bottom:1px solid var(--border); margin-bottom:16px; }
+.back-btn { background:none; border:1px solid var(--border2); color:var(--text-dim); padding:6px 14px; border-radius:16px; cursor:pointer; font-size:16px; font-family:'Heebo',sans-serif; -webkit-appearance:none; }
+.section-title { font-family:'Frank Ruhl Libre',serif; font-size:31px; font-weight:700; color:var(--text); }
+.home-shem { background:var(--deep); margin:0; padding:32px 20px; text-align:center; border-bottom:3px solid var(--deep-light); width:100%; }
+.home-shem-text { font-family:'Times New Roman',serif; font-size:48px; font-weight:900; color:#f4ede0; letter-spacing:0.15em; direction:rtl; line-height:1.4; }
+.home-shem-sub { font-size:17px; color:rgba(244,237,224,0.5); margin-top:8px; letter-spacing:0.08em; }
+.home-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:16px 0; }
+.home-btn { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 14px; cursor:pointer; text-align:center; -webkit-appearance:none; }
+.hb-icon { font-size:38px; margin-bottom:8px; display:block; color:var(--deep); }
+.hb-label { font-family:'Frank Ruhl Libre',serif; font-size:24px; font-weight:700; color:var(--text); display:block; }
+.hb-sub { font-size:18px; color:var(--text-faint); display:block; margin-top:3px; }
+.home-btn.gold, .home-btn.blue, .home-btn.green, .home-btn.rose, .home-btn.purple, .home-btn.teal, .home-btn.amber { border-color:var(--border2); }
+.home-btn.amber { width:100%; }
+.home-btn.wide-center { grid-column: span 2; }
+.kelim-list { display:flex; flex-direction:column; gap:10px; padding:4px 0; }
+.kelim-item { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 18px; cursor:pointer; display:flex; align-items:center; gap:14px; }
+.ki-icon { font-size:29px; color:var(--deep); }
+.ki-info { flex:1; }
+.ki-title { font-family:'Frank Ruhl Libre',serif; font-size:25px; font-weight:700; color:var(--text); }
+.ki-sub { font-size:19px; color:var(--text-faint); margin-top:2px; }
+.ki-arrow { color:var(--text-faint); font-size:17px; }
+.kelim-item.gold, .kelim-item.blue, .kelim-item.green, .kelim-item.rose, .kelim-item.purple, .kelim-item.amber { border-right:none; }
+.kli-hero { border-radius:16px; padding:24px 20px; margin-bottom:14px; text-align:center; }
+.kli-hero.gold, .kli-hero.blue, .kli-hero.green, .kli-hero.rose, .kli-hero.purple, .kli-hero.amber { background:linear-gradient(135deg,#fbf8f0,#f0e8d4); border:1px solid var(--border2); }
+.kli-hero-icon { font-size:43px; margin-bottom:10px; color:var(--deep); }
+.kli-hero-title { font-family:'Frank Ruhl Libre',serif; font-size:32px; font-weight:700; margin-bottom:6px; }
+.kli-hero-desc { font-size:20px; color:var(--text-dim); line-height:1.6; }
+.kli-hero.gold .kli-hero-title, .kli-hero.blue .kli-hero-title, .kli-hero.green .kli-hero-title, .kli-hero.rose .kli-hero-title, .kli-hero.purple .kli-hero-title, .kli-hero.amber .kli-hero-title { color:var(--deep); }
+.step-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:10px; }
+.step-num { font-size:17px; font-weight:600; letter-spacing:0.1em; color:var(--text-faint); margin-bottom:6px; text-transform:uppercase; }
+.step-title { font-family:'Frank Ruhl Libre',serif; font-size:25px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.step-body { font-size:20px; color:var(--text-dim); line-height:1.75; }
+.sep-label { font-size:12px; font-weight:600; letter-spacing:0.1em; color:var(--text-faint); text-transform:uppercase; padding:14px 0 8px; display:flex; align-items:center; gap:8px; }
+.sep-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.quick-pasuk { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:8px; }
+.qp-text { font-family:'Frank Ruhl Libre',serif; font-size:24px; color:var(--text); line-height:1.6; direction:rtl; }
+.qp-source { font-size:18px; color:var(--text-faint); margin-top:4px; }
+.quick-shem { background:#0a0908; border-radius:12px; padding:20px; margin-bottom:8px; text-align:center; cursor:pointer; }
+.qs-letters { font-family:'Times New Roman',serif; font-size:40px; font-weight:900; color:#fff; letter-spacing:0.12em; direction:rtl; line-height:1.8; text-shadow:0 0 6px #fff,0 0 20px rgba(255,255,255,0.6),0 0 40px rgba(220,220,255,0.3); animation:pulse 5s ease-in-out infinite; }
+.qs-mida { font-size:14px; color:rgba(255,255,255,0.4); margin-top:6px; }
+.info-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:10px; }
+.info-card-title { font-family:'Frank Ruhl Libre',serif; font-size:24px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.info-card-body { font-size:20px; color:var(--text-dim); line-height:1.75; }
+.mood-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:4px 0 16px; }
+.mood-btn { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 12px; cursor:pointer; text-align:center; -webkit-appearance:none; }
+.mood-icon { font-size:36px; margin-bottom:6px; display:block; color:var(--deep); }
+.mood-label { font-family:'Frank Ruhl Libre',serif; font-size:23px; font-weight:600; display:block; color:var(--text); }
+.mood-result { display:none; animation:fadeIn 0.25s ease; }
+.mood-result.open { display:block; }
+.cat-label { font-size:12px; font-weight:600; letter-spacing:0.1em; color:var(--text-faint); text-transform:uppercase; padding:16px 0 8px; display:flex; align-items:center; gap:8px; }
+.cat-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.cat-label:first-child { padding-top:4px; }
+.pasuk-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 18px; margin-bottom:8px; }
+.pasuk-text { font-family:'Frank Ruhl Libre',serif; font-size:25px; color:var(--text); line-height:1.6; direction:rtl; }
+.pasuk-source { font-size:18px; color:var(--text-faint); margin-top:5px; }
+.shem-intro { font-size:20px; color:var(--text-dim); line-height:1.7; text-align:center; padding:4px 0 16px; }
+.mida-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.mida-card { background:#0a0908; border-radius:16px; padding:24px 14px; text-align:center; cursor:pointer; border:1px solid #1e1e1e; }
+.mida-shem-glow { font-family:'Times New Roman',serif; font-size:46px; font-weight:900; color:#eee; direction:rtl; line-height:1.9; letter-spacing:0.05em; margin-bottom:10px; text-shadow:0 0 6px #fff,0 0 12px rgba(255,255,255,0.7),0 0 25px rgba(220,220,255,0.4),0 0 55px rgba(180,180,240,0.2); animation:pulse 5s ease-in-out infinite; }
+.mida-label { font-family:'Frank Ruhl Libre',serif; font-size:24px; font-weight:700; color:rgba(255,255,255,0.85); margin-bottom:4px; }
+.mida-desc { font-size:18px; color:rgba(255,255,255,0.35); line-height:1.4; }
+@keyframes pulse {
+  0%   { text-shadow:0 0 6px #fff,0 0 12px rgba(255,255,255,0.7),0 0 25px rgba(220,220,255,0.4),0 0 55px rgba(180,180,240,0.2),0 0 90px rgba(160,160,220,0.1); }
+  50%  { text-shadow:0 0 8px #fff,0 0 18px rgba(255,255,255,0.8),0 0 38px rgba(220,220,255,0.5),0 0 75px rgba(180,180,240,0.28),0 0 120px rgba(160,160,220,0.15); }
+  100% { text-shadow:0 0 6px #fff,0 0 12px rgba(255,255,255,0.7),0 0 25px rgba(220,220,255,0.4),0 0 55px rgba(180,180,240,0.2),0 0 90px rgba(160,160,220,0.1); }
+}
+.neshima-visual { background:#0a0908; border-radius:16px; padding:32px 20px; text-align:center; margin-bottom:14px; }
+.neshima-shem { font-family:'Times New Roman',serif; font-size:60px; font-weight:900; color:#fff; direction:rtl; letter-spacing:0.15em; margin-bottom:20px; line-height:1.8; text-shadow:0 0 6px #fff,0 0 20px rgba(255,255,255,0.6),0 0 50px rgba(220,220,255,0.3); animation:pulse 5s ease-in-out infinite; }
+.neshima-steps { display:flex; flex-direction:column; gap:12px; }
+.neshima-step { padding:12px 16px; border-radius:10px; text-align:right; }
+.neshima-step.inhale { background:rgba(74,127,165,0.15); border:1px solid rgba(74,127,165,0.3); }
+.neshima-step.hold { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+.neshima-step.exhale { background:rgba(74,122,90,0.15); border:1px solid rgba(74,122,90,0.3); }
+.ns-title { font-family:'Frank Ruhl Libre',serif; font-size:24px; font-weight:700; color:#fff; margin-bottom:4px; }
+.ns-body { font-size:19px; color:rgba(255,255,255,0.5); line-height:1.5; }
+.bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:rgba(243,236,219,0.97); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-top:1px solid var(--border); display:flex; padding:6px 0; padding-bottom:max(18px,env(safe-area-inset-bottom)); z-index:100; }
+.bnav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 4px; cursor:pointer; background:none; border:none; color:var(--text-faint); -webkit-appearance:none; }
+.bnav-item.active { color:var(--gold); }
+.bnav-icon { font-size:26px; }
+.hb-icon svg, .ki-icon svg, .kli-hero-icon svg, .mood-icon svg, .bnav-icon svg { width:1em; height:1em; stroke:currentColor; display:inline-block; vertical-align:-0.15em; }
+.bnav-label { font-size:16px; font-family:'Heebo',sans-serif; font-weight:500; }
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:200; align-items:flex-end; }
+.overlay.open { display:flex; }
+.sheet { background:var(--bg); border-top:1px solid var(--border); border-radius:20px 20px 0 0; padding:20px 20px; padding-bottom:max(40px,env(safe-area-inset-bottom)); width:100%; max-width:480px; margin:0 auto; animation:slideUp 0.28s ease; max-height:80vh; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+@keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+.sheet-handle { width:36px; height:3px; background:var(--border2); border-radius:2px; margin:0 auto 18px; }
+.sheet-shem-bg { background:#0a0908; border-radius:14px; padding:32px 20px; margin-bottom:16px; text-align:center; }
+.sheet-shem-glow { font-family:'Times New Roman',serif; font-size:76px; font-weight:900; color:#eee; direction:rtl; letter-spacing:0.08em; line-height:1.9; text-shadow:0 0 6px #fff,0 0 12px rgba(255,255,255,0.7),0 0 25px rgba(220,220,255,0.4),0 0 55px rgba(180,180,240,0.2); animation:pulse 5s ease-in-out infinite; }
+.sheet-mida-title { font-family:'Frank Ruhl Libre',serif; font-size:30px; font-weight:700; color:var(--text); text-align:center; margin-bottom:12px; }
+.sheet-body { font-size:22px; color:var(--text-dim); line-height:1.8; text-align:center; margin-bottom:16px; }
+.sheet-close { display:block; margin:16px auto 0; background:none; border:1px solid var(--border2); color:var(--text-dim); padding:10px 28px; border-radius:18px; cursor:pointer; font-family:'Heebo',sans-serif; font-size:16px; -webkit-appearance:none; }
+.intro-text { font-size:20px; color:var(--text-dim); line-height:1.7; padding:4px 0 12px; }
+</style>
+</head>
+<body>
+<div class="app">
+<div class="header">
+  <div class="header-title" style="padding:0 20px;">כְּלָלֵי הַהַשְׁקָטָה</div>
+  <div class="header-sub" style="padding:0 20px; margin-bottom:4px;">לְמוֹרֵנוּ הַבַּעַל שֵׁם טוֹב זִיע"א</div>
+  <div id="home-shem-sticky" class="home-shem" style="margin:4px 0 0; padding:10px 20px 16px; width:100%;">
+    <div class="home-shem-text">יְהֹוָה</div>
+    <div class="home-shem-sub">שִׁוִּיתִי ה' לְנֶגְדִּי תָמִיד</div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="view-home" class="view active">
+
+  <div class="page-content">
+    <div class="home-grid">
+      <button class="home-btn gold" onclick="nav('view-kelim')"><span class="hb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="16" r="4"/><path d="M11 13L20 4"/><path d="M15.5 8.5L18 11"/><path d="M18.5 5.5L21 8"/></svg></span><span class="hb-label">כלי העבודה</span><span class="hb-sub">לפי כוחות הנפש</span></button>
+      <button class="home-btn blue" onclick="nav('view-mood')"><span class="hb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/><path d="M2 15c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/></svg></span><span class="hb-label">לפי מצב</span><span class="hb-sub">מה אני מרגיש עכשיו</span></button>
+      <button class="home-btn green" onclick="nav('view-psukkim')"><span class="hb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.5 10l-5.7 1.4L12 17l-1.8-5.6L4.5 10l5.7-1.4L12 3z"/></svg></span><span class="hb-label">פסוקים לשינון</span><span class="hb-sub">לפי נושאים</span></button>
+      <button class="home-btn purple" onclick="nav('view-shem')"><span class="hb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg></span><span class="hb-label">שם הוי"ה</span><span class="hb-sub">ארבע המידות</span></button>
+      <button class="home-btn teal" onclick="nav('view-neshima')"><span class="hb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"><circle cx="12" cy="12" r="8"/></svg></span><span class="hb-label">נשימת שם הוי"ה</span><span class="hb-sub">חיבור דרך הנשימה</span></button>
+      <button class="home-btn rose" onclick="nav('view-hitbonenut')"><span class="hb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13c3-4 7-5 9-3 1-3 5-5 9-4-2 1-3 3-3 5 0 4-4 7-9 7-2 0-3-.5-4-1.5"/><circle cx="16.5" cy="8.5" r="0.6" fill="currentColor" stroke="none"/></svg></span><span class="hb-label">התבוננויות</span><span class="hb-sub">תרגולים מודרכים</span></button>
+    </div>
+    <div class="sep-label">עבור המטופלים שלך</div>
+    <button class="home-btn amber" onclick="nav('view-guide')" style="display:flex;align-items:center;gap:14px;padding:18px 16px;text-align:right;">
+      <span class="hb-icon" style="margin:0;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8l10-4 10 4-10 4-10-4z"/><path d="M6 10.5v4c0 1.5 2.7 3 6 3s6-1.5 6-3v-4"/><path d="M22 8v5"/></svg></span>
+      <span>
+        <span class="hb-label" style="display:block;">מדריך למטפל</span>
+        <span class="hb-sub" style="display:block;margin-top:3px;">איך להסביר את זה למטופל, בשפה שלו</span>
+      </span>
+    </button>
+  </div>
+</div>
+
+<!-- KELIM LIST -->
+<div id="view-kelim" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-home')">← חזרה</button><div class="section-title">כלי העבודה</div></div>
+  <div class="kelim-list">
+    <div class="kelim-item gold" onclick="nav('view-k1')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-1.5-1-2.5-1.5-3.5.7 1 1 2 1 3a5.5 5.5 0 11-11 0c0-4 3-5 3-6.5C9.5 3 10.5 2.5 12 2z"/></svg></div><div class="ki-info"><div class="ki-title">השקטת התאוות</div><div class="ki-sub">הכנעה, הבדלה, המתקה</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item blue" onclick="nav('view-k2')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/><path d="M2 15c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/></svg></div><div class="ki-info"><div class="ki-title">השקטת הרוח</div><div class="ki-sub">רגש, דיבור וכוח הגישור</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item green" onclick="nav('view-k3')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="9" rx="7" ry="5"/><circle cx="7" cy="17" r="1.3"/><circle cx="4.5" cy="20" r="0.8"/></svg></div><div class="ki-info"><div class="ki-title">השקטת הנשמה</div><div class="ki-sub">כוח המחשבה וטיהורו</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item rose" onclick="nav('view-k4')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div><div class="ki-info"><div class="ki-title">השקטת הרצונות</div><div class="ki-sub">כיוון, יישוב והשתוות</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item purple" onclick="nav('view-k5')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.5 10l-5.7 1.4L12 17l-1.8-5.6L4.5 10l5.7-1.4L12 3z"/></svg></div><div class="ki-info"><div class="ki-title">השקטת כוח המדמה</div><div class="ki-sub">מערכת הדימויים הפנימית</div></div><div class="ki-arrow">←</div></div>
+  </div>
+</div></div>
+
+<!-- K1 -->
+<div id="view-k1" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-kelim')">← חזרה</button><div class="section-title">השקטת התאוות</div></div>
+  <div class="kli-hero gold"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-1.5-1-2.5-1.5-3.5.7 1 1 2 1 3a5.5 5.5 0 11-11 0c0-4 3-5 3-6.5C9.5 3 10.5 2.5 12 2z"/></svg></div><div class="kli-hero-title">הכנעה, הבדלה, המתקה</div><div class="kli-hero-desc">התאוות אינן האויב — הן כוחות חיים. השאלה היא לא אם לממש, אלא איך, מתי ולאיזה כיוון.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">הכנעה — עצור ושאל</div><div class="step-body">עצור לפני הפעולה. שאל: <strong>מאיפה בא הדחף הזה?</strong> מלמטה מהנפש הבהמית? מבחוץ מהסביבה? מבפנים מהנשמה?<br><br>ברגע שמסתכלים על הדחף — כבר גדול ממנו.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">הבדלה — הפסק הזדהות</div><div class="step-body">"את את ואני אני. אני איני הרצון הזה." תן לדחף להיות בלי להזדהות איתו.<br><br>אני לא חייב לממש מיידית. יש לי הגה. אני העגלון — התאוות הן הסוסים.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">המתקה — מצא את הניצוץ</div><div class="step-body">שאל: <strong>האם יש מצווה שאפשר לעשות עם הכוח הזה?</strong> לא לדחות, לא לבטל — להחליף לתנועה גבוהה יותר.</div></div>
+  <div class="info-card"><div class="info-card-title">להעמקה</div><div class="info-card-body">הבעל שם טוב מלמד שהתאוות אינן רק "יצר הרע" שיש לדכא, אלא ניצוץ מכוח החיים העצום שנתן הבורא לאדם, כדי שיעבוד אותו בשני יצריו, גם ביצר הטוב וגם בעוצמת הנפש הבהמית. הצדיק אינו מי שאין לו תאוות, אלא מי ש"יודע" את נפשו הבהמית: מכיר אותה, אינו מזדהה איתה, ויודע לרתום את הכוח האדיר שבה לעבודת ה'.</div></div>
+  <div class="sep-label">פסוקים מומלצים</div>
+  <div class="quick-pasuk"><div class="qp-text">וְאָהַבְתָּ אֵת יְהֹוָ'ה אֱלֹהֶי'ךָ בְּכָל לְבָבְךָ — בִּשְׁנֵי יְצָרֶיךָ</div><div class="qp-source">דברים ו ה</div></div>
+  <div class="quick-pasuk"><div class="qp-text">יוֹדֵעַ צַדִּיק נֶפֶשׁ בְּהֶמְתּוֹ</div><div class="qp-source">משלי יב י</div></div>
+  <div class="sep-label">שם הוי"ה מומלץ</div>
+  <div class="quick-shem" onclick="openMida('ahava')"><div class="qs-letters">יַהֲוָה</div><div class="qs-mida">מידת האהבה — לחץ לפתיחה</div></div>
+</div></div>
+
+<!-- K2 -->
+<div id="view-k2" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-kelim')">← חזרה</button><div class="section-title">השקטת הרוח</div></div>
+  <div class="kli-hero blue"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/><path d="M2 15c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/></svg></div><div class="kli-hero-title">רגש, דיבור וכוח הגישור</div><div class="kli-hero-desc">הרוח היא הגשר בין הנשמה לנפש. כשהיא במקומה — הכול זורם. כשאינה — נוצר אי-שקט.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">זיהוי</div><div class="step-body">שאל בלא שיפוט: <strong>מה אני מרגיש עכשיו?</strong></div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">קבלה</div><div class="step-body">"זה בסדר שאני מרגיש כך." קבלת הרגש פותחת מרחב לבחירה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">הבנה</div><div class="step-body">מה הוביל לרגש הזה? הבנה יוצרת מרחב בין הרגש לתגובה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ד</div><div class="step-title">בחירה</div><div class="step-body"><strong>איך אני בוחר להרגיש?</strong> לאחר הזיהוי, הקבלה וההבנה — נפתח מרחב בחירה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ה</div><div class="step-title">למעשה</div><div class="step-body">מה אני עושה עכשיו, בפעולה קטנה ומוגדרת אחת?</div></div>
+  <div class="step-card"><div class="step-num">שלב ו</div><div class="step-title">חיבור</div><div class="step-body">כיצד הרגש, המחשבה והמעשה מחוברים? כשהמעגל סגור — הרוח שקטה.</div></div>
+  <div class="info-card"><div class="info-card-title">שלושה כלים חיצוניים</div><div class="info-card-body"><strong>התבוננות בנחל זורם</strong> — זרימה שקטה, זמן ממושך בנחת.<br><br><strong>הבטה במחוגי שעון</strong> — תנועה מדודה מאיטה את קצב הרגשות.<br><br><strong>שינון פסוקים בניגון</strong> — "חריש רוחני בשדה הנפש". פסוק אחד, פעמים רבות, בנעימה רכה.</div></div>
+  <div class="info-card"><div class="info-card-title">להעמקה: שלוש שפות</div><div class="info-card-body">הבעל שם טוב מבחין בין שלוש שפות שדרכן מתבטאת הרוח: שפה שכלית, של חוכמה, בינה ודעת, שפה רגשית, של חסד, גבורה ותפארת, ושפה חושית, של מגע וקרבה. לפעמים אדם מבין משהו בשכלו אך לא מרגיש אותו, ולפעמים הוא זקוק לא למילים אלא למגע, לחיבוק, לנוכחות. כדי שהרוח תהיה שקטה באמת, שלוש השפות צריכות לדבר יחד.</div></div>
+  <div class="sep-label">פסוקים מומלצים</div>
+  <div class="quick-pasuk"><div class="qp-text">לֵב טָהוֹר בְּרָא לִי אֱלֹהִי'ם וְרוּחַ נָכוֹן חַדֵּשׁ בְּקִרְבִּי</div><div class="qp-source">תהלים נא יב</div></div>
+  <div class="quick-pasuk"><div class="qp-text">הֹורֵנִי יְהֹוָ'ה דַּרְכֶּךָ אֲהַלֵּךְ בַּאֲמִתֶּךָ יַחֵד לְבָבִי לְיִרְאָה שְׁמֶךָ</div><div class="qp-source">תהלים פו יא</div></div>
+  <div class="sep-label">שם הוי"ה מומלץ</div>
+  <div class="quick-shem" onclick="openMida('simcha')"><div class="qs-letters">יִהְוָה</div><div class="qs-mida">מידת השמחה — לחץ לפתיחה</div></div>
+</div></div>
+
+<!-- K3 -->
+<div id="view-k3" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-kelim')">← חזרה</button><div class="section-title">השקטת הנשמה</div></div>
+  <div class="kli-hero green"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="9" rx="7" ry="5"/><circle cx="7" cy="17" r="1.3"/><circle cx="4.5" cy="20" r="0.8"/></svg></div><div class="kli-hero-title">כוח המחשבה וטיהורו</div><div class="kli-hero-desc">המחשבה היא "כיסא" להארת הנשמה. כשהמסך טהור — הנשמה מאירה בתוכו.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">טיהור המסך — דומיה</div><div class="step-body">"כל מה שאינו שלי, אני מניח לו לעבור."</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">זיהוי מקור המחשבה</div><div class="step-body">מאיפה באה המחשבה? מלמעלה — הארת הנשמה? מלמטה — נפש בהמית? מבחוץ — סביבה? מבפנים — צורך אמיתי?</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">הכנעה</div><div class="step-body">"את מחשבה שאינה כדאית עבורי." מבט ממעל — לא הכאה עצמית.</div></div>
+  <div class="step-card"><div class="step-num">שלב ד</div><div class="step-title">הבדלה</div><div class="step-body">"אני נותן לך לעבור ואיני מתייחס אליך עוד." מחשבה שנלחמים בה מתחזקת. מחשבה שמניחים לה — עוברת.</div></div>
+  <div class="step-card"><div class="step-num">שלב ה</div><div class="step-title">המתקה</div><div class="step-body">מצא את הניצוץ הטוב. בחר מחשבה שמרגישה נאמנה לנשמה — <strong>גדל אותה, הרחב אותה.</strong></div></div>
+  <div class="info-card"><div class="info-card-title">להעמקה: מה שלא נכנס פנימה</div><div class="info-card-body">מה שלא מתלבש עדיין בתוך חלל הגוף אינו הולך לאיבוד. הוא נשאר "מקיף", אור ממתין מעל האדם, שנכנס פנימה בהדרגה ככל שהאדם מזדכך. גם מחשבה שקשה כרגע להפנים אינה אבודה, היא ממתינה לרגע הנכון.</div></div>
+  <div class="sep-label">פסוקים מומלצים</div>
+  <div class="quick-pasuk"><div class="qp-text">דּוֹם לַיהֹוָ'ה וְהִתְחוֹלֵל לוֹ</div><div class="qp-source">תהלים לז ז</div></div>
+  <div class="quick-pasuk"><div class="qp-text">נִשְׁמַת שַׁדַּ'י תְּבִינֵם</div><div class="qp-source">איוב לב ח</div></div>
+  <div class="sep-label">שם הוי"ה מומלץ</div>
+  <div class="quick-shem" onclick="openMida('emuna')"><div class="qs-letters">יֱהוּהָ</div><div class="qs-mida">מידת האמונה — לחץ לפתיחה</div></div>
+</div></div>
+
+<!-- K4 -->
+<div id="view-k4" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-kelim')">← חזרה</button><div class="section-title">השקטת הרצונות</div></div>
+  <div class="kli-hero rose"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div><div class="kli-hero-title">כיוון, יישוב והשתוות</div><div class="kli-hero-desc">הרצון הוא "עמוד השדרה" של כל כוחות הנפש. כשהרצונות מיושבים — כולם נעים בסדר.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">התבוננות — הבטה</div><div class="step-body">הסתכל פנימה על זרם הרצונות. "אני לא הרצונות העוברים דרכי."</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">האטה ובחירה</div><div class="step-body">האט את קצב זרימת הרצונות. בחר רצון אחד — לא כי הוא הצועק ביותר, אלא כי הוא הנכון.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">ריכוז</div><div class="step-body">התרכז ברצון שבחרת מכל הזוויות עד שיאיר בבהירות.</div></div>
+  <div class="step-card"><div class="step-num">שלב ד</div><div class="step-title">השתוות — העיקר</div><div class="step-body">שאל: <strong>מה הבורא רוצה ממני כאן?</strong> כל פעם שמתאים את עצמך לרצונו — מפעיל שריר פנימי שמתחזק.<br><br>בסוף: "מה שהוא רוצה, גם אני רוצה."</div></div>
+  <div class="info-card"><div class="info-card-title">להעמקה: לחץ כמחיצה</div><div class="info-card-body">הבעל שם טוב מגדיר לחץ כ"לשון מחיצה", חציצה שמפריעה לזרימת האור בין המדרגות. כשהרצון אינו מוצא ביטוי במחשבה, הלחץ יורד ומתגלה ברוח כחוסר סבלנות ודיבור לא מאוזן. זיהוי המקום שבו נוצרה המחיצה הוא כבר חצי מהעבודה.</div></div>
+  <div class="sep-label">פסוקים מומלצים</div>
+  <div class="quick-pasuk"><div class="qp-text">בִּטְחוּ בַיהֹוָ'ה עֲדֵי עַד כִּי בְּיָ'הּ יְהֹוָ'ה צוּר עוֹלָמִים</div><div class="qp-source">ישעיה כו ד</div></div>
+  <div class="quick-pasuk"><div class="qp-text">לִישׁוּעָתְךָ קִוִּיתִי יְהֹוָ'ה</div><div class="qp-source">בראשית מט יח</div></div>
+  <div class="sep-label">שם הוי"ה מומלץ</div>
+  <div class="quick-shem" onclick="openMida('yira')"><div class="qs-letters">יִהְוָה</div><div class="qs-mida">מידת היראה — לחץ לפתיחה</div></div>
+</div></div>
+
+<!-- K5 -->
+<div id="view-k5" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-kelim')">← חזרה</button><div class="section-title">השקטת כוח המדמה</div></div>
+  <div class="kli-hero purple"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.5 10l-5.7 1.4L12 17l-1.8-5.6L4.5 10l5.7-1.4L12 3z"/></svg></div><div class="kli-hero-title">מערכת הדימויים הפנימית</div><div class="kli-hero-desc">כוח המדמה הוא הפנימי ביותר. מה שמצוי במסגרת הדימויים שלך — יש לו מציאות. מה שאינו — אינו נקלט.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">הכנעה</div><div class="step-body">"אני לא הדימויים שלי. אני יכול לשנות אותם." שאל: מאיפה בא הדימוי?</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">הבדלה</div><div class="step-body">"אני מוכן לפרוץ את המסגרת הזאת." להפסיק הזדהות עם הדימוי הישן.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">המתקה — דימוי חדש</div><div class="step-body">בחר דימוי חדש שמחבר לקדושה. <strong>צייר אותו, הרחב אותו, תן לו כוח.</strong></div></div>
+  <div class="step-card"><div class="step-num">שלב ד</div><div class="step-title">חיבור לשם הוי"ה</div><div class="step-body">ראה את אותיות שם הוי"ה מעל ראשך — זו המסגרת החדשה. "שִׁוִּיתִי ה' לְנֶגְדִּי תָמִיד."</div></div>
+  <div class="info-card"><div class="info-card-title">להעמקה: יחידה ותענוג</div><div class="info-card-body">כוח המדמה מאיר יחד עם כוח התענוג, ומתבטא בדבקות ובהתכללות עם השם, המדרגה הנקראת יחידה. הארתה מתעוררת ברגעים של מסירות נפש, כשאדם יוצא מגבולות עצמו. לכן העבודה על הדימויים הפנימיים אינה טכניקה בלבד, היא הכשרה ליכולת לצאת מעצמנו.</div></div>
+  <div class="sep-label">שם הוי"ה — כל ארבע המידות</div>
+  <div class="quick-shem" onclick="openMida('ahava')"><div class="qs-letters">יַהֲוָה</div><div class="qs-mida">אהבה</div></div>
+  <div class="quick-shem" onclick="openMida('yira')"><div class="qs-letters">יִהְוָה</div><div class="qs-mida">יראה</div></div>
+  <div class="quick-shem" onclick="openMida('emuna')"><div class="qs-letters">יֱהוּהָ</div><div class="qs-mida">אמונה</div></div>
+  <div class="quick-shem" onclick="openMida('simcha')"><div class="qs-letters">יִהְוָה</div><div class="qs-mida">שמחה</div></div>
+</div></div>
+
+<!-- MOOD -->
+<div id="view-mood" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-home')">← חזרה</button><div class="section-title">לפי מצב</div></div>
+  <p class="intro-text">בחר את מה שמרגיש קרוב עכשיו:</p>
+  <div class="mood-grid">
+    <button class="mood-btn" onclick="nav('view-mood-koas')"><span class="mood-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-1.5-1-2.5-1.5-3.5.7 1 1 2 1 3a5.5 5.5 0 11-11 0c0-4 3-5 3-6.5C9.5 3 10.5 2.5 12 2z"/></svg></span><span class="mood-label">כעס</span></button>
+    <button class="mood-btn" onclick="nav('view-mood-daga')"><span class="mood-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 7 6 10a6 6 0 01-12 0c0-3 3-6 6-10z"/></svg></span><span class="mood-label">דאגה / פחד</span></button>
+    <button class="mood-btn" onclick="nav('view-mood-atzuv')"><span class="mood-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1110 3a7 7 0 0010 11.5z"/></svg></span><span class="mood-label">עצבות / ריקנות</span></button>
+    <button class="mood-btn" onclick="nav('view-mood-balbul')"><span class="mood-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 12c0-1.5 1.2-2.5 2.5-2.5S17 10.5 17 12s-1.5 3-3.5 3-4.5-2-4.5-4.5S11 5 14 5s6 2.5 6 6-3 7-7 7-7.5-3-7.5-7"/></svg></span><span class="mood-label">בלבול / לחץ</span></button>
+    <button class="mood-btn" onclick="nav('view-mood-tayava')"><span class="mood-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></span><span class="mood-label">משיכה לתאווה</span></button>
+    <button class="mood-btn" onclick="nav('view-mood-ratzon')"><span class="mood-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/><path d="M2 15c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/></svg></span><span class="mood-label">רצונות סוערים</span></button>
+  </div>
+</div></div>
+
+<!-- MOOD: KOAS -->
+<div id="view-mood-koas" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-mood')">← חזרה</button><div class="section-title">כעס</div></div>
+  <div class="kli-hero"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-1.5-1-2.5-1.5-3.5.7 1 1 2 1 3a5.5 5.5 0 11-11 0c0-4 3-5 3-6.5C9.5 3 10.5 2.5 12 2z"/></svg></div><div class="kli-hero-title">אש שמבקשת כיוון</div><div class="kli-hero-desc">כעס הוא לא פסול מיסודו. הוא כוח חיים עז שמבקש פורקן, ואם לא נותנים לו כיוון נכון, הוא שורף גם את מי שסביבו וגם את מי שמחזיק בו.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">עצירה לפני שמדברים או פועלים</div><div class="step-body">ברגע שהכעס עולה, הגוף רוצה לפרוק אותו מיד במילה חדה או בתנועה. לפני שממשיכים, עוצרים לרגע ולוקחים שתיים שלוש נשימות איטיות. העצירה לא מבטלת את הכעס, היא רק קונה זמן לבחור איך להגיב אליו.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">לראות מאיפה הוא בא</div><div class="step-body">שואלים בשקט: על מה אני באמת כועס, ועל מי? לפעמים הכעס הגלוי הוא רק הקצה של תסכול ישן יותר, וזיהוי המקור מוריד חלק ניכר מהעוצמה שלו.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">להמתיק, לא לדכא</div><div class="step-body">הכעס לא צריך להיעלם, הוא צריך למצוא ביטוי בריא. אפשר להפנות את הכוח שבו לפעולה מתקנת, לומר בבירור מה הפריע בלי להאשים, או לתת לגל לעבור ואז לחזור לנושא ברוגע.</div></div>
+  <div class="sep-label">פסוק מומלץ</div>
+  <div class="quick-pasuk"><div class="qp-text">לֵב טָהוֹר בְּרָא לִי אֱלֹהִי'ם וְרוּחַ נָכוֹן חַדֵּשׁ בְּקִרְבִּי</div><div class="qp-source">תהלים נא יב</div></div>
+  <p class="intro-text" style="text-align:center;"><span style="color:var(--deep);text-decoration:underline;cursor:pointer;" onclick="nav('view-k2')">להעמקה נוספת: השקטת הרוח ←</span></p>
+</div></div>
+
+<!-- MOOD: DAGA -->
+<div id="view-mood-daga" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-mood')">← חזרה</button><div class="section-title">דאגה ופחד</div></div>
+  <div class="kli-hero"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 7 6 10a6 6 0 01-12 0c0-3 3-6 6-10z"/></svg></div><div class="kli-hero-title">חיפוש ביטחון בכיוון הלא נכון</div><div class="kli-hero-desc">דאגה היא מחשבה שרצה קדימה אל מה שעוד לא קרה. פחד הוא הגוף שמתכונן להגנה מפני סכנה, אמיתית או מדומיינת. שניהם מבקשים ביטחון, רק מחפשים אותו בשליטה על העתיד במקום באמון בהווה.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">לחזור לגוף ולרגע הזה</div><div class="step-body">דאגה חיה בעיקר בראש, ולכן הצעד הראשון הוא לחזור לרגע לגוף: כמה נשימות איטיות, כפות הרגליים על הרצפה, תשומת לב לתחושה הפיזית ברגע הזה בדיוק.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">להפריד בין מה שבשליטתי למה שלא</div><div class="step-body">שואלים: יש כאן משהו שאני יכול לעשות עכשיו, או שאני רק מסתובב סביב מחשבה שאין לי עליה שליטה? מה שבשליטה, עושים. מה שלא, משחררים אליו לרגע את האחיזה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">לזכור שההשגחה מלווה</div><div class="step-body">התובנה שכל מה שקורה הוא בהשגחה פרטית ולטובה, גם כשהיא לא ברורה כרגע, לא מבטלת את הצורך לפעול בזהירות, אבל היא מרפה את האחיזה הכוחנית בניסיון לשלוט בכל תוצאה.</div></div>
+  <div class="sep-label">פסוק מומלץ</div>
+  <div class="quick-pasuk"><div class="qp-text">קַוֵּה אֶל יְהֹוָ'ה חֲזַק וְיַאֲמֵץ לִבֶּךָ וְקַוֵּה אֶל יְהֹוָ'ה</div><div class="qp-source">תהלים כז יד</div></div>
+  <p class="intro-text" style="text-align:center;"><span style="color:var(--deep);text-decoration:underline;cursor:pointer;" onclick="nav('view-k3')">להעמקה נוספת: השקטת הנשמה ←</span></p>
+</div></div>
+
+<!-- MOOD: ATZUV -->
+<div id="view-mood-atzuv" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-mood')">← חזרה</button><div class="section-title">עצבות וריקנות</div></div>
+  <div class="kli-hero"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1110 3a7 7 0 0010 11.5z"/></svg></div><div class="kli-hero-title">תחושה שמבקשת מקום, לא פתרון</div><div class="kli-hero-desc">עצבות לא תמיד מגיעה כתגובה לאירוע ברור. לפעמים היא פשוט תחושת כובד או ריקנות שמתיישבת בלי הסבר. חשוב לתת לה מקום בלי להילחם בה ובלי להיבהל ממנה.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">לתת מקום בלי לברוח</div><div class="step-body">במקום לנסות להסיח את הדעת מיד, אפשר לתת לתחושה כמה רגעים של נוכחות, פשוט לשבת איתה, בלי להסביר אותה ובלי לתקן אותה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">לשאול מה חסר</div><div class="step-body">עצבות לפעמים מצביעה על צורך שלא קיבל מענה, מנוחה, קרבה, משמעות. השאלה מה בעצם חסר לי עכשיו יכולה לפתוח כיוון, גם בלי לדרוש תשובה מיידית.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">צעד קטן אחד</div><div class="step-body">לא צריך לפתור את כל התחושה בבת אחת. צעד קטן אחד, החוצה לאוויר, שיחה קצרה עם מישהו קרוב, כוס תה חם, כבר מזיז מעט את הזרימה הפנימית.</div></div>
+  <div class="sep-label">פסוק מומלץ</div>
+  <div class="quick-pasuk"><div class="qp-text">חַסְדֵי יְהֹוָ'ה כִּי לֹא תָמְנוּ כִּי לֹא כָלוּ רַחֲמָיו</div><div class="qp-source">איכה ג כב</div></div>
+  <p class="intro-text" style="text-align:center;"><span style="color:var(--deep);text-decoration:underline;cursor:pointer;" onclick="nav('view-k3')">להעמקה נוספת: השקטת הנשמה ←</span></p>
+</div></div>
+
+<!-- MOOD: BALBUL -->
+<div id="view-mood-balbul" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-mood')">← חזרה</button><div class="section-title">בלבול ולחץ</div></div>
+  <div class="kli-hero"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 12c0-1.5 1.2-2.5 2.5-2.5S17 10.5 17 12s-1.5 3-3.5 3-4.5-2-4.5-4.5S11 5 14 5s6 2.5 6 6-3 7-7 7-7.5-3-7.5-7"/></svg></div><div class="kli-hero-title">רגיעה מגיעה מהאטה, לא מעוד עשייה</div><div class="kli-hero-desc">בלבול הוא תחושה שהרבה דברים דורשים תשומת לב בו זמנית, ולחץ הוא התוצאה של הרגשה שאין מספיק זמן או כוח לכולם. שניהם נרגעים מתוך האטה, לא מתוך עוד עשייה.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">לעצור ולנשום לפני שממשיכים</div><div class="step-body">כשהראש מתרוצץ, הדבר הראשון הוא לא לפתור, אלא לעצור לרגע ולתת לגוף להאט: כמה נשימות עמוקות מספיקות כדי לרדת הילוך.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">לרוקן את הראש על דף</div><div class="step-body">אפשר לכתוב בלי סדר את כל מה שמסתובב, בלי לנסות לארגן. הרוקנות הזאת מוציאה את העומס מהראש למקום שאפשר להסתכל עליו מבחוץ.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">לבחור דבר אחד</div><div class="step-body">מתוך כל מה שנכתב, בוחרים דבר אחד קטן לטפל בו קודם. לא כי הוא החשוב מכולם, אלא כי בחירה אחת ברורה כבר מפחיתה את הבלבול יותר מכל ניסיון לפתור הכול יחד.</div></div>
+  <div class="sep-label">פסוק מומלץ</div>
+  <div class="quick-pasuk"><div class="qp-text">הַדְרִיכֵנִי בַאֲמִתֶּךָ וְלַמְּדֵנִי כִּי אַתָּה אֱלֹהֵ'י יִשְׁעִי אוֹתְךָ קִוִּיתִי כָל הַיּוֹם</div><div class="qp-source">תהלים כה ה</div></div>
+  <p class="intro-text" style="text-align:center;"><span style="color:var(--deep);text-decoration:underline;cursor:pointer;" onclick="nav('view-k4')">להעמקה נוספת: השקטת הרצונות ←</span></p>
+</div></div>
+
+<!-- MOOD: TAYAVA -->
+<div id="view-mood-tayava" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-mood')">← חזרה</button><div class="section-title">משיכה לתאווה</div></div>
+  <div class="kli-hero"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div><div class="kli-hero-title">כוח חיים שמחפש כיוון</div><div class="kli-hero-desc">משיכה חזקה לתאווה, לאוכל, למסך, לקנייה, לכעס שרוצה לצאת, איננה סימן לחולשה. היא סימן שיש כוח חיים גדול שמחפש מוצא, ולפעמים הוא פשוט לא מצא עדיין את הכיוון הנכון.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">עצירה של רגע אחד</div><div class="step-body">לפני שממשיכים בפעולה הרגילה, עוצרים ממש רגע אחד ושואלים: מה אני מרגיש עכשיו, שגורם לי לרצות את זה כל כך?</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">אני לא התאווה הזאת</div><div class="step-body">"את את ואני אני." אני לא חייב לממש כל דחף באופן מיידי. יש לי הגה, אני העגלון, והתאווה היא אחד הסוסים החזקים שרתומים לעגלה, לא זה שמחזיק במושכות.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">לחפש לכוח כיוון אחר</div><div class="step-body">השאלה האחרונה היא לא איך לדכא את הכוח הזה, אלא לאן עוד אפשר לתעל אותו. האם יש כאן צורך אמיתי שיכול להתמלא בדרך אחרת, או מצווה שיכולה לקבל את אותו כוח בדיוק?</div></div>
+  <div class="sep-label">פסוק מומלץ</div>
+  <div class="quick-pasuk"><div class="qp-text">וְאָהַבְתָּ אֵת יְהֹוָ'ה אֱלֹהֶי'ךָ בְּכָל לְבָבְךָ — בִּשְׁנֵי יְצָרֶיךָ</div><div class="qp-source">דברים ו ה</div></div>
+  <p class="intro-text" style="text-align:center;"><span style="color:var(--deep);text-decoration:underline;cursor:pointer;" onclick="nav('view-k1')">להעמקה נוספת: השקטת התאוות ←</span></p>
+</div></div>
+
+<!-- MOOD: RATZON -->
+<div id="view-mood-ratzon" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-mood')">← חזרה</button><div class="section-title">רצונות סוערים</div></div>
+  <div class="kli-hero"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/><path d="M2 15c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/></svg></div><div class="kli-hero-title">כמה כוחות אמיתיים, בלי סדר עדיפויות</div><div class="kli-hero-desc">כשכמה רצונות מושכים בו זמנית לכיוונים שונים, נוצרת תחושת קריעה פנימית. זה לא סימן שמשהו השתבש, זה סימן שיש בפנים כמה כוחות חיים אמיתיים שעדיין לא מצאו סדר עדיפויות משותף.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">להסתכל על כל הרצונות בלי לפסול</div><div class="step-body">לפני שבוחרים, שמים על השולחן את כל מה שמושך, גם את מה שמרגיש לא הגיוני או לא ראוי, בלי שיפוט.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">להאט ולבדוק כל אחד</div><div class="step-body">עוברים לאט על כל רצון ושואלים מאיפה הוא בא ומה יקרה אם אלך לפיו. ההאטה הזאת מבדילה בין רצון עמוק לבין רעש רגעי.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">להשתוות למה שנכון עכשיו</div><div class="step-body">בוחרים לא לפי מה שהכי חזק ברעש שלו, אלא לפי מה שהכי מתאים לרגע הזה, ומזכירים לעצמנו שבחירה אחת לא מוחקת את שאר הרצונות, היא רק קובעת מי מדבר ראשון.</div></div>
+  <div class="sep-label">פסוק מומלץ</div>
+  <div class="quick-pasuk"><div class="qp-text">בִּטְחוּ בַיהֹוָ'ה עֲדֵי עַד כִּי בְּיָ'הּ יְהֹוָ'ה צוּר עוֹלָמִים</div><div class="qp-source">ישעיה כו ד</div></div>
+  <p class="intro-text" style="text-align:center;"><span style="color:var(--deep);text-decoration:underline;cursor:pointer;" onclick="nav('view-k4')">להעמקה נוספת: השקטת הרצונות ←</span></p>
+</div></div>
+
+<!-- PSUKIM CATEGORY LIST -->
+<div id="view-psukkim" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-home')">← חזרה</button><div class="section-title">פסוקים לשינון</div></div>
+  <p class="intro-text">שנן בקול רם במתינות ובנעימה רכה, פעמים רבות. בחר נושא לפתיחת הפסוקים שלו.</p>
+  <div class="kelim-list">
+    <div class="kelim-item" onclick="nav('view-ps1')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><div class="ki-info"><div class="ki-title">בִּטָּחוֹן</div><div class="ki-sub">חמישה פסוקים</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item" onclick="nav('view-ps2')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.5 10l-5.7 1.4L12 17l-1.8-5.6L4.5 10l5.7-1.4L12 3z"/></svg></div><div class="ki-info"><div class="ki-title">אֱמוּנָה</div><div class="ki-sub">חמישה פסוקים</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item" onclick="nav('view-ps3')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-8-4.5-8-11a5 5 0 019-3 5 5 0 019 3c0 6.5-8 11-8 11z"/></svg></div><div class="ki-info"><div class="ki-title">אַהֲבָה</div><div class="ki-sub">שני פסוקים</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item" onclick="nav('view-ps4')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></div><div class="ki-info"><div class="ki-title">שִׂמְחָה וְשָׁלוֹם פְּנִימִי</div><div class="ki-sub">שני פסוקים</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item" onclick="nav('view-ps5')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6 6-2z"/></svg></div><div class="ki-info"><div class="ki-title">הַדְרָכָה וְכִיוּון</div><div class="ki-sub">שני פסוקים</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item" onclick="nav('view-ps6')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(45 12 12)"/></svg></div><div class="ki-info"><div class="ki-title">מַלְכוּת וּדְבֵקוּת</div><div class="ki-sub">שני פסוקים</div></div><div class="ki-arrow">←</div></div>
+  </div>
+</div></div>
+
+<!-- PS1 BITACHON -->
+<div id="view-ps1" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-psukkim')">← חזרה</button><div class="section-title">בִּטָּחוֹן</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">לְדָוִד יְהֹוָ'ה אוֹרִי וְיִשְׁעִי מִמִּי אִירָא יְהֹוָ'ה מָעוֹז חַיַּי מִמִּי אֶפְחָד</div><div class="pasuk-source">תהלים כז א</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">קַוֵּה אֶל יְהֹוָ'ה חֲזַק וְיַאֲמֵץ לִבֶּךָ וְקַוֵּה אֶל יְהֹוָ'ה</div><div class="pasuk-source">תהלים כז יד</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">בִּטְחוּ בַיהֹוָ'ה עֲדֵי עַד כִּי בְּיָ'הּ יְהֹוָ'ה צוּר עוֹלָמִים</div><div class="pasuk-source">ישעיה כו ד</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">וְאַתָּה יְהֹוָ'ה מָגֵן בַּעֲדִי כְּבוֹדִי וּמֵרִים רֹאשִׁי</div><div class="pasuk-source">תהלים ג ד</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">שָׁמְרָה נַפְשִׁי וְהַצִּילֵנִי אַ'ל אֵבוֹשׁ כִּי חָסִיתִי בָךְ</div><div class="pasuk-source">תהלים כה כ</div></div>
+</div></div>
+
+<!-- PS2 EMUNA -->
+<div id="view-ps2" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-psukkim')">← חזרה</button><div class="section-title">אֱמוּנָה</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">חַסְדֵי יְהֹוָ'ה כִּי לֹא תָמְנוּ כִּי לֹא כָלוּ רַחֲמָיו</div><div class="pasuk-source">איכה ג כב</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">חֲדָשִׁים לַבְּקָרִים רַבָּה אֱמוּנָתֶךָ</div><div class="pasuk-source">איכה ג כג</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">לִישׁוּעָתְךָ קִוִּיתִי יְהֹוָ'ה</div><div class="pasuk-source">בראשית מט יח</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">כִּי טוֹב יְהֹוָ'ה לְעוֹלָם חַסְדּוֹ וְעַד דֹּר וָדֹר אֱמוּנָתוֹ</div><div class="pasuk-source">תהלים ק ה</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">וְאַתֶּם הַדְּבֵקִים בַּיהֹוָ'ה אֱלֹהֵיכֶ'ם חַיִּים כֻּלְּכֶם הַיּוֹם</div><div class="pasuk-source">דברים ד ד</div></div>
+</div></div>
+
+<!-- PS3 AHAVA -->
+<div id="view-ps3" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-psukkim')">← חזרה</button><div class="section-title">אַהֲבָה</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">וְאָהַבְתָּ אֵת יְהֹוָ'ה אֱלֹהֶי'ךָ בְּכָל לְבָבְךָ וּבְכָל נַפְשְׁךָ וּבְכָל מְאֹדֶךָ</div><div class="pasuk-source">דברים ו ה</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">וַאֲנִי קִרְבַת אֱלֹהִי'ם לִי טוֹב</div><div class="pasuk-source">תהלים עג כח</div></div>
+</div></div>
+
+<!-- PS4 SIMCHA -->
+<div id="view-ps4" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-psukkim')">← חזרה</button><div class="section-title">שִׂמְחָה וְשָׁלוֹם פְּנִימִי</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">לֵב טָהוֹר בְּרָא לִי אֱלֹהִי'ם וְרוּחַ נָכוֹן חַדֵּשׁ בְּקִרְבִּי</div><div class="pasuk-source">תהלים נא יב</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">כִּי בוֹ יִשְׂמַח לִבֵּנוּ כִּי בְשֵׁם קָדְשׁוֹ בָּטָחְנוּ</div><div class="pasuk-source">תהלים לג כא</div></div>
+</div></div>
+
+<!-- PS5 HADRACHA -->
+<div id="view-ps5" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-psukkim')">← חזרה</button><div class="section-title">הַדְרָכָה וְכִיוּון</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">הֹורֵנִי יְהֹוָ'ה דַּרְכֶּךָ וּנְחֵנִי בְאֹרַח מִישׁוֹר</div><div class="pasuk-source">תהלים כז יא</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">הַדְרִיכֵנִי בַאֲמִתֶּךָ וְלַמְּדֵנִי כִּי אַתָּה אֱלֹהֵ'י יִשְׁעִי אוֹתְךָ קִוִּיתִי כָל הַיּוֹם</div><div class="pasuk-source">תהלים כה ה</div></div>
+</div></div>
+
+<!-- PS6 MALCHUT -->
+<div id="view-ps6" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-psukkim')">← חזרה</button><div class="section-title">מַלְכוּת וּדְבֵקוּת</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">אַתָּה הוּא אֱלֹהֵינוּ. אַתָּה הוּא אֲדוֹנֵינוּ. אַתָּה הוּא מַלְכֵּנוּ. אַתָּה הוּא מוֹשִׁיעֵנוּ</div><div class="pasuk-source">תפילה</div></div>
+  <div class="pasuk-card"><div class="pasuk-text">שִׁוִּיתִי יְהֹוָ'ה לְנֶגְדִּי תָמִיד</div><div class="pasuk-source">תהלים טז ח</div></div>
+</div></div>
+
+<!-- SHEM -->
+<div id="view-shem" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-home')">← חזרה</button><div class="section-title">שם הוי"ה</div></div>
+  <p class="shem-intro">לראות את אותיות שם הוי"ה מעל הראש בגובה מקום התפילין, באותיות גדולות ומאירות. לחץ על מידה לפתיחה.</p>
+  <div class="mida-grid">
+    <div class="mida-card" onclick="openMida('ahava')"><div class="mida-shem-glow">יַהֲוָה</div><div class="mida-label">אַהֲבָה</div><div class="mida-desc">לעורר אהבת ה' בלב</div></div>
+    <div class="mida-card" onclick="openMida('yira')"><div class="mida-shem-glow">יִהְוָה</div><div class="mida-label">יִרְאָה</div><div class="mida-desc">לעורר יראת הרוממות</div></div>
+    <div class="mida-card" onclick="openMida('emuna')"><div class="mida-shem-glow">יֱהוּהָ</div><div class="mida-label">אֱמוּנָה</div><div class="mida-desc">לחבר עליון ותחתון</div></div>
+    <div class="mida-card" onclick="openMida('simcha')"><div class="mida-shem-glow">יִהְוָה</div><div class="mida-label">שִׂמְחָה</div><div class="mida-desc">שמחה ומלכות</div></div>
+  </div>
+</div></div>
+
+<!-- NESHIMA -->
+<div id="view-neshima" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-home')">← חזרה</button><div class="section-title">נשימת שם הוי"ה</div></div>
+  <div class="neshima-visual">
+    <div class="neshima-shem">יְהֹוָה</div>
+    <div class="neshima-steps">
+      <div class="neshima-step inhale"><div class="ns-title">שְׁאִיפָה פְּנִימָה — י"ה</div><div class="ns-body">שאף לאט דרך אותיות יוֹ"ד הֵ"א | י' שניות</div></div>
+      <div class="neshima-step hold"><div class="ns-title">עֲצִירָה</div><div class="ns-body">עצור ברגע השקט שביניהם | ו' שניות</div></div>
+      <div class="neshima-step exhale"><div class="ns-title">נְשִׁיפָה — ו"ה</div><div class="ns-body">נשוף לאט דרך אותיות וָ"ו הֵ"א | ו' שניות</div></div>
+    </div>
+  </div>
+  <div class="info-card"><div class="info-card-title">הוראות</div><div class="info-card-body">ככל שמחזיקים יותר את האוויר פנימה, כך הפעולה עמוקה יותר. ניתן לחבר לניקוד של המידה שרוצים לעורר. "וַיִּפַּח בְּאַפָּיו נִשְׁמַת חַיִּים."</div></div>
+  <div class="sep-label">נשימות המילוי, למתקדמים</div>
+  <div class="step-card"><div class="step-num">נשימה מוחית</div><div class="step-title">האות יו"ד</div><div class="step-body">להשהות את אוויר הנשימה <strong>עשר שניות</strong> במוח, עם ראיית האות יו"ד במילויה, ולחזור <strong>עשר פעמים</strong>. הנשימה מביאה אוויר וחיות אל המוח ומעוררת אותו.</div></div>
+  <div class="step-card"><div class="step-num">נשימה חוטמית</div><div class="step-title">האות הֵ"א</div><div class="step-body">להשהות את אוויר הנשימה <strong>חמש שניות</strong> בחוטם, עם ראיית האות הֵ"א במילויה, ולחזור <strong>חמש פעמים</strong>, לתת אוויר בכל הפנים.</div></div>
+  <div class="step-card"><div class="step-num">נשימה סרעפתית</div><div class="step-title">האות וָ"ו</div><div class="step-body">להשהות את אוויר הנשימה <strong>שש שניות</strong> בחזה, בחמש כנפות הריאה והקנה, עם ראיית האות וָ"ו במילויה, ולחזור <strong>שש פעמים</strong>.</div></div>
+  <div class="step-card"><div class="step-num">נשימה בטנית</div><div class="step-title">הֵ"א תחתונה</div><div class="step-body">להשהות את אוויר הנשימה <strong>חמש שניות</strong> ולהוביל אותו עם כוח המדמה אל הבטן, עם ראיית האות הֵ"א במילויה, ולחזור <strong>חמש פעמים</strong>.</div></div>
+  <div class="info-card"><div class="info-card-body">מי שחדש בתרגול יתחיל בנשימה הבסיסית בלבד, ורק כשהיא נעשית טבעית יוסיף את נשימות המילוי. אדם שנושם טוב, הביטחון שלו מתייצב: "כִּי מִימִינִי בַּל אֶמּוֹט."</div></div>
+</div></div>
+
+<!-- HITBONENUT LIST -->
+<div id="view-hitbonenut" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-home')">← חזרה</button><div class="section-title">התבוננויות</div></div>
+  <p class="intro-text">תרגולים מודרכים לעבודה פנימית, במתינות ובנחת. הקביעות חשובה מן הכמות: תרגול קצר בקביעות בונה בנפש טבע שני.</p>
+  <div class="kelim-list">
+    <div class="kelim-item gold" onclick="nav('view-h1')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-8-4.5-8-11a5 5 0 019-3 5 5 0 019 3c0 6.5-8 11-8 11z"/></svg></div><div class="ki-info"><div class="ki-title">הדומיה</div><div class="ki-sub">יד של שקט בחלל המוח והלב</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item blue" onclick="nav('view-h2')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg></div><div class="ki-info"><div class="ki-title">השקטה בשעת אמת</div><div class="ki-sub">חמש דרכים ראשוניות להשקטת הלב</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item green" onclick="nav('view-h3')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="ki-info"><div class="ki-title">תבנית ההתבוננות</div><div class="ki-sub">הכנעה, הבדלה והמתקה בכל כוח</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item purple" onclick="nav('view-h4')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(45 12 12)"/></svg></div><div class="ki-info"><div class="ki-title">התבוננות הדבקות</div><div class="ki-sub">השם יתברך מקיף אותי מכל צדדיי</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item rose" onclick="nav('view-h5')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-5-2-9-1.5v13c4-.5 7 0 9 1.5 2-1.5 5-2 9-1.5v-13c-4-.5-7 0-9 1.5z"/><path d="M12 6v13"/></svg></div><div class="ki-info"><div class="ki-title">יומן השקטה</div><div class="ki-sub">רישום יומי ובחינה עצמית שבועית</div></div><div class="ki-arrow">←</div></div>
+  </div>
+</div></div>
+
+<!-- H1 DUMIYA -->
+<div id="view-h1" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-hitbonenut')">← חזרה</button><div class="section-title">הדומיה</div></div>
+  <div class="kli-hero gold"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-8-4.5-8-11a5 5 0 019-3 5 5 0 019 3c0 6.5-8 11-8 11z"/></svg></div><div class="kli-hero-title">לְךָ דֻּמִיָּה תְהִלָּה</div><div class="kli-hero-desc">הדומיה אינה שתיקה ריקה אלא פעולה עדינה של ניקוי וטיהור, כמו ניקוי זכוכית המחשבה שתוכל להאיר כראוי.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">עצירה</div><div class="step-body">לשבת בנוח, לעצום עיניים או להניח למבט לרדת, ולנשום כמה נשימות איטיות. אין צורך לשנות דבר, רק להאט.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">יד של שקט בראש</div><div class="step-body">לדמות יד של אור שקט שעוברת לאט בחלל הראש, מן המצח ועד העורף, ומשקיטה את הרעש וההמולה. לחזור על התנועה כמה פעמים, בנחת.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">יד של שקט בלב</div><div class="step-body">להעביר את אותה יד של שקט גם בחלל הלב, ולתת לה לנקות את מה שנערם שם. בלי לבדוק ובלי לנתח, פשוט ניקיון.</div></div>
+  <div class="step-card"><div class="step-num">שלב ד</div><div class="step-title">שהייה</div><div class="step-body">לשהות רגע במרחב הנקי שנוצר. כאשר מפסיקים לעשות, פתאום מאיר אור חדש. אין צורך לחפש אותו, רק לפנות לו מקום.</div></div>
+  <div class="info-card"><div class="info-card-body">התרגול כולו יכול להימשך שתי דקות בלבד. אפשר לחזור עליו כמה פעמים ביום, במיוחד לפני כניסה למשימה חדשה או אחרי אירוע שהשאיר רושם.</div></div>
+  <div class="sep-label">פסוק מומלץ</div>
+  <div class="quick-pasuk"><div class="qp-text">לְךָ דֻּמִיָּה תְהִלָּה</div><div class="qp-source">תהלים סה ב</div></div>
+</div></div>
+
+<!-- H2 EMERGENCY -->
+<div id="view-h2" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-hitbonenut')">← חזרה</button><div class="section-title">השקטה בשעת אמת</div></div>
+  <div class="kli-hero blue"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg></div><div class="kli-hero-title">חמש דרכים ראשוניות</div><div class="kli-hero-desc">כשהלב סוער ואין זמן לתהליך ארוך. כל אחת מהן פשוטה, וכולן יחד הן ערכת עזרה ראשונה פנימית.</div></div>
+  <div class="step-card"><div class="step-num">דרך א</div><div class="step-title">נשימה עמוקה ואיטית</div><div class="step-body">כמה נשימות איטיות, שאיפה מלאה ונשיפה ארוכה. הנשימה היא הדרך המהירה ביותר להאט את הקצב הפנימי.</div></div>
+  <div class="step-card"><div class="step-num">דרך ב</div><div class="step-title">גדלות הבורא ואהבתו</div><div class="step-body">להרים לרגע את המבט מן הצרה אל התמונה הגדולה: יש מי שמנהל את העולם, והוא אוהב אותי.</div></div>
+  <div class="step-card"><div class="step-num">דרך ג</div><div class="step-title">התבוננות בזרימת החיים</div><div class="step-body">להתבונן בתנועה טובה ומתחדשת, כמו מים זורמים או מחוגי השעון. תנועה חיצונית מסודרת מסדירה את הקצב הפנימי.</div></div>
+  <div class="step-card"><div class="step-num">דרך ד</div><div class="step-title">הכרת תודה</div><div class="step-body">להקדיש כמה רגעים לומר תודה, לבורא ולבני אדם, על הטוב שכן יש בחיים.</div></div>
+  <div class="step-card"><div class="step-num">דרך ה</div><div class="step-title">אמירת תהילים בכוונה</div><div class="step-body">לומר פרק תהילים לאט ובכוונה. אמירת תהילים מפרקת דינים ומשקיטה את הלב.</div></div>
+  <div class="info-card"><div class="info-card-body">גירויים חיצוניים אינם עובדים לאורך זמן. מה שאינו מופעל בתוך עצמנו אינו מועיל. הכוחות נמצאים בתוכנו, ויש לנו את כוח הבחירה להפעיל אותם.</div></div>
+</div></div>
+
+<!-- H3 TEMPLATE -->
+<div id="view-h3" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-hitbonenut')">← חזרה</button><div class="section-title">תבנית ההתבוננות</div></div>
+  <div class="kli-hero green"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="kli-hero-title">הכנעה, הבדלה, המתקה</div><div class="kli-hero-desc">התבנית המרכזית של עבודת ההשקטה. אותה תבנית פועלת על המחשבות, הרגשות, הרצונות והדמיונות.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">התבוננות</div><div class="step-body">אני מתבונן/ת אצלי פנימה במה שזורם ומתרוצץ בתוכי, ופשוט מסתכל/ת בו כיצד הוא עובר. בלי שיפוט ובלי רדיפה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">זהות והזדהות</div><div class="step-body">"אני לא המחשבות שעוברות דרכי. <strong>אני אני, והן הן.</strong>" אני יכול/ה לבחור מה להשהות אצלי ולמה לתת לעבור. זו הכנעה גדולה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">זיהוי המקור</div><div class="step-body">מאיפה זה נובע? <strong>מבפנים או מבחוץ? מלמעלה או מלמטה?</strong> הארה מן הנשמה, משקע מחוויות העבר, או משהו שנכנס מבחוץ ואינו שלי כלל?</div></div>
+  <div class="step-card"><div class="step-num">שלב ד</div><div class="step-title">האטה ובדיקה</div><div class="step-body">אני מאט/ה את קצב הזרימה אט אט, עד שאני רואה כל דבר באופן איטי ובהיר ומזהה מהו מקורו.</div></div>
+  <div class="step-card"><div class="step-num">שלב ה</div><div class="step-title">בחירה, הבדלה</div><div class="step-body">אני בוחר/ת אחד טוב, מפתח/ת ומגדיל/ה ומשכלל/ת אותו. מן השאר אני נבדל/ת: מפסיק/ה את ההזדהות ונותן/ת להם לעבור.</div></div>
+  <div class="step-card"><div class="step-num">שלב ו</div><div class="step-title">בניין וריכוז, המתקה</div><div class="step-body">אני מקדיש/ה כמה דקות להתבונן במה שבחרתי, <strong>במתינות ובנחת מכל הזוויות</strong>, עד שההזדהות איתו גדולה ואוכל לעורר אותו מתוך בחירה בכל זמן.</div></div>
+  <div class="info-card"><div class="info-card-title">חשוב במיוחד</div><div class="info-card-body">לא לעצור בשלב ההבדלה. הפסקת ההזדהות בלבד משאירה ריקנות, והריקנות מושכת חזרה אל הדפוס הישן. ההמתקה, הבחירה והבניין של הטוב, היא שמשלימה את התהליך.</div></div>
+</div></div>
+
+<!-- H4 DVEKUT -->
+<div id="view-h4" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-hitbonenut')">← חזרה</button><div class="section-title">התבוננות הדבקות</div></div>
+  <div class="kli-hero purple"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(45 12 12)"/></svg></div><div class="kli-hero-title">מוקף מכל הצדדים</div><div class="kli-hero-desc">"יחשוב ויהרהר תמיד בלבו שהוא אצל השם יתברך, והשם יתברך מקיף אותו מכל צדדיו." זו ההתבוננות המסכמת של כל עבודת ההשקטה.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">השקטה</div><div class="step-body">לשבת בנחת ולהשקיט את הגוף בכמה נשימות איטיות. אפשר לפתוח בדומיה קצרה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">הציור הפנימי</div><div class="step-body">לצייר בפנים את הידיעה: <strong>אני נמצא/ת בתוך בורא עולם.</strong> הוא מקיף אותי מכל עבר, מלמעלה ומלמטה, מלפנים ומאחור, מימין ומשמאל. "סוֹבֵב כָּל עָלְמִין וּמְמַלֵּא כָּל עָלְמִין."</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">שהייה והתרחבות</div><div class="step-body">לשהות בתוך הציור הזה ולתת לו להתרחב, עד שהוא נעשה חוויה ולא רק רעיון: כל תנועה שלי, כל רצון, כל מחשבה, הם בתוכו ומתוכו.</div></div>
+  <div class="step-card"><div class="step-num">שלב ד</div><div class="step-title">נשיאה אל היום</div><div class="step-body">לסיים לאט, לפקוח עיניים, ולנסות לשאת את הידיעה הזאת עוד כמה רגעים אל תוך מה שעושים אחר כך.</div></div>
+  <div class="info-card"><div class="info-card-body">כשהציור הזה חי ופעיל, כל כוחות הנפש זורמים מתוך מסגרת אחת של דבקות וחיבור, ולא ככוחות מפוזרים המתנגשים זה בזה. זוהי השקטה שלמה.</div></div>
+  <div class="sep-label">פסוק מומלץ</div>
+  <div class="quick-pasuk"><div class="qp-text">שִׁוִּיתִי יְהֹוָ'ה לְנֶגְדִּי תָמִיד</div><div class="qp-source">תהלים טז ח</div></div>
+</div></div>
+
+<!-- H5 JOURNAL -->
+<div id="view-h5" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-hitbonenut')">← חזרה</button><div class="section-title">יומן השקטה</div></div>
+  <div class="kli-hero rose"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-5-2-9-1.5v13c4-.5 7 0 9 1.5 2-1.5 5-2 9-1.5v-13c-4-.5-7 0-9 1.5z"/><path d="M12 6v13"/></svg></div><div class="kli-hero-title">העבודה השבועית</div><div class="kli-hero-desc">המסגרת שמחזיקה את כל התרגולים לאורך זמן. הקביעות חשובה מן הכמות, והמבט על עצמנו הוא בעין טובה, מתוך ספורטיביות שמחה.</div></div>
+  <div class="step-card"><div class="step-num">כלי א</div><div class="step-title">רישום יומי</div><div class="step-body">כל ערב לפני השינה לרשום <strong>שלושה דברים שעזרו</strong> להשקיט את הדמיונות, הרצונות, המחשבות, הרגשות והתאוות, <strong>ושלושה דברים שהיו קשים.</strong> למחרת לשאול: למה זה הצליח וזה לא? אין כמו מבחן המציאות.</div></div>
+  <div class="step-card"><div class="step-num">כלי ב</div><div class="step-title">זיהוי דפוסים</div><div class="step-body">לשים לב מה מנהל אותנו מבפנים, מה מעורר בנו אי שקט ומה מרגיע אותנו. דפוסים יושבים בדרך כלל על משקעים ישנים, וזיהוי הדפוס הוא הפתח לשינויו.</div></div>
+  <div class="step-card"><div class="step-num">כלי ג</div><div class="step-title">שעת השקטה שבועית</div><div class="step-body">לערוך פעם בשבוע בדיקה במפת כוחות הנפש, לעבור על התאוות, הרגשות, המחשבות, הרצונות והדמיונות, ולהפעיל נוהל השקטה היכן שנדרש.</div></div>
+  <div class="info-card"><div class="info-card-title">שאלות לבחינה עצמית</div><div class="info-card-body">איזו מן הפעולות עזרה לי להשקיט ולאזן?<br><br>איזו מהן הייתה לי קשה?<br><br>מה התגלה לי על הדפוסים הפנימיים שלי?<br><br>כיצד ההשקטה משפיעה על האופן שבו אני מתייחס/ת לעצמי, לעולם ולסובבים אותי?</div></div>
+  <div class="info-card"><div class="info-card-body">מומלץ שהיומן יהיה אישי וסודי. יומן שאיש אינו רואה מאפשר כנות מלאה, והכנות היא תנאי לעבודה אמיתית. "מי שמקפיד, מקפידים איתו", ולכן העבודה נעשית בעין טובה.</div></div>
+</div></div>
+
+<!-- GUIDE LIST -->
+<div id="view-guide" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-home')">← חזרה</button><div class="section-title">מדריך למטפל</div></div>
+  <p class="intro-text">האזור הזה בנוי אחרת מכל שאר האתר. בשאר המדורים השפה היא שפת המקורות, ואילו כאן אותו תוכן בדיוק מתורגם לשפה פשוטה ויומיומית, בלי מונחים קבליים או חסידיים, כדי שתוכל להעביר אותו למי שיושב מולך גם אם אין לו שום רקע קודם. הרעיון זהה, רק זווית ההסתכלות שונה: לא איך אני עובד עם עצמי, אלא איך אני מסביר את זה למישהו אחר, בגובה העיניים שלו.</p>
+  <p class="intro-text">כלל אצבע שימושי לאורך כל הדרך: עדיף לשאול מאשר להסביר. במקום להרצות למטופל על הכלי, אפשר להוביל אותו בשאלות עד שהוא מגלה את התובנה בעצמו, וכך היא נשארת אצלו הרבה יותר.</p>
+  <div class="kelim-list">
+    <div class="kelim-item amber" onclick="nav('view-g0')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6 6-2z"/></svg></div><div class="ki-info"><div class="ki-title">השיטה בשלושה צעדים</div><div class="ki-sub">המבנה הכללי שמתאים לכל דבר</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item amber" onclick="nav('view-g1')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-1.5-1-2.5-1.5-3.5.7 1 1 2 1 3a5.5 5.5 0 11-11 0c0-4 3-5 3-6.5C9.5 3 10.5 2.5 12 2z"/></svg></div><div class="ki-info"><div class="ki-title">דחפים וצרכים חזקים</div><div class="ki-sub">כשקשה לעצור: אוכל, מסך, קניות, כעס</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item amber" onclick="nav('view-g2')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/><path d="M2 15c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/></svg></div><div class="ki-info"><div class="ki-title">רגשות</div><div class="ki-sub">איך ללמד להקשיב לרגש בלי להיסחף</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item amber" onclick="nav('view-g3')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="9" rx="7" ry="5"/><circle cx="7" cy="17" r="1.3"/><circle cx="4.5" cy="20" r="0.8"/></svg></div><div class="ki-info"><div class="ki-title">מחשבות</div><div class="ki-sub">המסך הפנימי וכל מה שעובר עליו</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item amber" onclick="nav('view-g4')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div><div class="ki-info"><div class="ki-title">כשיש כמה רצונות שסותרים</div><div class="ki-sub">לעזור לבחור מה חשוב עכשיו</div></div><div class="ki-arrow">←</div></div>
+    <div class="kelim-item amber" onclick="nav('view-g5')"><div class="ki-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.5 10l-5.7 1.4L12 17l-1.8-5.6L4.5 10l5.7-1.4L12 3z"/></svg></div><div class="ki-info"><div class="ki-title">דימיון ותמונות פנימיות</div><div class="ki-sub">לשנות תמונה ישנה שמגבילה</div></div><div class="ki-arrow">←</div></div>
+  </div>
+</div></div>
+
+<!-- G0 METHOD -->
+<div id="view-g0" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-guide')">← חזרה</button><div class="section-title">השיטה בשלושה צעדים</div></div>
+  <div class="kli-hero amber"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6 6-2z"/></svg></div><div class="kli-hero-title">עצור, הבחן, בחר</div><div class="kli-hero-desc">כל כלי באזור הזה, בכל תחום שהוא, בנוי משלושה צעדים שחוזרים על עצמם. ברגע שהמטופל מכיר את המבנה הכללי, קל לו להשתמש בו בכל מצב, בלי שתצטרך ללמד אותו כלי חדש בכל פעם מחדש.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">עצירה</div><div class="step-body">לפני שממשיכים כרגיל, עוצרים לרגע אחד ושמים לב למה שקורה עכשיו בפנים. אפשר להציע למטופל שאלה פשוטה: מה עולה בי ממש עכשיו? העצירה הזאת לבדה כבר משנה משהו, כי היא שוברת את האוטומט.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">הבחנה</div><div class="step-body">מלמדים את המטופל להבדיל בין עצמו לבין מה שעולה בו. אפשר לנסח את זה כך: יש לי מחשבה, רגש או דחף, אבל אני לא הוא. הוא עובר דרכי, ואני מי שמסתכל עליו. ההבחנה הזאת פותחת מרחב קטן של בחירה במקום שבו הייתה קודם רק תגובה אוטומטית.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">בחירה</div><div class="step-body">בשלב האחרון המטופל בוחר מה לעשות עם מה שעלה, להמשיך בו, לשנות כיוון, או פשוט לתת לו לעבור. חשוב להדגיש שהמטרה איננה להילחם במה שעולה או לדכא אותו, אלא לבחור מודעות במקום להיסחף.</div></div>
+  <div class="info-card"><div class="info-card-title">טיפ לשיחה</div><div class="info-card-body">כדאי ללמד את שלוש המילים עצירה, הבחנה ובחירה כמילות מפתח קבועות. כשהן חוזרות על עצמן בכל פגישה, המטופל מפנים אותן מהר, ויכול להשתמש בהן גם לבד, בלי שאתה נוכח.</div></div>
+</div></div>
+
+<!-- G1 DRIVES -->
+<div id="view-g1" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-guide')">← חזרה</button><div class="section-title">דחפים וצרכים חזקים</div></div>
+  <div class="kli-hero amber"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-1.5-1-2.5-1.5-3.5.7 1 1 2 1 3a5.5 5.5 0 11-11 0c0-4 3-5 3-6.5C9.5 3 10.5 2.5 12 2z"/></svg></div><div class="kli-hero-title">דחף חזק זה לא קלקול</div><div class="kli-hero-desc">הרבה אנשים מגיעים לטיפול עם תחושה שמשהו בהם מקולקל כי יש להם דחף חזק שקשה לשלוט בו. אפשר להסביר להם שדחף חזק הוא בעצם הרבה כוח חיים שמחפש כיוון, לא סימן שיש איתם משהו לא בסדר.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">עצירה לפני שממשיכים</div><div class="step-body">מציעים למטופל לעצור ממש רגע לפני שהוא עושה את הפעולה שהוא רגיל אליה, ולשאול את עצמו: מה אני מרגיש עכשיו שגורם לי לרצות את זה? לפעמים מתגלה שמאחורי הדחף לאוכל מתוק יושבת עייפות, ומאחורי דחף לקניות יושבת בדידות.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">אני לא הדחף</div><div class="step-body">אפשר ללמד משפט פשוט לחזור עליו: יש לי דחף, אבל אני לא הדחף הזה. הוא כמו גל שעולה ויורד, ואני זה מי שמסתכל על הגל מהחוף. המשפט הזה יוצר מרחק קטן שמאפשר לבחור.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">למצוא לכוח כיוון אחר</div><div class="step-body">השלב האחרון הוא לא לדכא את הדחף, אלא לשאול לאיפה עוד אפשר לתעל את הכוח הזה. מי שיש לו דחף חזק לאכול בערב אולי זקוק בעצם למנוחה, לתשומת לב או לתנועה, וכשהוא נותן לעצמו את זה, הדחף נחלש מעצמו.</div></div>
+  <div class="info-card"><div class="info-card-title">משפט שאפשר להציע למטופל</div><div class="info-card-body">אני לא צריך להילחם בדחף. אני רק צריך לעצור רגע, לשאול מה מאחוריו, ולבחור מה אני עושה עם הכוח הזה.</div></div>
+</div></div>
+
+<!-- G2 EMOTIONS -->
+<div id="view-g2" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-guide')">← חזרה</button><div class="section-title">רגשות</div></div>
+  <div class="kli-hero amber"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/><path d="M2 15c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/></svg></div><div class="kli-hero-title">רגש הוא מידע, לא פקודה</div><div class="kli-hero-desc">הרבה פעמים אנשים מרגישים שהרגש שולט בהם. אפשר להסביר שרגש הוא בעצם מידע חשוב על מה שקורה בפנים, ולא הוראה שחייבים למלא אותה מיד.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">לתת לרגש שם</div><div class="step-body">השאלה הראשונה שאפשר להציע היא פשוטה: מה אני מרגיש עכשיו, ממש במילה אחת. עצם נתינת השם לרגש כבר יוצרת ריחוק קטן ממנו ומחזירה תחושת שליטה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">זה בסדר להרגיש ככה</div><div class="step-body">השלב הבא הוא קבלה. אפשר ללמד את המטופל לומר לעצמו: זה בסדר שאני מרגיש ככה, זו לא טעות. הקבלה לא אומרת שצריך לפעול מתוך הרגש, היא רק אומרת שאסור להילחם בעובדה שהוא קיים.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">מה אני בוחר לעשות איתו</div><div class="step-body">אחרי שהרגש קיבל שם ומקום, אפשר לשאול: מה אני בוחר לעשות עם מה שאני מרגיש עכשיו? השאלה הזאת מעבירה את המטופל ממקום של קורבן לרגש למקום של מי שיש לו בחירה לגביו.</div></div>
+  <div class="info-card"><div class="info-card-body">רגש שמקבל מקום להיאמר בקול, גם אם רק במילה אחת, כבר לא צריך לצעוק כדי להישמע.</div></div>
+</div></div>
+
+<!-- G3 THOUGHT -->
+<div id="view-g3" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-guide')">← חזרה</button><div class="section-title">מחשבות</div></div>
+  <div class="kli-hero amber"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="9" rx="7" ry="5"/><circle cx="7" cy="17" r="1.3"/><circle cx="4.5" cy="20" r="0.8"/></svg></div><div class="kli-hero-title">המחשבה היא מסך, לא אמת</div><div class="kli-hero-desc">אפשר להסביר למטופל שהמחשבה היא כמו מסך שדברים עוברים עליו כל הזמן. לא כל מה שמופיע על המסך הוא נכון, ולא כל מחשבה צריכה אמון אוטומטי.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">לפנות רגע למסך</div><div class="step-body">לפני שנכנסים לתוכן המחשבות, אפשר להציע רגע של שקט, כמה נשימות איטיות, רק כדי לפנות מקום. אין צורך לעצור את המחשבות בכוח, רק לתת להן להאט.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">מאיפה זה בא</div><div class="step-body">שאלה שמבהירה הרבה: המחשבה הזאת, היא באמת שלי, או שהיא הרגל ישן, או קול של מישהו אחר שנשאר בפנים? השאלה הזאת מפרידה בין המטופל לבין תוכן שאולי אינו שלו כלל.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">לבחור במה להתמקד</div><div class="step-body">בסוף מלמדים לבחור מחשבה אחת שכן שווה תשומת לב ולפתח אותה, ולתת לשאר לעבור בלי להיאבק בהן. ככל שנלחמים במחשבה יותר היא נשארת יותר, וככל שנותנים לה לעבור בלי דרמה היא נעלמת מהר יותר.</div></div>
+  <div class="info-card"><div class="info-card-title">דימוי שיכול לעזור</div><div class="info-card-body">אפשר להשוות את זה למסך טלוויזיה שרואים בו הרבה תוכניות במהלך היום. לא צריך לצפות בכל תוכנית עד הסוף, ואפשר להחליף ערוץ בכל רגע.</div></div>
+</div></div>
+
+<!-- G4 WILL -->
+<div id="view-g4" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-guide')">← חזרה</button><div class="section-title">כשיש כמה רצונות שסותרים</div></div>
+  <div class="kli-hero amber"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div><div class="kli-hero-title">כמה רצונות מושכים לכיוונים שונים</div><div class="kli-hero-desc">מטופלים רבים מגיעים עם תחושה של קריעה פנימית, חלק בהם רוצה דבר אחד וחלק אחר רוצה משהו הפוך. אפשר להסביר שזה נורמלי לגמרי, ושהעבודה היא לא לבטל רצון אחד, אלא לבחור לאיזה מהם לתת במה עכשיו.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">להסתכל על כל הרצונות</div><div class="step-body">מבקשים מהמטופל לשים על השולחן, ולו רק במילים, את כל הרצונות שמתרוצצים בו, בלי לפסול אף אחד מהם מראש.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">להאט ולבדוק</div><div class="step-body">עוברים לאט על כל רצון ושואלים: מאיפה הרצון הזה בא, ומה יקרה אם אלך לפיו? ההאטה הזאת מבהירה איזה רצון הוא באמת עמוק ואיזה הוא רק רעש של הרגע.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">לבחור מה מתאים עכשיו</div><div class="step-body">בסוף עוזרים למטופל לבחור, לא לפי מה שהכי חזק ברעש שלו אלא לפי מה שהכי נכון ומתאים לו כרגע, ולזכור שבחירה אחת לא מוחקת את שאר הרצונות, היא רק קובעת סדר עדיפויות זמני.</div></div>
+  <div class="info-card"><div class="info-card-title">משפט שיכול לעזור למטופל</div><div class="info-card-body">אני לא צריך לבטל שום רצון בתוכי. אני רק בוחר עכשיו למי מהם לתת את הבמה.</div></div>
+</div></div>
+
+<!-- G5 IMAGINATION -->
+<div id="view-g5" class="view"><div class="page-content">
+  <div class="section-head"><button class="back-btn" onclick="nav('view-guide')">← חזרה</button><div class="section-title">דימיון ותמונות פנימיות</div></div>
+  <div class="kli-hero amber"><div class="kli-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.5 10l-5.7 1.4L12 17l-1.8-5.6L4.5 10l5.7-1.4L12 3z"/></svg></div><div class="kli-hero-title">התמונות הפנימיות שלנו</div><div class="kli-hero-desc">כל אדם נושא בתוכו תמונות פנימיות של עצמו ושל העולם, לפעמים בלי לשים לב, ותמונות ישנות ומגבילות ממשיכות להשפיע גם כשהן כבר לא נכונות. אפשר ללמד את המטופל לזהות תמונה כזאת ולבנות לצידה תמונה חדשה שתומכת בו יותר.</div></div>
+  <div class="step-card"><div class="step-num">שלב א</div><div class="step-title">לזהות את התמונה הישנה</div><div class="step-body">שואלים: כשאני חושב על עצמי במצב הזה, איזו תמונה או סצנה עולה לי בראש? הרבה פעמים מתברר שהתמונה הזאת ישנה מאוד, ולא קשורה בכלל למציאות הנוכחית.</div></div>
+  <div class="step-card"><div class="step-num">שלב ב</div><div class="step-title">לשים לה גבול</div><div class="step-body">מלמדים את המטופל לומר לעצמו: זו תמונה מהעבר, אני לא חייב להישאר בתוכה. הקביעה הפשוטה הזאת כבר מרפה קצת את האחיזה של התמונה הישנה.</div></div>
+  <div class="step-card"><div class="step-num">שלב ג</div><div class="step-title">לבנות תמונה חדשה</div><div class="step-body">מבקשים מהמטופל לצייר בדמיון תמונה חדשה, ברורה וקונקרטית ככל האפשר, שמייצגת אותו במקום שהוא רוצה להגיע אליו, ומזמינים אותו לחזור אליה כמה פעמים ביום, גם ליום או שניים בלבד, כדי לתת לה מקום להשתרש.</div></div>
+  <div class="info-card"><div class="info-card-title">טיפ מעשי</div><div class="info-card-body">כדאי לעודד את המטופל לתאר את התמונה החדשה בקול, בפירוט, כאילו הוא כבר בתוכה. ככל שהתיאור מוחשי יותר, כך קל יותר לחזור אליו לבד בבית.</div></div>
+</div></div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <button class="bnav-item active" id="bnav-home" onclick="nav('view-home');setNav('bnav-home')"><span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><span class="bnav-label">בית</span></button>
+  <button class="bnav-item" id="bnav-kelim" onclick="nav('view-kelim');setNav('bnav-kelim')"><span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="16" r="4"/><path d="M11 13L20 4"/><path d="M15.5 8.5L18 11"/><path d="M18.5 5.5L21 8"/></svg></span><span class="bnav-label">כלים</span></button>
+  <button class="bnav-item" id="bnav-hit" onclick="nav('view-hitbonenut');setNav('bnav-hit')"><span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13c3-4 7-5 9-3 1-3 5-5 9-4-2 1-3 3-3 5 0 4-4 7-9 7-2 0-3-.5-4-1.5"/><circle cx="16.5" cy="8.5" r="0.6" fill="currentColor" stroke="none"/></svg></span><span class="bnav-label">התבוננות</span></button>
+  <button class="bnav-item" id="bnav-psukkim" onclick="nav('view-psukkim');setNav('bnav-psukkim')"><span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.5 10l-5.7 1.4L12 17l-1.8-5.6L4.5 10l5.7-1.4L12 3z"/></svg></span><span class="bnav-label">פסוקים</span></button>
+  <button class="bnav-item" id="bnav-shem" onclick="nav('view-shem');setNav('bnav-shem')"><span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg></span><span class="bnav-label">שם הוי"ה</span></button>
+</div>
+</div>
+
+<!-- Mida overlay -->
+<div class="overlay" id="mida-overlay" onclick="closeMidaOverlay(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-mida-title" id="sh-title"></div>
+    <div class="sheet-shem-bg"><div class="sheet-shem-glow" id="sh-shem"></div></div>
+    <div class="sheet-body" id="sh-body"></div>
+    <button class="sheet-close" onclick="document.getElementById('mida-overlay').classList.remove('open')">סגור</button>
+  </div>
+</div>
+
+<script>
+function nav(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);
+  const shem=document.getElementById('home-shem-sticky');
+  if(shem) shem.style.display = (id==='view-home') ? 'block' : 'none';
+}
+function setNav(id){document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');}
+const midaData={
+  ahava:{title:'מִדַּת הָאַהֲבָה',shem:'יַהֲוָה',body:'לראות את אותיות שם הוי"ה מעל הראש בגובה מקום התפילין, באותיות גדולות ורחבות המאירות באור בהיר ונעים בניקוד פַּתַּח — לעורר ולהשרות את מידת אהבת ה\' בנו.'},
+  yira:{title:'מִדַּת הַיִּרְאָה',shem:'יִהְוָה',body:'לראות את אותיות שם הוי"ה מעל הראש באותיות גדולות ורחבות המאירות בניקוד חִירִיק — לעורר את יראת הרוממות. יראת שמיים אמיתית מביאה שמחה.'},
+  emuna:{title:'מִדַּת הָאֱמוּנָה',shem:'יֱהוּהָ',body:'לראות את אותיות שם הוי"ה מעל הראש באותיות גדולות ומאירות בניקוד שְׁוָא וְשׁוּרוּק — לעורר את מידת האמונה. האות וָ"ו מחברת עליון ותחתון.'},
+  simcha:{title:'מִדַּת הַשִּׂמְחָה',shem:'יִהְוָה',body:'לראות את אותיות שם הוי"ה מעל הראש באותיות גדולות ורחבות המאירות בניקוד חִירִיק — לעורר את מידת השמחה ומלכות. יראה ושמחה גדלות יחד.'}
+};
+function openMida(key){const d=midaData[key];document.getElementById('sh-title').textContent=d.title;document.getElementById('sh-shem').textContent=d.shem;document.getElementById('sh-body').innerHTML=d.body;document.getElementById('mida-overlay').classList.add('open');}
+function closeMidaOverlay(e){if(e.target===document.getElementById('mida-overlay'))document.getElementById('mida-overlay').classList.remove('open');}
+</script>
+</body>
+</html>
