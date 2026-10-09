@@ -359,6 +359,121 @@
   .paper-empty{color:#5e6b66;}
   .bm-btn[disabled]{opacity:.4;cursor:default;}
 
+  /* ===== שאלון היכרות ואבחון בכרטיס המטופל ===== */
+  .iq-secs{display:flex;gap:6px;margin:4px 0 14px;background:#E7EFEC;border-radius:999px;padding:4px;max-width:420px;}
+  .iq-sec{flex:1;border:none;background:transparent;color:var(--forest-dark);border-radius:999px;padding:8px 6px;font-family:'Assistant',sans-serif;font-weight:700;font-size:0.92rem;cursor:pointer;}
+  .iq-sec.on{background:var(--forest);color:#fff;}
+  .iq-sec small{font-weight:600;opacity:.75;margin-inline-start:4px;}
+  .iq-switch{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--forest-dark);font-size:0.92rem;cursor:pointer;user-select:none;}
+  .iq-switch input{position:absolute;opacity:0;width:1px;height:1px;}
+  .iq-switch .track{width:40px;height:22px;border-radius:999px;background:#cfd6cf;position:relative;transition:background .15s;}
+  .iq-switch .track::after{content:"";position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .iq-switch input:checked + .track{background:var(--sefirah);}
+  .iq-switch input:checked + .track::after{transform:translateX(-18px);}
+  .iq-switch input:focus-visible + .track{outline:3px solid var(--air);outline-offset:2px;}
+
+  .iq-paper .paper-h h2{margin:0;font-size:1.45rem;color:var(--forest-dark);font-weight:900;}
+  .iq-intro{font-size:0.98rem;line-height:1.75;color:#3f4a46;margin:12px 0 4px;}
+  .iq-intro.small{font-size:0.84rem;color:#6a756f;margin-top:0;}
+  .iq-q{margin-top:24px;}
+  .iq-q > h3{font-size:1.18rem;color:var(--forest-dark);margin:0 0 2px;padding-bottom:6px;border-bottom:1px solid var(--sage);}
+  .iq-hint{font-size:0.88rem;color:#6a756f;margin:6px 0 10px;line-height:1.6;}
+  .iq-sub{font-size:0.9rem;font-weight:800;color:var(--sefirah);margin:16px 0 0;}
+  .iq-item{margin:13px 0;break-inside:avoid;}
+  .iq-lbl{display:block;font-weight:700;font-size:0.96rem;margin-bottom:6px;color:#2f3a36;}
+  .iq-grid2{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;}
+  .iq-details{display:grid;grid-template-columns:1fr 2fr 1.4fr;gap:10px;margin-top:10px;}
+  .iq-details label{font-size:0.82rem;font-weight:700;color:var(--forest);display:block;margin-bottom:3px;}
+  .iq-paper input[type=text],.iq-paper textarea{width:100%;font-family:'Assistant',sans-serif;font-size:0.98rem;color:var(--ink);background:#fff;border:1px solid rgba(44,95,91,0.25);border-radius:8px;padding:8px 10px;outline:none;}
+  .iq-paper input[type=text]:focus,.iq-paper textarea:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(44,95,91,0.12);}
+  .iq-paper textarea{min-height:60px;resize:vertical;line-height:1.6;}
+  .iq-group{font-size:0.82rem;font-weight:800;color:var(--forest);margin:12px 0 2px;}
+  .iq-opts{display:flex;flex-wrap:wrap;gap:6px 8px;}
+  .iq-opts.col{flex-direction:column;gap:2px;}
+  .iq-opts.iq-grid2{display:grid;}
+  .iq-opt{display:flex;align-items:flex-start;gap:8px;cursor:pointer;padding:5px 2px;line-height:1.45;font-size:0.95rem;}
+  .iq-opts:not(.col):not(.iq-grid2) .iq-opt{border:1.5px solid rgba(44,95,91,0.2);border-radius:999px;padding:6px 13px;background:#fff;}
+  .iq-opts:not(.col):not(.iq-grid2) .iq-opt.on{border-color:var(--forest);background:#E7EFEC;}
+  .iq-opt input{accent-color:var(--forest);width:18px;height:18px;margin:1px 0 0;flex-shrink:0;}
+  .iq-opt:has(input:focus-visible),.iq-sc:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  .iq-bi .iq-dur{display:none;margin:0 26px 6px 0;width:calc(100% - 26px) !important;font-size:0.86rem !important;padding:5px 9px !important;}
+  .iq-bi.on .iq-dur{display:block;}
+  .iq-scale{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+  .iq-sc{width:33px;height:33px;border-radius:50%;border:1.5px solid rgba(44,95,91,0.3);background:#fff;font-family:'Assistant',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;color:var(--ink);}
+  .iq-sc.on{background:var(--forest);color:#fff;border-color:var(--forest);}
+  .iq-scale .end{font-size:0.78rem;color:#6a756f;margin:0 4px;}
+  .iq-stmt{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dotted rgba(44,95,91,0.25);break-inside:avoid;}
+  .iq-stmt .t{font-size:0.95rem;line-height:1.5;}
+  .iq-tri{display:flex;gap:4px;}
+  .iq-tri button{border:1.5px solid rgba(44,95,91,0.25);background:#fff;border-radius:999px;padding:4px 10px;font-family:'Assistant',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;color:#4a5551;white-space:nowrap;}
+  .iq-tri button.on{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .iq-nature{margin:14px 0;break-inside:avoid;}
+  .iq-k-body .iq-soul{display:none;}
+  .iq-k-soul .iq-bodyc{display:none;}
+  .iq-k-body .iq-sub, .iq-k-soul .iq-sub, .iq-k-both .iq-sub{display:none;}
+  .iq-blank-only{display:none;}
+  .iq-print-lines{display:none;}
+  .iq-tg{display:none;gap:3px;margin-inline-start:4px;vertical-align:middle;}
+  .iq-thera .iq-tg{display:inline-flex;}
+  .iq-tg i{display:inline-block;font-style:normal;font-size:0.68rem;font-weight:800;padding:1px 6px;border-radius:999px;}
+  .iq-tg .fire{background:var(--fire-bg);color:var(--fire);} .iq-tg .water{background:var(--water-bg);color:var(--water);}
+  .iq-tg .air{background:var(--air-bg);color:var(--air);} .iq-tg .earth{background:var(--earth-bg);color:var(--earth);}
+  .iq-tg .floor{background:var(--sefirah-bg);color:var(--sefirah);}
+  #iqSummary{display:none;margin-bottom:16px;background:#fff;border:2px solid var(--sefirah);border-radius:14px;padding:16px 18px;}
+  .iq-thera #iqSummary{display:block;}
+  #iqSummary h2{margin:0 0 4px;color:var(--sefirah);font-size:1.25rem;}
+  #iqSummary .note{font-size:0.84rem;color:#6a756f;margin:0 0 10px;}
+  .iq-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:10px 0 12px;}
+  .iq-bars h4{margin:0 0 6px;font-size:0.86rem;color:var(--forest-dark);font-family:'Assistant',sans-serif;}
+  .iq-bar-row{display:grid;grid-template-columns:44px 1fr 22px;align-items:center;gap:6px;font-size:0.8rem;font-weight:700;margin-bottom:4px;}
+  .iq-bar-track{height:10px;background:#EFEDE6;border-radius:999px;overflow:hidden;}
+  .iq-bar-fill{display:block;height:100%;border-radius:999px;}
+  .iq-sum-h{font-weight:800;color:var(--sefirah);font-size:0.84rem;margin:12px 0 3px;}
+  .iq-sum-p{margin:0;line-height:1.7;font-size:0.93rem;}
+
+  .iq-read-in{width:100%;min-height:320px;border:1.5px solid rgba(44,95,91,0.25);border-radius:12px;padding:12px 14px;font-family:'Assistant',sans-serif;font-size:0.98rem;line-height:1.7;background:#fff;resize:vertical;outline:none;}
+  .iq-read-in:focus{border-color:var(--forest);}
+  .iq-read p{margin:0 0 14px;line-height:1.85;font-size:1.02rem;}
+  .iq-read b{color:var(--forest-dark);}
+  .iq-read-date{font-weight:700;color:var(--forest);}
+  .iq-thera-part{margin-top:22px;background:var(--sefirah-bg);border-radius:12px;padding:14px 16px;}
+  .iq-thera-part .iq-tp-h{font-weight:800;color:var(--sefirah);font-size:0.86rem;margin-bottom:8px;}
+  .iq-thera-part p{font-size:0.94rem;}
+  .iq-empty{background:#fff;border:1.5px dashed var(--sage);border-radius:16px;padding:20px;color:#5e6b66;line-height:1.7;}
+
+  @media (max-width:600px){
+    .iq-grid2,.iq-opts.iq-grid2{grid-template-columns:1fr;}
+    .iq-bars{grid-template-columns:1fr;}
+    .iq-stmt{grid-template-columns:1fr;gap:6px;}
+    .iq-details{grid-template-columns:1fr 1fr;}
+  }
+  @media print{
+    html{font-size:11pt;}
+    .iq-paper input[type=text]{border:none;border-bottom:1px solid #999;border-radius:0;padding:2px 0;background:transparent;}
+    .iq-paper textarea{display:none;}
+    .iq-print-lines{display:block;white-space:pre-wrap;line-height:1.7;min-height:var(--ph,48px);border-bottom:1px solid #bbb;
+      background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 23px,#ddd 23px,#ddd 24px);font-size:0.95rem;}
+    .iq-print-lines.filled{background-image:none;min-height:0;border-bottom:none;}
+    .iq-bi .iq-dur{border:none !important;padding:0 !important;font-style:italic;color:#555;}
+    .iq-bi .iq-dur.empty{display:none !important;}
+    .iq-blankmode .iq-blank-only{display:block;}
+    .iq-opt{padding:2px 2px;}
+    .iq-item{margin:9px 0;}
+    .iq-q{margin-top:16px;}
+    .iq-q > h3{break-after:avoid;}
+    .iq-opts:not(.col):not(.iq-grid2) .iq-opt{border:1px solid #aaa;padding:3px 10px;}
+    .iq-opts:not(.col):not(.iq-grid2) .iq-opt.on{background:#e5e5e5;border-color:#333;}
+    .iq-sc{width:24px;height:24px;font-size:0.78rem;border-color:#999;}
+    .iq-sc.on{background:#333;border-color:#333;}
+    .iq-tri button{border-color:#999;padding:2px 8px;}
+    .iq-tri button.on{background:#333;border-color:#333;}
+    .iq-nature .iq-opts.col{display:grid;grid-template-columns:1fr 1fr;gap:2px 18px;}
+    .iq-stmt{padding:5px 0;}
+    #iqSummary{break-after:page;border-width:1px;}
+    .iq-print-patient .iq-thera-part{display:none !important;}
+    .iq-read p{font-size:11.5pt;}
+  }
+
 </style>
 </head>
 <body>
@@ -452,7 +567,7 @@
     <div id="toolsList"></div>
   </div>
   <div id="sheetView" style="display:none;">
-    <div class="system-title no-print"><h2>מטופלים ודפים לבית</h2></div>
+    <div class="system-title no-print"><h2>מטופלים</h2></div>
     <div id="sheetBody"></div>
   </div>
 </main>
@@ -2379,6 +2494,510 @@ function jumpToSefirahWeek(n){
   jumpToSefirah(n);
   setTimeout(()=>{ const c=document.getElementById(sefId(n)); if(c){ const w=c.querySelector('.subsection.week'); if(w){ w.classList.add('open'); setTimeout(()=>scrollToEl(w),250);} } },80);
 }
+
+/* ===== שאלון היכרות ואבחון בכרטיס המטופל ===== */
+const IQ_EL = {fire:{name:"אש",c:"#A8442B"}, water:{name:"מים",c:"#2F6690"}, air:{name:"אוויר",c:"#A9821F"}, earth:{name:"אדמה",c:"#5C6B3F"}};
+const IQ_ORDER = ["fire","water","air","earth"];
+const iqEsc = s => String(s==null?"":s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const IQ_KIND = [["body","משהו בגוף"],["soul","משהו בנפש, כמו לחץ, עצב או חרדה"],["both","שניהם"]];
+const IQ_SIDE = [["right","ימין"],["left","שמאל"],["both","שני הצדדים"],["na","לא רלוונטי"]];
+const IQ_FB = [["front","מלפנים"],["back","מאחור"],["na","לא רלוונטי"]];
+const IQ_SENS = [
+  {id:"t_pain",label:"כאב",tags:[]},
+  {id:"t_burn",label:"שריפה, צריבה או חום",tags:["fire"]},
+  {id:"t_infl",label:"דלקת",tags:["fire"]},
+  {id:"t_stiff",label:"נוקשות או הגבלה בתנועה",tags:["earth"]},
+  {id:"t_swell",label:"נפיחות או בצקת",tags:["water"]},
+  {id:"t_itch",label:"גרד או אי שקט בעור",tags:["air"]},
+  {id:"t_allergy",label:"תגובה אלרגית",tags:["air"]},
+  {id:"t_weak",label:"חולשה או עייפות",tags:["air"]},
+  {id:"t_bleed",label:"דימום",tags:["fire"]},
+  {id:"t_lump",label:"גוש",tags:[]}
+];
+const IQ_SOUL = [
+  {id:"k_stress",label:"לחץ ומתח",tags:["fire"]},
+  {id:"k_anger",label:"כעס או רוגז",tags:["fire"]},
+  {id:"k_sad",label:"עצב, דכדוך או כבדות",tags:["earth"]},
+  {id:"k_anx",label:"חרדה או אי שקט",tags:["air"]},
+  {id:"k_fear",label:"פחד או דאגה",tags:["water"]},
+  {id:"k_flood",label:"הצפה רגשית",tags:["water"]},
+  {id:"k_empty",label:"ריקנות, כאילו חסרה חיות",tags:["water"]}
+];
+const IQ_BODY = [
+  {name:"ראש ושינה", items:[
+    {id:"b_head_hot",label:"כאב ראש לוחץ, חם, תחושה שהראש מתפוצץ",tags:["fire"]},
+    {id:"b_head_heavy",label:"כבדות בראש",tags:["earth"]},
+    {id:"b_sleep",label:"קושי להירדם או שינה לא רציפה",tags:["air"]},
+    {id:"b_eyes",label:"עיניים עייפות, דומעות או מגורות",tags:["water"]}]},
+  {name:"נשימה", items:[
+    {id:"b_shallow",label:"נשימה שטחית, קושי לנשום עמוק",tags:["air"]},
+    {id:"b_exhale",label:"קושי דווקא להוציא את האוויר",tags:["air"]},
+    {id:"b_breath",label:"קוצר נשימה או אסטמה",tags:["air"]},
+    {id:"b_chest",label:"מועקה וכובד בחזה",tags:["earth"]},
+    {id:"b_cough",label:"שיעול יבש",tags:["earth"]},
+    {id:"b_colds",label:"נטייה להצטננויות וליחה",tags:["water"]},
+    {id:"b_sinus",label:"נזלת או סינוסים",tags:["water"]},
+    {id:"b_allergy",label:"אלרגיות ועיטושים",tags:["air"]},
+    {id:"b_throat",label:"דלקות גרון",tags:["fire"]}]},
+  {name:"עור", items:[
+    {id:"b_rash",label:"פריחות אדומות או דלקות בעור",tags:["fire"]},
+    {id:"b_itch",label:"גרד",tags:["air"]},
+    {id:"b_dryskin",label:"עור יבש ומתקלף",tags:["air"]},
+    {id:"b_moist",label:"עור לח ודביק",tags:["water"]},
+    {id:"b_sweat",label:"הזעת יתר",tags:["water"]},
+    {id:"b_nails",label:"ציפורניים רכות ומתקלפות",tags:["water"]}]},
+  {name:"עיכול", items:[
+    {id:"b_heartburn",label:"צרבת או חומציות",tags:["fire"]},
+    {id:"b_nausea",label:"בחילות",tags:["water"]},
+    {id:"b_constip",label:"עצירות",tags:["water"]},
+    {id:"b_diarr",label:"שלשולים",tags:["water"]},
+    {id:"b_gas",label:"גזים ונפיחות שמשתנה במהלך היום",tags:["air"]},
+    {id:"b_ibs",label:"מעי רגיז",tags:["fire","air"]},
+    {id:"b_slowdig",label:"כבדות ואיטיות אחרי אוכל",tags:["earth"]},
+    {id:"b_hemo",label:"טחורים",tags:["fire"]}]},
+  {name:"שתן ונוזלים", items:[
+    {id:"b_urine",label:"דחיפות או תכיפות במתן שתן",tags:["water"]},
+    {id:"b_edema",label:"בצקות או אגירת נוזלים",tags:["water"]},
+    {id:"b_stones",label:"אבנים בכליות",tags:["earth"]}]},
+  {name:"גב, שרירים ושלד", items:[
+    {id:"b_neck",label:"צוואר ועורף תפוסים",tags:["air"]},
+    {id:"b_upback",label:"גב עליון ושכמות",tags:["fire"]},
+    {id:"b_midback",label:"גב אמצעי",tags:["water"]},
+    {id:"b_lowback",label:"גב תחתון ואגן",tags:["earth"]},
+    {id:"b_knees",label:"כאבי ברכיים או חולשה ברגליים",tags:["water","earth"]},
+    {id:"b_tension",label:"שרירים תפוסים ומתוחים",tags:["fire"]},
+    {id:"b_cramps",label:"התכווצויות שרירים",tags:["air"]}]},
+  {name:"כללי", items:[
+    {id:"b_heavy",label:"עייפות וכבדות כללית",tags:["earth"]},
+    {id:"b_weak",label:"חולשה וחוסר אנרגיה",tags:["air"]},
+    {id:"b_cold",label:"ידיים ורגליים קרות, חיוורון",tags:["fire"]},
+    {id:"b_bphigh",label:"לחץ דם גבוה",tags:["fire"]},
+    {id:"b_bplow",label:"לחץ דם נמוך",tags:["fire","air"]},
+    {id:"b_inflam",label:"דלקות שחוזרות",tags:["fire"]},
+    {id:"b_thyroid",label:"תת פעילות של בלוטת התריס",tags:["earth"]},
+    {id:"b_iron",label:"חוסר ברזל או בריחת סידן",tags:["earth"]},
+    {id:"b_cycle",label:"כאבי מחזור או קושי בפריון",tags:["fire","earth"]}]}
+];
+const IQ_EMO = [
+  {id:"e_anger",label:"כעס או רוגז שעולים אצלי מהר",tags:["fire"]},
+  {id:"e_control",label:"חשוב לי שהדברים יהיו בשליטה שלי",tags:["fire"]},
+  {id:"e_rush",label:"מתח ומהירות כמעט כל הזמן",tags:["fire"]},
+  {id:"e_nospark",label:"קשה לי להתלהב או להוציא דברים לפועל",tags:["fire"]},
+  {id:"e_flood",label:"הרגשות שלי מציפים אותי",tags:["water"]},
+  {id:"e_please",label:"קשה לי לומר לא, והצרכים שלי נדחקים הצידה בשביל אחרים",tags:["water"]},
+  {id:"e_fear",label:"פחד או דאגה שמלווים אותי",tags:["water"]},
+  {id:"e_numb",label:"קשה לי להרגיש, כאילו הרגשות רחוקים ממני",tags:["water"]},
+  {id:"e_mind",label:"המחשבות לא נרגעות, גם בלילה",tags:["air"]},
+  {id:"e_scatter",label:"קשה לי לסיים דברים שהתחלתי",tags:["air"]},
+  {id:"e_anx",label:"חרדה או אי שקט",tags:["air"]},
+  {id:"e_detach",label:"תחושה שהכול עובר דרך הראש, בריחוק מהגוף",tags:["air"]},
+  {id:"e_habits",label:"קשה לי לשנות הרגלים ולהיפרד ממה שמוכר",tags:["earth"]},
+  {id:"e_sad",label:"עצבות, כבדות או חוסר חשק",tags:["earth"]},
+  {id:"e_worry",label:"דאגות סביב כסף, פרנסה או בריאות",tags:["earth"]},
+  {id:"e_must",label:"הרבה ממה שאני עושה הוא כי חייבים, ולא מתוך בחירה",tags:["earth"]}
+];
+const IQ_EMO_MAX = 4;
+const IQ_PRESS = [
+  {id:"p_ratzon",label:"ברצונות שאין להם מוצא, בתחושה שיש בי יותר ממה שיוצא לפועל",floor:"רצון",key:"לחץ נשמתי, העבודה ברצון"},
+  {id:"p_mach",label:"במחשבות שחוזרות על עצמן ולא נותנות מנוחה",floor:"מחשבה",key:"העבודה במחשבה, ניתוב והתמרת מחשבות"},
+  {id:"p_regesh",label:"ברגש שמחפש מישהו לשמוע ולדבר איתו",floor:"רגש ודיבור",key:"לחץ רוחני, העבודה ברגש ובדיבור"},
+  {id:"p_guf",label:"בגוף, במתח, בכאב או באי נוחות",floor:"מעשה וגוף",key:"לחץ נפשי, העבודה בקומת הגוף ובנשימה"}
+];
+const IQ_STMTS = [
+  {id:"s1",n:1,t:"קשה לי לקיים הבטחות, לעצמי ולאחרים",gap:"נתק בין הדיבור למעשה",go:"שבוע של מלכות, לומר ולעשות באותו יום"},
+  {id:"s2",n:2,t:"יש בי הרבה רגשות, וקשה לי להסביר אותם במילים",gap:"נתק בין הרגש לדיבור",go:"שבוע של רוח, כתיבה ודיבור בקול"},
+  {id:"s3",n:3,t:"יש בי הרבה רגשות, אבל הם לא מתורגמים למעשים",gap:"נתק בין הרגש למעשה",go:"שבוע של יסוד, צעד אחד ביום"},
+  {id:"s4",n:4,t:"ההבנה שלי את המצב טובה, אבל היא לא משנה את התחושות שלי",gap:"נתק בין המחשבה לרגש",go:"שבוע של תפארת, דו שיח בין השכל ללב"},
+  {id:"s6",n:6,t:"יש לי רצונות ברורים, אבל אין לי תוכנית איך להגיע אליהם",gap:"נתק בין הרצון למחשבה",go:"שבוע של נצח, שלושה צעדים ברורים"},
+  {id:"s8",n:8,t:"רוב מה שאני עושה ביום הוא מה שצריך, ולא מה שאני באמת רוצה",gap:"נתק בין הגוף לרצון",go:"שבוע של אש, שני רצונות"},
+  {id:"s12",n:12,t:"יש בי כישרון או רצון שלא קיבלו מקום בחיים שלי",gap:"שורש המחילה",go:"עבודת התשליך, שבוע של יסוד"},
+  {id:"s14",n:14,t:"יש תחושה של מאבק מתמיד, עם עצמי או עם אחרים",gap:"שורש המלחמה",go:"שבוע של אש, שביל הפיוס"}
+];
+const IQ_NATURE = [
+  {id:"n1",q:"כשמשהו חדש נכנס לחיים שלי",o:[["air","סקרנות לכמה כיוונים, מחשבה ותכנון"],["fire","התלהבות, וקפיצה פנימה בלי לחכות"],["earth","צורך בזמן, והתקדמות הדרגתית כשבטוח לי"],["water","קודם לבדוק איך זה מרגיש לי, ואז להתאים את עצמי"]]},
+  {id:"n2",q:"החוזקה הבולטת שלי",o:[["water","גמישות והכלה של אחרים"],["earth","יציבות והתמדה"],["fire","התלהבות ויוזמה"],["air","בהירות מחשבה ותקשורת"]]},
+  {id:"n3",q:"כשקשה לי, הנטייה שלי היא",o:[["fire","לכעוס ולהילחם"],["air","לחשוב בלי סוף, בלי מנוחה"],["water","להתכנס, לבכות או לרצות"],["earth","להיתקע, להתכבד ולהתעצב"]]},
+  {id:"n4",q:"הקצב הטבעי שלי",o:[["earth","איטי ויציב"],["water","משתנה לפי מה שאני מרגיש"],["air","קופצני, הרבה דברים במקביל"],["fire","מהיר ונמרץ"]]},
+  {id:"n5",q:"הגוף שלי בדרך כלל",o:[["water","רך, ונוטה לאגור נוזלים"],["fire","חם, והפנים מאדימות בקלות"],["earth","מוצק וחזק, עם נטייה לכבדות"],["air","קל, רזה, ונוטה לקור וליובש"]]},
+  {id:"n6",q:"מה הכי מזין אותי",o:[["air","רעיונות, שיחות וטיולים"],["earth","שגרה, ביטחון וסדר"],["fire","עשייה והשפעה"],["water","קרבה, חום ותענוג"]]}
+];
+const IQ_L = {
+  l_sleep:[["lt6","פחות משש"],["6to7","שש עד שבע"],["7to8","שבע עד שמונה"],["gt8","יותר משמונה"]],
+  l_wake:[["fresh","רעננים"],["tired","עייפים"],["varies","משתנה"]],
+  l_meals:[["regular","סדירות"],["irregular","לא סדירות"],["skip","מדלגים על ארוחות"]],
+  l_water:[["lt1","פחות מליטר"],["1to2","ליטר עד שניים"],["gt2","יותר משניים"]],
+  l_temp:[["warm","חום ומשקאות חמים"],["cold","קור ומשקאות קרים"],["none","לא משנה לי"]],
+  l_move:[["none","כמעט לא"],["some","מדי פעם"],["regular","באופן קבוע"]],
+  l_nature:[["none","כמעט לא"],["some","לפעמים"],["much","הרבה"]]
+};
+const IQ_HABITS = [{id:"h_coffee",label:"קפה"},{id:"h_sweet",label:"מתוקים"},{id:"h_alcohol",label:"אלכוהול"},{id:"h_smoke",label:"עישון"},{id:"h_screens",label:"מסכים לפני השינה"},{id:"h_late",label:"אכילה מאוחרת"}];
+const IQ_STRESS = [{id:"st_work",label:"עבודה"},{id:"st_family",label:"משפחה"},{id:"st_couple",label:"זוגיות"},{id:"st_money",label:"כסף ופרנסה"},{id:"st_health",label:"בריאות"},{id:"st_other",label:"משהו אחר"}];
+
+let iqBlank = false;
+let iqThera = false; try{ iqThera = localStorage.getItem('iq-thera')==='1'; }catch(e){}
+function iqS(){ if(iqBlank) return {}; const p=curP(); if(!p.intake) p.intake={}; return p.intake; }
+function iqStore(){ try{ localStorage.setItem('bm-patients', JSON.stringify(PT)); }catch(e){} iqRenderSummary(); }
+function iqHas(p){ return p && p.intake && Object.keys(p.intake).length>0; }
+
+/* ---- builders ---- */
+function iqTag(tags){ return tags&&tags.length ? `<span class="iq-tg">${tags.map(t=>`<i class="${t}">${IQ_EL[t].name}</i>`).join("")}</span>` : ""; }
+function iqTA(id,label,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
+function iqChecks(items, cls, extra){ return `<div class="iq-opts ${cls||""}" ${extra||""}>${items.map(it=>`<label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}${it.floor?`<span class="iq-tg"><i class="floor">${it.floor}</i></span>`:""}</span></label>`).join("")}</div>`; }
+function iqRadios(name, pairs){ return `<div class="iq-opts">${pairs.map(([v,l])=>`<label class="iq-opt"><input type="radio" name="iq_${name}" value="${v}" data-r="${name}"><span>${l}</span></label>`).join("")}</div>`; }
+function iqScale(id,lo,hi){ let h=`<div class="iq-scale" data-scale="${id}"><span class="end">${lo}</span>`; for(let i=0;i<=10;i++) h+=`<button type="button" class="iq-sc" data-sv="${i}">${i}</button>`; return h+`<span class="end">${hi}</span></div>`; }
+
+function iqFormHTML(p){
+  let h = "";
+  h += `<div class="paper-h"><h2>שאלון היכרות</h2><span class="paper-brand">יובל שניר, רפלקסולוגיה והילינג</span></div>`;
+  h += `<p class="iq-intro">השאלון הזה לא בודק אם משהו נכון או לא. הוא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה.</p>`;
+  h += `<p class="iq-intro small">השאלון לא מחליף אבחון או מעקב רפואי.</p>`;
+  h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
+    <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
+    <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
+    <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
+    <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div></section>`;
+
+  h += `<section class="iq-q"><h3>מה הביא אתכם</h3>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מה הביא אתכם בעיקר?</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
+  h += iqTA("m_what","מה מפריע לכם, ואיך הייתם מתארים את זה במילים שלכם?",3);
+  h += `<div class="iq-sub">אם זה בגוף</div><div class="iq-bodyc">
+    <div class="iq-item"><label class="iq-lbl" for="iq_m_where">איפה בגוף?</label><input type="text" id="iq_m_where" data-k="m_where"></div>
+    <div class="iq-item iq-grid2"><div><span class="iq-lbl">באיזה צד</span>${iqRadios("m_side",IQ_SIDE)}</div><div><span class="iq-lbl">מלפנים או מאחור</span>${iqRadios("m_fb",IQ_FB)}</div></div>
+    <div class="iq-item"><span class="iq-lbl">איך זה מרגיש? אפשר לסמן כמה</span>${iqChecks(IQ_SENS)}</div></div>`;
+  h += `<div class="iq-sub">אם זה בנפש</div><div class="iq-soul">
+    <div class="iq-item"><span class="iq-lbl">איך זה מתבטא? אפשר לסמן כמה</span>${iqChecks(IQ_SOUL)}</div>
+    <div class="iq-item"><label class="iq-lbl" for="iq_m_point">אם הייתם צריכים להצביע על מקום בגוף שבו זה יושב, איפה?</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">כמה זה מפריע בימים אלה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
+  h += iqTA("m_when","מתי זה התחיל, ומה קרה בחיים שלכם באותה תקופה?",2);
+  h += iqTA("m_better","מה מחמיר את זה, ומה מקל?",2);
+  h += iqTA("m_medical","אבחנה רפואית, בדיקות ותרופות, אם יש",2);
+  h += iqTA("m_why","מה לדעתכם גרם לזה, ומה צריך להשתנות כדי שזה יעבור?",2);
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>עוד דברים שקורים בגוף</h3><p class="iq-hint">סמנו רק מה שקורה לכם לעיתים קרובות, או בחצי השנה האחרונה.</p>`;
+  IQ_BODY.forEach(g=>{
+    h += `<div class="iq-group">${g.name}</div><div class="iq-opts col iq-grid2">${g.items.map(it=>`
+      <div class="iq-bi" data-bi="${it.id}"><label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}</span></label>
+      <input type="text" class="iq-dur" data-k="${it.id}_d" placeholder="מאז מתי, ובעקבות מה" aria-label="מאז מתי, ובעקבות מה"></div>`).join("")}</div>`;
+  });
+  h += `<div class="iq-blank-only">${iqTA("b_durpaper","ליד מה שסימנתם, כתבו אם אפשר מאז מתי, ואם זה התחיל בעקבות משהו",3)}</div>`;
+  h += iqTA("b_other","משהו נוסף שלא הופיע כאן?",1);
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>רגש ומחשבה</h3><p class="iq-hint">בחרו עד ארבעה דברים שהכי מתארים אתכם בתקופה האחרונה.</p>`;
+  h += iqChecks(IQ_EMO,"col iq-grid2",'data-lim="emo"');
+  h += `<div class="iq-item" style="margin-top:16px"><span class="iq-lbl">כשיש לחץ, איפה הוא מורגש אצלכם בעיקר?</span>${iqChecks(IQ_PRESS,"col")}</div>`;
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>משפטים</h3><p class="iq-hint">סמנו ליד כל משפט כמה הוא מתאים לכם.</p>`;
+  IQ_STMTS.forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>אורח חיים</h3>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה בלילה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">איך אתם מתעוררים</span>${iqRadios("l_wake",IQ_L.l_wake)}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים ביום</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מה נעים לכם יותר</span>${iqRadios("l_temp",IQ_L.l_temp)}</div>`;
+  h += iqTA("l_food","מה הכי אוהבים לאכול, ועל מה הכי קשה לוותר?",1);
+  h += `<div class="iq-item"><span class="iq-lbl">יש הרבה מזה ביום שלכם</span>${iqChecks(IQ_HABITS)}</div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div><div><span class="iq-lbl">זמן בטבע ובאוויר פתוח</span>${iqRadios("l_nature",IQ_L.l_nature)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">כמה לחץ יש בחיים שלכם עכשיו</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מאיפה מגיע הלחץ בעיקר</span>${iqChecks(IQ_STRESS)}</div>`;
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">לא איך אתם בתקופה האחרונה, אלא איך אתם לאורך השנים. בכל שאלה בחרו את מה שהכי דומה לכם.</p>`;
+  IQ_NATURE.forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>לסיום</h3>`;
+  h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",2);
+  h += iqTA("c_goal","מה הייתם רוצים שישתנה בעקבות הטיפולים?",2);
+  h += iqTA("c_more","עוד משהו שחשוב לכם שאדע?",2);
+  h += `</section>`;
+  return h;
+}
+
+/* ---- render & bind ---- */
+function iqKindClass(){ const w=document.getElementById('iqForm'); if(!w) return; const k=iqS().m_kind; w.classList.remove('iq-k-body','iq-k-soul','iq-k-both'); if(k) w.classList.add('iq-k-'+k); }
+function iqSyncPrint(k){ const el=document.querySelector(`.iq-print-lines[data-for="${k}"]`); if(!el) return; const v=iqS()[k]||""; el.textContent=v; el.classList.toggle('filled', !!v.trim()); }
+function iqRefreshOpts(){
+  document.querySelectorAll('#iqForm .iq-opt').forEach(o=>{ const i=o.querySelector('input'); o.classList.toggle('on', i.checked); });
+  document.querySelectorAll('#iqForm .iq-bi').forEach(b=>{ const S=iqS(); b.classList.toggle('on', !!S[b.dataset.bi]); const d=b.querySelector('.iq-dur'); d.classList.toggle('empty', !(S[b.dataset.bi+'_d']||'').trim()); });
+}
+function renderIntake(){
+  const p = curP(); const wrap = document.getElementById('iqWrap'); if(!p||!wrap) return;
+  const filled = iqHas(p);
+  wrap.className = (iqThera && !iqBlank ? 'iq-thera' : '') + (iqBlank ? ' iq-blankmode' : '');
+  wrap.innerHTML = `
+    <div class="sheet-actions no-print">
+      <button class="bm-btn" onclick="iqPrint(false)">הדפסה</button>
+      <button class="bm-btn ghost" onclick="iqPrint(true)">הדפסת שאלון ריק</button>
+      <button class="bm-btn ghost" onclick="iqCopy()" ${filled?'':'disabled'}>העתקה לניתוח</button>
+      <label class="iq-switch"><input type="checkbox" ${iqThera?'checked':''} onchange="iqSetThera(this.checked)"><span class="track"></span>תצוגת מטפל</label>
+      ${filled ? `<button class="bm-link danger" onclick="iqClear()">ניקוי השאלון</button>` : ''}
+    </div>
+    <div id="iqSummary"></div>
+    <div class="paper iq-paper" id="iqForm">${iqFormHTML(p)}</div>`;
+  iqBind(); iqKindClass(); iqRenderSummary();
+}
+function iqBind(){
+  const S = iqS(), f = document.getElementById('iqForm');
+  f.querySelectorAll('[data-k]').forEach(el=>{
+    el.value = S[el.dataset.k]||""; iqSyncPrint(el.dataset.k);
+    el.addEventListener('input', ()=>{ if(iqBlank) return; S[el.dataset.k]=el.value; if(!el.value) delete S[el.dataset.k]; iqSyncPrint(el.dataset.k); iqRefreshOpts(); iqStore(); });
+  });
+  f.querySelectorAll('[data-c]').forEach(el=>{
+    el.checked = !!S[el.dataset.c];
+    el.addEventListener('change', ()=>{
+      if(iqBlank){ el.checked=false; return; }
+      const lim = el.closest('[data-lim]');
+      if(el.checked && lim){
+        const n = lim.querySelectorAll('input:checked').length;
+        if(n > IQ_EMO_MAX){ el.checked=false; bmToast(`אפשר לבחור עד ${IQ_EMO_MAX}`); return; }
+      }
+      if(el.checked) S[el.dataset.c]=true; else delete S[el.dataset.c];
+      iqRefreshOpts(); iqStore();
+    });
+  });
+  f.querySelectorAll('[data-r]').forEach(el=>{
+    el.checked = S[el.dataset.r]===el.value;
+    el.addEventListener('click', ()=>{
+      if(iqBlank){ el.checked=false; return; }
+      if(S[el.dataset.r]===el.value){ el.checked=false; delete S[el.dataset.r]; } else S[el.dataset.r]=el.value;
+      iqRefreshOpts(); iqKindClass(); iqStore();
+    });
+  });
+  f.querySelectorAll('[data-scale]').forEach(w=>{
+    const k=w.dataset.scale, paint=()=>w.querySelectorAll('.iq-sc').forEach(x=>x.classList.toggle('on', S[k]!==undefined && String(S[k])===x.dataset.sv));
+    paint();
+    w.querySelectorAll('.iq-sc').forEach(b=>b.addEventListener('click', ()=>{ if(iqBlank) return; if(String(S[k])===b.dataset.sv) delete S[k]; else S[k]=Number(b.dataset.sv); paint(); iqStore(); }));
+  });
+  f.querySelectorAll('[data-tri]').forEach(w=>{
+    const k=w.dataset.tri, paint=()=>w.querySelectorAll('button').forEach(x=>x.classList.toggle('on', S[k]===x.dataset.tv));
+    paint();
+    w.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{ if(iqBlank) return; if(S[k]===b.dataset.tv) delete S[k]; else S[k]=b.dataset.tv; paint(); iqStore(); }));
+  });
+  iqRefreshOpts();
+}
+function iqSetThera(on){ iqThera=on; try{localStorage.setItem('iq-thera', on?'1':'0');}catch(e){} const w=document.getElementById('iqWrap'); if(w) w.classList.toggle('iq-thera', on); iqRenderSummary(); }
+function iqPrint(blank){
+  if(blank){
+    iqBlank = true; renderIntake();
+    const back = ()=>{ iqBlank=false; renderIntake(); window.removeEventListener('afterprint', back); };
+    window.addEventListener('afterprint', back);
+    setTimeout(()=>window.print(), 60);
+  } else window.print();
+}
+function iqClear(){ const p=curP(); if(!confirm(`לנקות את כל התשובות של ${p.name} בשאלון?`)) return; p.intake={}; savePT(); renderIntake(); bmToast('השאלון נוקה'); }
+
+/* ---- analysis ---- */
+function iqTally(S){
+  const body={fire:0,water:0,air:0,earth:0}, emo={fire:0,water:0,air:0,earth:0}, nat={fire:0,water:0,air:0,earth:0};
+  IQ_SENS.forEach(t=>{ if(S[t.id]) t.tags.forEach(e=>body[e]++); });
+  IQ_BODY.forEach(g=>g.items.forEach(it=>{ if(S[it.id]) it.tags.forEach(e=>body[e]++); }));
+  IQ_SOUL.forEach(it=>{ if(S[it.id]) it.tags.forEach(e=>emo[e]++); });
+  IQ_EMO.forEach(it=>{ if(S[it.id]) it.tags.forEach(e=>emo[e]++); });
+  IQ_NATURE.forEach(n=>{ if(S[n.id]) nat[S[n.id]]++; });
+  return {body,emo,nat};
+}
+const iqLead = o => { const m=Math.max(...Object.values(o)); return m ? IQ_ORDER.filter(k=>o[k]===m) : []; };
+const iqNames = a => a.map(k=>IQ_EL[k].name).join(" ו");
+function iqInsights(S){
+  const {body,emo,nat} = iqTally(S), out=[];
+  const comb={}; IQ_ORDER.forEach(k=>comb[k]=body[k]+emo[k]);
+  const lc=iqLead(comb), ln=iqLead(nat), lb=iqLead(body), le=iqLead(emo);
+  if(lc.length){
+    let p=`הכי הרבה סימונים, בגוף וברגש יחד, ביסוד <b>${iqNames(lc)}</b>.`;
+    if(lb.length && le.length && lb.join()!==le.join()) p+=` בגוף בולט ${iqNames(lb)}, וברגש בולט ${iqNames(le)}. כדאי לבדוק אם יסוד אחד פולש למקומו של השני.`;
+    out.push(["היסוד שנראה מחוץ לאיזון",p]);
+  }
+  const an = Object.values(nat).reduce((a,b)=>a+b,0);
+  if(an){
+    let p = ln.length===1 && nat[ln[0]]>=3 ? `נראה שהיסוד הבולט מלידה הוא <b>${IQ_EL[ln[0]].name}</b> (${nat[ln[0]]} מתוך ${an}).` : `אין יסוד אחד בולט בשאלות על הטבע${ln.length?`, הנטייה היא ל${iqNames(ln)}`:""}. כדאי לברר בשיחה.`;
+    const strongN = ln.length===1 && nat[ln[0]]>=3;
+    if(strongN && lc.includes(ln[0])) p+=` היסוד הבולט מלידה הוא גם זה שהכי מסומן עכשיו, אז אפשר לבדוק עודף שלו, כשהחוזקה הופכת לחולשה.`;
+    else if(strongN && lc.length && comb[ln[0]]===0) p+=` דווקא ביסוד הזה כמעט אין סימונים עכשיו, ואפשר לבדוק אם הוא חסר או מוחלש.`;
+    const bodyAns = S.n5; if(bodyAns && ln.length===1 && bodyAns!==ln[0]) p+=` מבנה הגוף שסומן הוא של ${IQ_EL[bodyAns].name}.`;
+    out.push(["היסוד הדומיננטי",p]);
+  }
+  const loc=[];
+  if(S.m_side==="right") loc.push("בצד ימין, שמכוון לצד הזכרי, לעשייה, ליוזמה ולהוצאה אל הפועל, ולעיתים לדמות האב");
+  if(S.m_side==="left") loc.push("בצד שמאל, שמכוון לצד הנקבי, לקבלה ולהכלה, ולעיתים לדמות האם");
+  if(S.m_side==="both") loc.push("בשני הצדדים, ולכן קשור לרעיון הכללי של האיבר");
+  if(S.m_fb==="front") loc.push("מלפנים, שמייצג את ההווה");
+  if(S.m_fb==="back") loc.push("מאחור, שמייצג את העבר");
+  const ty=[...IQ_SENS,...IQ_SOUL].filter(t=>S[t.id]&&t.tags.length).map(t=>`${t.label} (${t.tags.map(e=>IQ_EL[e].name).join(", ")})`);
+  if(loc.length||ty.length||S.m_kind){
+    let p = S.m_kind ? `התלונה העיקרית ${{body:"בגוף",soul:"בנפש",both:"בגוף ובנפש"}[S.m_kind]}. ` : "";
+    if(loc.length) p+=`היא ${loc.join(", ")}. `;
+    if(ty.length) p+=`איך זה מורגש: ${ty.join(", ")}.`;
+    if(S.m_point) p+=` המקום בגוף שסומן: ${iqEsc(S.m_point)}.`;
+    out.push(["התלונה העיקרית",p]);
+  }
+  const pr=IQ_PRESS.filter(x=>S[x.id]); if(pr.length) out.push(["איפה הלחץ", pr.map(x=>`<b>${x.floor}</b>: ${x.key}`).join(". ")+"."]);
+  const st=IQ_STMTS.filter(s=>S[s.id]==="yes"||S[s.id]==="part");
+  if(st.length) out.push(["מחיצות אפשריות", st.map(s=>`${s.n} ${S[s.id]==="yes"?"":"(חלקית) "}${s.gap}, ולאן הולכים: ${s.go}`).join(". ")+". כשכמה מסומנים, מתחילים מהנתק שהכי קרוב לתלונה, ואם אין חיות, מהגוף."]);
+  const life=[];
+  if(S.l_sleep==="lt6") life.push("פחות משש שעות שינה");
+  if(S.l_wake==="tired") life.push("קימה בעייפות");
+  if(S.l_meals && S.l_meals!=="regular") life.push("ארוחות לא סדירות");
+  if(S.l_water==="lt1") life.push("שתייה מועטה");
+  if(S.l_move==="none") life.push("כמעט בלי פעילות גופנית");
+  if(S.l_nature==="none") life.push("כמעט בלי זמן בטבע");
+  if(S.l_stress!==undefined && S.l_stress>=7) life.push(`לחץ גבוה (${S.l_stress})`);
+  if(S.l_temp==="warm") life.push("העדפה לחום, אפשר לבדוק חוסר אש");
+  if(S.l_temp==="cold") life.push("העדפה לקור, אפשר לבדוק עודף אש");
+  if(life.length) out.push(["קומת הגוף", life.join(", ")+"."]);
+  return {body,emo,nat,out};
+}
+function iqBars(t,o){ const m=Math.max(3,...Object.values(o)); return `<div><h4>${t}</h4>${IQ_ORDER.map(k=>`<div class="iq-bar-row"><span style="color:${IQ_EL[k].c}">${IQ_EL[k].name}</span><span class="iq-bar-track"><span class="iq-bar-fill" style="width:${o[k]/m*100}%;background:${IQ_EL[k].c}"></span></span><span>${o[k]}</span></div>`).join("")}</div>`; }
+function iqRenderSummary(){
+  const box=document.getElementById('iqSummary'); if(!box) return;
+  if(!iqThera || iqBlank){ box.innerHTML=""; return; }
+  const {body,emo,nat,out} = iqInsights(iqS());
+  box.innerHTML = `<h2>תמונת כיוון</h2><p class="note">כיוון לבירור ולא קביעה. הסיכום נבנה מהסימונים בלבד, והשיחה וכף הרגל משלימות אותו.</p>
+    <div class="iq-bars">${iqBars("גוף",body)}${iqBars("רגש ומחשבה",emo)}${iqBars("טבע לאורך השנים",nat)}</div>
+    ${out.length ? out.map(([h,p])=>`<div class="iq-sum-h">${h}</div><p class="iq-sum-p">${p}</p>`).join("") : `<p class="iq-sum-p">עוד אין מספיק סימונים לסיכום.</p>`}`;
+}
+
+/* ---- export ---- */
+function iqText(){
+  const p=curP(), S=p.intake||{}, L=[], v=k=>(S[k]||"").trim();
+  const rl=(name,pairs)=>{ const f=pairs.find(x=>x[0]===S[name]); return f?f[1]:""; };
+  const tg=t=>t.tags&&t.tags.length?` [${t.tags.map(e=>IQ_EL[e].name).join("/")}]`:"";
+  L.push("שאלון היכרות, לניתוח");
+  L.push(`שם: ${p.name} | גיל: ${v("f_age")} | עיסוק: ${v("f_job")} | תאריך: ${v("f_date")}`);
+  L.push("","התלונה העיקרית");
+  L.push(`סוג: ${rl("m_kind",IQ_KIND)}`);
+  L.push(`מה מפריע: ${v("m_what")}`);
+  L.push(`איפה: ${v("m_where")} | צד: ${rl("m_side",IQ_SIDE)} | ${rl("m_fb",IQ_FB)}`);
+  L.push(`איך זה מרגיש: ${IQ_SENS.filter(t=>S[t.id]).map(t=>t.label+tg(t)).join(", ")}`);
+  L.push(`איך זה מתבטא בנפש: ${IQ_SOUL.filter(t=>S[t.id]).map(t=>t.label+tg(t)).join(", ")}`);
+  L.push(`המקום בגוף שבו זה יושב: ${v("m_point")}`);
+  L.push(`עוצמה: ${S.m_level!==undefined?S.m_level+"/10":""}`);
+  L.push(`מתי התחיל ומה קרה אז: ${v("m_when")}`);
+  L.push(`מה מחמיר ומה מקל: ${v("m_better")}`);
+  L.push(`רפואי ותרופות: ${v("m_medical")}`);
+  L.push(`מה גרם ומה צריך להשתנות: ${v("m_why")}`);
+  L.push("","תלונות נוספות בגוף");
+  IQ_BODY.forEach(g=>{ const c=g.items.filter(i=>S[i.id]); if(c.length) L.push(`${g.name}: ${c.map(i=>i.label+tg(i)+(v(i.id+"_d")?` (${v(i.id+"_d")})`:"")).join(", ")}`); });
+  L.push(`נוסף: ${v("b_other")}`);
+  L.push("","רגש ומחשבה");
+  L.push(IQ_EMO.filter(i=>S[i.id]).map(i=>i.label+tg(i)).join(", "));
+  L.push(`איפה הלחץ מורגש: ${IQ_PRESS.filter(x=>S[x.id]).map(x=>x.floor).join(", ")}`);
+  L.push("","משפטים");
+  IQ_STMTS.forEach(s=>{ if(S[s.id]) L.push(`${s.n}. ${s.t}: ${{yes:"מתאים",part:"חלקית",no:"לא מתאים"}[S[s.id]]}`); });
+  L.push("","אורח חיים");
+  L.push(`שינה: ${rl("l_sleep",IQ_L.l_sleep)}, קימה: ${rl("l_wake",IQ_L.l_wake)}`);
+  L.push(`ארוחות: ${rl("l_meals",IQ_L.l_meals)}, מים: ${rl("l_water",IQ_L.l_water)}, העדפה: ${rl("l_temp",IQ_L.l_temp)}`);
+  L.push(`אוכל אהוב: ${v("l_food")}`);
+  L.push(`הרגלים: ${IQ_HABITS.filter(x=>S[x.id]).map(x=>x.label).join(", ")}`);
+  L.push(`פעילות: ${rl("l_move",IQ_L.l_move)}, טבע: ${rl("l_nature",IQ_L.l_nature)}`);
+  const sts=IQ_STRESS.filter(x=>S[x.id]).map(x=>x.label);
+  L.push(`לחץ: ${S.l_stress!==undefined?S.l_stress+"/10":""}${sts.length?" ("+sts.join(", ")+")":""}`);
+  L.push("","טבע לאורך השנים");
+  IQ_NATURE.forEach(n=>{ if(S[n.id]){ const o=n.o.find(x=>x[0]===S[n.id]); L.push(`${n.q}: ${o[1]} [${IQ_EL[o[0]].name}]`); } });
+  L.push("","לסיום");
+  L.push(`מה הייתי עושה אילו יכולתי: ${v("c_wish")}`);
+  L.push(`מה ארצה שישתנה: ${v("c_goal")}`);
+  L.push(`עוד: ${v("c_more")}`);
+  const {body,emo,nat,out}=iqInsights(S);
+  L.push("","ספירה לפי יסודות (גוף / רגש / טבע)");
+  IQ_ORDER.forEach(k=>L.push(`${IQ_EL[k].name}: ${body[k]} / ${emo[k]} / ${nat[k]}`));
+  out.forEach(([h,x])=>L.push(`${h}: ${x.replace(/<[^>]+>/g,"")}`));
+  const clean=[];
+  L.forEach(line=>{
+    if(line===""){ if(clean.length && clean[clean.length-1]!=="") clean.push(""); return; }
+    let l=line.split(" | ").map(s=>s.trim()).filter(s=>s && !/:\s*$/.test(s)).join(" | ");
+    l=l.replace(/(^|,\s*)[^,:()]+:\s*(?=,|$)/g,"$1").replace(/^[,\s]+|[,\s]+$/g,"").replace(/,\s*,/g,",");
+    if(l) clean.push(l);
+  });
+  const HEADS=["התלונה העיקרית","תלונות נוספות בגוף","רגש ומחשבה","משפטים","אורח חיים","טבע לאורך השנים","לסיום"];
+  const out2=[];
+  clean.forEach((l,i)=>{ if(HEADS.includes(l) && (clean[i+1]===undefined || clean[i+1]==="")) return; if(l==="" && out2[out2.length-1]==="") return; out2.push(l); });
+  return out2.join("\n").trim();
+}
+function iqCopyText(txt, msg){
+  const fb=()=>{ const ta=document.createElement('textarea'); ta.value=txt; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0,txt.length); try{document.execCommand('copy'); bmToast(msg);}catch(e){bmToast('לא הצלחתי להעתיק');} ta.remove(); };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(()=>bmToast(msg), fb); else fb();
+}
+function iqCopy(){ iqCopyText(iqText(), 'הועתק. אפשר להדביק בשיחה'); }
+
+/* ---- reading (אבחון) ---- */
+let iqReadEdit = false;
+function iqReadParts(text){
+  const paras = String(text||"").replace(/\r/g,"").split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);
+  const idx = paras.findIndex(x=>/^[\*\s#]*למטפל בלבד/.test(x));
+  return idx<0 ? {pt:paras, th:[]} : {pt:paras.slice(0,idx), th:paras.slice(idx)};
+}
+function iqParaHTML(x){
+  let h = iqEsc(x).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/^#+\s*/,"").replace(/\n/g,"<br>");
+  return `<p>${h}</p>`;
+}
+function renderReading(){
+  const p=curP(), wrap=document.getElementById('iqWrap'); if(!p||!wrap) return;
+  wrap.className='';
+  const r = p.reading || null;
+  if(!r || !r.text || iqReadEdit){
+    wrap.innerHTML = `
+      <p class="iq-hint no-print">הדביקו כאן את האבחון. מה שמופיע אחרי פסקה שמתחילה במילים "למטפל בלבד" יישמר בנפרד, ולא יודפס בגרסה למטופל.</p>
+      <textarea class="iq-read-in no-print" id="iqReadIn" placeholder="הדבקת האבחון">${iqEsc(r&&r.text||"")}</textarea>
+      <div class="sheet-actions no-print" style="margin-top:10px">
+        <button class="bm-btn" onclick="iqReadSave()">שמירה</button>
+        ${r&&r.text ? `<button class="bm-link" onclick="iqReadEdit=false;renderReading()">ביטול</button>` : ''}
+      </div>`;
+    return;
+  }
+  const {pt,th} = iqReadParts(r.text);
+  wrap.innerHTML = `
+    <div class="sheet-actions no-print">
+      <button class="bm-btn" onclick="iqReadPrint(true)">הדפסה למטופל</button>
+      <button class="bm-btn ghost" onclick="iqReadPrint(false)">הדפסה מלאה</button>
+      <button class="bm-btn ghost" onclick="iqCopyText(curP().reading.text,'הועתק')">העתקה</button>
+      <button class="bm-link" onclick="iqReadEdit=true;renderReading()">עריכה</button>
+      <button class="bm-link danger" onclick="iqReadDelete()">מחיקת האבחון</button>
+    </div>
+    <div class="paper iq-read" id="iqRead">
+      <div class="paper-h"><span class="paper-name">${iqEsc(p.name)}</span><span class="iq-read-date">${iqEsc(r.date||"")}</span></div>
+      <p class="paper-brand">יובל שניר, רפלקסולוגיה והילינג</p>
+      <div style="margin-top:14px">${pt.map(iqParaHTML).join("")}</div>
+      ${th.length ? `<div class="iq-thera-part"><div class="iq-tp-h">למטפל בלבד</div>${th.map((x,i)=>iqParaHTML(i===0?x.replace(/^[\*\s#]*למטפל בלבד[\*\s:,.]*/,""):x)).join("")}</div>` : ''}
+    </div>`;
+}
+function iqReadSave(){
+  const p=curP(), v=document.getElementById('iqReadIn').value.trim();
+  if(!v){ bmToast('אין מה לשמור'); return; }
+  p.reading = {text:v, date:(p.reading&&p.reading.date)||today()};
+  iqReadEdit=false; savePT(); renderSheet(); bmToast('האבחון נשמר');
+}
+function iqReadDelete(){ const p=curP(); if(!confirm(`למחוק את האבחון של ${p.name}?`)) return; delete p.reading; savePT(); renderSheet(); }
+function iqReadPrint(patientOnly){
+  const w=document.getElementById('iqWrap');
+  if(patientOnly){ w.classList.add('iq-print-patient'); const back=()=>{ w.classList.remove('iq-print-patient'); window.removeEventListener('afterprint',back); }; window.addEventListener('afterprint',back); }
+  setTimeout(()=>window.print(), 30);
+}
+
+/* ---- hook into the patient card ---- */
+function ptSection(k){ const p=curP(); if(!p) return; p.section=k; iqReadEdit=false; iqBlank=false; savePT(); renderSheet(); window.scrollTo(0,0); }
+const _renderSheetBase = renderSheet;
+renderSheet = function(){
+  _renderSheetBase();
+  const p = curP(); if(!p) return;
+  const box = document.getElementById('sheetBody');
+  const head = box.querySelector('.pt-head'); if(!head) return;
+  const sec = p.section || 'weeks';
+  const hasR = p.reading && p.reading.text;
+  head.insertAdjacentHTML('afterend', `<div class="iq-secs no-print">
+    <button class="iq-sec ${sec==='intake'?'on':''}" onclick="ptSection('intake')">שאלון${iqHas(p)?'<small>✓</small>':''}</button>
+    <button class="iq-sec ${sec==='reading'?'on':''}" onclick="ptSection('reading')">אבחון${hasR?'<small>✓</small>':''}</button>
+    <button class="iq-sec ${sec==='weeks'?'on':''}" onclick="ptSection('weeks')">דפים לבית</button></div>`);
+  if(sec==='weeks') return;
+  const sw = head.nextElementSibling;
+  while(sw.nextSibling) sw.nextSibling.remove();
+  sw.insertAdjacentHTML('afterend','<div id="iqWrap"></div>');
+  if(sec==='intake') renderIntake(); else renderReading();
+};
+ptCreate = function(){ const i=document.getElementById('ptNewName'); if(!i.value.trim()){ i.focus(); return; } const p=newPatient(i.value); p.section='intake'; savePT(); renderSheet(); };
 
 /* רינדור מחדש עם ההרחבות */
 renderSefirot();
