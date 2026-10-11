@@ -2665,7 +2665,7 @@ function iqScale(id,lo,hi){ let h=`<div class="iq-scale" data-scale="${id}"><spa
 
 function iqFormHTML(p){
   let h = "";
-  h += `<div class="paper-h"><h2>שאלון היכרות</h2><span class="paper-brand">יובל שניר, רפלקסולוגיה והילינג</span></div>`;
+  h += `<div class="paper-h"><h2>שאלון היכרות</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
   h += `<p class="iq-intro">השאלון הזה לא בודק אם משהו נכון או לא. הוא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה.</p>`;
   h += `<p class="iq-intro small">השאלון לא מחליף אבחון או מעקב רפואי.</p>`;
   h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
@@ -2754,9 +2754,15 @@ function renderIntake(){
     <div class="sheet-actions no-print">
       <button class="bm-btn" onclick="iqPrint(false)">הדפסה</button>
       <button class="bm-btn ghost" onclick="iqPrint(true)">הדפסת שאלון ריק</button>
+      <button class="bm-btn ghost" onclick="iqImportOpen()">ייבוא מהמטופל</button>
       <button class="bm-btn ghost" onclick="iqCopy()" ${filled?'':'disabled'}>העתקה לניתוח</button>
       <label class="iq-switch"><input type="checkbox" ${iqThera?'checked':''} onchange="iqSetThera(this.checked)"><span class="track"></span>תצוגת מטפל</label>
       ${filled ? `<button class="bm-link danger" onclick="iqClear()">ניקוי השאלון</button>` : ''}
+    </div>
+    <div id="iqImport" class="no-print" hidden>
+      <p class="iq-hint">הדביקו כאן את ההודעה שהמטופל שלח מהשאלון באינטרנט. אפשר להדביק את כל ההודעה כמו שהיא.</p>
+      <textarea class="iq-read-in" id="iqImportIn" style="min-height:120px" placeholder="הדבקת ההודעה"></textarea>
+      <div class="sheet-actions" style="margin-top:8px"><button class="bm-btn" onclick="iqImportDo()">ייבוא לכרטיס</button><button class="bm-link" onclick="document.getElementById('iqImport').hidden=true">ביטול</button></div>
     </div>
     <div id="iqSummary"></div>
     <div class="paper iq-paper" id="iqForm">${iqFormHTML(p)}</div>`;
@@ -2809,6 +2815,18 @@ function iqPrint(blank){
     window.addEventListener('afterprint', back);
     setTimeout(()=>window.print(), 60);
   } else window.print();
+}
+function iqImportOpen(){ const b=document.getElementById('iqImport'); b.hidden=false; document.getElementById('iqImportIn').focus(); }
+function iqImportDo(){
+  const raw=document.getElementById('iqImportIn').value.replace(/\s+/g,"");
+  const m=raw.match(/IQ1:([A-Za-z0-9+/=]+):IQ/);
+  if(!m){ bmToast('לא נמצא קוד שאלון בהודעה'); return; }
+  let d; try{ d=JSON.parse(decodeURIComponent(escape(atob(m[1])))); }catch(e){ bmToast('הקוד לא תקין או שנחתך'); return; }
+  const a=(d&&d.a)||{}, p=curP();
+  if(iqHas(p) && !confirm(`לכרטיס של ${p.name} כבר יש תשובות. להחליף אותן בתשובות שהתקבלו?`)) return;
+  const nm=(a.f_name||"").trim(); delete a.f_name;
+  p.intake=a; if(nm && !p.intakeName) p.intakeName=nm;
+  savePT(); renderIntake(); bmToast(nm?`התשובות של ${nm} יובאו`:'התשובות יובאו');
 }
 function iqClear(){ const p=curP(); if(!confirm(`לנקות את כל התשובות של ${p.name} בשאלון?`)) return; p.intake={}; savePT(); renderIntake(); bmToast('השאלון נוקה'); }
 
@@ -2991,7 +3009,7 @@ function renderReading(){
     </div>
     <div class="paper iq-read" id="iqRead">
       <div class="paper-h"><span class="paper-name">${iqEsc(p.name)}</span><span class="iq-read-date">${iqEsc(r.date||"")}</span></div>
-      <p class="paper-brand">יובל שניר, רפלקסולוגיה והילינג</p>
+      <p class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</p>
       <div style="margin-top:14px">${pt.map(iqParaHTML).join("")}</div>
       ${th.length ? `<div class="iq-thera-part"><div class="iq-tp-h">למטפל בלבד</div>${th.map((x,i)=>iqParaHTML(i===0?x.replace(/^[\*\s#]*למטפל בלבד[\*\s:,.]*/,""):x)).join("")}</div>` : ''}
     </div>`;
