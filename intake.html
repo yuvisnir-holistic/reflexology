@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>שאלון היכרות | יובל שניר</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#2C5F5B; --forest-dark:#1E4744; --cream:#F7F1E6; --sage:#AEBFAE; --ink:#28312E; --paper:#FFFDF8; --field:#fff; --muted:#6a756f;
+    --fire:#A8442B; --fire-bg:#F3E3DD; --water:#2F6690; --water-bg:#DFE8ED; --air:#A9821F; --air-bg:#F1E9D2; --earth:#5C6B3F; --earth-bg:#E4E7D9;
+    --sefirah:#7A5C8E; --sefirah-bg:#E9E2ED; --on:#E7EFEC;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+    --cream:#18201E; --paper:#212B28; --field:#2A3532; --ink:#E9ECE7; --muted:#A9B3AE; --forest:#5FA39C; --forest-dark:#9FD0C9; --sage:#4E6158; --on:#2F4440;
+  }}
+  :root[data-theme="dark"]{ --cream:#18201E; --paper:#212B28; --field:#2A3532; --ink:#E9ECE7; --muted:#A9B3AE; --forest:#5FA39C; --forest-dark:#9FD0C9; --sage:#4E6158; --on:#2F4440; }
+  :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:18px;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Assistant',Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Frank Ruhl Libre',Georgia,serif;}
+  header{background:#1E4744;color:#FDFBF5;text-align:center;padding:18px 16px 16px;}
+  header h1{margin:0;font-size:1.5rem;font-weight:900;}
+  header .sub{color:#AEBFAE;font-size:0.9rem;margin-top:2px;}
+  main{max-width:780px;margin:0 auto;padding:16px 12px 40px;}
+  .paper{background:var(--paper);border-radius:12px;padding:26px 26px;box-shadow:0 2px 14px rgba(44,95,91,0.10);}
+  .paper-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:2px solid var(--forest-dark);padding-bottom:8px;}
+  .paper-brand{font-size:0.8rem;color:var(--muted);}
+  .bm-btn{background:var(--forest);color:#fff;border:none;border-radius:999px;padding:12px 22px;font-weight:800;font-family:'Assistant',sans-serif;font-size:1rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;}
+  .bm-btn.ghost{background:transparent;color:var(--forest);border:1.5px solid var(--forest);}
+  .bm-btn:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  .bm-link{background:none;border:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-family:'Assistant',sans-serif;font-size:0.9rem;}
+  .send{margin-top:28px;border-top:2px solid var(--forest-dark);padding-top:18px;}
+  .send h3{margin:0 0 6px;color:var(--forest-dark);font-size:1.25rem;}
+  .send p{line-height:1.7;margin:0 0 12px;color:var(--muted);}
+  .send .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 6px;}
+  .saved{font-size:0.8rem;color:var(--muted);text-align:center;margin-top:16px;}
+  #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#28312E;color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:0.92rem;opacity:0;transition:all .2s;pointer-events:none;z-index:80;}
+  #toast.show{opacity:1;transform:translate(-50%,0);}
+  /* ===== שאלון היכרות ואבחון בכרטיס המטופל ===== */
+  .iq-secs{display:flex;gap:6px;margin:4px 0 14px;background:#E7EFEC;border-radius:999px;padding:4px;max-width:420px;}
+  .iq-sec{flex:1;border:none;background:transparent;color:var(--forest-dark);border-radius:999px;padding:8px 6px;font-family:'Assistant',sans-serif;font-weight:700;font-size:0.92rem;cursor:pointer;}
+  .iq-sec.on{background:var(--forest);color:#fff;}
+  .iq-sec small{font-weight:600;opacity:.75;margin-inline-start:4px;}
+  .iq-switch{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--forest-dark);font-size:0.92rem;cursor:pointer;user-select:none;}
+  .iq-switch input{position:absolute;opacity:0;width:1px;height:1px;}
+  .iq-switch .track{width:40px;height:22px;border-radius:999px;background:#cfd6cf;position:relative;transition:background .15s;}
+  .iq-switch .track::after{content:"";position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .iq-switch input:checked + .track{background:var(--sefirah);}
+  .iq-switch input:checked + .track::after{transform:translateX(-18px);}
+  .iq-switch input:focus-visible + .track{outline:3px solid var(--air);outline-offset:2px;}
+
+  .iq-paper .paper-h h2{margin:0;font-size:1.45rem;color:var(--forest-dark);font-weight:900;}
+  .iq-intro{font-size:0.98rem;line-height:1.75;color:var(--ink);margin:12px 0 4px;}
+  .iq-intro.small{font-size:0.84rem;color:#6a756f;margin-top:0;}
+  .iq-q{margin-top:24px;}
+  .iq-q > h3{font-size:1.18rem;color:var(--forest-dark);margin:0 0 2px;padding-bottom:6px;border-bottom:1px solid var(--sage);}
+  .iq-hint{font-size:0.88rem;color:var(--muted);margin:6px 0 10px;line-height:1.6;}
+  .iq-sub{font-size:0.9rem;font-weight:800;color:var(--sefirah);margin:16px 0 0;}
+  .iq-item{margin:13px 0;break-inside:avoid;}
+  .iq-lbl{display:block;font-weight:700;font-size:0.96rem;margin-bottom:6px;color:var(--ink);}
+  .iq-grid2{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;}
+  .iq-details{display:grid;grid-template-columns:1fr 2fr 1.4fr;gap:10px;margin-top:10px;}
+  .iq-details label{font-size:0.82rem;font-weight:700;color:var(--forest);display:block;margin-bottom:3px;}
+  .iq-paper input[type=text],.iq-paper textarea{width:100%;font-family:'Assistant',sans-serif;font-size:0.98rem;color:var(--ink);background:var(--field);border:1px solid rgba(44,95,91,0.3);border-radius:8px;padding:9px 11px;outline:none;}
+  .iq-paper input[type=text]:focus,.iq-paper textarea:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(44,95,91,0.12);}
+  .iq-paper textarea{min-height:60px;resize:vertical;line-height:1.6;}
+  .iq-group{font-size:0.82rem;font-weight:800;color:var(--forest);margin:12px 0 2px;}
+  .iq-opts{display:flex;flex-wrap:wrap;gap:6px 8px;}
+  .iq-opts.col{flex-direction:column;gap:2px;}
+  .iq-opts.iq-grid2{display:grid;}
+  .iq-opt{display:flex;align-items:flex-start;gap:8px;cursor:pointer;padding:5px 2px;line-height:1.45;font-size:0.95rem;}
+  .iq-opts:not(.col):not(.iq-grid2) .iq-opt{border:1.5px solid rgba(44,95,91,0.2);border-radius:999px;padding:7px 14px;background:var(--field);}
+  .iq-opts:not(.col):not(.iq-grid2) .iq-opt.on{border-color:var(--forest);background:var(--on);}
+  .iq-opt input{accent-color:var(--forest);width:18px;height:18px;margin:1px 0 0;flex-shrink:0;}
+  .iq-opt:has(input:focus-visible),.iq-sc:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  .iq-bi .iq-dur{display:none;margin:0 26px 6px 0;width:calc(100% - 26px) !important;font-size:0.86rem !important;padding:5px 9px !important;}
+  .iq-bi.on .iq-dur{display:block;}
+  .iq-scale{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+  .iq-sc{width:33px;height:33px;border-radius:50%;border:1.5px solid rgba(44,95,91,0.3);background:var(--field);font-family:'Assistant',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;color:var(--ink);}
+  .iq-sc.on{background:var(--forest);color:#fff;border-color:var(--forest);}
+  .iq-scale .end{font-size:0.78rem;color:#6a756f;margin:0 4px;}
+  .iq-stmt{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dotted rgba(44,95,91,0.25);break-inside:avoid;}
+  .iq-stmt .t{font-size:0.95rem;line-height:1.5;}
+  .iq-tri{display:flex;gap:4px;}
+  .iq-tri button{border:1.5px solid rgba(44,95,91,0.25);background:var(--field);border-radius:999px;padding:5px 11px;font-family:'Assistant',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;color:var(--ink);white-space:nowrap;}
+  .iq-tri button.on{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .iq-nature{margin:14px 0;break-inside:avoid;}
+  .iq-k-body .iq-soul{display:none;}
+  .iq-k-soul .iq-bodyc{display:none;}
+  .iq-k-body .iq-sub, .iq-k-soul .iq-sub, .iq-k-both .iq-sub{display:none;}
+  .iq-blank-only{display:none;}
+  .iq-print-lines{display:none;}
+  .iq-tg{display:none;gap:3px;margin-inline-start:4px;vertical-align:middle;}
+  .iq-thera .iq-tg{display:inline-flex;}
+  .iq-tg i{display:inline-block;font-style:normal;font-size:0.68rem;font-weight:800;padding:1px 6px;border-radius:999px;}
+  .iq-tg .fire{background:var(--fire-bg);color:var(--fire);} .iq-tg .water{background:var(--water-bg);color:var(--water);}
+  .iq-tg .air{background:var(--air-bg);color:var(--air);} .iq-tg .earth{background:var(--earth-bg);color:var(--earth);}
+  .iq-tg .floor{background:var(--sefirah-bg);color:var(--sefirah);}
+  #iqSummary{display:none;margin-bottom:16px;background:#fff;border:2px solid var(--sefirah);border-radius:14px;padding:16px 18px;}
+  .iq-thera #iqSummary{display:block;}
+  #iqSummary h2{margin:0 0 4px;color:var(--sefirah);font-size:1.25rem;}
+  #iqSummary .note{font-size:0.84rem;color:#6a756f;margin:0 0 10px;}
+  .iq-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:10px 0 12px;}
+  .iq-bars h4{margin:0 0 6px;font-size:0.86rem;color:var(--forest-dark);font-family:'Assistant',sans-serif;}
+  .iq-bar-row{display:grid;grid-template-columns:44px 1fr 22px;align-items:center;gap:6px;font-size:0.8rem;font-weight:700;margin-bottom:4px;}
+  .iq-bar-track{height:10px;background:#EFEDE6;border-radius:999px;overflow:hidden;}
+  .iq-bar-fill{display:block;height:100%;border-radius:999px;}
+  .iq-sum-h{font-weight:800;color:var(--sefirah);font-size:0.84rem;margin:12px 0 3px;}
+  .iq-sum-p{margin:0;line-height:1.7;font-size:0.93rem;}
+
+  .iq-read-in{width:100%;min-height:320px;border:1.5px solid rgba(44,95,91,0.25);border-radius:12px;padding:12px 14px;font-family:'Assistant',sans-serif;font-size:0.98rem;line-height:1.7;background:#fff;resize:vertical;outline:none;}
+  .iq-read-in:focus{border-color:var(--forest);}
+  .iq-read p{margin:0 0 14px;line-height:1.85;font-size:1.02rem;}
+  .iq-read b{color:var(--forest-dark);}
+  .iq-read-date{font-weight:700;color:var(--forest);}
+  .iq-thera-part{margin-top:22px;background:var(--sefirah-bg);border-radius:12px;padding:14px 16px;}
+  .iq-thera-part .iq-tp-h{font-weight:800;color:var(--sefirah);font-size:0.86rem;margin-bottom:8px;}
+  .iq-thera-part p{font-size:0.94rem;}
+  .iq-empty{background:#fff;border:1.5px dashed var(--sage);border-radius:16px;padding:20px;color:#5e6b66;line-height:1.7;}
+
+  @media (max-width:600px){
+    .iq-grid2,.iq-opts.iq-grid2{grid-template-columns:1fr;}
+    .iq-bars{grid-template-columns:1fr;}
+    .iq-stmt{grid-template-columns:1fr;gap:6px;}
+    .iq-details{grid-template-columns:1fr 1fr;}
+  }
+  @media print{
+    html{font-size:11pt;}
+    .iq-paper input[type=text]{border:none;border-bottom:1px solid #999;border-radius:0;padding:2px 0;background:transparent;}
+    .iq-paper textarea{display:none;}
+    .iq-print-lines{display:block;white-space:pre-wrap;line-height:1.7;min-height:var(--ph,48px);border-bottom:1px solid #bbb;
+      background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 23px,#ddd 23px,#ddd 24px);font-size:0.95rem;}
+    .iq-print-lines.filled{background-image:none;min-height:0;border-bottom:none;}
+    .iq-bi .iq-dur{border:none !important;padding:0 !important;font-style:italic;color:#555;}
+    .iq-bi .iq-dur.empty{display:none !important;}
+    .iq-blankmode .iq-blank-only{display:block;}
+    .iq-opt{padding:2px 2px;}
+    .iq-item{margin:9px 0;}
+    .iq-q{margin-top:16px;}
+    .iq-q > h3{break-after:avoid;}
+    .iq-opts:not(.col):not(.iq-grid2) .iq-opt{border:1px solid #aaa;padding:3px 10px;}
+    .iq-opts:not(.col):not(.iq-grid2) .iq-opt.on{background:#e5e5e5;border-color:#333;}
+    .iq-sc{width:24px;height:24px;font-size:0.78rem;border-color:#999;}
+    .iq-sc.on{background:#333;border-color:#333;}
+    .iq-tri button{border-color:#999;padding:2px 8px;}
+    .iq-tri button.on{background:#333;border-color:#333;}
+    .iq-nature .iq-opts.col{display:grid;grid-template-columns:1fr 1fr;gap:2px 18px;}
+    .iq-stmt{padding:5px 0;}
+    #iqSummary{break-after:page;border-width:1px;}
+    .iq-print-patient .iq-thera-part{display:none !important;}
+    .iq-read p{font-size:11.5pt;}
+  }
+
+</style>
+</head>
+<body>
+<main id="app"></main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+const IQ_EL = {fire:{name:"אש",c:"#A8442B"}, water:{name:"מים",c:"#2F6690"}, air:{name:"אוויר",c:"#A9821F"}, earth:{name:"אדמה",c:"#5C6B3F"}};
+const IQ_ORDER = ["fire","water","air","earth"];
+const iqEsc = s => String(s==null?"":s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const IQ_KIND = [["body","משהו בגוף"],["soul","משהו בנפש, כמו לחץ, עצב או חרדה"],["both","שניהם"]];
+const IQ_SIDE = [["right","ימין"],["left","שמאל"],["both","שני הצדדים"],["na","לא רלוונטי"]];
+const IQ_FB = [["front","מלפנים"],["back","מאחור"],["na","לא רלוונטי"]];
+const IQ_SENS = [
+  {id:"t_pain",label:"כאב",tags:[]},
+  {id:"t_burn",label:"שריפה, צריבה או חום",tags:["fire"]},
+  {id:"t_infl",label:"דלקת",tags:["fire"]},
+  {id:"t_stiff",label:"נוקשות או הגבלה בתנועה",tags:["earth"]},
+  {id:"t_swell",label:"נפיחות או בצקת",tags:["water"]},
+  {id:"t_itch",label:"גרד או אי שקט בעור",tags:["air"]},
+  {id:"t_allergy",label:"תגובה אלרגית",tags:["air"]},
+  {id:"t_weak",label:"חולשה או עייפות",tags:["air"]},
+  {id:"t_bleed",label:"דימום",tags:["fire"]},
+  {id:"t_lump",label:"גוש",tags:[]},
+  {id:"t_numb",label:"נימול, חוסר תחושה או אזור רדום",tags:[]}
+];
+const IQ_VIEW = [["mirror","משהו שבא ללמד אותי, ומבקש שינוי"],["carry","משהו שצריך ללמוד לחיות איתו"],["hard","משהו מפחיד, שקשה לי לשאת"]];
+const IQ_SOUL = [
+  {id:"k_stress",label:"לחץ ומתח",tags:["fire"]},
+  {id:"k_anger",label:"כעס או רוגז",tags:["fire"]},
+  {id:"k_sad",label:"עצב, דכדוך או כבדות",tags:["earth"]},
+  {id:"k_anx",label:"חרדה או אי שקט",tags:["air"]},
+  {id:"k_fear",label:"פחד או דאגה",tags:["water"]},
+  {id:"k_flood",label:"הצפה רגשית",tags:["water"]},
+  {id:"k_empty",label:"ריקנות, כאילו חסרה חיות",tags:["water"]}
+];
+const IQ_BODY = [
+  {name:"ראש ושינה", items:[
+    {id:"b_head_hot",label:"כאב ראש לוחץ, חם, תחושה שהראש מתפוצץ",tags:["fire"]},
+    {id:"b_head_heavy",label:"כבדות בראש",tags:["earth"]},
+    {id:"b_sleep",label:"קושי להירדם או שינה לא רציפה",tags:["air"]},
+    {id:"b_eyes",label:"עיניים עייפות, דומעות או מגורות",tags:["water"]}]},
+  {name:"נשימה", items:[
+    {id:"b_shallow",label:"נשימה שטחית, קושי לנשום עמוק",tags:["air"]},
+    {id:"b_exhale",label:"קושי דווקא להוציא את האוויר",tags:["air"]},
+    {id:"b_breath",label:"קוצר נשימה או אסטמה",tags:["air"]},
+    {id:"b_chest",label:"מועקה וכובד בחזה",tags:["earth"]},
+    {id:"b_cough",label:"שיעול יבש",tags:["earth"]},
+    {id:"b_colds",label:"נטייה להצטננויות וליחה",tags:["water"]},
+    {id:"b_sinus",label:"נזלת או סינוסים",tags:["water"]},
+    {id:"b_allergy",label:"אלרגיות ועיטושים",tags:["air"]},
+    {id:"b_throat",label:"דלקות גרון",tags:["fire"]}]},
+  {name:"עור", items:[
+    {id:"b_rash",label:"פריחות אדומות או דלקות בעור",tags:["fire"]},
+    {id:"b_itch",label:"גרד",tags:["air"]},
+    {id:"b_dryskin",label:"עור יבש ומתקלף",tags:["air"]},
+    {id:"b_moist",label:"עור לח ודביק",tags:["water"]},
+    {id:"b_sweat",label:"הזעת יתר",tags:["water"]},
+    {id:"b_nails",label:"ציפורניים רכות ומתקלפות",tags:["water"]}]},
+  {name:"עיכול", items:[
+    {id:"b_heartburn",label:"צרבת או חומציות",tags:["fire"]},
+    {id:"b_nausea",label:"בחילות",tags:["water"]},
+    {id:"b_constip",label:"עצירות",tags:["water"]},
+    {id:"b_diarr",label:"שלשולים",tags:["water"]},
+    {id:"b_gas",label:"גזים ונפיחות שמשתנה במהלך היום",tags:["air"]},
+    {id:"b_ibs",label:"מעי רגיז",tags:["fire","air"]},
+    {id:"b_slowdig",label:"כבדות ואיטיות אחרי אוכל",tags:["earth"]},
+    {id:"b_hemo",label:"טחורים",tags:["fire"]}]},
+  {name:"שתן ונוזלים", items:[
+    {id:"b_urine",label:"דחיפות או תכיפות במתן שתן",tags:["water"]},
+    {id:"b_edema",label:"בצקות או אגירת נוזלים",tags:["water"]},
+    {id:"b_stones",label:"אבנים בכליות",tags:["earth"]}]},
+  {name:"גב, שרירים ושלד", items:[
+    {id:"b_neck",label:"צוואר ועורף תפוסים",tags:["air"]},
+    {id:"b_upback",label:"גב עליון ושכמות",tags:["fire"]},
+    {id:"b_midback",label:"גב אמצעי",tags:["water"]},
+    {id:"b_lowback",label:"גב תחתון ואגן",tags:["earth"]},
+    {id:"b_knees",label:"כאבי ברכיים או חולשה ברגליים",tags:["water","earth"]},
+    {id:"b_tension",label:"שרירים תפוסים ומתוחים",tags:["fire"]},
+    {id:"b_cramps",label:"התכווצויות שרירים",tags:["air"]}]},
+  {name:"כללי", items:[
+    {id:"b_heavy",label:"עייפות וכבדות כללית",tags:["earth"]},
+    {id:"b_weak",label:"חולשה וחוסר אנרגיה",tags:["air"]},
+    {id:"b_cold",label:"ידיים ורגליים קרות, חיוורון",tags:["fire"]},
+    {id:"b_bphigh",label:"לחץ דם גבוה",tags:["fire"]},
+    {id:"b_bplow",label:"לחץ דם נמוך",tags:["fire","air"]},
+    {id:"b_inflam",label:"דלקות שחוזרות",tags:["fire"]},
+    {id:"b_thyroid",label:"תת פעילות של בלוטת התריס",tags:["earth"]},
+    {id:"b_iron",label:"חוסר ברזל או בריחת סידן",tags:["earth"]},
+    {id:"b_cycle",label:"כאבי מחזור או קושי בפריון",tags:["fire","earth"]}]}
+];
+const IQ_EMO = [
+  {id:"e_anger",label:"כעס או רוגז שעולים אצלי מהר",tags:["fire"]},
+  {id:"e_control",label:"חשוב לי שהדברים יהיו בשליטה שלי",tags:["fire"]},
+  {id:"e_rush",label:"מתח ומהירות כמעט כל הזמן",tags:["fire"]},
+  {id:"e_nospark",label:"קשה לי להתלהב או להוציא דברים לפועל",tags:["fire"]},
+  {id:"e_flood",label:"הרגשות שלי מציפים אותי",tags:["water"]},
+  {id:"e_please",label:"קשה לי לומר לא, והצרכים שלי נדחקים הצידה בשביל אחרים",tags:["water"]},
+  {id:"e_fear",label:"פחד או דאגה שמלווים אותי",tags:["water"]},
+  {id:"e_numb",label:"קשה לי להרגיש, כאילו הרגשות רחוקים ממני",tags:["water"]},
+  {id:"e_mind",label:"המחשבות לא נרגעות, גם בלילה",tags:["air"]},
+  {id:"e_scatter",label:"קשה לי לסיים דברים שהתחלתי",tags:["air"]},
+  {id:"e_anx",label:"חרדה או אי שקט",tags:["air"]},
+  {id:"e_detach",label:"תחושה שהכול עובר דרך הראש, בריחוק מהגוף",tags:["air"]},
+  {id:"e_habits",label:"קשה לי לשנות הרגלים ולהיפרד ממה שמוכר",tags:["earth"]},
+  {id:"e_sad",label:"עצבות, כבדות או חוסר חשק",tags:["earth"]},
+  {id:"e_worry",label:"דאגות סביב כסף, פרנסה או בריאות",tags:["earth"]},
+  {id:"e_must",label:"הרבה ממה שאני עושה הוא כי חייבים, ולא מתוך בחירה",tags:["earth"]}
+];
+const IQ_EMO_MAX = 4;
+const IQ_PRESS = [
+  {id:"p_medame",label:"בדמיון, בתמונות של מה שעלול לקרות או של חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
+  {id:"p_ratzon",label:"ברצונות שאין להם מוצא, בתחושה שיש בי יותר ממה שיוצא לפועל",floor:"רצון",key:"לחץ נשמתי, העבודה ברצון"},
+  {id:"p_mach",label:"במחשבות שחוזרות על עצמן ולא נותנות מנוחה",floor:"מחשבה",key:"העבודה במחשבה, ניתוב והתמרת מחשבות"},
+  {id:"p_regesh",label:"ברגש שמחפש מישהו לשמוע ולדבר איתו",floor:"רגש ודיבור",key:"לחץ רוחני, העבודה ברגש ובדיבור"},
+  {id:"p_guf",label:"בגוף, במתח, בכאב או באי נוחות",floor:"מעשה וגוף",key:"לחץ נפשי, העבודה בקומת הגוף ובנשימה"}
+];
+const IQ_STMTS = [
+  {id:"s7",n:7,t:"יש פער גדול בין החיים שבדמיון שלי לבין מה שקורה בפועל",gap:"נתק בין המדמה לרצון, שורש החלם",go:"שבוע של מלכות, גדלות וקטנות, ועבודת ההשתוות"},
+  {id:"s15",n:15,t:"קשה לי להרשות לעצמי ליהנות, כאילו צריך קודם להרוויח את זה",gap:"היחס לגוף ולתענוג",go:"שבוע של מים, מה מענג אותי באמת"},
+  {id:"s16",n:16,t:"יש דברים שמושכים אותי, וקשה לי להתאפק מולם גם כשברור לי שהם לא טובים לי",gap:"נתק בין התענוג לרצון",go:"תרגיל שני הרצונות, ומה מענג אותי באמת משבוע המים"},
+  {id:"s6",n:6,t:"יש לי רצונות ברורים, אבל אין לי תוכנית איך להגיע אליהם",gap:"נתק בין הרצון למחשבה",go:"שבוע של נצח, שלושה צעדים ברורים"},
+  {id:"s17",n:17,t:"יש בי רצון ברור, אבל הוא לא יוצא לפועל",gap:"נתק בין הרצון למעשה",go:"ריכוז הרצון, עבודת התשליך ושבוע של יסוד"},
+  {id:"s8",n:8,t:"רוב מה שאני עושה ביום הוא מה שצריך, ולא מה שאני באמת רוצה",gap:"נתק בין הגוף לרצון",go:"שבוע של אש, שני רצונות"},
+  {id:"s4",n:4,t:"ההבנה שלי את המצב טובה, אבל היא לא משנה את התחושות שלי",gap:"נתק בין המחשבה לרגש",go:"שבוע של תפארת, דו שיח בין השכל ללב"},
+  {id:"s5",n:5,t:"הרגשות שלי מציפים אותי, וקשה לי לחשוב בבהירות",gap:"נתק בין המחשבה לרגש, הרגש מציף",go:"שבוע של תפארת, דו שיח בין השכל ללב"},
+  {id:"s2",n:2,t:"יש בי הרבה רגשות, וקשה לי להסביר אותם במילים",gap:"נתק בין הרגש לדיבור",go:"שבוע של רוח, כתיבה ודיבור בקול"},
+  {id:"s3",n:3,t:"יש בי הרבה רגשות, אבל הם לא מתורגמים למעשים",gap:"נתק בין הרגש למעשה",go:"שבוע של יסוד, צעד אחד ביום"},
+  {id:"s1",n:1,t:"קשה לי לקיים הבטחות, לעצמי ולאחרים",gap:"נתק בין הדיבור למעשה",go:"שבוע של מלכות, לומר ולעשות באותו יום"},
+  {id:"s12",n:12,t:"יש בי כישרון או רצון שלא קיבלו מקום בחיים שלי",gap:"שורש המחילה",go:"עבודת התשליך, שבוע של יסוד"},
+  {id:"s14",n:14,t:"יש תחושה של מאבק מתמיד, עם עצמי או עם אחרים",gap:"שורש המלחמה",go:"שבוע של אש, שביל הפיוס"}
+];
+const IQ_ROOTS = [
+  {when:S=>S.e_scatter, name:"חול", what:"פיזור הכוחות", cure:"ריכוז הכוחות, כללי ההשקטה"},
+  {when:S=>S.k_empty, name:"חלל", what:"נתק וחיסרון", cure:"חיבור הנפש והרוח לנשמה מחדש, נשמה ונשימה ושבוע של מים"},
+  {when:S=>S.s12==="yes"||S.s12==="part", name:"מחילה", what:"התחפרות וחוסר ביטוי", cure:"גילוי הכוחות וסדר התשליך"},
+  {when:S=>S.e_habits, name:"מלח", what:"קיבעון", cure:"פריצת דרך כנגד ההרגל, פעולה קטנה שחוזרת שלוש פעמים, שבוע של עפר"},
+  {when:S=>S.s14==="yes"||S.s14==="part", name:"מלחמה", what:"הפניית הכוחות כלפי גורם חיצוני", cure:"משימת הפיוס, שביל הפיוס"},
+  {when:S=>S.s7==="yes"||S.s7==="part"||S.p_medame, name:"חלם", what:"דמיון שמנותק מהמציאות", cure:"עבודת ההשתוות וענווה"}
+];
+const IQ_NATURE = [
+  {id:"n1",q:"כשמשהו חדש נכנס לחיים שלי",o:[["air","סקרנות לכמה כיוונים, מחשבה ותכנון"],["fire","התלהבות, וקפיצה פנימה בלי לחכות"],["earth","צורך בזמן, והתקדמות הדרגתית כשבטוח לי"],["water","קודם לבדוק איך זה מרגיש לי, ואז להתאים את עצמי"]]},
+  {id:"n2",q:"החוזקה הבולטת שלי",o:[["water","גמישות והכלה של אחרים"],["earth","יציבות והתמדה"],["fire","התלהבות ויוזמה"],["air","בהירות מחשבה ותקשורת"]]},
+  {id:"n3",q:"כשקשה לי, הנטייה שלי היא",o:[["fire","לכעוס ולהילחם"],["air","לחשוב בלי סוף, בלי מנוחה"],["water","להתכנס, לבכות או לרצות"],["earth","להיתקע, להתכבד ולהתעצב"]]},
+  {id:"n4",q:"הקצב הטבעי שלי",o:[["earth","איטי ויציב"],["water","משתנה לפי מה שאני מרגיש"],["air","קופצני, הרבה דברים במקביל"],["fire","מהיר ונמרץ"]]},
+  {id:"n5",q:"הגוף שלי בדרך כלל",o:[["water","רך, ונוטה לאגור נוזלים"],["fire","חם, והפנים מאדימות בקלות"],["earth","מוצק וחזק, עם נטייה לכבדות"],["air","קל, רזה, ונוטה לקור וליובש"]]},
+  {id:"n6",q:"מה הכי מזין אותי",o:[["air","רעיונות, שיחות וטיולים"],["earth","שגרה, ביטחון וסדר"],["fire","עשייה והשפעה"],["water","קרבה, חום ותענוג"]]}
+];
+const IQ_L = {
+  l_sleep:[["lt6","פחות משש"],["6to7","שש עד שבע"],["7to8","שבע עד שמונה"],["gt8","יותר משמונה"]],
+  l_wake:[["fresh","רעננים"],["tired","עייפים"],["varies","משתנה"]],
+  l_meals:[["regular","סדירות"],["irregular","לא סדירות"],["skip","מדלגים על ארוחות"]],
+  l_water:[["lt1","פחות מליטר"],["1to2","ליטר עד שניים"],["gt2","יותר משניים"]],
+  l_temp:[["warm","חום ומשקאות חמים"],["cold","קור ומשקאות קרים"],["none","לא משנה לי"]],
+  l_move:[["none","כמעט לא"],["some","מדי פעם"],["regular","באופן קבוע"]],
+  l_nature:[["none","כמעט לא"],["some","לפעמים"],["much","הרבה"]]
+};
+const IQ_HABITS = [{id:"h_coffee",label:"קפה"},{id:"h_sweet",label:"מתוקים"},{id:"h_alcohol",label:"אלכוהול"},{id:"h_smoke",label:"עישון"},{id:"h_screens",label:"מסכים לפני השינה"},{id:"h_late",label:"אכילה מאוחרת"}];
+const IQ_STRESS = [{id:"st_work",label:"עבודה"},{id:"st_family",label:"משפחה"},{id:"st_couple",label:"זוגיות"},{id:"st_money",label:"כסף ופרנסה"},{id:"st_health",label:"בריאות"},{id:"st_other",label:"משהו אחר"}];
+
+
+let iqBlank = false;
+/* ---- builders ---- */
+var iqTag = function(tags){ return tags&&tags.length ? `<span class="iq-tg">${tags.map(t=>`<i class="${t}">${IQ_EL[t].name}</i>`).join("")}</span>` : ""; }
+function iqTA(id,label,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
+function iqChecks(items, cls, extra){ return `<div class="iq-opts ${cls||""}" ${extra||""}>${items.map(it=>`<label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}${it.floor?`<span class="iq-tg"><i class="floor">${it.floor}</i></span>`:""}</span></label>`).join("")}</div>`; }
+function iqRadios(name, pairs){ return `<div class="iq-opts">${pairs.map(([v,l])=>`<label class="iq-opt"><input type="radio" name="iq_${name}" value="${v}" data-r="${name}"><span>${l}</span></label>`).join("")}</div>`; }
+function iqScale(id,lo,hi){ let h=`<div class="iq-scale" data-scale="${id}"><span class="end">${lo}</span>`; for(let i=0;i<=10;i++) h+=`<button type="button" class="iq-sc" data-sv="${i}">${i}</button>`; return h+`<span class="end">${hi}</span></div>`; }
+
+function iqFormHTML(p){
+  let h = "";
+  h += `<div class="paper-h"><h2>שאלון היכרות</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
+  h += `<p class="iq-intro">השאלון הזה לא בודק אם משהו נכון או לא. הוא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה.</p>`;
+  h += `<p class="iq-intro small">השאלון לא מחליף אבחון או מעקב רפואי.</p>`;
+  h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
+    <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
+    <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
+    <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
+    <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div></section>`;
+
+  h += `<section class="iq-q"><h3>מה הביא אתכם</h3>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מה הביא אתכם בעיקר?</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
+  h += iqTA("m_what","מה מפריע לכם, ואיך הייתם מתארים את זה במילים שלכם?",3);
+  h += iqTA("m_effect","איך זה משפיע על החיים שלכם?",2);
+  h += `<div class="iq-sub">אם זה בגוף</div><div class="iq-bodyc">
+    <div class="iq-item"><label class="iq-lbl" for="iq_m_where">איפה בגוף?</label><input type="text" id="iq_m_where" data-k="m_where"></div>
+    <div class="iq-item iq-grid2"><div><span class="iq-lbl">באיזה צד</span>${iqRadios("m_side",IQ_SIDE)}</div><div><span class="iq-lbl">מלפנים או מאחור</span>${iqRadios("m_fb",IQ_FB)}</div></div>
+    <div class="iq-item"><span class="iq-lbl">איך זה מרגיש? אפשר לסמן כמה</span>${iqChecks(IQ_SENS)}</div></div>`;
+  h += `<div class="iq-sub">אם זה בנפש</div><div class="iq-soul">
+    <div class="iq-item"><span class="iq-lbl">איך זה מתבטא? אפשר לסמן כמה</span>${iqChecks(IQ_SOUL)}</div>
+    <div class="iq-item"><label class="iq-lbl" for="iq_m_point">אם הייתם צריכים להצביע על מקום בגוף שבו זה יושב, איפה?</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">כמה זה מפריע בימים אלה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
+  h += iqTA("m_when","מתי זה התחיל, ומה קרה בחיים שלכם באותה תקופה?",2);
+  h += iqTA("m_better","מה מחמיר את זה, ומה מקל?",2);
+  h += iqTA("m_medical","אבחנה רפואית ובדיקות, אם יש",2);
+  h += iqTA("m_meds","תרופות, ויטמינים ותוספי תזונה שאתם לוקחים, ואם אפשר גם המינון",2);
+  h += iqTA("m_why","מה לדעתכם גרם לזה, ומה צריך להשתנות כדי שזה יעבור?",2);
+  h += `<div class="iq-item"><span class="iq-lbl">איך אתם מתייחסים למה שקורה לכם?</span>${iqRadios("m_view",IQ_VIEW)}</div>`;
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>עוד דברים שקורים בגוף</h3><p class="iq-hint">סמנו רק מה שקורה לכם לעיתים קרובות, או בחצי השנה האחרונה.</p>`;
+  IQ_BODY.forEach(g=>{
+    h += `<div class="iq-group">${g.name}</div><div class="iq-opts col iq-grid2">${g.items.map(it=>`
+      <div class="iq-bi" data-bi="${it.id}"><label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}</span></label>
+      <input type="text" class="iq-dur" data-k="${it.id}_d" placeholder="מאז מתי, ובעקבות מה" aria-label="מאז מתי, ובעקבות מה"></div>`).join("")}</div>`;
+  });
+  h += `<div class="iq-blank-only">${iqTA("b_durpaper","ליד מה שסימנתם, כתבו אם אפשר מאז מתי, ואם זה התחיל בעקבות משהו",3)}</div>`;
+  h += iqTA("b_other","משהו נוסף שלא הופיע כאן?",1);
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>רגש ומחשבה</h3><p class="iq-hint">בחרו עד ארבעה דברים שהכי מתארים אתכם בתקופה האחרונה.</p>`;
+  h += iqChecks(IQ_EMO,"col iq-grid2",'data-lim="emo"');
+  h += `<div class="iq-item" style="margin-top:16px"><span class="iq-lbl">כשיש לחץ, איפה הוא מורגש אצלכם בעיקר?</span>${iqChecks(IQ_PRESS,"col")}</div>`;
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>משפטים</h3><p class="iq-hint">סמנו ליד כל משפט כמה הוא מתאים לכם.</p>`;
+  IQ_STMTS.forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>אורח חיים</h3>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה בלילה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">איך אתם מתעוררים</span>${iqRadios("l_wake",IQ_L.l_wake)}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים ביום</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מה נעים לכם יותר</span>${iqRadios("l_temp",IQ_L.l_temp)}</div>`;
+  h += iqTA("l_food","מה הכי אוהבים לאכול, ועל מה הכי קשה לוותר?",1);
+  h += `<div class="iq-item"><span class="iq-lbl">יש הרבה מזה ביום שלכם</span>${iqChecks(IQ_HABITS)}</div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div><div><span class="iq-lbl">זמן בטבע ובאוויר פתוח</span>${iqRadios("l_nature",IQ_L.l_nature)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">כמה לחץ יש בחיים שלכם עכשיו</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מאיפה מגיע הלחץ בעיקר</span>${iqChecks(IQ_STRESS)}</div>`;
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">לא איך אתם בתקופה האחרונה, אלא איך אתם לאורך השנים. בכל שאלה בחרו את מה שהכי דומה לכם.</p>`;
+  IQ_NATURE.forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
+  h += `</section>`;
+
+  h += `<section class="iq-q"><h3>לסיום</h3>`;
+  h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",2);
+  h += iqTA("c_talent","מה הכישרון הטבעי שלכם, משהו שתמיד בא לכם בקלות?",1);
+  h += iqTA("c_hard","ומה תמיד היה לכם קשה, יותר מלאחרים?",1);
+  h += iqTA("c_world","אם הייתם מתארים את העולם בתמונה אחת, הוא כמו... (גן, ג׳ונגל, שדה קרב, מסלול, או משהו אחר)",1);
+  h += iqTA("c_goal","מה הייתם רוצים שישתנה בעקבות הטיפולים?",2);
+  h += iqTA("c_more","עוד משהו שחשוב לכם שאדע?",2);
+  h += `</section>`;
+  return h;
+}
+
+
+/* ===== גרסת המטופל ===== */
+const YUVAL_WA = "972506818811";   // מספר הוואטסאפ של יובל בפורמט בינלאומי, למשל 9725XXXXXXXX. ריק = בחירת איש קשר
+const PKEY = "yuval-intake-patient-v1";
+let S = {};
+try { S = JSON.parse(localStorage.getItem(PKEY)) || {}; } catch(e) { S = {}; }
+function store(){ try { localStorage.setItem(PKEY, JSON.stringify(S)); } catch(e) {} }
+iqTag = function(){ return ""; };
+let tt; function bmToast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),2400); }
+
+function formHTML(){
+  let h = iqFormHTML({name:""});
+  h = h.replace(/<div><label>שם<\/label><input type="text" value="" readonly tabindex="-1"><\/div>/, '<div><label for="iq_f_name">שם</label><input type="text" id="iq_f_name" data-k="f_name" autocomplete="name"></div>');
+  return h;
+}
+function kindClass(){ const w=document.getElementById('iqForm'); w.classList.remove('iq-k-body','iq-k-soul','iq-k-both'); if(S.m_kind) w.classList.add('iq-k-'+S.m_kind); }
+function refresh(){
+  document.querySelectorAll('#iqForm .iq-opt').forEach(o=>{ const i=o.querySelector('input'); o.classList.toggle('on', i.checked); });
+  document.querySelectorAll('#iqForm .iq-bi').forEach(b=>b.classList.toggle('on', !!S[b.dataset.bi]));
+}
+function bind(){
+  const f=document.getElementById('iqForm');
+  f.querySelectorAll('[data-k]').forEach(el=>{
+    el.value=S[el.dataset.k]||"";
+    el.addEventListener('input',()=>{ if(el.value) S[el.dataset.k]=el.value; else delete S[el.dataset.k]; store(); });
+  });
+  f.querySelectorAll('[data-c]').forEach(el=>{
+    el.checked=!!S[el.dataset.c];
+    el.addEventListener('change',()=>{
+      const lim=el.closest('[data-lim]');
+      if(el.checked && lim && lim.querySelectorAll('input:checked').length>IQ_EMO_MAX){ el.checked=false; bmToast(`אפשר לבחור עד ${IQ_EMO_MAX}`); return; }
+      if(el.checked) S[el.dataset.c]=true; else delete S[el.dataset.c];
+      refresh(); store();
+    });
+  });
+  f.querySelectorAll('[data-r]').forEach(el=>{
+    el.checked=S[el.dataset.r]===el.value;
+    el.addEventListener('click',()=>{ if(S[el.dataset.r]===el.value){ el.checked=false; delete S[el.dataset.r]; } else S[el.dataset.r]=el.value; refresh(); kindClass(); store(); });
+  });
+  f.querySelectorAll('[data-scale]').forEach(w=>{
+    const k=w.dataset.scale, paint=()=>w.querySelectorAll('.iq-sc').forEach(x=>x.classList.toggle('on', S[k]!==undefined && String(S[k])===x.dataset.sv));
+    paint(); w.querySelectorAll('.iq-sc').forEach(b=>b.addEventListener('click',()=>{ if(String(S[k])===b.dataset.sv) delete S[k]; else S[k]=Number(b.dataset.sv); paint(); store(); }));
+  });
+  f.querySelectorAll('[data-tri]').forEach(w=>{
+    const k=w.dataset.tri, paint=()=>w.querySelectorAll('button').forEach(x=>x.classList.toggle('on', S[k]===x.dataset.tv));
+    paint(); w.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ if(S[k]===b.dataset.tv) delete S[k]; else S[k]=b.dataset.tv; paint(); store(); }));
+  });
+  refresh(); kindClass();
+}
+function encode(){
+  const json = JSON.stringify({v:1, a:S});
+  return "IQ1:" + btoa(unescape(encodeURIComponent(json))) + ":IQ";
+}
+function message(){
+  const nm = (S.f_name||"").trim();
+  return `שלום יובל, מילאתי את שאלון ההיכרות${nm?`. ${nm}`:""}.\n\nהקוד הבא מיועד לייבוא לכרטיס, אין צורך לקרוא אותו:\n${encode()}`;
+}
+function sendWA(){
+  if(!Object.keys(S).length){ bmToast("השאלון עוד ריק"); return; }
+  if(!(S.f_name||"").trim()){ bmToast("כתבו שם בראש השאלון"); document.getElementById('iq_f_name').focus(); return; }
+  const url = (YUVAL_WA ? `https://wa.me/${YUVAL_WA}` : "https://wa.me/") + "?text=" + encodeURIComponent(message());
+  const a=document.createElement('a'); a.href=url; a.target="_blank"; a.rel="noopener"; document.body.appendChild(a); a.click(); a.remove();
+}
+function copyMsg(){
+  if(!Object.keys(S).length){ bmToast("השאלון עוד ריק"); return; }
+  const txt=message();
+  const fb=()=>{ const ta=document.createElement('textarea'); ta.value=txt; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0,txt.length); try{document.execCommand('copy'); bmToast('הועתק. אפשר להדביק במייל או בהודעה');}catch(e){bmToast('לא הצלחתי להעתיק');} ta.remove(); };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(()=>bmToast('הועתק. אפשר להדביק במייל או בהודעה'), fb); else fb();
+}
+function wipe(){ if(!confirm("למחוק את התשובות מהמכשיר הזה?")) return; S={}; store(); render(); window.scrollTo(0,0); bmToast("התשובות נמחקו מהמכשיר"); }
+function render(){
+  document.getElementById('app').innerHTML = `
+    <div class="paper iq-paper" id="iqForm">${formHTML()}
+      <div class="send">
+        <h3>שליחה</h3>
+        <p>כשסיימתם, לחצו על השליחה. תיפתח הודעת וואטסאפ אליי עם התשובות, וכל מה שנשאר הוא ללחוץ שלח. אם נוח לכם יותר במייל, אפשר להעתיק ולהדביק.</p>
+        <div class="row">
+          <button class="bm-btn" onclick="sendWA()">שליחה בוואטסאפ</button>
+          <button class="bm-btn ghost" onclick="copyMsg()">העתקת התשובות</button>
+        </div>
+        <p style="font-size:0.85rem;margin-top:10px">התשובות לא נשמרות באף שרת. הן נשמרות רק בדפדפן שלכם עד שתשלחו, ואחרי השליחה אפשר למחוק אותן מהמכשיר.</p>
+        <button class="bm-link" onclick="wipe()">מחיקת התשובות מהמכשיר</button>
+      </div>
+    </div>`;
+  document.querySelectorAll('#iqForm .iq-tg').forEach(e=>e.remove());
+  bind();
+}
+render();
+
+</script>
+</body>
+</html>
