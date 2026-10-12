@@ -98,6 +98,10 @@
     box-shadow:var(--shadow);
   }
   .intro-card h2{margin:0 0 8px;font-size:1.3rem;color:#FBF3DC;}
+  .intro-card.plain{background:var(--cream-soft);color:var(--ink);border:1px solid rgba(44,95,91,0.08);}
+  .intro-card.plain h2{color:var(--navy);}
+  .intro-card.plain p{color:var(--ink);}
+  .intro-card.plain .verse{color:var(--gold);}
   .intro-card p{color:#E4E1D4;margin:0 0 .7em;font-size:.95rem;line-height:1.8;}
   .intro-card .verse{color:var(--gold-bright);font-style:normal;font-weight:600;margin-top:10px;font-size:.95rem;}
 
@@ -121,6 +125,7 @@
   .card .card-body .card{box-shadow:none;border:1px solid rgba(44,95,91,0.12);}
   .card .card-body .card .card-head{padding:12px 14px;}
   .card .card-body .card.open > .card-body{padding:0 14px 16px;}
+  #practiceContent .card{margin-bottom:8px;}
   .box-group-label{font-size:.8rem;font-weight:800;color:var(--gold);margin:2px 4px 10px;}
 
   .box{border-radius:14px;padding:14px 16px;margin:14px 0;}
@@ -198,7 +203,7 @@
 <main>
 
   <div id="homeView">
-    <div class="intro-card">
+    <div class="intro-card plain">
       <h2>פתח דבר</h2>
       <p>יש בידך מדריך שמתחיל בדבר הכי פשוט שיש: נשימה. כל מי שקורא את השורות האלה נושם ברגע זה ממש, בלי לחשוב על זה, בלי מאמץ, בלי בחירה מודעת. הלב פועם, הריאות מתמלאות ומתרוקנות, והחיים ממשיכים. וזה בדיוק הסוד. הדבר הכי אוטומטי בחיים שלנו הוא בו זמנית הדבר הכי עמוק שיש בבריאה. כי הנשימה, כפי שמלמדת המסורת הזאת, איננה רק חילופי אוויר. היא ההמשך הישיר של הרגע שבו בורא עולם ברא את האדם הראשון: וייפח באפיו נשמת חיים, ויהי האדם לנפש חיה. הפעולה הזאת לא נגמרה פעם אחת בגן עדן. היא קורית מחדש, בכל אדם, בכל נשימה, בכל רגע.</p>
       <p>המדריך הזה לא בא ללמד טכניקת נשימה כשלעצמה. הוא בא לפתוח דלת אל משהו עמוק בהרבה: לחבר בין הפעולה הפיזיולוגית הפשוטה ביותר לבין הקשר שבין האדם לבורא עולם, ולתת לפעולה הזאת גם מסגרת, גם כיוון, וגם תרגול מעשי. במרוצתו יילקח הקורא בהדרגה מיסודות המחשבה אל התרגול המדויק, בדרך שהולכת מן הכלל אל הפרט, שלב אחר שלב.</p>
@@ -364,9 +369,9 @@ const CHAPTERS = [
   </table></div>
   <p>מעבר לצורת האותיות, יש גם התייחסות לאותיות סופיות, מנצפ״ך, שמתפשטות דווקא כלפי מטה, אל הרגליים וכפות הרגליים.</p>
   <div class="table-wrap"><table class="data"><tr><th>אות סופית</th><th>כיוון ההתפשטות</th></tr>
-  <tr><td>כ״ף סופית</td><td>רגל, בחינת נצח</td></tr>
-  <tr><td>נו״ן סופית</td><td>רגל</td></tr>
-  <tr><td>פ״א סופית</td><td>הרגל השנייה</td></tr>
+  <tr><td>כ״ף סופית</td><td>רגל ימין, בחינת נצח</td></tr>
+  <tr><td>נו״ן סופית</td><td>רגל ימין</td></tr>
+  <tr><td>פ״א סופית</td><td>רגל שמאל</td></tr>
   <tr><td>צד״י סופית</td><td>הרגל האמצעית, בחינת יסוד</td></tr>
   <tr><td>מ״ם סופית</td><td>כפות הרגליים</td></tr>
   </table></div>
@@ -898,11 +903,11 @@ function renderPractice(){
 
   /* ---------- מדיטציה ---------- */
   const meditationHTML = `
-    ${subCard('מדיטציה קצרה', 'ייחוד הנשימה', `
+    ${subCard('התבוננות קצרה', 'ייחוד הנשימה', `
       <div class="grid2">
         <div class="box practice"><span class="label">הכנה</span><p>שב במנוחה, גב ישר, עיניים עצומות או פקוחות.</p></div>
         <div class="box practice"><span class="label">נשימה טבעית</span><p>נשום באופן רגוע וטבעי, ללא מאמץ.</p></div>
-        <div class="box practice"><span class="label">מסלול האוויר</span><p>עקוב אחר האוויר: נחיריים (י׳) ← מוח (ה׳) ← ריאות (ו׳) ← בטן (ה׳).</p></div>
+        <div class="box practice"><span class="label">מסלול האוויר</span><p>עקוב אחר האוויר: נחיריים ← מוח (י׳) ← חזה (ה׳) ← ריאות (ו׳) ← בטן (ה׳).</p></div>
         <div class="box practice"><span class="label">ראיית האותיות</span><p>ראה את אותיות יהו״ה זורמות עם האוויר.</p></div>
       </div>
     `, false)}
@@ -921,6 +926,12 @@ function renderPractice(){
     `, false)}
   `;
 
+  const learningHTML = `
+    ${subCard('', 'שלבי הלימוד', practicesHTML, false)}
+    ${subCard('', 'לפי איבר וכוח נפש', organHTML, false)}
+    ${subCard('', 'תרגולים מתקדמים', advancedHTML, false)}
+  `;
+
   document.getElementById('practiceContent').innerHTML = `
   <div class="intro-card">
     <h2>התרגול המלא</h2>
@@ -928,23 +939,13 @@ function renderPractice(){
     <div style="text-align:center;font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:2.4rem;letter-spacing:10px;color:#F3EFE2;margin-top:14px;">יהו״ה</div>
   </div>
 
-  <div class="box-group-label">הוראות</div>
   ${outerBox('לפני שמתרגלים', 'הוראות כלליות', instructionsHTML, false)}
 
-  <div class="box-group-label">תרגולים</div>
-  ${outerBox('לחצו כדי לבחור שלב', 'התרגולים', practicesHTML, false)}
+  ${outerBox('לחצו כדי לבחור', 'תרגולים', learningHTML, false)}
 
-  <div class="box-group-label">לפי איבר וכוח נפש</div>
-  ${outerBox('לפי הצורך', 'איבר, כוח נפש ומה שמטריד', organHTML, false)}
+  ${outerBox('להתכנסות פנימה', 'התבוננות', meditationHTML, false)}
 
-  <div class="box-group-label">מתקדם</div>
-  ${outerBox('אחרי שהבסיס נוח', 'ניקוד, אותיות סופיות, תגים ועוד', advancedHTML, false)}
-
-  <div class="box-group-label">מדיטציה</div>
-  ${outerBox('להתכנסות פנימה', 'מדיטציית נשימה', meditationHTML, false)}
-
-  <div class="box-group-label">כלים ליום יום</div>
-  ${outerBox('גרסאות קצרות', 'לפי מצב ורגע', toolsHTML, false)}
+  ${outerBox('גרסאות קצרות', 'כלים ליום יום', toolsHTML, false)}
   `;
 }
 
