@@ -2739,6 +2739,62 @@ function iqFormHTML(p){
   return h;
 }
 
+
+/* ---- אבחון רזה לקליניקה ---- */
+const IQ_LEAN_SIGNS = ["e_anger","b_heartburn","b_cold","e_fear","e_flood","b_edema","e_mind","b_sleep","b_shallow","e_sad","e_habits","b_heavy"];
+const IQ_LEAN_STMTS = ["s7","s6","s4","s2","s1","s12"];
+const IQ_LEAN_NATURE = ["n2","n3","n5"];
+function iqLeanSigns(){ const all=[...IQ_EMO]; IQ_BODY.forEach(g=>g.items.forEach(i=>all.push(i))); return IQ_LEAN_SIGNS.map(id=>all.find(x=>x.id===id)); }
+function iqMode(p){ if(!p) return 'lean'; return p.intakeMode || (iqHas(p) ? 'full' : 'lean'); }
+function iqSetMode(m){ const p=curP(); p.intakeMode=m; savePT(); renderIntake(); }
+function iqLeanHTML(p){
+  let h = "";
+  h += `<div class="paper-h"><h2>אבחון</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
+  h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
+    <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
+    <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
+    <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
+    <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div></section>`;
+  h += `<section class="iq-q"><h3>מה הביא אותך</h3>`;
+  h += `<div class="iq-item"><span class="iq-lbl">בעיקר</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
+  h += iqTA("m_what","מה מפריע, במילים של המטופל",2);
+  h += `<div class="iq-sub">אם זה בגוף</div><div class="iq-bodyc">
+    <div class="iq-item"><label class="iq-lbl" for="iq_m_where">איפה בגוף?</label><input type="text" id="iq_m_where" data-k="m_where"></div>
+    <div class="iq-item iq-grid2"><div><span class="iq-lbl">צד</span>${iqRadios("m_side",IQ_SIDE)}</div><div><span class="iq-lbl">מלפנים או מאחור</span>${iqRadios("m_fb",IQ_FB)}</div></div>
+    <div class="iq-item"><span class="iq-lbl">איך זה מרגיש</span>${iqChecks(IQ_SENS)}</div></div>`;
+  h += `<div class="iq-sub">אם זה בנפש</div><div class="iq-soul">
+    <div class="iq-item"><span class="iq-lbl">איך זה מתבטא</span>${iqChecks(IQ_SOUL)}</div>
+    <div class="iq-item"><label class="iq-lbl" for="iq_m_point">איפה זה יושב בגוף</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">עוצמה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
+  h += iqTA("m_when","מתי התחיל, ומה קרה בחיים באותה תקופה",2);
+  h += iqTA("m_meds","תרופות, ויטמינים ותוספים",1);
+  h += iqTA("b_other","תלונות נוספות, ומאז מתי",3);
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>מה בולט עכשיו</h3><p class="iq-hint">עד ארבעה סימנים שהכי מתאימים.</p>`;
+  h += iqChecks(iqLeanSigns(),"col iq-grid2",'data-lim="lean"');
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>הטבע לאורך השנים</h3>`;
+  IQ_NATURE.filter(n=>IQ_LEAN_NATURE.includes(n.id)).forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>קומות ומחיצות</h3>`;
+  h += `<div class="iq-item"><span class="iq-lbl">איפה הלחץ מורגש</span>${iqChecks(IQ_PRESS,"col")}</div>`;
+  IQ_STMTS.filter(s=>IQ_LEAN_STMTS.includes(s.id)).forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>אורח חיים</h3>`;
+  h += `<div class="iq-item"><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
+  h += iqTA("l_food","תזונה: מה אוכל בדרך כלל, ועל מה קשה לוותר",1);
+  h += `<div class="iq-item"><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">הרגלים</span>${iqChecks(IQ_HABITS)}</div>`;
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>לסיום</h3>`;
+  h += iqTA("c_talent","הכישרון הטבעי",1);
+  h += iqTA("c_goal","מה היה רוצה שישתנה",1);
+  h += `</section>`;
+  return h;
+}
+
 /* ---- render & bind ---- */
 function iqKindClass(){ const w=document.getElementById('iqForm'); if(!w) return; const k=iqS().m_kind; w.classList.remove('iq-k-body','iq-k-soul','iq-k-both'); if(k) w.classList.add('iq-k-'+k); }
 function iqSyncPrint(k){ const el=document.querySelector(`.iq-print-lines[data-for="${k}"]`); if(!el) return; const v=iqS()[k]||""; el.textContent=v; el.classList.toggle('filled', !!v.trim()); }
@@ -2764,8 +2820,12 @@ function renderIntake(){
       <textarea class="iq-read-in" id="iqImportIn" style="min-height:120px" placeholder="הדבקת ההודעה"></textarea>
       <div class="sheet-actions" style="margin-top:8px"><button class="bm-btn" onclick="iqImportDo()">ייבוא לכרטיס</button><button class="bm-link" onclick="document.getElementById('iqImport').hidden=true">ביטול</button></div>
     </div>
+    <div class="iq-secs no-print" style="max-width:320px">
+      <button class="iq-sec ${iqMode(p)==='lean'?'on':''}" onclick="iqSetMode('lean')">אבחון</button>
+      <button class="iq-sec ${iqMode(p)==='full'?'on':''}" onclick="iqSetMode('full')">אבחון מתקדם</button>
+    </div>
     <div id="iqSummary"></div>
-    <div class="paper iq-paper" id="iqForm">${iqFormHTML(p)}</div>`;
+    <div class="paper iq-paper" id="iqForm">${iqMode(p)==='lean' ? iqLeanHTML(p) : iqFormHTML(p)}</div>`;
   iqBind(); iqKindClass(); iqRenderSummary();
 }
 function iqBind(){
@@ -2825,7 +2885,7 @@ function iqImportDo(){
   const a=(d&&d.a)||{}, p=curP();
   if(iqHas(p) && !confirm(`לכרטיס של ${p.name} כבר יש תשובות. להחליף אותן בתשובות שהתקבלו?`)) return;
   const nm=(a.f_name||"").trim(); delete a.f_name;
-  p.intake=a; if(nm && !p.intakeName) p.intakeName=nm;
+  p.intake=a; p.intakeMode='full'; if(nm && !p.intakeName) p.intakeName=nm;
   savePT(); renderIntake(); bmToast(nm?`התשובות של ${nm} יובאו`:'התשובות יובאו');
 }
 function iqClear(){ const p=curP(); if(!confirm(`לנקות את כל התשובות של ${p.name} בשאלון?`)) return; p.intake={}; savePT(); renderIntake(); bmToast('השאלון נוקה'); }
@@ -2909,7 +2969,7 @@ function iqText(){
   const p=curP(), S=p.intake||{}, L=[], v=k=>(S[k]||"").trim();
   const rl=(name,pairs)=>{ const f=pairs.find(x=>x[0]===S[name]); return f?f[1]:""; };
   const tg=t=>t.tags&&t.tags.length?` [${t.tags.map(e=>IQ_EL[e].name).join("/")}]`:"";
-  L.push("שאלון היכרות, לניתוח");
+  L.push(iqMode(p)==="lean" ? "שאלון היכרות, לניתוח (אבחון רזה מהקליניקה)" : "שאלון היכרות, לניתוח");
   L.push(`שם: ${p.name} | גיל: ${v("f_age")} | עיסוק: ${v("f_job")} | תאריך: ${v("f_date")}`);
   L.push("","התלונה העיקרית");
   L.push(`סוג: ${rl("m_kind",IQ_KIND)}`);
@@ -2928,7 +2988,7 @@ function iqText(){
   L.push(`היחס למה שקורה: ${rl("m_view",IQ_VIEW)}`);
   L.push("","תלונות נוספות בגוף");
   IQ_BODY.forEach(g=>{ const c=g.items.filter(i=>S[i.id]); if(c.length) L.push(`${g.name}: ${c.map(i=>i.label+tg(i)+(v(i.id+"_d")?` (${v(i.id+"_d")})`:"")).join(", ")}`); });
-  L.push(`נוסף: ${v("b_other")}`);
+  L.push(`תלונות נוספות: ${v("b_other")}`);
   L.push("","רגש ומחשבה");
   L.push(IQ_EMO.filter(i=>S[i.id]).map(i=>i.label+tg(i)).join(", "));
   L.push(`איפה הלחץ מורגש: ${IQ_PRESS.filter(x=>S[x.id]).map(x=>x.floor).join(", ")}`);
@@ -3027,10 +3087,52 @@ function iqReadPrint(patientOnly){
   setTimeout(()=>window.print(), 30);
 }
 
+
+/* ---- גיבוי ושחזור ---- */
+function bkLast(){ try{ return localStorage.getItem('bm-last-backup')||""; }catch(e){ return ""; } }
+function bkDays(){ const l=bkLast(); if(!l) return null; return Math.floor((Date.now()-new Date(l).getTime())/86400000); }
+function bkBar(){
+  const box=document.getElementById('sheetBody'); if(!box) return;
+  const old=document.getElementById('bkBar'); if(old) old.remove();
+  const n=(PT.patients||[]).length, d=bkDays();
+  let status = !n ? 'אין עדיין מטופלים במכשיר הזה.' : (d===null ? '<b style="color:#A8442B">עוד לא נעשה גיבוי.</b>' : (d===0 ? 'גיבוי אחרון: היום.' : (d>=7 ? `<b style="color:#A8442B">גיבוי אחרון לפני ${d} ימים. כדאי לגבות.</b>` : `גיבוי אחרון: לפני ${d} ימים.`)));
+  box.insertAdjacentHTML('beforeend', `<div id="bkBar" class="no-print" style="margin-top:22px;border-top:1px solid var(--sage);padding-top:12px">
+    <p class="iq-hint" style="margin:0 0 8px">${status} הגיבוי שומר את כל המטופלים, השאלונים, האבחונים והדפים לקובץ אחד.</p>
+    <div class="sheet-actions">
+      <button class="bm-btn ghost" onclick="bkExport()" ${n?'':'disabled'}>גיבוי לקובץ</button>
+      <button class="bm-btn ghost" onclick="document.getElementById('bkFile').click()">שחזור מקובץ</button>
+      <input type="file" id="bkFile" accept=".json,application/json" hidden onchange="bkImport(this)">
+    </div></div>`);
+}
+function bkExport(){
+  const now=new Date(), ds=now.toISOString().slice(0,10);
+  const data={app:'body-map', v:1, saved:now.toISOString(), patients:PT};
+  const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`clinic-backup-${ds}.json`;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500);
+  try{ localStorage.setItem('bm-last-backup', now.toISOString()); }catch(e){}
+  bkBar(); bmToast('קובץ הגיבוי ירד למחשב');
+}
+function bkImport(inp){
+  const f=inp.files&&inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    let d; try{ d=JSON.parse(r.result); }catch(e){ bmToast('הקובץ לא תקין'); inp.value=''; return; }
+    if(!d || d.app!=='body-map' || !d.patients || !Array.isArray(d.patients.patients)){ bmToast('זה לא קובץ גיבוי של מפת הגוף'); inp.value=''; return; }
+    const n=d.patients.patients.length, when=(d.saved||'').slice(0,10);
+    const cur=(PT.patients||[]).length;
+    if(!confirm(`לשחזר גיבוי מתאריך ${when} עם ${n} מטופלים?${cur?`\nהמטופלים שכרגע במכשיר (${cur}) יוחלפו בגיבוי.`:''}`)){ inp.value=''; return; }
+    PT = Object.assign({patients:[], activeId:null}, d.patients);
+    savePT(); inp.value=''; renderSheet(); bmToast(`שוחזרו ${n} מטופלים`);
+  };
+  r.readAsText(f);
+}
+
 /* ---- hook into the patient card ---- */
 function ptSection(k){ const p=curP(); if(!p) return; p.section=k; iqReadEdit=false; iqBlank=false; savePT(); renderSheet(); window.scrollTo(0,0); }
 const _renderSheetBase = renderSheet;
-renderSheet = function(){
+renderSheet = function(){ _renderSheetCore(); bkBar(); };
+function _renderSheetCore(){
   _renderSheetBase();
   const p = curP(); if(!p) return;
   const box = document.getElementById('sheetBody');
@@ -3039,14 +3141,14 @@ renderSheet = function(){
   const hasR = p.reading && p.reading.text;
   head.insertAdjacentHTML('afterend', `<div class="iq-secs no-print">
     <button class="iq-sec ${sec==='intake'?'on':''}" onclick="ptSection('intake')">שאלון${iqHas(p)?'<small>✓</small>':''}</button>
-    <button class="iq-sec ${sec==='reading'?'on':''}" onclick="ptSection('reading')">אבחון${hasR?'<small>✓</small>':''}</button>
+    <button class="iq-sec ${sec==='reading'?'on':''}" onclick="ptSection('reading')">סיכום אבחון${hasR?'<small>✓</small>':''}</button>
     <button class="iq-sec ${sec==='weeks'?'on':''}" onclick="ptSection('weeks')">דפים לבית</button></div>`);
   if(sec==='weeks') return;
   const sw = head.nextElementSibling;
   while(sw.nextSibling) sw.nextSibling.remove();
   sw.insertAdjacentHTML('afterend','<div id="iqWrap"></div>');
   if(sec==='intake') renderIntake(); else renderReading();
-};
+}
 ptCreate = function(){ const i=document.getElementById('ptNewName'); if(!i.value.trim()){ i.focus(); return; } const p=newPatient(i.value); p.section='intake'; savePT(); renderSheet(); };
 
 /* רינדור מחדש עם ההרחבות */
