@@ -592,6 +592,13 @@
   .hdr-link:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
   header.compact .hdr-link{display:none;}
   @media print{ .hdr-link{display:none !important;} }
+  /* אבחון ותרגול בהדפסה אחת */
+  .rd-sheet{display:none;}
+  .rd-note{margin:-6px 0 14px;}
+  @media print{
+    .iq-print-patient .rd-sheet{display:block;break-before:page;margin-top:0;}
+    .rd-sheet .paper-list li{break-inside:avoid;}
+  }
 
 </style>
 </head>
@@ -909,19 +916,19 @@ function renderWeeks(){
       <button class="wk-new" onclick="ptNewWeek()">+ שבוע חדש</button></div>
     <div class="sheet-actions no-print">
       <button class="bm-btn" onclick="exOpen()">+ הוספת תרגיל</button>
-      ${iqHas(p) ? `<button class="bm-btn ghost" onclick="sugToggle()">${sugOpen?'סגירת ההצעה':'הצעה מהשאלון'}</button>` : ''}
+      ${(iqHas(p)||readRecs(p).length) ? `<button class="bm-btn ghost" onclick="sugToggle()">${sugOpen?'סגירת ההצעות':'הצעות לתרגול'}</button>` : ''}
       <button class="bm-btn ghost" onclick="window.print()" ${items.length?'':'disabled'}>הדפסה</button>
       <button class="bm-btn ghost" onclick="copySheet()" ${items.length?'':'disabled'}>העתקה כטקסט</button>
       ${p.weeks.length>1 ? `<button class="bm-link danger" onclick="ptDeleteWeek()">מחיקת השבוע</button>` : ''}
     </div>
-    ${sugOpen && iqHas(p) ? sugHTML() : ''}
+    ${sugOpen && (iqHas(p)||readRecs(p).length) ? sugHTML() : ''}
     <div class="paper">
       <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">שבוע ${wi+1}, ${escH(w.date)}</span></div>
       <p class="paper-brand">יובל שניר, עבודה פנימית בין המפגשים</p>
       ${items.length ? `<p class="paper-intro">חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. פעולה שחוזרת שלוש פעמים יוצרת אחיזה, ושבע פעמים יוצרות טבע שני. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.</p>
       <ol class="paper-list">${items.map(id=>`<li><div class="pl-h"><h3>${escH(EXR[id].title)}</h3>
         <button class="x no-print" onclick="ptRemove('${id}')">הסרה</button></div><p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>`
-      : `<p class="paper-empty no-print">השבוע עוד ריק. "הוספת תרגיל" פותח את מאגר התרגילים: יסודות, ספירות, כלים, תרגילים כלליים, או לפי תלונה.${iqHas(p)?' ו"הצעה מהשאלון" מציע תרגילים לפי מה שסומן בשאלון.':''}</p>`}
+      : `<p class="paper-empty no-print">השבוע עוד ריק. "הוספת תרגיל" פותח את מאגר התרגילים: יסודות, ספירות, כלים, תרגילים כלליים, או לפי תלונה.${(iqHas(p)||readRecs(p).length)?' ו"הצעות לתרגול" מציע תרגילים לפי השאלון והאבחון.':''}</p>`}
       <textarea class="note-in" placeholder="הערה אישית לשבוע הזה, אם יש" oninput="ptNote(this.value)">${escH(w.note||'')}</textarea>
       ${items.length ? `<div class="paper-q"><h3>לרישום, ולהביא למפגש הבא</h3>${(qs.length?qs:['מה עבד, מה היה קשה, ומה התגלה?']).map(q=>`<p>${escH(q)}</p>`).join('')}</div>` : ''}
     </div>`;
@@ -1143,6 +1150,7 @@ function suggest(p){
   const pref = floors.length ? floors : ['guf'];
   const picked = new Map();
   const add = (id, why) => { if(EXR[id] && !picked.has(id)) picked.set(id, why); };
+  readRecs(p).forEach(id=>add(id, 'הוצע באבחון'));
   const pick = (src, why) => {
     const xs = Object.values(EXR).filter(e=>e.src===src && !e.mine && !picked.has(e.id));
     if(!xs.length) return;
@@ -1165,19 +1173,19 @@ function suggest(p){
     .forEach(r=>fromText(r.cure, `שורש אפשרי: ${r.name}, ${r.what}`));
   const {body, emo} = iqTally(S); const comb = {}; IQ_ORDER.forEach(k=>comb[k]=body[k]+emo[k]);
   iqLead(comb).slice(0,2).forEach(k=>pick('el:'+k, `היסוד הכי מסומן בשאלון: ${IQ_EL[k].name}`));
-  return {list:[...picked.entries()].slice(0,6), floors};
+  return {list:[...picked.entries()].slice(0,8), floors};
 }
 function sugHTML(){
   const p = curP(); const {list, floors} = suggest(p); const w = curWeek();
   const fl = floors.length ? `הלחץ סומן בקומת ${floors.map(floorLabel).join(' ובקומת ')}, ולכן ההצעות נוטות לשם.` : 'לא סומנה קומה של לחץ, ולכן ההצעות מתחילות מקומת הגוף.';
   return `<div class="sug no-print">
-    <div class="sug-h"><h3>הצעה מהשאלון</h3>${list.length?`<button class="bm-link" onclick="sugAddAll()">הוספת כל ההצעות</button>`:''}</div>
-    <p class="iq-hint" style="margin:0 0 10px">אלה הצעות בלבד, לפי מה שסומן בשאלון. ${fl} ההחלטה נשארת אצלך, לפי מה שראית בכף הרגל ובשיחה.</p>
+    <div class="sug-h"><h3>הצעות לתרגול</h3>${list.length?`<button class="bm-link" onclick="sugAddAll()">הוספת כל ההצעות</button>`:''}</div>
+    <p class="iq-hint" style="margin:0 0 10px">אלה הצעות בלבד, לפי האבחון ולפי מה שסומן בשאלון. ${iqHas(p)?fl:''} ההחלטה נשארת אצלך, לפי מה שראית בכף הרגל ובשיחה.</p>
     ${list.length ? list.map(([id,why])=>{ const e=EXR[id]; const on=w.items.includes(id);
       return `<div class="ex-item"><div class="ex-top"><div><div class="ex-title">${escH(e.title)}</div><span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></div>
         <button class="add-btn ${on?'on':''}" onclick="sugAdd('${id}')">${on?'נוסף ✓':'הוספה'}</button></div>
         <p class="sug-why">${escH(why)}</p><p>${escH(e.text)}</p></div>`; }).join('')
-      : `<p class="ex-none" style="padding:6px 0">בשאלון עוד אין מספיק סימונים כדי להציע תרגילים.</p>`}
+      : `<p class="ex-none" style="padding:6px 0">בשאלון ובאבחון עוד אין מספיק כדי להציע תרגילים.</p>`}
   </div>`;
 }
 function sugToggle(){ sugOpen = !sugOpen; renderCard(); }
@@ -1775,6 +1783,69 @@ function iqReadPrint(patientOnly){
   if(patientOnly){ w.classList.add('iq-print-patient'); const back=()=>{ w.classList.remove('iq-print-patient'); window.removeEventListener('afterprint',back); }; window.addEventListener('afterprint',back); }
   setTimeout(()=>window.print(), 30);
 }
+
+/* ===================== אבחון ותרגול יחד, למטופל ===================== */
+function readRecs(p){
+  const text = (p && p.reading && p.reading.text) || '';
+  if(!text) return [];
+  const {th} = iqReadParts(text); const thText = th.join('\n');
+  const byTitle = {};
+  Object.values(EXR).forEach(e=>{
+    if(!e.title || e.title.length<3) return;
+    const quoted = ['"'+e.title+'"', '״'+e.title+'״', '“'+e.title+'”', '”'+e.title+'“'].some(q=>text.includes(q));
+    const plain = e.title.length>=6 && thText.includes(e.title);
+    if(!quoted && !plain) return;
+    const cur = byTitle[e.title];
+    if(!cur || (!text.includes(cur.srcLabel) && text.includes(e.srcLabel))) byTitle[e.title] = e;
+  });
+  return Object.values(byTitle).map(e=>e.id);
+}
+function lastWeekItems(p){ const w = p.weeks[p.weeks.length-1]; return (w.items||[]).filter(id=>EXR[id]); }
+function sheetTextFor(p, wi){
+  const w = p.weeks[wi]; const items = w.items.filter(id=>EXR[id]);
+  let t = `עבודה פנימית בין המפגשים, שבוע ${wi+1}\nחמש עד עשר דקות ביום, בזמן קבוע אם אפשר.\n\n`;
+  items.forEach((id,i)=>{ t += `${i+1}. ${EXR[id].title}\n${EXR[id].text}\n\n`; });
+  if(w.note) t += w.note + '\n\n';
+  const qs = weekQs(items);
+  return t + 'לרישום, ולהביא למפגש הבא:\n' + (qs.length ? qs.join('\n') : 'מה עבד, מה היה קשה, ומה התגלה?');
+}
+function sheetPaperFor(p, wi){
+  const w = p.weeks[wi]; const items = w.items.filter(id=>EXR[id]); const qs = weekQs(items);
+  return `<div class="paper rd-sheet">
+    <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">שבוע ${wi+1}, ${escH(w.date)}</span></div>
+    <p class="paper-brand">יובל שניר, עבודה פנימית בין המפגשים</p>
+    <p class="paper-intro">חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. פעולה שחוזרת שלוש פעמים יוצרת אחיזה, ושבע פעמים יוצרות טבע שני. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.</p>
+    <ol class="paper-list">${items.map(id=>`<li><h3>${escH(EXR[id].title)}</h3><p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>
+    ${w.note?`<p>${escH(w.note)}</p>`:''}
+    <div class="paper-q"><h3>לרישום, ולהביא למפגש הבא</h3>${(qs.length?qs:['מה עבד, מה היה קשה, ומה התגלה?']).map(q=>`<p>${escH(q)}</p>`).join('')}</div>
+  </div>`;
+}
+function readPatientText(p){
+  const {pt} = iqReadParts(p.reading.text);
+  const clean = pt.map(x=>x.replace(/\*\*(.+?)\*\*/g,'$1').replace(/^#+\s*/,'')).join('\n\n');
+  return `${p.name}\n${p.reading.date||''}\n\n${clean}`;
+}
+function readCopyPatient(){
+  const p = curP(); if(!p || !p.reading) return;
+  const n = lastWeekItems(p).length;
+  const txt = readPatientText(p) + (n ? '\n\n\n' + sheetTextFor(p, p.weeks.length-1) : '');
+  iqCopyText(txt, n ? 'האבחון והתרגול הועתקו' : 'האבחון הועתק. בתרגול של השבוע האחרון עוד אין תרגילים');
+}
+const _renderReading = renderReading;
+renderReading = function(){
+  _renderReading();
+  const p = curP(); if(!p || !p.reading || !p.reading.text || iqReadEdit) return;
+  const wrap = $('iqWrap'); const bar = wrap.querySelector('.sheet-actions'); if(!bar) return;
+  const first = bar.querySelector('.bm-btn');
+  first.insertAdjacentHTML('afterend', `<button class="bm-btn ghost" onclick="readCopyPatient()">העתקה למטופל</button>`);
+  const wi = p.weeks.length-1, n = lastWeekItems(p).length, recs = readRecs(p);
+  const note = n
+    ? `בהדפסה למטופל ובהעתקה למטופל מצורף גם התרגול של שבוע ${wi+1}, ${n===1?'תרגיל אחד':n+' תרגילים'}.`
+    : `בתרגול של השבוע האחרון עוד אין תרגילים, ולכן בהדפסה ובהעתקה למטופל יופיע רק האבחון.`;
+  bar.insertAdjacentHTML('afterend', `<p class="iq-hint no-print rd-note">${note}${recs.length?` באבחון הוצעו ${recs.length===1?'תרגיל אחד':recs.length+' תרגילים'} מהמאגר, והם מחכים בלשונית התרגול, תחת "הצעות לתרגול".`:''}</p>`);
+  if(n) wrap.insertAdjacentHTML('beforeend', sheetPaperFor(p, wi));
+};
+
 
 /* ===== חיבורים ===== */
 const _iqImportDo = iqImportDo;
