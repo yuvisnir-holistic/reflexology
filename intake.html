@@ -155,6 +155,13 @@
     .iq-read p{font-size:11.5pt;}
   }
 
+
+  .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
+  .iq-xhead{font-size:0.8rem;font-weight:700;color:var(--forest);margin:2px 0 4px;}
+  .iq-xrow{margin-bottom:6px;}
+  .iq-xrow input{min-width:0;}
+  @media (max-width:600px){ .iq-xhead{display:none;} .iq-xrow{grid-template-columns:1fr 1fr;padding-bottom:8px;border-bottom:1px dotted rgba(44,95,91,0.25);} }
+  @media print{ .iq-xrow input::placeholder{color:transparent;} }
 </style>
 </head>
 <body>
@@ -315,6 +322,36 @@ const IQ_L = {
 const IQ_HABITS = [{id:"h_coffee",label:"קפה"},{id:"h_sweet",label:"מתוקים"},{id:"h_alcohol",label:"אלכוהול"},{id:"h_smoke",label:"עישון"},{id:"h_screens",label:"מסכים לפני השינה"},{id:"h_late",label:"אכילה מאוחרת"}];
 const IQ_STRESS = [{id:"st_work",label:"עבודה"},{id:"st_family",label:"משפחה"},{id:"st_couple",label:"זוגיות"},{id:"st_money",label:"כסף ופרנסה"},{id:"st_health",label:"בריאות"},{id:"st_other",label:"משהו אחר"}];
 
+const IQ_PAIN = [{id:"q_sharp",label:"חד"},{id:"q_dull",label:"עמום"},{id:"q_throb",label:"פועם"},{id:"q_radiate",label:"מקרין לאזור אחר"}];
+const IQ_TIME = [{id:"w_morning",label:"בבוקר"},{id:"w_noon",label:"בצהריים"},{id:"w_evening",label:"בערב"},{id:"w_night",label:"בלילה"}];
+const IQ_POSE = [{id:"o_stand",label:"בעמידה"},{id:"o_sit",label:"בישיבה"},{id:"o_lie",label:"בשכיבה"},{id:"o_move",label:"בתנועה"}];
+const IQ_RELIEF = [{id:"r_heat",label:"חום"},{id:"r_cold",label:"קור"},{id:"r_rest",label:"מנוחה"},{id:"r_move",label:"תנועה"}];
+const IQ_SLEEPQ = [{id:"sl_fall",label:"קושי להירדם"},{id:"sl_wake",label:"יקיצות באמצע הלילה"},{id:"sl_dreams",label:"חלומות שחוזרים על עצמם"}];
+const IQ_L2 = {
+  l_bed:[["early","לפני עשר"],["mid","בין עשר לחצות"],["late","אחרי חצות"]],
+  l_plate:[["home","בעיקר אוכל ביתי ומזין"],["mix","שילוב"],["processed","הרבה מזון מעובד או מהיר"]],
+  l_veg:[["most","כמעט בכל ארוחה"],["daily","פעם ביום"],["rare","לעיתים רחוקות"]],
+  l_bowel:[["regular","סדירות"],["irregular","לא סדירות"]]
+};
+function iqInp(id,label,ph){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><input type="text" id="iq_${id}" data-k="${id}"${ph?` placeholder="${ph}"`:""}></div>`; }
+function iqExtra(){
+  let h = `<div class="iq-item"><span class="iq-lbl">תלונות נוספות, אם יש</span><div class="iq-xhead"><span>מה</span><span>מאז מתי</span><span>איך טופל עד היום</span><span>כמה מפריע, 0 עד 10</span></div>`;
+  [1,2,3].forEach(n=>{ h += `<div class="iq-xrow">
+    <input type="text" data-k="x${n}_what" aria-label="תלונה ${n}: מה" placeholder="מה">
+    <input type="text" data-k="x${n}_since" aria-label="תלונה ${n}: מאז מתי" placeholder="מאז מתי">
+    <input type="text" data-k="x${n}_treat" aria-label="תלונה ${n}: איך טופל" placeholder="איך טופל">
+    <input type="text" data-k="x${n}_lvl" inputmode="numeric" aria-label="תלונה ${n}: כמה מפריע" placeholder="כמה מפריע, 0 עד 10"></div>`; });
+  return h + `</div>`;
+}
+function iqHistory(){
+  return `<section class="iq-q"><h3>רקע רפואי</h3><p class="iq-hint">ליד כל דבר, אם אפשר, באיזו שנה.</p>`
+    + iqInp("h_surg","ניתוחים ואשפוזים")
+    + iqInp("h_injury","תאונות, פציעות ושברים")
+    + iqInp("h_scars","צלקות, ואיפה בגוף")
+    + iqInp("h_family","מחלות במשפחה הקרובה")
+    + `</section>`;
+}
+
 
 let iqBlank = false;
 /* ---- builders ---- */
@@ -342,18 +379,23 @@ function iqFormHTML(p){
   h += `<div class="iq-sub">אם זה בגוף</div><div class="iq-bodyc">
     <div class="iq-item"><label class="iq-lbl" for="iq_m_where">איפה בגוף?</label><input type="text" id="iq_m_where" data-k="m_where"></div>
     <div class="iq-item iq-grid2"><div><span class="iq-lbl">באיזה צד</span>${iqRadios("m_side",IQ_SIDE)}</div><div><span class="iq-lbl">מלפנים או מאחור</span>${iqRadios("m_fb",IQ_FB)}</div></div>
-    <div class="iq-item"><span class="iq-lbl">איך זה מרגיש? אפשר לסמן כמה</span>${iqChecks(IQ_SENS)}</div></div>`;
+    <div class="iq-item"><span class="iq-lbl">איך זה מרגיש? אפשר לסמן כמה</span>${iqChecks(IQ_SENS)}</div>
+    <div class="iq-item"><span class="iq-lbl">אם יש כאב, איך הוא מרגיש?</span>${iqChecks(IQ_PAIN)}</div></div>`;
   h += `<div class="iq-sub">אם זה בנפש</div><div class="iq-soul">
     <div class="iq-item"><span class="iq-lbl">איך זה מתבטא? אפשר לסמן כמה</span>${iqChecks(IQ_SOUL)}</div>
     <div class="iq-item"><label class="iq-lbl" for="iq_m_point">אם הייתם צריכים להצביע על מקום בגוף שבו זה יושב, איפה?</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">כמה זה מפריע בימים אלה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
   h += iqTA("m_when","מתי זה התחיל, ומה קרה בחיים שלכם באותה תקופה?",2);
-  h += iqTA("m_better","מה מחמיר את זה, ומה מקל?",2);
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מתי ביום זה מחמיר?</span>${iqChecks(IQ_TIME)}</div><div><span class="iq-lbl">ובאיזו תנוחה?</span>${iqChecks(IQ_POSE)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מה מקל?</span>${iqChecks(IQ_RELIEF)}</div>`;
+  h += iqTA("m_better","מה עוד מחמיר את זה, ומה עוד מקל?",2);
+  h += iqTA("m_treated","איך זה טופל עד היום, ומה עזר?",2);
   h += iqTA("m_medical","אבחנה רפואית ובדיקות, אם יש",2);
   h += iqTA("m_meds","תרופות, ויטמינים ותוספי תזונה שאתם לוקחים, ואם אפשר גם המינון",2);
   h += iqTA("m_why","מה לדעתכם גרם לזה, ומה צריך להשתנות כדי שזה יעבור?",2);
   h += `<div class="iq-item"><span class="iq-lbl">איך אתם מתייחסים למה שקורה לכם?</span>${iqRadios("m_view",IQ_VIEW)}</div>`;
   h += `</section>`;
+  h += iqHistory();
 
   h += `<section class="iq-q"><h3>עוד דברים שקורים בגוף</h3><p class="iq-hint">סמנו רק מה שקורה לכם לעיתים קרובות, או בחצי השנה האחרונה.</p>`;
   IQ_BODY.forEach(g=>{
@@ -362,7 +404,7 @@ function iqFormHTML(p){
       <input type="text" class="iq-dur" data-k="${it.id}_d" placeholder="מאז מתי, ובעקבות מה" aria-label="מאז מתי, ובעקבות מה"></div>`).join("")}</div>`;
   });
   h += `<div class="iq-blank-only">${iqTA("b_durpaper","ליד מה שסימנתם, כתבו אם אפשר מאז מתי, ואם זה התחיל בעקבות משהו",3)}</div>`;
-  h += iqTA("b_other","משהו נוסף שלא הופיע כאן?",1);
+  h += iqExtra();
   h += `</section>`;
 
   h += `<section class="iq-q"><h3>רגש ומחשבה</h3><p class="iq-hint">בחרו עד ארבעה דברים שהכי מתארים אתכם בתקופה האחרונה.</p>`;
@@ -376,7 +418,12 @@ function iqFormHTML(p){
 
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה בלילה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">איך אתם מתעוררים</span>${iqRadios("l_wake",IQ_L.l_wake)}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מתי הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div><div><span class="iq-lbl">בשינה יש</span>${iqChecks(IQ_SLEEPQ)}</div></div>`;
+  h += iqInp("l_wakehour","אם יש יקיצות, באיזו שעה בערך?");
+  h += iqTA("l_dreams","אם יש חלום שחוזר, על מה הוא?",1);
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים ביום</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מה בעיקר יש בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">ירקות ופירות</span>${iqRadios("l_veg",IQ_L2.l_veg)}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div>${iqInp("l_sens","רגישות למזון מסוים, אם יש")}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">מה נעים לכם יותר</span>${iqRadios("l_temp",IQ_L.l_temp)}</div>`;
   h += iqTA("l_food","מה הכי אוהבים לאכול, ועל מה הכי קשה לוותר?",1);
   h += `<div class="iq-item"><span class="iq-lbl">יש הרבה מזה ביום שלכם</span>${iqChecks(IQ_HABITS)}</div>`;
@@ -392,6 +439,7 @@ function iqFormHTML(p){
   h += `<section class="iq-q"><h3>לסיום</h3>`;
   h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",2);
   h += iqTA("c_talent","מה הכישרון הטבעי שלכם, משהו שתמיד בא לכם בקלות?",1);
+  h += iqTA("c_hobby","תחביבים, ומה אתם אוהבים לעשות בזמן הפנוי",1);
   h += iqTA("c_hard","ומה תמיד היה לכם קשה, יותר מלאחרים?",1);
   h += iqTA("c_world","אם הייתם מתארים את העולם בתמונה אחת, הוא כמו... (גן, ג׳ונגל, שדה קרב, מסלול, או משהו אחר)",1);
   h += iqTA("c_goal","מה הייתם רוצים שישתנה בעקבות הטיפולים?",2);
