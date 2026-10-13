@@ -585,10 +585,19 @@
   .sug-h h3{margin:0 0 4px;color:var(--sefirah);font-size:1.15rem;}
   .sug-why{font-size:0.84rem !important;color:var(--sefirah);font-weight:600;margin:4px 0 0 !important;}
 
+  /* מעבר בין הכלים */
+  header{position:sticky;}
+  .hdr-link{position:absolute;left:14px;top:14px;display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;border:1.5px solid rgba(253,251,245,0.45);color:#FDFBF5;text-decoration:none;font-family:'Assistant',sans-serif;font-weight:700;font-size:0.82rem;line-height:1.2;}
+  .hdr-link:hover{background:rgba(253,251,245,0.12);}
+  .hdr-link:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  header.compact .hdr-link{display:none;}
+  @media print{ .hdr-link{display:none !important;} }
+
 </style>
 </head>
 <body>
 <header>
+  <a class="hdr-link" href="body-map-reference.html">מפת הגוף</a>
   <h1>הקליניקה</h1>
   <div class="sub">יובל שניר, ניהול מטופלים</div>
 </header>
