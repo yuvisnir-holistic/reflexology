@@ -930,8 +930,9 @@ function tCard(t,n){
       ${ta('done','מה עשינו',3)}
       ${ta('foot','מה ראיתי בכף הרגל',3)}
       <div class="f">
-        <div class="tr-hw-h"><label class="f-l" for="t_homework_${t.id}">תרגול</label><button class="bm-link" onclick="tFill('${t.id}')">מילוי מלשונית התרגול</button></div>
-        <textarea class="inp" id="t_homework_${t.id}" rows="2" oninput="tSet('${t.id}','homework',this.value)">${escH(t.homework||'')}</textarea>
+        <div class="tr-hw-h"><span class="f-l">תרגול</span><button class="bm-link" onclick="tFill('${t.id}')">מילוי מלשונית התרגול</button></div>
+        ${(t.exIds||[]).filter(x=>EXR[x]).length ? `<div class="rd-exs">${t.exIds.filter(x=>EXR[x]).map(x=>{ const e=EXR[x]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span><button type="button" class="bm-link danger no-print" onclick="event.preventDefault();event.stopPropagation();tExDel('${t.id}','${x}')">הסרה</button></summary><p>${escH(e.text)}</p></details>`; }).join('')}</div>` : ''}
+        <textarea class="inp" id="t_homework_${t.id}" rows="2" placeholder="עוד על התרגול, אם צריך" aria-label="עוד על התרגול" oninput="tSet('${t.id}','homework',this.value)">${escH(t.homework||'')}</textarea>
       </div>
       ${n>1 ? `<div class="f"><span class="f-l">איך הגיע ביחס לפעם הקודמת</span>
         <div class="seg" role="group" aria-label="איך הגיע ביחס לפעם הקודמת">${Object.entries(PROG).map(([k,l])=>`<button class="${t.progress===k?'on':''}" aria-pressed="${t.progress===k}" onclick="tProg('${t.id}','${k}')">${l}</button>`).join('')}</div>
@@ -958,13 +959,14 @@ function tNew(){
 function tProg(id,k){ const t=getT(id); t.progress = t.progress===k ? '' : k; savePT(); renderCard(); }
 function tFill(id){
   const p = curP(); const t = getT(id);
-  const w = p.weeks[p.weeks.length-1];
-  const titles = (w.items||[]).filter(x=>EXR[x]).map(x=>EXR[x].title);
-  if(!titles.length){ bmToast('התרגול של השבוע האחרון עוד ריק'); return; }
-  const line = titles.join(', ');
-  t.homework = t.homework && t.homework.trim() ? t.homework.trim()+'\n'+line : line;
-  savePT(); renderCard(); bmToast('התרגילים מהשבוע האחרון נוספו');
+  const wi = curWi(p); const ids = (p.weeks[wi].items||[]).filter(x=>EXR[x]);
+  if(!ids.length){ bmToast(`בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים`); return; }
+  t.exIds = t.exIds || []; let n = 0;
+  ids.forEach(x=>{ if(!t.exIds.includes(x)){ t.exIds.push(x); n++; } });
+  savePT(); renderCard();
+  bmToast(n ? `נוספו ${n===1?'תרגיל אחד':n+' תרגילים'} משבוע ${wi+1}` : `כל התרגילים של שבוע ${wi+1} כבר כאן`);
 }
+function tExDel(id,x){ const t=getT(id); t.exIds=(t.exIds||[]).filter(y=>y!==x); savePT(); renderCard(); }
 function tDel(id){
   const p = curP(); const n = tSorted(p).findIndex(x=>x.id===id)+1;
   if(!confirm(`למחוק את טיפול ${n}?`)) return;
@@ -2018,7 +2020,8 @@ function readRecs(p){
   });
   return Object.values(byTitle).map(e=>e.id);
 }
-function lastWeekItems(p){ const w = p.weeks[p.weeks.length-1]; return (w.items||[]).filter(id=>EXR[id]); }
+function curWi(p){ return (p.activeWeek!=null && p.activeWeek<p.weeks.length) ? p.activeWeek : p.weeks.length-1; }
+function lastWeekItems(p){ const w = p.weeks[curWi(p)]; return (w.items||[]).filter(id=>EXR[id]); }
 function sheetTextFor(p, wi){
   const w = p.weeks[wi]; const items = w.items.filter(id=>EXR[id]);
   let t = `עבודה פנימית בין המפגשים, שבוע ${wi+1}\nחמש עד עשר דקות ביום, בזמן קבוע אם אפשר.\n\n`;
@@ -2046,8 +2049,8 @@ function readPatientText(p){
 function readCopyPatient(){
   const p = curP(); if(!p || !p.reading) return;
   const n = lastWeekItems(p).length;
-  const txt = readPatientText(p) + (n ? '\n\n\n' + sheetTextFor(p, p.weeks.length-1) : '');
-  iqCopyText(txt, n ? 'האבחון והתרגול הועתקו' : 'האבחון הועתק. בתרגול של השבוע האחרון עוד אין תרגילים');
+  const txt = readPatientText(p) + (n ? '\n\n\n' + sheetTextFor(p, curWi(p)) : '');
+  iqCopyText(txt, n ? 'האבחון והתרגול הועתקו' : `האבחון הועתק. בשבוע ${curWi(p)+1} בתרגול עוד אין תרגילים`);
 }
 const _renderReading = renderReading;
 renderReading = function(){
@@ -2056,10 +2059,10 @@ renderReading = function(){
   const wrap = $('iqWrap'); const bar = wrap.querySelector('.sheet-actions'); if(!bar) return;
   const first = bar.querySelector('.bm-btn');
   first.insertAdjacentHTML('afterend', `<button class="bm-btn ghost" onclick="readCopyPatient()">העתקה למטופל</button>`);
-  const wi = p.weeks.length-1, n = lastWeekItems(p).length, recs = readRecs(p);
+  const wi = curWi(p), n = lastWeekItems(p).length, recs = readRecs(p);
   const note = n
     ? `בהדפסה למטופל ובהעתקה למטופל מצורף גם התרגול של שבוע ${wi+1}, ${n===1?'תרגיל אחד':n+' תרגילים'}.`
-    : `בתרגול של השבוע האחרון עוד אין תרגילים, ולכן בהדפסה ובהעתקה למטופל יופיע רק האבחון.`;
+    : `בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים, ולכן בהדפסה ובהעתקה למטופל יופיע רק האבחון.`;
   bar.insertAdjacentHTML('afterend', `<p class="iq-hint no-print rd-note">${note}${recs.length?` באבחון הוצעו ${recs.length===1?'תרגיל אחד':recs.length+' תרגילים'} מהמאגר, והם מחכים בלשונית התרגול, תחת "הצעות לתרגול".`:''}</p>`);
   if(n) wrap.insertAdjacentHTML('beforeend', sheetPaperFor(p, wi));
   readTabs();
@@ -2141,7 +2144,7 @@ function rdBuild(){
   const box = paper.querySelector('.iq-thera-part'); if(!box) return;
   if(rdLastP !== p.id){ rdOpen = new Set(); rdOpenEx = new Set(); rdLastP = p.id; }
   const {th} = iqReadParts(p.reading.text);
-  const recs = readRecs(p); const w = p.weeks[p.weeks.length-1];
+  const recs = readRecs(p); const w = p.weeks[curWi(p)];
   const cards = rdCards(th); const used = new Set();
   const cardHTML = cards.map((c,i)=>{
     const found = {ex:new Set(), el:new Set(), sf:new Set()};
@@ -2168,10 +2171,10 @@ function rdAll(){
   const b=document.querySelector('.rd-all'); if(b) b.textContent = openAll?'סגירת הכול':'פתיחת הכול';
 }
 function rdAdd(id){
-  const p = curP(); const w = p.weeks[p.weeks.length-1]; const i = w.items.indexOf(id);
+  const p = curP(); const w = p.weeks[curWi(p)]; const i = w.items.indexOf(id);
   if(i<0) w.items.push(id); else w.items.splice(i,1);
   savePT(); const y = window.scrollY; renderReading(); window.scrollTo(0,y);
-  bmToast(i<0 ? `נוסף לתרגול, שבוע ${p.weeks.length}` : 'הוסר מהתרגול');
+  bmToast(i<0 ? `נוסף לתרגול, שבוע ${curWi(p)+1}` : 'הוסר מהתרגול');
 }
 function rdJump(id){
   const d = document.querySelector(`details.rd-ex[data-ex="${id}"]`); if(!d) return;
@@ -2181,7 +2184,6 @@ function rdJump(id){
 }
 function exOpenAt(tab, sel){
   const p = curP(); if(!p) return;
-  p.activeWeek = p.weeks.length-1;
   exTab = tab; exSel[tab] = sel; exOpen();
 }
 /* בהדפסה כל הכרטיסים נפתחים, ואחריה חוזרים למצב הקודם */
