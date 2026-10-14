@@ -638,6 +638,9 @@
   .rd-ex > p{padding:0 12px 10px;margin:0;}
   @media print{ .rd-link{text-decoration:none;color:inherit !important;} .rd-ex{border:none;} }
 
+  .kb-opt{display:flex;align-items:center;gap:8px;font-weight:600;cursor:pointer;}
+  .kb-opt input{width:18px;height:18px;accent-color:var(--forest);}
+
   .iq-sub2{font-size:0.95rem;font-weight:800;color:var(--sefirah);margin:22px 0 2px;padding-top:12px;border-top:1px dotted rgba(44,95,91,0.3);}
   .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
   .iq-xhead{font-size:0.8rem;font-weight:700;color:var(--forest);margin:2px 0 4px;}
@@ -889,6 +892,7 @@ function renderDetails(){
       <div class="f"><label class="f-l" for="d_job">עיסוק</label><input class="inp" id="d_job" value="${escH(p.job)}" autocomplete="off" oninput="dSet('job',this.value)"></div>
       <div class="f"><span class="f-l">מקור המטופל</span><div class="seg" role="group" aria-label="מקור המטופל">${Object.entries(SOURCES).map(([k,l])=>`<button class="${p.source===k?'on':''}" aria-pressed="${p.source===k}" onclick="dSource('${k}')">${l}</button>`).join('')}</div></div>
       <div class="f"><label class="f-l" for="d_first">תאריך טיפול ראשון</label><input class="inp" id="d_first" type="date" value="${escH(p.firstDate)}" onchange="dSet('firstDate',this.value)"></div>
+      <div class="f wide"><span class="f-l">שפה לאבחון</span><label class="kb-opt"><input type="checkbox" id="d_kb" ${p.kabbalah?'checked':''} onchange="dKb(this.checked)"> פתוח או פתוחה לשפה של קבלה</label><span class="iq-hint" style="margin:0">רק אצלך. המטופל לא רואה את זה. הסימון נכנס לטקסט של "העתקה לניתוח", והאבחון ייכתב בהתאם.</span></div>
       <div class="f wide"><label class="f-l" for="d_gift">קריסטל שקיבל או קיבלה במתנה</label><input class="inp" id="d_gift" value="${escH(p.gift||'')}" placeholder="איזו אבן, ומתי" autocomplete="off" oninput="dSet('gift',this.value)"></div>
       <div class="f wide"><label class="f-l" for="d_ref">איך הגיע אליי</label><textarea class="inp" id="d_ref" rows="2" oninput="dSet('referral',this.value)">${escH(p.referral)}</textarea></div>
     </div>
@@ -903,6 +907,7 @@ function dSet(k,v){
   if(k==='phone'){ const tel=v.replace(/[^\d+]/g,''); const a=$('d_call'); a.href='tel:'+tel; a.hidden=!tel; }
 }
 function dName(v){ const p=curP(); if(!v.trim()) return; p.name=v.trim(); savePT(); $('cardName').textContent=p.name; }
+function dKb(v){ const p=curP(); p.kabbalah=!!v; savePT(); }
 function dSource(k){ const p=curP(); p.source = p.source===k ? '' : k; savePT(); renderCard(); }
 function ptDelete(){
   const p = curP(); if(!p) return;
@@ -2204,6 +2209,15 @@ function iqSyncActions(p){
   if(has && !clr) bar.insertAdjacentHTML('beforeend', '<button class="bm-link danger" onclick="iqClear()">ניקוי השאלון</button>');
   if(!has && clr) clr.remove();
 }
+
+/* שפה לאבחון: נכנס לטקסט לניתוח */
+const _iqTextKb = iqText;
+iqText = function(){
+  const t = _iqTextKb(); const p = curP();
+  if(!p || !p.kabbalah) return t;
+  const i = t.indexOf('\n');
+  return t.slice(0,i+1) + 'שפה לאבחון: פתוח או פתוחה לשפה של קבלה (סימון של יובל)\n' + t.slice(i+1);
+};
 
 /* ===== הפעלה ===== */
 const _migrated = loadPT();
