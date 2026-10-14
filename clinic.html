@@ -600,12 +600,69 @@
     .rd-sheet .paper-list li{break-inside:avoid;}
   }
 
+  /* כרטיסיות בסיכום האבחון */
+  .rd-tabs{margin-bottom:12px;}
+  #iqRead.rt-th .rd-pt{display:none;}
+  #iqRead.rt-pt .iq-thera-part{display:none;}
+  #iqRead.rt-th .iq-thera-part{margin-top:14px;}
+  @media print{
+    #iqRead .rd-pt{display:block !important;}
+    #iqRead .iq-thera-part{display:block;}
+    .iq-print-patient #iqRead .iq-thera-part{display:none !important;}
+  }
+  /* הודעה כשקובץ התרגילים לא נטען */
+  .ex-missing{background:var(--fire-bg);color:#7a3320;border-radius:12px;padding:10px 14px;margin:14px 0 0;font-size:0.92rem;line-height:1.6;}
+  /* החלק למטפל בכרטיסים */
+  .iq-thera-part .iq-tp-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+  .rd-card{border-top:1px solid rgba(110,74,140,0.18);}
+  .rd-card:first-of-type{border-top:none;}
+  .rd-card > summary{list-style:none;cursor:pointer;padding:11px 2px;font-weight:800;color:var(--sefirah);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .rd-card > summary::-webkit-details-marker{display:none;}
+  .rd-card > summary::before{content:"";display:inline-block;width:7px;height:7px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .2s;margin-inline-end:2px;}
+  .rd-card[open] > summary::before{transform:rotate(-45deg);}
+  .rd-card > summary:focus-visible,.rd-ex > summary:focus-visible,.rd-link:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  .rd-card-b{padding:0 2px 12px;}
+  .rd-badge{font-size:0.74rem;font-weight:700;background:#fff;color:var(--forest);border-radius:999px;padding:2px 10px;}
+  .rd-link{border:none;background:none;padding:0 1px;font:inherit;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;}
+  .rd-link.ex{color:var(--forest);}
+  .rd-link.sf{color:var(--sefirah);}
+  .rd-link.el{color:var(--earth);}
+  .rd-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 6px;font-size:0.84rem;color:#5e6b66;}
+  .rd-chips .wchip{border:none;cursor:pointer;font-family:'Assistant',sans-serif;}
+  .rd-exs{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+  .rd-ex{background:#fff;border:1px solid rgba(44,95,91,0.15);border-radius:12px;}
+  .rd-ex > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;}
+  .rd-ex > summary::-webkit-details-marker{display:none;}
+  .rd-ex-t{font-weight:700;color:var(--ink);display:flex;flex-direction:column;gap:2px;}
+  .rd-ex-t .ex-src{font-weight:600;}
+  .rd-ex > p{padding:0 12px 10px;margin:0;}
+  @media print{ .rd-link{text-decoration:none;color:inherit !important;} .rd-ex{border:none;} }
+
+  .iq-sub2{font-size:0.95rem;font-weight:800;color:var(--sefirah);margin:22px 0 2px;padding-top:12px;border-top:1px dotted rgba(44,95,91,0.3);}
   .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
   .iq-xhead{font-size:0.8rem;font-weight:700;color:var(--forest);margin:2px 0 4px;}
   .iq-xrow{margin-bottom:6px;}
-  .iq-xrow input{min-width:0;}
+  .iq-xrow input,.iq-xrow select{min-width:0;}
+  .iq-xrow select{font-family:inherit;font-size:0.95rem;border:1px solid rgba(44,95,91,0.25);border-radius:8px;background:#fff;padding:6px 8px;color:inherit;}
   @media (max-width:600px){ .iq-xhead{display:none;} .iq-xrow{grid-template-columns:1fr 1fr;padding-bottom:8px;border-bottom:1px dotted rgba(44,95,91,0.25);} }
   @media print{ .iq-xrow input::placeholder{color:transparent;} }
+
+  .iq-acc > h3{display:none;}
+  .iq-acc-h{width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;border-bottom:1px solid var(--sage);padding:14px 2px 12px;margin:0;cursor:pointer;font-family:'Frank Ruhl Libre',serif;font-size:1.18rem;font-weight:700;color:var(--forest-dark);text-align:start;}
+  .iq-acc-h:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  .iq-acc-h .t{flex:1;}
+  .iq-acc-h .c{font-family:'Assistant',sans-serif;font-size:0.76rem;font-weight:700;color:var(--forest);background:#E7EFEC;border-radius:999px;padding:2px 10px;white-space:nowrap;}
+  .iq-acc-h .c:empty{display:none;}
+  .iq-acc-h .ch::before{content:"";display:inline-block;width:8px;height:8px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s;margin:0 4px 4px;}
+  .iq-acc.open > .iq-acc-h .ch::before{transform:rotate(135deg);margin-bottom:-2px;}
+  .iq-acc-b{display:none;padding-top:6px;}
+  .iq-acc.open > .iq-acc-b{display:block;}
+  .iq-acc-next{margin:20px 0 6px;}
+  @media print{
+    .iq-acc > h3{display:block !important;}
+    .iq-acc-b{display:block !important;}
+    .iq-acc-h,.iq-acc-next{display:none !important;}
+  }
 
 </style>
 </head>
@@ -656,6 +713,17 @@
 <footer>הנתונים נשמרים רק במכשיר הזה, ולכן חשוב לגבות לקובץ מדי פעם</footer>
 
 <script src="exercises.js"></script>
+<script>
+/* אם קובץ התרגילים לא נטען, הקליניקה ממשיכה לעבוד בלי מאגר התרגילים */
+if(typeof EXR==='undefined'){
+  window.EX_MISSING = true;
+  window.WEEK_EL = {}; window.WEEK_SF = {}; window.WTOOLS = {}; window.WGENERAL = {}; window.PATH_LINKS = {}; window.EXR = {};
+  window.EX_EL_NAMES = {fire:'אש', water:'מים', air:'אוויר', earth:'אדמה'};
+  window.FLOOR_ORDER = [['guf','מעשה וגוף'],['regesh','רגש ודיבור'],['machshava','מחשבה'],['ratzon','רצון']];
+  window.floorLabel = id => (FLOOR_ORDER.find(f=>f[0]===id)||[])[1]||'';
+  window.regEx = function(id, title, text, src, srcLabel, floor){ EXR[id] = {id, title, text, src, srcLabel, floor}; };
+}
+</script>
 <script>
 const ELEMENTS = {fire:{name:"אש",color:"var(--fire)",bg:"var(--fire-bg)"}, water:{name:"מים",color:"var(--water)",bg:"var(--water-bg)"}, air:{name:"אוויר",color:"var(--air)",bg:"var(--air-bg)"}, earth:{name:"אדמה",color:"var(--earth)",bg:"var(--earth-bg)"}};
 const escH = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -988,6 +1056,7 @@ function exFloors(src){
 }
 function srcOfLink(x){ if(ELEMENTS[x]) return 'el:'+x; if(WEEK_SF[x]) return 'sf:'+x; if(WTOOLS[x]) return x; return null; }
 function exRender(){
+  if(window.EX_MISSING){ $('exTabs').hidden=true; $('exSrcs').innerHTML=''; $('exList').innerHTML='<p class="ex-none">קובץ התרגילים לא נטען, ולכן אין כרגע תרגילים לבחירה.</p>'; return; }
   const q = exQ.trim().toLowerCase();
   $('exTabs').hidden = !!q;
   $('exTabs').innerHTML = EX_TABS.map(([k,l])=>`<button class="ct ${exTab===k?'on':''}" onclick="exSetTab('${k}')">${l}</button>`).join('');
@@ -1364,20 +1433,24 @@ const IQ_L2 = {
   l_bed:[["early","לפני עשר"],["mid","בין עשר לחצות"],["late","אחרי חצות"]],
   l_plate:[["home","בעיקר אוכל ביתי ומזין"],["mix","שילוב"],["processed","הרבה מזון מעובד או מהיר"]],
   l_veg:[["most","כמעט בכל ארוחה"],["daily","פעם ביום"],["rare","לעיתים רחוקות"]],
-  l_bowel:[["regular","סדירות"],["irregular","לא סדירות"]]
+  l_bowel:[["regular","סדירות"],["irregular","לא סדירות"]],
+  l_wakes:[["1","פעם אחת"],["2","פעמיים"],["3","שלוש פעמים ומעלה"]],
+  l_stool:[["soft","רכות"],["normal","רגילות"],["hard","קשות"]]
 };
 function iqInp(id,label,ph){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><input type="text" id="iq_${id}" data-k="${id}"${ph?` placeholder="${ph}"`:""}></div>`; }
 function iqExtra(){
-  let h = `<div class="iq-item"><span class="iq-lbl">תלונות נוספות, אם יש</span><div class="iq-xhead"><span>מה</span><span>מאז מתי</span><span>איך טופל עד היום</span><span>כמה מפריע, 0 עד 10</span></div>`;
+  let h = `<div class="iq-item"><span class="iq-lbl">עוד תלונות שלא הופיעו ברשימה, אם יש</span><div class="iq-xhead"><span>פירוט</span><span>ממתי</span><span>איך טופל עד היום</span><span>כמה מפריע</span></div>`;
   [1,2,3].forEach(n=>{ h += `<div class="iq-xrow">
-    <input type="text" data-k="x${n}_what" aria-label="תלונה ${n}: מה" placeholder="מה">
-    <input type="text" data-k="x${n}_since" aria-label="תלונה ${n}: מאז מתי" placeholder="מאז מתי">
+    <input type="text" data-k="x${n}_what" aria-label="תלונה ${n}: פירוט" placeholder="פירוט">
+    <input type="text" data-k="x${n}_since" aria-label="תלונה ${n}: ממתי" placeholder="ממתי">
     <input type="text" data-k="x${n}_treat" aria-label="תלונה ${n}: איך טופל" placeholder="איך טופל">
-    <input type="text" data-k="x${n}_lvl" inputmode="numeric" aria-label="תלונה ${n}: כמה מפריע" placeholder="כמה מפריע, 0 עד 10"></div>`; });
+    <select data-k="x${n}_lvl" aria-label="תלונה ${n}: כמה מפריע, מ־0 עד 10"><option value="">כמה מפריע</option>${[0,1,2,3,4,5,6,7,8,9,10].map(v=>`<option value="${v}">${v}</option>`).join("")}</select></div>`; });
   return h + `</div>`;
 }
 function iqHistory(){
-  return `<section class="iq-q"><h3>רקע רפואי</h3><p class="iq-hint">ליד כל דבר, אם אפשר, באיזו שנה.</p>`
+  return `<section class="iq-q"><h3>רקע רפואי ותרופות</h3>`
+    + iqTA("m_meds","תרופות, ויטמינים ותוספי תזונה שאתם לוקחים, ואם אפשר גם המינון",2)
+    + `<p class="iq-hint">בשאלות הבאות, ליד כל דבר, אם אפשר, באיזו שנה.</p>`
     + iqInp("h_surg","ניתוחים ואשפוזים")
     + iqInp("h_injury","תאונות, פציעות ושברים")
     + iqInp("h_scars","צלקות, ואיפה בגוף")
@@ -1409,9 +1482,9 @@ function iqFormHTML(p){
     <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
     <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div></section>`;
 
-  h += `<section class="iq-q"><h3>מה הביא אתכם</h3>`;
-  h += `<div class="iq-item"><span class="iq-lbl">מה הביא אתכם בעיקר?</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
-  h += iqTA("m_what","מה מפריע לכם, ואיך הייתם מתארים את זה במילים שלכם?",3);
+  h += `<section class="iq-q"><h3>התלונה העיקרית</h3><p class="iq-hint">כאן כותבים על דבר אחד בלבד, הדבר שהכי מפריע לכם עכשיו. אם יש עוד דברים, יש להם מקום בהמשך, בחלק של התלונות הנוספות.</p>`;
+  h += `<div class="iq-item"><span class="iq-lbl">התלונה העיקרית היא בעיקר</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
+  h += iqTA("m_what","מה הדבר שהכי מפריע לכם, ואיך הייתם מתארים אותו במילים שלכם?",3);
   h += iqTA("m_effect","איך זה משפיע על החיים שלכם?",2);
   h += `<div class="iq-sub">אם זה בגוף</div><div class="iq-bodyc">
     <div class="iq-item"><label class="iq-lbl" for="iq_m_where">איפה בגוף?</label><input type="text" id="iq_m_where" data-k="m_where"></div>
@@ -1420,21 +1493,21 @@ function iqFormHTML(p){
     <div class="iq-item"><span class="iq-lbl">אם יש כאב, איך הוא מרגיש?</span>${iqChecks(IQ_PAIN)}</div></div>`;
   h += `<div class="iq-sub">אם זה בנפש</div><div class="iq-soul">
     <div class="iq-item"><span class="iq-lbl">איך זה מתבטא? אפשר לסמן כמה</span>${iqChecks(IQ_SOUL)}</div>
-    <div class="iq-item"><label class="iq-lbl" for="iq_m_point">אם הייתם צריכים להצביע על מקום בגוף שבו זה יושב, איפה?</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
+    <div class="iq-item"><label class="iq-lbl" for="iq_m_point">כשזה קורה, איפה בגוף אתם מרגישים את זה? למשל בחזה, בגרון או בבטן</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">כמה זה מפריע בימים אלה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
+  h += `<div class="iq-sub2">מתי, ומה משפיע על זה</div>`;
   h += iqTA("m_when","מתי זה התחיל, ומה קרה בחיים שלכם באותה תקופה?",2);
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מתי ביום זה מחמיר?</span>${iqChecks(IQ_TIME)}</div><div><span class="iq-lbl">ובאיזו תנוחה?</span>${iqChecks(IQ_POSE)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">מה מקל?</span>${iqChecks(IQ_RELIEF)}</div>`;
   h += iqTA("m_better","מה עוד מחמיר את זה, ומה עוד מקל?",2);
+  h += `<div class="iq-sub2">מה כבר ידוע, ומה נעשה</div>`;
   h += iqTA("m_treated","איך זה טופל עד היום, ומה עזר?",2);
   h += iqTA("m_medical","אבחנה רפואית ובדיקות, אם יש",2);
-  h += iqTA("m_meds","תרופות, ויטמינים ותוספי תזונה שאתם לוקחים, ואם אפשר גם המינון",2);
   h += iqTA("m_why","מה לדעתכם גרם לזה, ומה צריך להשתנות כדי שזה יעבור?",2);
   h += `<div class="iq-item"><span class="iq-lbl">איך אתם מתייחסים למה שקורה לכם?</span>${iqRadios("m_view",IQ_VIEW)}</div>`;
   h += `</section>`;
-  h += iqHistory();
 
-  h += `<section class="iq-q"><h3>עוד דברים שקורים בגוף</h3><p class="iq-hint">סמנו רק מה שקורה לכם לעיתים קרובות, או בחצי השנה האחרונה.</p>`;
+  h += `<section class="iq-q"><h3>תלונות נוספות</h3><p class="iq-hint">סמנו רק מה שקורה לכם לעיתים קרובות, או בחצי השנה האחרונה.</p>`;
   IQ_BODY.forEach(g=>{
     h += `<div class="iq-group">${g.name}</div><div class="iq-opts col iq-grid2">${g.items.map(it=>`
       <div class="iq-bi" data-bi="${it.id}"><label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}</span></label>
@@ -1443,6 +1516,7 @@ function iqFormHTML(p){
   h += `<div class="iq-blank-only">${iqTA("b_durpaper","ליד מה שסימנתם, כתבו אם אפשר מאז מתי, ואם זה התחיל בעקבות משהו",3)}</div>`;
   h += iqExtra();
   h += `</section>`;
+  h += iqHistory();
 
   h += `<section class="iq-q"><h3>רגש ומחשבה</h3><p class="iq-hint">בחרו עד ארבעה דברים שהכי מתארים אתכם בתקופה האחרונה.</p>`;
   h += iqChecks(IQ_EMO,"col iq-grid2",'data-lim="emo"');
@@ -1456,11 +1530,12 @@ function iqFormHTML(p){
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה בלילה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">איך אתם מתעוררים</span>${iqRadios("l_wake",IQ_L.l_wake)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מתי הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div><div><span class="iq-lbl">בשינה יש</span>${iqChecks(IQ_SLEEPQ)}</div></div>`;
-  h += iqInp("l_wakehour","אם יש יקיצות, באיזו שעה בערך?");
+  h += `<div class="iq-item"><span class="iq-lbl">אם יש יקיצות, כמה פעמים בלילה?</span>${iqRadios("l_wakes",IQ_L2.l_wakes)}</div>`;
   h += iqTA("l_dreams","אם יש חלום שחוזר, על מה הוא?",1);
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים ביום</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מה בעיקר יש בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">ירקות ופירות</span>${iqRadios("l_veg",IQ_L2.l_veg)}</div></div>`;
-  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div>${iqInp("l_sens","רגישות למזון מסוים, אם יש")}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div><span class="iq-lbl">והן בדרך כלל</span>${iqRadios("l_stool",IQ_L2.l_stool)}</div></div>`;
+  h += iqInp("l_sens","רגישות למזון מסוים, אם יש");
   h += `<div class="iq-item"><span class="iq-lbl">מה נעים לכם יותר</span>${iqRadios("l_temp",IQ_L.l_temp)}</div>`;
   h += iqTA("l_food","מה הכי אוהבים לאכול, ועל מה הכי קשה לוותר?",1);
   h += `<div class="iq-item"><span class="iq-lbl">יש הרבה מזה ביום שלכם</span>${iqChecks(IQ_HABITS)}</div>`;
@@ -1500,15 +1575,15 @@ function iqLeanHTML(p){
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
     <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
-    <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div></section>`;
-  h += `<div class="iq-details" style="grid-template-columns:repeat(4,1fr);margin-top:8px">
+    <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div>
+  <div class="iq-details" style="grid-template-columns:repeat(4,1fr);margin-top:8px">
     <div><label for="iq_f_weight">משקל</label><input type="text" id="iq_f_weight" data-k="f_weight"></div>
     <div><label for="iq_f_height">גובה</label><input type="text" id="iq_f_height" data-k="f_height"></div>
     <div><label for="iq_f_bp">לחץ דם</label><input type="text" id="iq_f_bp" data-k="f_bp"></div>
-    <div><label for="iq_f_pulse">דופק</label><input type="text" id="iq_f_pulse" data-k="f_pulse"></div></div>`;
-  h += `<section class="iq-q"><h3>מה הביא אותך</h3>`;
-  h += `<div class="iq-item"><span class="iq-lbl">בעיקר</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
-  h += iqTA("m_what","מה מפריע, במילים של המטופל",2);
+    <div><label for="iq_f_pulse">דופק</label><input type="text" id="iq_f_pulse" data-k="f_pulse"></div></div></section>`;
+  h += `<section class="iq-q"><h3>התלונה העיקרית</h3><p class="iq-hint">תלונה אחת בלבד, מה שהכי מפריע עכשיו. השאר נכנס לתלונות הנוספות.</p>`;
+  h += `<div class="iq-item"><span class="iq-lbl">התלונה העיקרית היא בעיקר</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
+  h += iqTA("m_what","התלונה העיקרית, במילים של המטופל",2);
   h += `<div class="iq-sub">אם זה בגוף</div><div class="iq-bodyc">
     <div class="iq-item"><label class="iq-lbl" for="iq_m_where">איפה בגוף?</label><input type="text" id="iq_m_where" data-k="m_where"></div>
     <div class="iq-item iq-grid2"><div><span class="iq-lbl">צד</span>${iqRadios("m_side",IQ_SIDE)}</div><div><span class="iq-lbl">מלפנים או מאחור</span>${iqRadios("m_fb",IQ_FB)}</div></div>
@@ -1516,14 +1591,16 @@ function iqLeanHTML(p){
     <div class="iq-item"><span class="iq-lbl">אופי הכאב</span>${iqChecks(IQ_PAIN)}</div></div>`;
   h += `<div class="iq-sub">אם זה בנפש</div><div class="iq-soul">
     <div class="iq-item"><span class="iq-lbl">איך זה מתבטא</span>${iqChecks(IQ_SOUL)}</div>
-    <div class="iq-item"><label class="iq-lbl" for="iq_m_point">איפה זה יושב בגוף</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
+    <div class="iq-item"><label class="iq-lbl" for="iq_m_point">כשזה קורה, איפה בגוף זה מורגש</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">עוצמה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
+  h += `<div class="iq-sub2">מתי, ומה משפיע על זה</div>`;
   h += iqTA("m_when","מתי התחיל, ומה קרה בחיים באותה תקופה",2);
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מחמיר</span>${iqChecks(IQ_TIME)}${iqChecks(IQ_POSE)}</div><div><span class="iq-lbl">מקל</span>${iqChecks(IQ_RELIEF)}</div></div>`;
+  h += `<div class="iq-sub2">מה כבר ידוע, ומה נעשה</div>`;
   h += iqTA("m_treated","איך טופל עד היום, ומה עזר",1);
-  h += iqTA("m_meds","תרופות, ויטמינים ותוספים",1);
-  h += iqExtra();
+  h += iqTA("m_medical","אבחנה רפואית ובדיקות",1);
   h += `</section>`;
+  h += `<section class="iq-q"><h3>תלונות נוספות</h3>${iqExtra()}</section>`;
   h += iqHistory();
   h += `<section class="iq-q"><h3>מה בולט עכשיו</h3><p class="iq-hint">עד ארבעה סימנים שהכי מתאימים.</p>`;
   h += iqChecks(iqLeanSigns(),"col iq-grid2",'data-lim="lean"');
@@ -1537,10 +1614,10 @@ function iqLeanHTML(p){
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולך או הולכת לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
-  h += `<div class="iq-item"><span class="iq-lbl">בשינה</span>${iqChecks(IQ_SLEEPQ)}</div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בשינה</span>${iqChecks(IQ_SLEEPQ)}</div><div><span class="iq-lbl">יקיצות בלילה</span>${iqRadios("l_wakes",IQ_L2.l_wakes)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">ירקות ופירות</span>${iqRadios("l_veg",IQ_L2.l_veg)}</div></div>`;
-  h += `<div class="iq-item"><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div><span class="iq-lbl">והן</span>${iqRadios("l_stool",IQ_L2.l_stool)}</div></div>`;
   h += iqTA("l_food","תזונה: מה אוכל בדרך כלל, ועל מה קשה לוותר",1);
   h += `<div class="iq-item"><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
@@ -1711,10 +1788,12 @@ function iqInsights(S){
   if(S.l_nature==="none") life.push("כמעט בלי זמן בטבע");
   if(S.l_bed==="late") life.push("הולכים לישון אחרי חצות");
   if(S.sl_fall) life.push("קושי להירדם");
-  if(S.sl_wake) life.push(`יקיצות בלילה${(S.l_wakehour||"").trim()?" בסביבות "+S.l_wakehour.trim():""}`);
+  if(S.sl_wake||S.l_wakes) life.push(`יקיצות בלילה${S.l_wakes?", "+((IQ_L2.l_wakes.find(x=>x[0]===S.l_wakes)||[])[1]||""):""}`);
   if(S.l_plate==="processed") life.push("הרבה מזון מעובד או מהיר");
   if(S.l_veg==="rare") life.push("מעט ירקות ופירות");
   if(S.l_bowel==="irregular") life.push("יציאות לא סדירות");
+  if(S.l_stool==="soft") life.push("יציאות רכות");
+  if(S.l_stool==="hard") life.push("יציאות קשות");
   if(S.l_stress!==undefined && S.l_stress>=7) life.push(`לחץ גבוה (${S.l_stress})`);
   if(S.l_temp==="warm") life.push("העדפה לחום, אפשר לבדוק חוסר אש");
   if(S.l_temp==="cold") life.push("העדפה לקור, אפשר לבדוק עודף אש");
@@ -1756,14 +1835,14 @@ function iqText(){
   L.push(`עוד מה מחמיר ומה מקל: ${v("m_better")}`);
   L.push(`איך טופל עד היום ומה עזר: ${v("m_treated")}`);
   L.push(`אבחנה רפואית ובדיקות: ${v("m_medical")}`);
-  L.push(`תרופות, ויטמינים ותוספים: ${v("m_meds")}`);
   L.push(`מה גרם ומה צריך להשתנות: ${v("m_why")}`);
   L.push(`היחס למה שקורה: ${rl("m_view",IQ_VIEW)}`);
   L.push("","תלונות נוספות בגוף");
   IQ_BODY.forEach(g=>{ const c=g.items.filter(i=>S[i.id]); if(c.length) L.push(`${g.name}: ${c.map(i=>i.label+tg(i)+(v(i.id+"_d")?` (${v(i.id+"_d")})`:"")).join(", ")}`); });
   L.push(`תלונות נוספות: ${v("b_other")}`);
   [1,2,3].forEach(n=>{ if(v(`x${n}_what`)) L.push(`תלונה נוספת: ${v(`x${n}_what`)}${v(`x${n}_since`)?`, מאז ${v(`x${n}_since`)}`:""}${v(`x${n}_treat`)?`, טופל: ${v(`x${n}_treat`)}`:""}${v(`x${n}_lvl`)?`, מפריע ${v(`x${n}_lvl`)}/10`:""}`); });
-  L.push("","רקע רפואי");
+  L.push("","רקע רפואי ותרופות");
+  L.push(`תרופות, ויטמינים ותוספים: ${v("m_meds")}`);
   L.push(`ניתוחים ואשפוזים: ${v("h_surg")}`);
   L.push(`תאונות ופציעות: ${v("h_injury")}`);
   L.push(`צלקות: ${v("h_scars")}`);
@@ -1775,10 +1854,10 @@ function iqText(){
   IQ_STMTS.forEach(s=>{ if(S[s.id]) L.push(`${s.n}. ${s.t}: ${{yes:"מתאים",part:"חלקית",no:"לא מתאים"}[S[s.id]]}`); });
   L.push("","אורח חיים");
   L.push(`שינה: ${rl("l_sleep",IQ_L.l_sleep)}, קימה: ${rl("l_wake",IQ_L.l_wake)}, הולכים לישון: ${rl("l_bed",IQ_L2.l_bed)}`);
-  L.push(`בשינה: ${ck(IQ_SLEEPQ)}${v("l_wakehour")?`, יקיצה בסביבות ${v("l_wakehour")}`:""}`);
+  L.push(`בשינה: ${ck(IQ_SLEEPQ)}${S.l_wakes?`, יקיצות: ${rl("l_wakes",IQ_L2.l_wakes)}`:""}${v("l_wakehour")?`, יקיצה בסביבות ${v("l_wakehour")}`:""}`);
   L.push(`חלום חוזר: ${v("l_dreams")}`);
   L.push(`ארוחות: ${rl("l_meals",IQ_L.l_meals)}, מים: ${rl("l_water",IQ_L.l_water)}, העדפה: ${rl("l_temp",IQ_L.l_temp)}`);
-  L.push(`בצלחת: ${rl("l_plate",IQ_L2.l_plate)}, ירקות ופירות: ${rl("l_veg",IQ_L2.l_veg)}, יציאות: ${rl("l_bowel",IQ_L2.l_bowel)}`);
+  L.push(`בצלחת: ${rl("l_plate",IQ_L2.l_plate)}, ירקות ופירות: ${rl("l_veg",IQ_L2.l_veg)}, יציאות: ${rl("l_bowel",IQ_L2.l_bowel)}${S.l_stool?`, ${rl("l_stool",IQ_L2.l_stool)}`:""}`);
   L.push(`רגישות למזון: ${v("l_sens")}`);
   L.push(`אוכל אהוב: ${v("l_food")}`);
   L.push(`הרגלים: ${IQ_HABITS.filter(x=>S[x.id]).map(x=>x.label).join(", ")}`);
@@ -1806,7 +1885,7 @@ function iqText(){
     l=l.replace(/(^|,\s*)[^,:()]+:\s*(?=,|$)/g,"$1").replace(/^[,\s]+|[,\s]+$/g,"").replace(/,\s*,/g,",");
     if(l) clean.push(l);
   });
-  const HEADS=["התלונה העיקרית","תלונות נוספות בגוף","רקע רפואי","רגש ומחשבה","משפטים","אורח חיים","טבע לאורך השנים","לסיום"];
+  const HEADS=["התלונה העיקרית","תלונות נוספות בגוף","רקע רפואי ותרופות","רגש ומחשבה","משפטים","אורח חיים","טבע לאורך השנים","לסיום"];
   const out2=[];
   clean.forEach((l,i)=>{ if(HEADS.includes(l) && (clean[i+1]===undefined || clean[i+1]==="")) return; if(l==="" && out2[out2.length-1]==="") return; out2.push(l); });
   return out2.join("\n").trim();
@@ -1870,6 +1949,58 @@ function iqReadPrint(patientOnly){
   if(patientOnly){ w.classList.add('iq-print-patient'); const back=()=>{ w.classList.remove('iq-print-patient'); window.removeEventListener('afterprint',back); }; window.addEventListener('afterprint',back); }
   setTimeout(()=>window.print(), 30);
 }
+/* ===== חלקים מתקפלים בשאלון ===== */
+const IQ_ACC = {};
+function iqAccKey(wizard){ if(wizard) return 'pt'; try{ const p=curP(); return p ? (p.intakeMode || (iqHas(p) ? 'full' : 'lean')) : 'x'; }catch(e){ return 'x'; } }
+function iqAcc(root, wizard){
+  if(!root) return;
+  const key = iqAccKey(wizard);
+  const secs = [...root.querySelectorAll(':scope > section.iq-q')];
+  if(!IQ_ACC[key]) IQ_ACC[key] = new Set([0]);
+  const open = IQ_ACC[key];
+  secs.forEach((sec,i)=>{
+    const h3 = sec.querySelector(':scope > h3'); if(!h3) return;
+    sec.classList.add('iq-acc');
+    const body = document.createElement('div'); body.className = 'iq-acc-b';
+    [...sec.childNodes].forEach(n=>{ if(n!==h3) body.appendChild(n); });
+    const btn = document.createElement('button'); btn.type='button'; btn.className='iq-acc-h';
+    btn.innerHTML = `<span class="t">${h3.textContent}</span><span class="c"></span><span class="ch" aria-hidden="true"></span>`;
+    sec.insertBefore(btn, h3); sec.appendChild(body);
+    if(wizard && i<secs.length-1){
+      const nx = document.createElement('button'); nx.type='button'; nx.className='bm-btn iq-acc-next';
+      nx.textContent = 'לחלק הבא: ' + (secs[i+1].querySelector(':scope > h3')||{}).textContent;
+      nx.onclick = ()=>{ open.clear(); open.add(i+1); iqAccApply(root,key); iqAccScroll(secs[i+1]); };
+      body.appendChild(nx);
+    }
+    btn.onclick = ()=>{
+      const was = open.has(i);
+      if(wizard){ open.clear(); if(!was) open.add(i); } else { if(was) open.delete(i); else open.add(i); }
+      iqAccApply(root,key); if(!was) iqAccScroll(sec);
+    };
+  });
+  const recount = ()=>setTimeout(()=>iqAccCount(root),0);
+  root.addEventListener('input', recount); root.addEventListener('change', recount); root.addEventListener('click', recount);
+  iqAccApply(root,key); iqAccCount(root);
+}
+function iqAccApply(root,key){
+  [...root.querySelectorAll(':scope > section.iq-acc')].forEach((sec,i)=>{
+    const on = IQ_ACC[key].has(i); sec.classList.toggle('open', on);
+    const b = sec.querySelector(':scope > .iq-acc-h'); if(b) b.setAttribute('aria-expanded', on);
+  });
+}
+function iqAccScroll(sec){ const y = sec.getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({top:y, behavior:'smooth'}); }
+function iqAccCount(root){
+  root.querySelectorAll(':scope > section.iq-acc').forEach(sec=>{
+    let n = 0;
+    sec.querySelectorAll('[data-k]').forEach(el=>{ if(el.value && String(el.value).trim()) n++; });
+    n += sec.querySelectorAll('input[data-c]:checked, input[data-r]:checked, .iq-sc.on, .iq-tri button.on').length;
+    const c = sec.querySelector(':scope > .iq-acc-h .c'); if(c) c.textContent = n ? (n===1?'תשובה אחת':n+' תשובות') : '';
+  });
+}
+
+const _renderIntakeAcc = renderIntake;
+renderIntake = function(){ _renderIntakeAcc(); iqAcc(document.getElementById('iqForm'), false); };
+
 
 /* ===================== אבחון ותרגול יחד, למטופל ===================== */
 function readRecs(p){
@@ -1931,7 +2062,131 @@ renderReading = function(){
     : `בתרגול של השבוע האחרון עוד אין תרגילים, ולכן בהדפסה ובהעתקה למטופל יופיע רק האבחון.`;
   bar.insertAdjacentHTML('afterend', `<p class="iq-hint no-print rd-note">${note}${recs.length?` באבחון הוצעו ${recs.length===1?'תרגיל אחד':recs.length+' תרגילים'} מהמאגר, והם מחכים בלשונית התרגול, תחת "הצעות לתרגול".`:''}</p>`);
   if(n) wrap.insertAdjacentHTML('beforeend', sheetPaperFor(p, wi));
+  readTabs();
 };
+/* שתי כרטיסיות: החלק למטופל והחלק למטפל */
+let readTab = 'pt';
+function readTabs(){
+  const paper = $('iqRead'); if(!paper) return;
+  const th = paper.querySelector('.iq-thera-part');
+  const ptBox = paper.querySelector(':scope > div[style*="margin-top:14px"]');
+  if(ptBox) ptBox.classList.add('rd-pt');
+  if(!th){ paper.classList.remove('rt-pt','rt-th'); return; }
+  paper.classList.toggle('rt-pt', readTab==='pt'); paper.classList.toggle('rt-th', readTab==='th');
+  const bar = document.createElement('nav'); bar.className = 'card-tabs rd-tabs no-print'; bar.setAttribute('aria-label','חלקי האבחון');
+  bar.innerHTML = [['pt','מה שמוקרא למטופל'],['th','למטפל בלבד']].map(([k,l])=>`<button class="ct ${readTab===k?'on':''}" aria-pressed="${readTab===k}" onclick="readTab='${k}';renderReading()">${l}</button>`).join('');
+  paper.parentNode.insertBefore(bar, paper);
+  rdBuild();
+}
+
+
+/* ===================== החלק למטפל: כרטיסים מתקפלים, קישורים ותרגילים ===================== */
+let rdOpen = new Set(), rdOpenEx = new Set(), rdLastP = null;
+const RD_EL = {'אש':'fire','מים':'water','אוויר':'air','רוח':'air','אדמה':'earth','עפר':'earth'};
+function rdPlain(s){ return s.replace(/\*\*/g,'').replace(/^#+\s*/,'').trim(); }
+function rdFirstWords(s){ const w = rdPlain(s).split(/\s+/); return w.slice(0,7).join(' ') + (w.length>7?'…':''); }
+function rdHead(par){
+  const raw = par.trim(), lines = raw.split('\n'), first = lines[0].trim(), pf = rdPlain(first);
+  const shortNoStop = pf.length<=55 && !/[.?!]$/.test(pf);
+  if(/^\*\*[^*]+\*\*:?$/.test(first) || /^#+\s/.test(first) || (shortNoStop && /:$/.test(pf)) || (shortNoStop && lines.length===1))
+    return {title:pf.replace(/:$/,''), rest:lines.slice(1).join('\n').trim(), kind:'head'};
+  if(shortNoStop && lines.length>1) return {title:pf.replace(/:$/,''), rest:lines.slice(1).join('\n').trim(), kind:'head'};
+  const m = raw.match(/^\**([^.:\n*]{2,45}?)\**:\s+/);
+  if(m) return {title:m[1].trim(), rest:raw.slice(m[0].length), kind:'lead'};
+  return null;
+}
+function rdCards(th){
+  const paras = th.map((x,i)=>i===0 ? x.replace(/^[\*\s#]*למטפל בלבד[\*\s:,.]*/,'') : x).map(s=>s.trim()).filter(Boolean);
+  const cards = [];
+  paras.forEach(par=>{
+    const h = rdHead(par);
+    if(h){ cards.push({title:h.title, paras:h.rest?[h.rest]:[], kind:h.kind}); return; }
+    const last = cards[cards.length-1];
+    if(last && last.kind==='head') last.paras.push(par);
+    else cards.push({title:rdFirstWords(par), paras:[par], kind:'lead'});
+  });
+  return cards.filter(c=>c.paras.length || c.kind==='lead');
+}
+/* קישורים בתוך הטקסט: תרגילים, יסודות וספירות */
+function rdLinkify(text, recs, found){
+  const slots = [];
+  const put = html => { slots.push(html); return '\u0001'+(slots.length-1)+'\u0001'; };
+  recs.forEach(id=>{
+    const t = EXR[id].title;
+    ['"'+t+'"','״'+t+'״','“'+t+'”','”'+t+'“'].forEach(q=>{
+      if(text.includes(q)){ found.ex.add(id); text = text.split(q).join(put(`<button type="button" class="rd-link ex" onclick="rdJump('${id}')">${escH(t)}</button>`)); }
+    });
+  });
+  text = text.replace(/יסוד ה(אש|מים|אוויר|רוח|אדמה|עפר)/g, (m,w)=>{ const k=RD_EL[w]; found.el.add(k); return put(`<button type="button" class="rd-link el" onclick="exOpenAt('el','${k}')">${m}</button>`); });
+  text = text.replace(/ספירת ([א-ת]+)/g, (m,w)=>{ if(!WEEK_SF[w]) return m; found.sf.add(w); return put(`<button type="button" class="rd-link sf" onclick="exOpenAt('sf','${w}')">${m}</button>`); });
+  text = text.replace(/ספירות ((?:[א-ת]+(?:,\s*|\s+ו|\s+)?){1,6})/g, (m,list)=>{
+    return 'ספירות ' + list.replace(/(^|[\s,]+)(ו?)([א-ת]+)/g, (mm,sep,vav,w)=>{
+      if(!WEEK_SF[w]) return mm; found.sf.add(w);
+      return sep+vav+put(`<button type="button" class="rd-link sf" onclick="exOpenAt('sf','${w}')">${w}</button>`);
+    });
+  });
+  let html = iqParaHTML(text);
+  html = html.replace(/\u0001(\d+)\u0001/g, (m,i)=>slots[+i]);
+  return html;
+}
+function rdExHTML(id, w){
+  const e = EXR[id]; const on = w.items.includes(id);
+  return `<details class="rd-ex" data-ex="${id}" ${rdOpenEx.has(id)?'open':''} ontoggle="rdExTog('${id}',this.open)">
+    <summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span>
+      <button type="button" class="add-btn no-print ${on?'on':''}" onclick="event.preventDefault();event.stopPropagation();rdAdd('${id}')">${on?'בתרגול ✓':'הוספה לתרגול'}</button></summary>
+    <p>${escH(e.text)}</p></details>`;
+}
+function rdBuild(){
+  const p = curP(); const paper = $('iqRead'); if(!p || !paper) return;
+  const box = paper.querySelector('.iq-thera-part'); if(!box) return;
+  if(rdLastP !== p.id){ rdOpen = new Set(); rdOpenEx = new Set(); rdLastP = p.id; }
+  const {th} = iqReadParts(p.reading.text);
+  const recs = readRecs(p); const w = p.weeks[p.weeks.length-1];
+  const cards = rdCards(th); const used = new Set();
+  const cardHTML = cards.map((c,i)=>{
+    const found = {ex:new Set(), el:new Set(), sf:new Set()};
+    let body = c.paras.map(x=>rdLinkify(x, recs, found)).join('');
+    const isEx = /תרגיל/.test(c.title), isFocus = /מיקוד/.test(c.title);
+    if(isFocus && (found.el.size || found.sf.size)){
+      body += `<div class="rd-chips no-print"><span>לתרגילים של:</span>${[...found.el].map(k=>`<button type="button" class="wchip" style="background:${ELEMENTS[k].bg};color:${ELEMENTS[k].color}" onclick="exOpenAt('el','${k}')">יסוד ה${EX_EL_NAMES[k]}</button>`).join('')}${[...found.sf].map(n=>`<button type="button" class="wchip" style="background:var(--sefirah-bg);color:var(--sefirah)" onclick="exOpenAt('sf','${n}')">ספירת ${n}</button>`).join('')}</div>`;
+    }
+    if(isEx){
+      const ids = (found.ex.size ? [...found.ex] : recs).filter(id=>!used.has(id));
+      ids.forEach(id=>used.add(id));
+      if(ids.length) body += `<div class="rd-exs">${ids.map(id=>rdExHTML(id,w)).join('')}</div>`;
+    }
+    const key = c.title;
+    return `<details class="rd-card" data-card="${escH(key)}" ${rdOpen.has(key)?'open':''} ontoggle="rdCardTog(this)"><summary>${escH(c.title)}${isEx&&recs.length?`<span class="rd-badge">${recs.filter(id=>w.items.includes(id)).length} מתוך ${recs.length} בתרגול</span>`:''}</summary><div class="rd-card-b">${body}</div></details>`;
+  }).join('');
+  box.innerHTML = `<div class="iq-tp-h">למטפל בלבד<button type="button" class="bm-link no-print rd-all" onclick="rdAll()">${cards.length && rdOpen.size===cards.length?'סגירת הכול':'פתיחת הכול'}</button></div>${cardHTML}`;
+}
+function rdCardTog(el){ const k = el.dataset.card; if(el.open) rdOpen.add(k); else rdOpen.delete(k); const b=document.querySelector('.rd-all'); if(b){ const n=document.querySelectorAll('details.rd-card').length; b.textContent = rdOpen.size===n?'סגירת הכול':'פתיחת הכול'; } }
+function rdExTog(id,open){ if(open) rdOpenEx.add(id); else rdOpenEx.delete(id); }
+function rdAll(){
+  const ds = [...document.querySelectorAll('details.rd-card')]; const openAll = rdOpen.size !== ds.length;
+  ds.forEach(d=>{ d.open = openAll; }); rdOpen = new Set(openAll ? ds.map(d=>d.dataset.card) : []);
+  const b=document.querySelector('.rd-all'); if(b) b.textContent = openAll?'סגירת הכול':'פתיחת הכול';
+}
+function rdAdd(id){
+  const p = curP(); const w = p.weeks[p.weeks.length-1]; const i = w.items.indexOf(id);
+  if(i<0) w.items.push(id); else w.items.splice(i,1);
+  savePT(); const y = window.scrollY; renderReading(); window.scrollTo(0,y);
+  bmToast(i<0 ? `נוסף לתרגול, שבוע ${p.weeks.length}` : 'הוסר מהתרגול');
+}
+function rdJump(id){
+  const d = document.querySelector(`details.rd-ex[data-ex="${id}"]`); if(!d) return;
+  const card = d.closest('details.rd-card'); if(card && !card.open){ card.open = true; }
+  d.open = true; rdOpenEx.add(id);
+  const y = d.getBoundingClientRect().top + window.scrollY - 80; window.scrollTo({top:y, behavior:'smooth'});
+}
+function exOpenAt(tab, sel){
+  const p = curP(); if(!p) return;
+  p.activeWeek = p.weeks.length-1;
+  exTab = tab; exSel[tab] = sel; exOpen();
+}
+/* בהדפסה כל הכרטיסים נפתחים, ואחריה חוזרים למצב הקודם */
+window.addEventListener('beforeprint', ()=>{ document.querySelectorAll('details.rd-card, details.rd-ex').forEach(d=>{ d.dataset.was = d.open?'1':''; d.open = true; }); });
+window.addEventListener('afterprint', ()=>{ document.querySelectorAll('details.rd-card, details.rd-ex').forEach(d=>{ d.open = d.dataset.was==='1'; }); });
 
 
 /* ===== חיבורים ===== */
@@ -1950,6 +2205,7 @@ function iqSyncActions(p){
 
 /* ===== הפעלה ===== */
 const _migrated = loadPT();
+if(window.EX_MISSING) document.querySelector('main').insertAdjacentHTML('afterbegin','<p class="ex-missing no-print" role="alert">קובץ התרגילים, exercises.js, לא נטען, ולכן התרגילים לא יופיעו. בתצוגה המקדימה בצ׳אט זה צפוי. באתר עצמו, צריך לוודא שהקובץ נמצא במאגר, באותה תיקייה.</p>');
 renderHome();
 if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגוף`);
 </script>
