@@ -641,6 +641,18 @@
   .kb-opt{display:flex;align-items:center;gap:8px;font-weight:600;cursor:pointer;}
   .kb-opt input{width:18px;height:18px;accent-color:var(--forest);}
 
+  /* התרגול בתוך האבחון למטופל */
+  .rd-pt-ex{margin-top:18px;padding-top:12px;border-top:1px dashed var(--sage);}
+  .rd-pt-ex-h{font-weight:800;color:var(--forest-dark);margin-bottom:8px;}
+  #iqRead.rt-th .rd-pt-ex{display:none;}
+
+  /* מחיקה מהרשימה */
+  .pr-row{display:flex;align-items:stretch;gap:6px;margin-bottom:8px;}
+  .pr-row .pr{margin-bottom:0;flex:1;min-width:0;}
+  .pr-del{flex-shrink:0;width:44px;border:1px solid rgba(44,95,91,0.12);background:var(--cream-soft);border-radius:14px;color:#9aa5a0;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .pr-del:hover{color:#A8442B;border-color:#A8442B;background:var(--fire-bg);}
+  .pr-del:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+
   .iq-sub2{font-size:0.95rem;font-weight:800;color:var(--sefirah);margin:22px 0 2px;padding-top:12px;border-top:1px dotted rgba(44,95,91,0.3);}
   .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
   .iq-xhead{font-size:0.8rem;font-weight:700;color:var(--forest);margin:2px 0 4px;}
@@ -822,11 +834,11 @@ function renderList(){
   if(!list.length){ $('ptList').innerHTML = `<p class="ex-none">אין מטופל בשם הזה. אפשר לפתוח כרטיס חדש למעלה.</p>`; return; }
   $('ptList').innerHTML = list.map(p=>{
     const n = p.treatments.length, last = lastT(p);
-    return `<button class="pr" onclick="openP('${p.id}')">
+    return `<div class="pr-row"><button class="pr" onclick="openP('${p.id}')">
       <span class="pr-l1"><span class="pr-name">${escH(p.name)}</span>${srcTag(p)}</span>
       <span class="pr-l2">${n ? `<span>${n===1?'טיפול אחד':n+' טיפולים'}</span>${last?`<span>אחרון ב־${fmtD(last)}</span>`:''}` : '<span>עוד אין טיפולים ביומן</span>'}</span>
       <span class="pr-flags"><span class="flag ${iqHas(p)?'on':''}">שאלון</span><span class="flag ${hasReading(p)?'on':''}">אבחון</span></span>
-    </button>`;
+    </button><button class="pr-del" onclick="ptDeleteId('${p.id}')" aria-label="מחיקת ${escH(p.name)}" title="מחיקת המטופל"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg></button></div>`;
   }).join('');
 }
 function ptCreate(){
@@ -911,9 +923,14 @@ function dSet(k,v){
 function dName(v){ const p=curP(); if(!v.trim()) return; p.name=v.trim(); savePT(); $('cardName').textContent=p.name; }
 function dKb(v){ const p=curP(); p.kabbalah=!!v; savePT(); }
 function dSource(k){ const p=curP(); p.source = p.source===k ? '' : k; savePT(); renderCard(); }
+function ptDeleteId(id){
+  const p = getP(id); if(!p) return;
+  if(!confirm(`למחוק את ${p.name}, כולל השאלון, האבחון, יומן הטיפולים והתרגול?\nאי אפשר לבטל את זה, אלא משחזור גיבוי.`)) return;
+  PT.patients = PT.patients.filter(x=>x!==p); savePT(); renderHome(); bmToast(`${p.name} נמחק`);
+}
 function ptDelete(){
   const p = curP(); if(!p) return;
-  if(!confirm(`למחוק את ${p.name}, כולל השאלון, האבחון, יומן הטיפולים והדפים לבית?\nאי אפשר לבטל את זה, אלא משחזור גיבוי.`)) return;
+  if(!confirm(`למחוק את ${p.name}, כולל השאלון, האבחון, יומן הטיפולים והתרגול?\nאי אפשר לבטל את זה, אלא משחזור גיבוי.`)) return;
   PT.patients = PT.patients.filter(x=>x!==p); bmToast(`${p.name} נמחק`); goHome();
 }
 
@@ -2084,6 +2101,12 @@ renderReading = function(){
     : `בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים, ולכן בהדפסה ובהעתקה למטופל יופיע רק האבחון.`;
   bar.insertAdjacentHTML('afterend', `<p class="iq-hint no-print rd-note">${note}${recs.length?` באבחון הוצעו ${recs.length===1?'תרגיל אחד':recs.length+' תרגילים'} מהמאגר, והם מחכים בלשונית התרגול, תחת "הצעות לתרגול".`:''}</p>`);
   if(n) wrap.insertAdjacentHTML('beforeend', sheetPaperFor(p, wi));
+  if(n){
+    const paper = $('iqRead'); const ptBox = paper && paper.querySelector(':scope > div[style*="margin-top:14px"]');
+    const ids = lastWeekItems(p);
+    const html = `<div class="rd-pt-ex no-print"><div class="rd-pt-ex-h">התרגול שיצורף לאבחון, שבוע ${wi+1}</div><div class="rd-exs">${ids.map(id=>{ const e=EXR[id]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span><button type="button" class="bm-link danger" onclick="event.preventDefault();event.stopPropagation();rdAdd('${id}')">הסרה</button></summary><p>${escH(e.text)}</p></details>`; }).join('')}</div></div>`;
+    if(ptBox) ptBox.insertAdjacentHTML('afterend', html); else if(paper) paper.insertAdjacentHTML('beforeend', html);
+  }
   readTabs();
 };
 /* שתי כרטיסיות: החלק למטופל והחלק למטפל */
