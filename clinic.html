@@ -2131,9 +2131,11 @@ renderReading = function(){
   const wrap = $('iqWrap'); const bar = wrap.querySelector('.sheet-actions'); if(!bar) return;
   const first = bar.querySelector('.bm-btn');
   first.insertAdjacentHTML('afterend', `<button class="bm-btn ghost" onclick="readCopyPatient()">העתקה למטופל</button>`);
+  const bP = bar.querySelector('button[onclick="iqReadPrint(true)"]'); if(bP) bP.textContent = 'PDF והדפסה למטופל';
+  const bF = bar.querySelector('button[onclick="iqReadPrint(false)"]'); if(bF){ bF.textContent = 'הדפסה כולל החלק שלי'; bF.classList.add('ghost'); }
   const wi = curWi(p), n = lastWeekItems(p).length, recs = readRecs(p);
   const note = n
-    ? `בכל הדפסה, ובהעתקה למטופל, מצורף גם התרגול של שבוע ${wi+1}, ${n===1?'תרגיל אחד':n+' תרגילים'}.`
+    ? `ב"PDF והדפסה למטופל" וב"העתקה למטופל" יוצאים האבחון למטופל והתרגול של שבוע ${wi+1}, ${n===1?'תרגיל אחד':n+' תרגילים'}, בלי החלק שלך.`
     : `בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים, ולכן בהדפסה ובהעתקה יופיע רק האבחון. אם הוספת תרגילים לשבוע אחר, צריך לבחור אותו בלשונית התרגול.`;
   bar.insertAdjacentHTML('afterend', `<p class="iq-hint no-print rd-note">${note}${recs.length?` באבחון הוצעו ${recs.length===1?'תרגיל אחד':recs.length+' תרגילים'} מהמאגר, והם מחכים בלשונית התרגול, תחת "הצעות לתרגול".`:''}</p>`);
   if(n) wrap.insertAdjacentHTML('beforeend', sheetPaperFor(p, wi));
