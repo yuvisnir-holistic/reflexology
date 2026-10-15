@@ -596,7 +596,7 @@
   .rd-sheet{display:none;}
   .rd-note{margin:-6px 0 14px;}
   @media print{
-    .iq-print-patient .rd-sheet{display:block;break-before:page;margin-top:0;}
+    #iqWrap .rd-sheet{display:block !important;break-before:page;margin-top:0;}
     .rd-sheet .paper-list li{break-inside:avoid;}
   }
 
@@ -607,8 +607,8 @@
   #iqRead.rt-th .iq-thera-part{margin-top:14px;}
   @media print{
     #iqRead .rd-pt{display:block !important;}
-    #iqRead .iq-thera-part{display:block;}
-    .iq-print-patient #iqRead .iq-thera-part{display:none !important;}
+    #iqRead .iq-thera-part{display:block !important;}
+    #iqWrap.iq-print-patient #iqRead .iq-thera-part{display:none !important;}
   }
   /* הודעה כשקובץ התרגילים לא נטען */
   .ex-missing{background:var(--fire-bg);color:#7a3320;border-radius:12px;padding:10px 14px;margin:14px 0 0;font-size:0.92rem;line-height:1.6;}
@@ -2134,8 +2134,8 @@ renderReading = function(){
   first.insertAdjacentHTML('afterend', `<button class="bm-btn ghost" onclick="readCopyPatient()">העתקה למטופל</button>`);
   const wi = curWi(p), n = lastWeekItems(p).length, recs = readRecs(p);
   const note = n
-    ? `בהדפסה למטופל ובהעתקה למטופל מצורף גם התרגול של שבוע ${wi+1}, ${n===1?'תרגיל אחד':n+' תרגילים'}.`
-    : `בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים, ולכן בהדפסה ובהעתקה למטופל יופיע רק האבחון.`;
+    ? `בכל הדפסה, ובהעתקה למטופל, מצורף גם התרגול של שבוע ${wi+1}, ${n===1?'תרגיל אחד':n+' תרגילים'}.`
+    : `בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים, ולכן בהדפסה ובהעתקה יופיע רק האבחון. אם הוספת תרגילים לשבוע אחר, צריך לבחור אותו בלשונית התרגול.`;
   bar.insertAdjacentHTML('afterend', `<p class="iq-hint no-print rd-note">${note}${recs.length?` באבחון הוצעו ${recs.length===1?'תרגיל אחד':recs.length+' תרגילים'} מהמאגר, והם מחכים בלשונית התרגול, תחת "הצעות לתרגול".`:''}</p>`);
   if(n) wrap.insertAdjacentHTML('beforeend', sheetPaperFor(p, wi));
   if(n){
