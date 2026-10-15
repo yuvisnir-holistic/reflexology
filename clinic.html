@@ -650,6 +650,8 @@
   @media (max-width:600px){ .iq-xhead{display:none;} .iq-xrow{grid-template-columns:1fr 1fr;padding-bottom:8px;border-bottom:1px dotted rgba(44,95,91,0.25);} }
   @media print{ .iq-xrow input::placeholder{color:transparent;} }
 
+  .iq-tg.iq-alt{opacity:0.8;font-size:0.72rem;font-weight:600;margin-inline-start:4px;}
+
   .iq-acc > h3{display:none;}
   .iq-acc-h{width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;border-bottom:1px solid var(--sage);padding:14px 2px 12px;margin:0;cursor:pointer;font-family:'Frank Ruhl Libre',serif;font-size:1.18rem;font-weight:700;color:var(--forest-dark);text-align:start;}
   .iq-acc-h:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
@@ -1276,6 +1278,7 @@ function sugToggle(){ sugOpen = !sugOpen; renderCard(); }
 function sugAdd(id){ const w=curWeek(); const i=w.items.indexOf(id); if(i<0) w.items.push(id); else w.items.splice(i,1); savePT(); renderCard(); }
 function sugAddAll(){ const w=curWeek(); suggest(curP()).list.forEach(([id])=>{ if(!w.items.includes(id)) w.items.push(id); }); savePT(); renderCard(); bmToast('ההצעות נוספו לשבוע'); }
 
+const IQ_SHOW_ALT = true;
 /* ===== שאלון היכרות ואבחון בכרטיס המטופל ===== */
 const IQ_EL = {fire:{name:"אש",c:"#A8442B"}, water:{name:"מים",c:"#2F6690"}, air:{name:"אוויר",c:"#A9821F"}, earth:{name:"אדמה",c:"#5C6B3F"}};
 const IQ_ORDER = ["fire","water","air","earth"];
@@ -1288,11 +1291,11 @@ const IQ_SENS = [
   {id:"t_pain",label:"כאב",tags:[]},
   {id:"t_burn",label:"שריפה, צריבה או חום",tags:["fire"]},
   {id:"t_infl",label:"דלקת",tags:["fire"]},
-  {id:"t_stiff",label:"נוקשות או הגבלה בתנועה",tags:["earth"]},
+  {id:"t_stiff",label:"נוקשות או הגבלה בתנועה",tags:["earth"],alt:["fire"]},
   {id:"t_swell",label:"נפיחות או בצקת",tags:["water"]},
   {id:"t_itch",label:"גרד או אי שקט בעור",tags:["air"]},
-  {id:"t_allergy",label:"תגובה אלרגית",tags:["air"]},
-  {id:"t_weak",label:"חולשה או עייפות",tags:["air"]},
+  {id:"t_allergy",label:"תגובה אלרגית",tags:["air"],alt:["water"]},
+  {id:"t_weak",label:"חולשה או עייפות",tags:["air"],alt:["water","earth"]},
   {id:"t_bleed",label:"דימום",tags:["fire"]},
   {id:"t_lump",label:"גוש",tags:[]},
   {id:"t_numb",label:"נימול, חוסר תחושה או אזור רדום",tags:[]}
@@ -1311,17 +1314,17 @@ const IQ_BODY = [
   {name:"ראש ושינה", items:[
     {id:"b_head_hot",label:"כאב ראש לוחץ, חם, תחושה שהראש מתפוצץ",tags:["fire"]},
     {id:"b_head_heavy",label:"כבדות בראש",tags:["earth"]},
-    {id:"b_sleep",label:"קושי להירדם או שינה לא רציפה",tags:["air"]},
+    {id:"b_sleep",label:"קושי להירדם או שינה לא רציפה",tags:["air"],alt:["fire"]},
     {id:"b_eyes",label:"עיניים עייפות, דומעות או מגורות",tags:["water"]}]},
   {name:"נשימה", items:[
     {id:"b_shallow",label:"נשימה שטחית, קושי לנשום עמוק",tags:["air"]},
     {id:"b_exhale",label:"קושי דווקא להוציא את האוויר",tags:["air"]},
-    {id:"b_breath",label:"קוצר נשימה או אסטמה",tags:["air"]},
+    {id:"b_breath",label:"קוצר נשימה או אסטמה",tags:["air"],alt:["earth"]},
     {id:"b_chest",label:"מועקה וכובד בחזה",tags:["earth"]},
     {id:"b_cough",label:"שיעול יבש",tags:["earth"]},
     {id:"b_colds",label:"נטייה להצטננויות וליחה",tags:["water"]},
     {id:"b_sinus",label:"נזלת או סינוסים",tags:["water"]},
-    {id:"b_allergy",label:"אלרגיות ועיטושים",tags:["air"]},
+    {id:"b_allergy",label:"אלרגיות ועיטושים",tags:["air"],alt:["water"]},
     {id:"b_throat",label:"דלקות גרון",tags:["fire"]}]},
   {name:"עור", items:[
     {id:"b_rash",label:"פריחות אדומות או דלקות בעור",tags:["fire"]},
@@ -1333,7 +1336,7 @@ const IQ_BODY = [
   {name:"עיכול", items:[
     {id:"b_heartburn",label:"צרבת או חומציות",tags:["fire"]},
     {id:"b_nausea",label:"בחילות",tags:["water"]},
-    {id:"b_constip",label:"עצירות",tags:["water"]},
+    {id:"b_constip",label:"עצירות",tags:["water"],alt:["earth","fire"]},
     {id:"b_diarr",label:"שלשולים",tags:["water"]},
     {id:"b_gas",label:"גזים ונפיחות שמשתנה במהלך היום",tags:["air"]},
     {id:"b_ibs",label:"מעי רגיז",tags:["fire","air"]},
@@ -1344,22 +1347,24 @@ const IQ_BODY = [
     {id:"b_edema",label:"בצקות או אגירת נוזלים",tags:["water"]},
     {id:"b_stones",label:"אבנים בכליות",tags:["earth"]}]},
   {name:"גב, שרירים ושלד", items:[
-    {id:"b_neck",label:"צוואר ועורף תפוסים",tags:["air"]},
-    {id:"b_upback",label:"גב עליון ושכמות",tags:["fire"]},
+    {id:"b_neck",label:"צוואר ועורף תפוסים",tags:["air"],alt:["earth","fire"]},
+    {id:"b_upback",label:"גב עליון ושכמות",tags:["fire"],alt:["air"]},
     {id:"b_midback",label:"גב אמצעי",tags:["water"]},
-    {id:"b_lowback",label:"גב תחתון ואגן",tags:["earth"]},
+    {id:"b_lowback",label:"גב תחתון ואגן",tags:["earth"],alt:["fire"]},
     {id:"b_knees",label:"כאבי ברכיים או חולשה ברגליים",tags:["water","earth"]},
+    {id:"b_legheavy",label:"כבדות ועייפות ברגליים",tags:["water"],alt:["earth"]},
+    {id:"b_armweak",label:"חולשה בידיים ובשכמות",tags:["air"]},
     {id:"b_tension",label:"שרירים תפוסים ומתוחים",tags:["fire"]},
     {id:"b_cramps",label:"התכווצויות שרירים",tags:["air"]}]},
   {name:"כללי", items:[
-    {id:"b_heavy",label:"עייפות וכבדות כללית",tags:["earth"]},
-    {id:"b_weak",label:"חולשה וחוסר אנרגיה",tags:["air"]},
-    {id:"b_cold",label:"ידיים ורגליים קרות, חיוורון",tags:["fire"]},
+    {id:"b_heavy",label:"עייפות וכבדות כללית",tags:["earth"],alt:["water"]},
+    {id:"b_weak",label:"חולשה וחוסר אנרגיה",tags:["air"],alt:["water","earth"]},
+    {id:"b_cold",label:"ידיים ורגליים קרות, חיוורון",tags:["fire"],alt:["water","air"]},
     {id:"b_bphigh",label:"לחץ דם גבוה",tags:["fire"]},
     {id:"b_bplow",label:"לחץ דם נמוך",tags:["fire","air"]},
     {id:"b_inflam",label:"דלקות שחוזרות",tags:["fire"]},
     {id:"b_thyroid",label:"תת פעילות של בלוטת התריס",tags:["earth"]},
-    {id:"b_iron",label:"חוסר ברזל או בריחת סידן",tags:["earth"]},
+    {id:"b_iron",label:"חוסר ברזל או בריחת סידן",tags:["earth"],alt:["air"]},
     {id:"b_cycle",label:"כאבי מחזור או קושי בפריון",tags:["fire","earth"]}]}
 ];
 const IQ_EMO = [
@@ -1370,17 +1375,25 @@ const IQ_EMO = [
   {id:"e_flood",label:"הרגשות שלי מציפים אותי",tags:["water"]},
   {id:"e_please",label:"קשה לי לומר לא, והצרכים שלי נדחקים הצידה בשביל אחרים",tags:["water"]},
   {id:"e_fear",label:"פחד או דאגה שמלווים אותי",tags:["water"]},
-  {id:"e_numb",label:"קשה לי להרגיש, כאילו הרגשות רחוקים ממני",tags:["water"]},
+  {id:"e_numb",label:"קשה לי להרגיש, כאילו הרגשות רחוקים ממני",tags:["water"],alt:["fire","air"]},
   {id:"e_mind",label:"המחשבות לא נרגעות, גם בלילה",tags:["air"]},
   {id:"e_scatter",label:"קשה לי לסיים דברים שהתחלתי",tags:["air"]},
-  {id:"e_anx",label:"חרדה או אי שקט",tags:["air"]},
+  {id:"e_anx",label:"חרדה או אי שקט",tags:["air"],alt:["water"]},
   {id:"e_detach",label:"תחושה שהכול עובר דרך הראש, בריחוק מהגוף",tags:["air"]},
   {id:"e_habits",label:"קשה לי לשנות הרגלים ולהיפרד ממה שמוכר",tags:["earth"]},
   {id:"e_sad",label:"עצבות, כבדות או חוסר חשק",tags:["earth"]},
   {id:"e_worry",label:"דאגות סביב כסף, פרנסה או בריאות",tags:["earth"]},
-  {id:"e_must",label:"הרבה ממה שאני עושה הוא כי חייבים, ולא מתוך בחירה",tags:["earth"]}
+  {id:"e_must",label:"הרבה ממה שאני עושה הוא כי חייבים, ולא מתוך בחירה",tags:["earth"]},
+  {id:"e_analyze",label:"אני מנתח או מנתחת את הרגשות שלי שוב ושוב בראש",tags:["air"]},
+  {id:"e_belly",label:"דברים שקרו עדיין יושבים לי בבטן, ולא עוכלו",tags:["earth"]},
+  {id:"e_burst",label:"אני שומר או שומרת הכול בפנים, עד שזה מתפרץ",tags:["fire"]},
+  {id:"e_norest",label:"קשה לי לנוח, היום שלי מתוכנן עד הסוף",tags:["fire"]},
+  {id:"e_belong",label:"יש בי תחושה שאני לא שייך או שייכת באחד המקומות בחיים שלי",tags:["air"]},
+  {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
-const IQ_EMO_MAX = 4;
+const IQ_EMO_MAX = 5;
+const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על אחרים"},{id:"th_anger",label:"כעס"},{id:"th_resent",label:"טינה, משהו שקשה לי לשחרר"},{id:"th_guilt",label:"אשמה"}];
+function iqAlt(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.alt && it.alt.length) ? `<span class="iq-tg iq-alt">או ${it.alt.map(e=>IQ_EL[e].name).join(", ")}</span>` : ""; }
 const IQ_PRESS = [
   {id:"p_medame",label:"בדמיון, בתמונות של מה שעלול לקרות או של חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
   {id:"p_ratzon",label:"ברצונות שאין להם מוצא, בתחושה שיש בי יותר ממה שיוצא לפועל",floor:"רצון",key:"לחץ נשמתי, העבודה ברצון"},
@@ -1417,7 +1430,8 @@ const IQ_NATURE = [
   {id:"n3",q:"כשקשה לי, הנטייה שלי היא",o:[["fire","לכעוס ולהילחם"],["air","לחשוב בלי סוף, בלי מנוחה"],["water","להתכנס, לבכות או לרצות"],["earth","להיתקע, להתכבד ולהתעצב"]]},
   {id:"n4",q:"הקצב הטבעי שלי",o:[["earth","איטי ויציב"],["water","משתנה לפי מה שאני מרגיש"],["air","קופצני, הרבה דברים במקביל"],["fire","מהיר ונמרץ"]]},
   {id:"n5",q:"הגוף שלי בדרך כלל",o:[["water","רך, ונוטה לאגור נוזלים"],["fire","חם, והפנים מאדימות בקלות"],["earth","מוצק וחזק, עם נטייה לכבדות"],["air","קל, רזה, ונוטה לקור וליובש"]]},
-  {id:"n6",q:"מה הכי מזין אותי",o:[["air","רעיונות, שיחות וטיולים"],["earth","שגרה, ביטחון וסדר"],["fire","עשייה והשפעה"],["water","קרבה, חום ותענוג"]]}
+  {id:"n6",q:"מה הכי מזין אותי",o:[["air","רעיונות, שיחות וטיולים"],["earth","שגרה, ביטחון וסדר"],["fire","עשייה והשפעה"],["water","קרבה, חום ותענוג"]]},
+  {id:"n7",q:"איזו מהנטיות האלה הכי מוכרת לך, ברגעים הפחות טובים?",o:[["water","להימשך להנאות של הרגע, כמו אוכל, מסכים או קניות, ולהתקשות לעצור גם כשאני יודע או יודעת שזה לא באמת מיטיב איתי"],["earth","לשקוע בעצבות ובכבדות, ולהתקשות לזוז ולהתחיל"],["fire","לכעוס מהר, ולהיפגע כשדברים לא נעשים כמו שאני רוצה"],["air","לדבר ולחשוב הרבה, להתפזר, ולהרגיש אי שקט, כאילו אני לא מוצא או מוצאת את המקום שלי"]]}
 ];
 const IQ_L = {
   l_sleep:[["lt6","פחות משש"],["6to7","שש עד שבע"],["7to8","שבע עד שמונה"],["gt8","יותר משמונה"]],
@@ -1474,7 +1488,7 @@ function iqHas(p){ return p && p.intake && Object.keys(p.intake).length>0; }
 /* ---- builders ---- */
 function iqTag(tags){ return tags&&tags.length ? `<span class="iq-tg">${tags.map(t=>`<i class="${t}">${IQ_EL[t].name}</i>`).join("")}</span>` : ""; }
 function iqTA(id,label,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
-function iqChecks(items, cls, extra){ return `<div class="iq-opts ${cls||""}" ${extra||""}>${items.map(it=>`<label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}${it.floor?`<span class="iq-tg"><i class="floor">${it.floor}</i></span>`:""}</span></label>`).join("")}</div>`; }
+function iqChecks(items, cls, extra){ return `<div class="iq-opts ${cls||""}" ${extra||""}>${items.map(it=>`<label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}${iqAlt(it)}${it.floor?`<span class="iq-tg"><i class="floor">${it.floor}</i></span>`:""}</span></label>`).join("")}</div>`; }
 function iqRadios(name, pairs){ return `<div class="iq-opts">${pairs.map(([v,l])=>`<label class="iq-opt"><input type="radio" name="iq_${name}" value="${v}" data-r="${name}"><span>${l}</span></label>`).join("")}</div>`; }
 function iqScale(id,lo,hi){ let h=`<div class="iq-scale" data-scale="${id}"><span class="end">${lo}</span>`; for(let i=0;i<=10;i++) h+=`<button type="button" class="iq-sc" data-sv="${i}">${i}</button>`; return h+`<span class="end">${hi}</span></div>`; }
 
@@ -1525,8 +1539,9 @@ function iqFormHTML(p){
   h += `</section>`;
   h += iqHistory();
 
-  h += `<section class="iq-q"><h3>רגש ומחשבה</h3><p class="iq-hint">בחרו עד ארבעה דברים שהכי מתארים אתכם בתקופה האחרונה.</p>`;
+  h += `<section class="iq-q"><h3>רגש ומחשבה</h3><p class="iq-hint">בחרו עד חמישה דברים שהכי מתארים אתכם בתקופה האחרונה.</p>`;
   h += iqChecks(IQ_EMO,"col iq-grid2",'data-lim="emo"');
+  h += `<div class="iq-item" style="margin-top:16px"><span class="iq-lbl">ומה מהדברים האלה מוכר לכם, לאורך זמן? אפשר לסמן כמה</span>${iqChecks(IQ_THOUGHT)}</div>`;
   h += `<div class="iq-item" style="margin-top:16px"><span class="iq-lbl">כשיש לחץ, איפה הוא מורגש אצלכם בעיקר?</span>${iqChecks(IQ_PRESS,"col")}</div>`;
   h += `</section>`;
 
@@ -1569,9 +1584,9 @@ function iqFormHTML(p){
 
 
 /* ---- אבחון רזה לקליניקה ---- */
-const IQ_LEAN_SIGNS = ["e_anger","b_heartburn","b_cold","e_fear","e_flood","b_edema","e_mind","b_sleep","b_shallow","e_sad","e_habits","b_heavy"];
+const IQ_LEAN_SIGNS = ["e_anger","b_heartburn","e_burst","e_fear","e_flood","b_edema","e_mind","b_shallow","e_analyze","e_sad","e_habits","b_slowdig"];
 const IQ_LEAN_STMTS = ["s7","s6","s4","s2","s1","s12"];
-const IQ_LEAN_NATURE = ["n2","n3","n5"];
+const IQ_LEAN_NATURE = ["n2","n3","n5","n7"];
 function iqLeanSigns(){ const all=[...IQ_EMO]; IQ_BODY.forEach(g=>g.items.forEach(i=>all.push(i))); return IQ_LEAN_SIGNS.map(id=>all.find(x=>x.id===id)); }
 function iqMode(p){ if(!p) return 'lean'; return p.intakeMode || (iqHas(p) ? 'full' : 'lean'); }
 function iqSetMode(m){ const p=curP(); p.intakeMode=m; savePT(); renderIntake(); }
@@ -1594,23 +1609,23 @@ function iqLeanHTML(p){
   h += `<div class="iq-sub">אם זה בגוף</div><div class="iq-bodyc">
     <div class="iq-item"><label class="iq-lbl" for="iq_m_where">איפה בגוף?</label><input type="text" id="iq_m_where" data-k="m_where"></div>
     <div class="iq-item iq-grid2"><div><span class="iq-lbl">צד</span>${iqRadios("m_side",IQ_SIDE)}</div><div><span class="iq-lbl">מלפנים או מאחור</span>${iqRadios("m_fb",IQ_FB)}</div></div>
-    <div class="iq-item"><span class="iq-lbl">איך זה מרגיש</span>${iqChecks(IQ_SENS)}</div>
-    <div class="iq-item"><span class="iq-lbl">אופי הכאב</span>${iqChecks(IQ_PAIN)}</div></div>`;
+    <div class="iq-item"><span class="iq-lbl">איך זה מרגיש</span>${iqChecks(IQ_SENS)}</div></div>`;
   h += `<div class="iq-sub">אם זה בנפש</div><div class="iq-soul">
     <div class="iq-item"><span class="iq-lbl">איך זה מתבטא</span>${iqChecks(IQ_SOUL)}</div>
     <div class="iq-item"><label class="iq-lbl" for="iq_m_point">כשזה קורה, איפה בגוף זה מורגש</label><input type="text" id="iq_m_point" data-k="m_point"></div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">עוצמה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
   h += `<div class="iq-sub2">מתי, ומה משפיע על זה</div>`;
-  h += iqTA("m_when","מתי התחיל, ומה קרה בחיים באותה תקופה",2);
-  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מחמיר</span>${iqChecks(IQ_TIME)}${iqChecks(IQ_POSE)}</div><div><span class="iq-lbl">מקל</span>${iqChecks(IQ_RELIEF)}</div></div>`;
+  h += iqTA("m_when","מתי התחיל, ומה קרה בחיים באותה תקופה",1);
+  h += `<div class="iq-item"><span class="iq-lbl">מה מקל</span>${iqChecks(IQ_RELIEF)}</div>`;
   h += `<div class="iq-sub2">מה כבר ידוע, ומה נעשה</div>`;
   h += iqTA("m_treated","איך טופל עד היום, ומה עזר",1);
   h += iqTA("m_medical","אבחנה רפואית ובדיקות",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>תלונות נוספות</h3>${iqExtra()}</section>`;
-  h += iqHistory();
+  h += `<section class="iq-q"><h3>רקע רפואי ותרופות</h3>${iqTA("m_meds","תרופות, ויטמינים ותוספים",1)}${iqInp("h_surg","ניתוחים, פציעות וצלקות, ובאיזו שנה")}</section>`;
   h += `<section class="iq-q"><h3>מה בולט עכשיו</h3><p class="iq-hint">עד ארבעה סימנים שהכי מתאימים.</p>`;
   h += iqChecks(iqLeanSigns(),"col iq-grid2",'data-lim="lean"');
+  h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">דפוסי מחשבה מוכרים, לאורך זמן</span>${iqChecks(IQ_THOUGHT)}</div>`;
   h += `</section>`;
   h += `<section class="iq-q"><h3>הטבע לאורך השנים</h3>`;
   IQ_NATURE.filter(n=>IQ_LEAN_NATURE.includes(n.id)).forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
@@ -1621,18 +1636,15 @@ function iqLeanHTML(p){
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולך או הולכת לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
-  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בשינה</span>${iqChecks(IQ_SLEEPQ)}</div><div><span class="iq-lbl">יקיצות בלילה</span>${iqRadios("l_wakes",IQ_L2.l_wakes)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">יקיצות בלילה</span>${iqRadios("l_wakes",IQ_L2.l_wakes)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
-  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">ירקות ופירות</span>${iqRadios("l_veg",IQ_L2.l_veg)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div><span class="iq-lbl">והן</span>${iqRadios("l_stool",IQ_L2.l_stool)}</div></div>`;
-  h += iqTA("l_food","תזונה: מה אוכל בדרך כלל, ועל מה קשה לוותר",1);
   h += `<div class="iq-item"><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
-  h += `<div class="iq-item"><span class="iq-lbl">הרגלים</span>${iqChecks(IQ_HABITS)}</div>`;
   h += `</section>`;
   h += `<section class="iq-q"><h3>לסיום</h3>`;
-  h += iqTA("c_talent","הכישרון הטבעי",1);
-  h += iqTA("c_hobby","תחביבים וזמן פנוי",1);
+  h += iqTA("c_talent","הכישרון הטבעי, ותחביבים",1);
   h += iqTA("c_goal","מה היה רוצה שישתנה",1);
   h += `</section>`;
   return h;
@@ -1769,14 +1781,14 @@ function iqInsights(S){
   if(S.m_side==="both") loc.push("בשני הצדדים, ולכן קשור לרעיון הכללי של האיבר");
   if(S.m_fb==="front") loc.push("מלפנים, שמייצג את ההווה");
   if(S.m_fb==="back") loc.push("מאחור, שמייצג את העבר");
-  const ty=[...IQ_SENS,...IQ_SOUL].filter(t=>S[t.id]&&t.tags.length).map(t=>`${t.label} (${t.tags.map(e=>IQ_EL[e].name).join(", ")})`);
+  const ty=[...IQ_SENS,...IQ_SOUL].filter(t=>S[t.id]&&t.tags.length).map(t=>`${t.label} (${t.tags.map(e=>IQ_EL[e].name).join(", ")}${t.alt&&t.alt.length?`, או ${t.alt.map(e=>IQ_EL[e].name).join(", ")}`:""})`);
   if(loc.length||ty.length||S.m_kind||S.m_view||S.t_numb){
     let p = S.m_kind ? `התלונה העיקרית ${{body:"בגוף",soul:"בנפש",both:"בגוף ובנפש"}[S.m_kind]}. ` : "";
     if(loc.length) p+=`היא ${loc.join(", ")}. `;
     if(ty.length) p+=`איך זה מורגש: ${ty.join(", ")}.`;
     if(S.m_point) p+=` המקום בגוף שסומן: ${iqEsc(S.m_point)}.`;
-    if(S.t_numb) p+=` סומן נימול או אזור רדום. לפי הבעש"ט, מקום שכואב הוא המקום החי, ומקום רדום בלי כאב מצביע על חולי עמוק יותר, ולכן כדאי לברר אותו.`;
-    if(S.m_view) p+=` היחס לחולי: ${{mirror:"כמראה ושיעור, וזה מצב טוב להתחלת עבודה",carry:"כמשהו שסוחבים, וכדאי לבדוק אם יש השלמה או ייאוש",hard:"כאסון, וכדאי לבדוק אם יש מטען רגשי עודף ממשקעים קודמים"}[S.m_view]}.`;
+    if(S.t_numb) p+=` סומן נימול או אזור רדום. לפי הבעש"ט, מקום שכואב הוא המקום החי, ומקום רדום בלי כאב מצביע על מחלה עמוקה יותר, ולכן כדאי לברר אותו.`;
+    if(S.m_view) p+=` היחס למחלה: ${{mirror:"כמראה ושיעור, וזה מצב טוב להתחלת עבודה",carry:"כמשהו שסוחבים, וכדאי לבדוק אם יש השלמה או ייאוש",hard:"כאסון, וכדאי לבדוק אם יש מטען רגשי עודף ממשקעים קודמים"}[S.m_view]}.`;
     const rel=[]; if(S.r_heat) rel.push("חום מקל, ואפשר לבדוק חוסר אש"); if(S.r_cold) rel.push("קור מקל, ואפשר לבדוק עודף אש");
     if(rel.length) p+=` ${rel.join(". ")}.`;
     out.push(["התלונה העיקרית",p]);
@@ -1793,6 +1805,7 @@ function iqInsights(S){
   if(S.l_water==="lt1") life.push("שתייה מועטה");
   if(S.l_move==="none") life.push("כמעט בלי פעילות גופנית");
   if(S.l_nature==="none") life.push("כמעט בלי זמן בטבע");
+  { const TH={th_crit:"ביקורת, שלאורך זמן קשורה לדלקות מפרקים",th_anger:"כעס, שקשור לדלקת, לצריבה ולחום",th_resent:"טינה, שקשורה לגידולים ולמה שאוכל מבפנים",th_guilt:"אשמה, שמחפשת עונש ומובילה לכאב"}; const th=IQ_THOUGHT.filter(x=>S[x.id]).map(x=>TH[x.id]); if(th.length) out.push(["דפוסי מחשבה",`${th.join(". ")}. לבדוק בזהירות, כאפשרות ולא כקביעה.`]); }
   if(S.l_bed==="late") life.push("הולכים לישון אחרי חצות");
   if(S.sl_fall) life.push("קושי להירדם");
   if(S.sl_wake||S.l_wakes) life.push(`יקיצות בלילה${S.l_wakes?", "+((IQ_L2.l_wakes.find(x=>x[0]===S.l_wakes)||[])[1]||""):""}`);
@@ -1821,7 +1834,7 @@ function iqRenderSummary(){
 function iqText(){
   const p=curP(), S=p.intake||{}, L=[], v=k=>(S[k]||"").trim();
   const rl=(name,pairs)=>{ const f=pairs.find(x=>x[0]===S[name]); return f?f[1]:""; };
-  const tg=t=>t.tags&&t.tags.length?` [${t.tags.map(e=>IQ_EL[e].name).join("/")}]`:"";
+  const tg=t=>t.tags&&t.tags.length?` [${t.tags.map(e=>IQ_EL[e].name).join("/")}${t.alt&&t.alt.length?`, או: ${t.alt.map(e=>IQ_EL[e].name).join(", ")}`:""}]`:"";
   L.push(iqMode(p)==="lean" ? "שאלון היכרות, לניתוח (אבחון רזה מהקליניקה)" : "שאלון היכרות, לניתוח");
   L.push(`שם: ${p.name} | גיל: ${v("f_age")} | עיסוק: ${v("f_job")} | תאריך: ${v("f_date")}`);
   L.push(`משקל: ${v("f_weight")} | גובה: ${v("f_height")} | לחץ דם: ${v("f_bp")} | דופק: ${v("f_pulse")}`);
@@ -1849,13 +1862,14 @@ function iqText(){
   L.push(`תלונות נוספות: ${v("b_other")}`);
   [1,2,3].forEach(n=>{ if(v(`x${n}_what`)) L.push(`תלונה נוספת: ${v(`x${n}_what`)}${v(`x${n}_since`)?`, מאז ${v(`x${n}_since`)}`:""}${v(`x${n}_treat`)?`, טופל: ${v(`x${n}_treat`)}`:""}${v(`x${n}_lvl`)?`, מפריע ${v(`x${n}_lvl`)}/10`:""}`); });
   L.push("","רקע רפואי ותרופות");
-  L.push(`תרופות, ויטמינים ותוספים: ${v("m_meds")}`);
+  L.push(`תרופות ותוספים: ${v("m_meds")}`);
   L.push(`ניתוחים ואשפוזים: ${v("h_surg")}`);
   L.push(`תאונות ופציעות: ${v("h_injury")}`);
   L.push(`צלקות: ${v("h_scars")}`);
   L.push(`במשפחה: ${v("h_family")}`);
   L.push("","רגש ומחשבה");
   L.push(IQ_EMO.filter(i=>S[i.id]).map(i=>i.label+tg(i)).join(", "));
+  { const th = IQ_THOUGHT.filter(x=>S[x.id]).map(x=>x.label).join(", "); if(th) L.push(`דפוסי מחשבה מוכרים: ${th}`); }
   L.push(`איפה הלחץ מורגש: ${IQ_PRESS.filter(x=>S[x.id]).map(x=>x.floor).join(", ")}`);
   L.push("","משפטים");
   IQ_STMTS.forEach(s=>{ if(S[s.id]) L.push(`${s.n}. ${s.t}: ${{yes:"מתאים",part:"חלקית",no:"לא מתאים"}[S[s.id]]}`); });
@@ -2082,7 +2096,7 @@ function readTabs(){
   if(!th){ paper.classList.remove('rt-pt','rt-th'); return; }
   paper.classList.toggle('rt-pt', readTab==='pt'); paper.classList.toggle('rt-th', readTab==='th');
   const bar = document.createElement('nav'); bar.className = 'card-tabs rd-tabs no-print'; bar.setAttribute('aria-label','חלקי האבחון');
-  bar.innerHTML = [['pt','מה שמוקרא למטופל'],['th','למטפל בלבד']].map(([k,l])=>`<button class="ct ${readTab===k?'on':''}" aria-pressed="${readTab===k}" onclick="readTab='${k}';renderReading()">${l}</button>`).join('');
+  bar.innerHTML = [['pt','אבחון למטופל'],['th','למטפל בלבד']].map(([k,l])=>`<button class="ct ${readTab===k?'on':''}" aria-pressed="${readTab===k}" onclick="readTab='${k}';renderReading()">${l}</button>`).join('');
   paper.parentNode.insertBefore(bar, paper);
   rdBuild();
 }
