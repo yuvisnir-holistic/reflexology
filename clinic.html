@@ -607,8 +607,8 @@
   #iqRead.rt-th .iq-thera-part{margin-top:14px;}
   @media print{
     #iqRead .rd-pt{display:block !important;}
-    #iqRead .iq-thera-part{display:block !important;}
-    #iqWrap.iq-print-patient #iqRead .iq-thera-part{display:none !important;}
+    #iqRead .iq-thera-part{display:none !important;}
+    #iqWrap.iq-print-full #iqRead .iq-thera-part{display:block !important;}
   }
   /* הודעה כשקובץ התרגילים לא נטען */
   .ex-missing{background:var(--fire-bg);color:#7a3320;border-radius:12px;padding:10px 14px;margin:14px 0 0;font-size:0.92rem;line-height:1.6;}
@@ -2161,6 +2161,17 @@ function readTabs(){
   paper.parentNode.insertBefore(bar, paper);
   rdBuild();
 }
+
+/* הדפסה: ברירת המחדל היא למטופל בלבד. החלק של המטפל מודפס רק ב"הדפסה מלאה" */
+iqReadPrint = function(patientOnly){
+  const w = $('iqWrap');
+  if(w && !patientOnly){
+    w.classList.add('iq-print-full');
+    const back = ()=>{ w.classList.remove('iq-print-full'); window.removeEventListener('afterprint', back); };
+    window.addEventListener('afterprint', back);
+  }
+  setTimeout(()=>window.print(), 30);
+};
 
 
 /* ===================== החלק למטפל: כרטיסים מתקפלים, קישורים ותרגילים ===================== */
