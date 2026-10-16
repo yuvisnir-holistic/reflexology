@@ -301,7 +301,7 @@ const IQ_EMO = [
   {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
 const IQ_EMO_MAX = 5;
-const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על אחרים"},{id:"th_anger",label:"כעס"},{id:"th_resent",label:"טינה, משהו שקשה לי לשחרר"},{id:"th_guilt",label:"אשמה"}];
+const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על אחרים"},{id:"th_anger",label:"כעס"},{id:"th_resent",label:"טינה, משהו שקשה לי לשחרר"},{id:"th_guilt",label:"אשמה"},{id:"th_perfect",label:"דרישה לשלמות, ומדידה של עצמי לפי מי שאני אמור או אמורה להיות"}];
 function iqAlt(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.alt && it.alt.length) ? `<span class="iq-tg iq-alt">או ${it.alt.map(e=>IQ_EL[e].name).join(", ")}</span>` : ""; }
 const IQ_PRESS = [
   {id:"p_medame",label:"בדמיון, בתמונות של מה שעלול לקרות או של חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},

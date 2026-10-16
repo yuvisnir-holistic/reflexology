@@ -1437,7 +1437,7 @@ const IQ_EMO = [
   {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
 const IQ_EMO_MAX = 5;
-const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על אחרים"},{id:"th_anger",label:"כעס"},{id:"th_resent",label:"טינה, משהו שקשה לי לשחרר"},{id:"th_guilt",label:"אשמה"}];
+const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על אחרים"},{id:"th_anger",label:"כעס"},{id:"th_resent",label:"טינה, משהו שקשה לי לשחרר"},{id:"th_guilt",label:"אשמה"},{id:"th_perfect",label:"דרישה לשלמות, ומדידה של עצמי לפי מי שאני אמור או אמורה להיות"}];
 function iqAlt(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.alt && it.alt.length) ? `<span class="iq-tg iq-alt">או ${it.alt.map(e=>IQ_EL[e].name).join(", ")}</span>` : ""; }
 const IQ_PRESS = [
   {id:"p_medame",label:"בדמיון, בתמונות של מה שעלול לקרות או של חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
@@ -1689,6 +1689,7 @@ function iqLeanHTML(p){
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
   h += `</section>`;
   h += `<section class="iq-q"><h3>לסיום</h3>`;
+  h += iqTA("c_wish","אילו יכול או יכולה לעשות בדיוק את מה שהוא או היא באמת רוצים, מה היה עושה?",1);
   h += iqTA("c_talent","הכישרון הטבעי, ותחביבים",1);
   h += iqTA("c_goal","מה היה רוצה שישתנה",1);
   h += `</section>`;
@@ -1850,7 +1851,7 @@ function iqInsights(S){
   if(S.l_water==="lt1") life.push("שתייה מועטה");
   if(S.l_move==="none") life.push("כמעט בלי פעילות גופנית");
   if(S.l_nature==="none") life.push("כמעט בלי זמן בטבע");
-  { const TH={th_crit:"ביקורת, שלאורך זמן קשורה לדלקות מפרקים",th_anger:"כעס, שקשור לדלקת, לצריבה ולחום",th_resent:"טינה, שקשורה לגידולים ולמה שאוכל מבפנים",th_guilt:"אשמה, שמחפשת עונש ומובילה לכאב"}; const th=IQ_THOUGHT.filter(x=>S[x.id]).map(x=>TH[x.id]); if(th.length) out.push(["דפוסי מחשבה",`${th.join(". ")}. לבדוק בזהירות, כאפשרות ולא כקביעה.`]); }
+  { const TH={th_crit:"ביקורת, שלאורך זמן קשורה לדלקות מפרקים",th_anger:"כעס, שקשור לדלקת, לצריבה ולחום",th_resent:"טינה, שקשורה לגידולים ולמה שאוכל מבפנים",th_guilt:"אשמה, שמחפשת עונש ומובילה לכאב",th_perfect:"דרישה לשלמות ומדידה לפי מודל חיצוני, שמתאימה לסיפור על רבי זושא ולעבודה על קבלת עצמי"}; const th=IQ_THOUGHT.filter(x=>S[x.id]).map(x=>TH[x.id]); if(th.length) out.push(["דפוסי מחשבה",`${th.join(". ")}. לבדוק בזהירות, כאפשרות ולא כקביעה.`]); }
   if(S.l_bed==="late") life.push("הולכים לישון אחרי חצות");
   if(S.sl_fall) life.push("קושי להירדם");
   if(S.sl_wake||S.l_wakes) life.push(`יקיצות בלילה${S.l_wakes?", "+((IQ_L2.l_wakes.find(x=>x[0]===S.l_wakes)||[])[1]||""):""}`);
