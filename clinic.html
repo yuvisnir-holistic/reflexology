@@ -1443,6 +1443,17 @@ const IQ_EMO = [
   {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
 const IQ_EMO_MAX = 5;
+function iqTAh(id,label,hint,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><p class="iq-hint" style="margin:0 0 6px">${hint}</p><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
+function iqOtherSync(root){
+  if(!root) return;
+  root.querySelectorAll('.iq-other[data-other]').forEach(box=>{
+    const cb = root.querySelector(`input[data-c="${box.dataset.other}"]`);
+    const inp = box.querySelector('[data-k]');
+    box.hidden = !((cb && cb.checked) || (inp && inp.value));
+    if(cb && !cb._oth){ cb._oth = 1; cb.addEventListener('change', ()=>{ box.hidden = !cb.checked && !(inp && inp.value); if(cb.checked && inp) setTimeout(()=>inp.focus(),30); }); }
+  });
+}
+
 function iqIsoToday(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function iqFmtDate(v){ const m=String(v||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${+m[3]}.${+m[2]}.${m[1]}` : (v||""); }
 function iqToIso(v){ const m=String(v||"").trim().match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})$/); if(!m) return v||""; const y=m[3].length===2?"20"+m[3]:m[3]; return `${y}-${String(m[2]).padStart(2,"0")}-${String(m[1]).padStart(2,"0")}`; }
@@ -1573,9 +1584,7 @@ function iqFormHTML(p){
   h += `<div class="iq-item"><span class="iq-lbl">כמה זה מפריע בימים אלה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
   h += `<div class="iq-sub2">מתי, ומה משפיע על זה</div>`;
   h += iqTA("m_when","מתי זה התחיל, ומה קרה בחיים שלכם באותה תקופה?",2);
-  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מתי ביום זה מחמיר?</span>${iqChecks(IQ_TIME)}</div><div><span class="iq-lbl">ובאיזו תנוחה?</span>${iqChecks(IQ_POSE)}</div></div>`;
-  h += `<div class="iq-item"><span class="iq-lbl">מה מקל?</span>${iqChecks(IQ_RELIEF)}</div>`;
-  h += iqTA("m_better","מה עוד מחמיר את זה, ומה עוד מקל?",2);
+  h += iqTAh("m_better","מה מחמיר את זה, ומה מקל?","למשל: בשעה מסוימת ביום, בתנוחה מסוימת, אחרי מאמץ, במצבים או מול אנשים מסוימים. ומה עוזר: חום או קור, מנוחה או תנועה, שיחה, שקט.",2);
   h += `<div class="iq-sub2">מה כבר ידוע, ומה נעשה</div>`;
   h += iqTA("m_treated","איך זה טופל עד היום, ומה עזר?",2);
   h += iqTA("m_medical","אבחנה רפואית ובדיקות, אם יש",2);
@@ -1619,9 +1628,10 @@ function iqFormHTML(p){
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div><div><span class="iq-lbl">זמן בטבע ובאוויר פתוח</span>${iqRadios("l_nature",IQ_L.l_nature)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">כמה לחץ יש בחיים שלכם עכשיו</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">מאיפה מגיע הלחץ בעיקר</span>${iqChecks(IQ_STRESS)}</div>`;
+  h += `<div class="iq-other" data-other="st_other" hidden>${iqInp("l_stress_other","מה עוד?")}</div>`;
   h += `</section>`;
 
-  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">לא איך אתם בתקופה האחרונה, אלא איך אתם לאורך השנים. בכל שאלה בחרו את מה שהכי דומה לכם.</p>`;
+  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">לא איך אתם בתקופה האחרונה, אלא איך אתם לאורך השנים. בכל שאלה אפשר לסמן תשובה אחת, את זו שהכי נכונה עבורכם.</p>`;
   IQ_NATURE.forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
   h += `</section>`;
 
@@ -1671,7 +1681,7 @@ function iqLeanHTML(p){
   h += `<div class="iq-item"><span class="iq-lbl">עוצמה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
   h += `<div class="iq-sub2">מתי, ומה משפיע על זה</div>`;
   h += iqTA("m_when","מתי התחיל, ומה קרה בחיים באותה תקופה",1);
-  h += `<div class="iq-item"><span class="iq-lbl">מה מקל</span>${iqChecks(IQ_RELIEF)}</div>`;
+  h += iqTAh("m_better","מה מחמיר ומה מקל","למשל: שעה ביום, תנוחה, מאמץ, מצבים או אנשים. ומה עוזר: חום, קור, מנוחה, תנועה, שיחה.",1);
   h += `<div class="iq-sub2">מה כבר ידוע, ומה נעשה</div>`;
   h += iqTA("m_treated","איך טופל עד היום, ומה עזר",1);
   h += iqTA("m_medical","אבחנה רפואית ובדיקות",1);
@@ -1682,10 +1692,10 @@ function iqLeanHTML(p){
   h += iqChecks(iqLeanSigns(),"col iq-grid2",'data-lim="lean"');
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">דפוסי מחשבה מוכרים, לאורך זמן</span>${iqChecks(IQ_THOUGHT)}</div>`;
   h += `</section>`;
-  h += `<section class="iq-q"><h3>הטבע לאורך השנים</h3>`;
+  h += `<section class="iq-q"><h3>הטבע לאורך השנים</h3><p class="iq-hint">בכל שאלה תשובה אחת, זו שהכי נכונה עבורו או עבורה.</p>`;
   IQ_NATURE.filter(n=>IQ_LEAN_NATURE.includes(n.id)).forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
   h += `</section>`;
-  h += `<section class="iq-q"><h3>קומות ומחיצות</h3>`;
+  h += `<section class="iq-q"><h3>איפה הלחץ, ואיפה משהו נתקע</h3>`;
   h += `<div class="iq-item"><span class="iq-lbl">איפה הלחץ מורגש</span>${iqChecks(IQ_PRESS,"col")}</div>`;
   IQ_STMTS.filter(s=>IQ_LEAN_STMTS.includes(s.id)).forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
   h += `</section>`;
@@ -1909,7 +1919,7 @@ function iqText(){
   L.push(`מתי התחיל ומה קרה אז: ${v("m_when")}`);
   L.push(`מחמיר: ${[ck(IQ_TIME),ck(IQ_POSE)].filter(Boolean).join(", ")}`);
   L.push(`מקל: ${ck(IQ_RELIEF)}`);
-  L.push(`עוד מה מחמיר ומה מקל: ${v("m_better")}`);
+  L.push(`מה מחמיר ומה מקל: ${v("m_better")}`);
   L.push(`איך טופל עד היום ומה עזר: ${v("m_treated")}`);
   L.push(`אבחנה רפואית ובדיקות: ${v("m_medical")}`);
   L.push(`מה גרם ומה צריך להשתנות: ${v("m_why")}`);
@@ -1942,6 +1952,7 @@ function iqText(){
   L.push(`פעילות: ${rl("l_move",IQ_L.l_move)}, טבע: ${rl("l_nature",IQ_L.l_nature)}`);
   const sts=IQ_STRESS.filter(x=>S[x.id]).map(x=>x.label);
   L.push(`לחץ: ${S.l_stress!==undefined?S.l_stress+"/10":""}${sts.length?" ("+sts.join(", ")+")":""}`);
+  L.push(`מקור לחץ אחר: ${v("l_stress_other")}`);
   L.push("","טבע לאורך השנים");
   IQ_NATURE.forEach(n=>{ if(S[n.id]){ const o=n.o.find(x=>x[0]===S[n.id]); L.push(`${n.q}: ${o[1]} [${IQ_EL[o[0]].name}]`); } });
   L.push("","לסיום");
@@ -2029,7 +2040,7 @@ function iqReadPrint(patientOnly){
 }
 /* ===== חלקים מתקפלים בשאלון ===== */
 const IQ_ACC = {};
-function iqAccKey(wizard){ if(wizard) return 'pt'; try{ const p=curP(); return p ? (p.intakeMode || (iqHas(p) ? 'full' : 'lean')) : 'x'; }catch(e){ return 'x'; } }
+function iqAccKey(wizard){ try{ if(typeof curP==='function'){ const p=curP(); if(p) return p.intakeMode || (iqHas(p) ? 'full' : 'lean'); } }catch(e){} return 'pt'; }
 function iqAcc(root, wizard){
   if(!root) return;
   const key = iqAccKey(wizard);
@@ -2044,6 +2055,13 @@ function iqAcc(root, wizard){
     const btn = document.createElement('button'); btn.type='button'; btn.className='iq-acc-h';
     btn.innerHTML = `<span class="t">${h3.textContent}</span><span class="c"></span><span class="ch" aria-hidden="true"></span>`;
     sec.insertBefore(btn, h3); sec.appendChild(body);
+    if(wizard && i===secs.length-1){
+      const fin = document.createElement('button'); fin.type='button'; fin.className='bm-btn iq-acc-next';
+      const inClinic = typeof curP==='function';
+      fin.textContent = inClinic ? 'סיום ושמירה' : 'לשליחה';
+      fin.onclick = ()=>{ open.clear(); iqAccApply(root,key); if(inClinic){ window.scrollTo({top:0,behavior:'smooth'}); if(typeof bmToast==='function') bmToast('השאלון נשמר'); } else { const snd=document.querySelector('.send'); if(snd) iqAccScroll(snd); } };
+      body.appendChild(fin);
+    }
     if(wizard && i<secs.length-1){
       const nx = document.createElement('button'); nx.type='button'; nx.className='bm-btn iq-acc-next';
       nx.textContent = 'לחלק הבא: ' + (secs[i+1].querySelector(':scope > h3')||{}).textContent;
@@ -2077,7 +2095,7 @@ function iqAccCount(root){
 }
 
 const _renderIntakeAcc = renderIntake;
-renderIntake = function(){ _renderIntakeAcc(); iqAcc(document.getElementById('iqForm'), false); };
+renderIntake = function(){ _renderIntakeAcc(); iqAcc(document.getElementById('iqForm'), true); iqOtherSync(document.getElementById('iqForm')); };
 
 
 /* ===================== לוגו להדפסה ===================== */
@@ -2328,6 +2346,7 @@ function iqFillFromDetails(store){
     if(store){ if(p.intake && Object.keys(p.intake).length && !p.intake[k]) p.intake[k] = v; }
     else if(el && !el.value){ el.value = v; }
   });
+  if(!store){ const d = document.getElementById('iq_f_date'); if(d && !d.value) d.value = iqIsoToday(); }
 }
 const _renderIntakeDet = renderIntake;
 renderIntake = function(){ _renderIntakeDet(); iqFillFromDetails(false); };
