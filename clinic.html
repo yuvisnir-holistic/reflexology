@@ -1150,7 +1150,8 @@ function exRenderBody(sel){
     list.innerHTML = exFloors('gen');
   } else {
     srcs.innerHTML = `<select aria-label="בחירת תלונה" onchange="exSetSrc(this.value)">${Object.keys(PATH_LINKS).map(k=>`<option ${k===sel?'selected':''}>${escH(k)}</option>`).join('')}</select>`;
-    list.innerHTML = PATH_LINKS[sel].map(x=>{
+    const rec = (typeof pathExercises==='function') ? pathExercises(sel) : [];
+    list.innerHTML = (rec.length ? `<div class="ex-group">תרגילים מומלצים לתלונה הזו</div>${rec.map(id=>exRow(id,true)).join('')}<div class="ex-group" style="margin-top:22px">כל התרגילים של המקורות הקשורים</div>` : '') + PATH_LINKS[sel].map(x=>{
       const src = srcOfLink(x); if(!src) return '';
       const xs = exBySrc(src); if(!xs.length) return '';
       return `<div class="ex-group">${escH(xs[0].srcLabel)}</div>${xs.map(e=>exRow(e.id,false)).join('')}`;

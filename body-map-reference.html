@@ -3076,5 +3076,104 @@ renderToolsView();
 updateFab();
 
 </script>
+<script>
+/* ===== פתולוגיות: תרגילים אפשריים, וקישור אליהן ממערכות הגוף ===== */
+pathologyCardHTML = function(p){
+  let h = _origPath(p);
+  h = h.replace('<div class="organ-card">', `<div class="organ-card" data-path="${escH(p.name)}">`);
+  const links = PATH_LINKS[p.name] || [];
+  const ids = (typeof pathExercises === 'function') ? pathExercises(p.name) : [];
+  if(!links.length && !ids.length) return h;
+  const inner = `<p class="path-ex-hint">תרגילים לבחירה, לפי מה שמתאים למטופל. אפשר גם לפתוח את כל השבוע של היסוד, של הספירה או של הכלי:</p>
+    <div class="wchips">${links.map(linkChip).join('')}</div>${ids.map(id=>exItemHTML(id,true)).join('')}`;
+  return h.replace(/<\/div>\s*<\/div>\s*$/, subsectionHTML('תרגילים אפשריים', inner, 'practice open') + '</div></div>');
+};
+const ORGAN_PATH = {
+  'עצמות ומינרלים (כללי)':['שברים חוזרים וירידה בצפיפות העצם'],
+  'שרירי השלד (כללי)':['שרירים תפוסים וכאבי שרירים כרוניים'],
+  'קרקפת ושיער':['נשירת שיער'],
+  'צוואר':['כאבי גב עליון וכתפיים','מיגרנות וכאבי ראש'],
+  'כתפיים':['כאבי גב עליון וכתפיים'],
+  'ידיים וזרועות':['שרירים תפוסים וכאבי שרירים כרוניים'],
+  'מרפקים':['שרירים תפוסים וכאבי שרירים כרוניים'],
+  'כפות ידיים':['שרירים תפוסים וכאבי שרירים כרוניים'],
+  'עמוד השדרה':['כאבי גב תחתון','כאבי גב עליון וכתפיים'],
+  'גב עליון':['כאבי גב עליון וכתפיים'],
+  'גב אמצעי':['כאבי גב עליון וכתפיים','כאבי גב תחתון'],
+  'גב תחתון':['כאבי גב תחתון'],
+  'אגן':['כאבי גב תחתון'],
+  'ירכיים':['כאבי גב תחתון','כאבי ברכיים'],
+  'ברכיים':['כאבי ברכיים'],
+  'קרסוליים':['כאבי ברכיים'],
+  'כפות רגליים':['כאבי ברכיים'],
+  'מוח':['בעיות זיכרון וקושי להתמקד','מיגרנות וכאבי ראש','סחרחורות, ערפול וקשיי ריכוז'],
+  'היפותלמוס':['חוסר איזון הורמונלי כללי'],
+  'היפופיזה (בלוטת יותרת המוח)':['חוסר איזון הורמונלי כללי'],
+  'עיניים':['בעיות ראייה'],
+  'אוזניים':['ירידה בשמיעה וטנטון'],
+  'אף':['גודש ונזלת כרונית'],
+  'לשון ופה (חוש הטעם)':['בעיות בפה, בטעם או בדיבור'],
+  'עור (חוש המגע)':['בעיות עור (פריחות, יובש, אקנה)'],
+  'בלוטת התריס והפאראתריס':['בעיות בבלוטת התריס'],
+  'בלוטת האדרנל':['שחיקה ועייפות אדרנלית'],
+  'בלוטת התימוס (עוטף הלב-תימוס)':['זיהומים חוזרים וחולשה חיסונית'],
+  'מקלעת השמש':['אי שקט, חרדה ולחץ כרוני'],
+  'מקלעת מותני':['כאבי גב תחתון'],
+  'עצב הוואגוס':['אי שקט, חרדה ולחץ כרוני','דופק לא סדיר וחרדת לב'],
+  'הטחול':['זיהומים חוזרים וחולשה חיסונית','אנמיה'],
+  'מערכת הלימפה':['בצקות והצטברות נוזלים לימפתית','זיהומים חוזרים וחולשה חיסונית'],
+  'שקדים':['זיהומים חוזרים וחולשה חיסונית'],
+  'תאי הדם הלבנים':['זיהומים חוזרים וחולשה חיסונית','מחלות אוטואימוניות'],
+  'הלב':['דופק לא סדיר וחרדת לב'],
+  'עוטף הלב (פריקרד)':['דופק לא סדיר וחרדת לב'],
+  'כלי הדם':['לחץ דם גבוה','לחץ דם נמוך וחוסר חיוניות'],
+  'הדם':['אנמיה'],
+  'קנה הנשימה':['שיעול כרוני','אסתמה וקוצר נשימה'],
+  'ריאות':['אסתמה וקוצר נשימה','שיעול כרוני'],
+  'קיבה':['צרבת וחומציות'],
+  'ושט':['צרבת וחומציות'],
+  'מעי דק':['מעי רגיז ושלשולים','נפיחות וגזים'],
+  'כבד':['צרבת וחומציות','עייפות כרונית וחוסר חיוניות'],
+  'כיס המרה':['צרבת וחומציות','נפיחות וגזים'],
+  'לבלב ותריסריון':['נפיחות וגזים'],
+  'קנדידה (כתופעה)':['נפיחות וגזים'],
+  'כליות':['אבנים בכליות','דלקות בדרכי השתן'],
+  'שלפוחית השתן':['דלקות בדרכי השתן','תכיפות או קושי במתן שתן'],
+  'אשכים וערמונית':['תכיפות או קושי במתן שתן','קשיי פוריות','קשיים באינטימיות ובתפקוד המיני'],
+  'שחלות':['קשיי פוריות','חוסר איזון הורמונלי כללי'],
+  'רחם':['כאבי מחזור ו-PMS','קשיי פוריות'],
+  'המחזור החודשי':['כאבי מחזור ו-PMS'],
+  'מיניות ואינטימיות':['קשיים באינטימיות ובתפקוד המיני']
+};
+function organPathologies(o){
+  const all = PATHOLOGIES.flatMap(g=>g.items);
+  const byName = n => all.find(p=>p.name===n);
+  if(ORGAN_PATH[o.name]) return ORGAN_PATH[o.name].map(byName).filter(Boolean);
+  const nm = (o.name||'').split(/[ ,(]/)[0];
+  return nm.length>2 ? all.filter(p=>(p.name+' '+(p.symptoms||'')).includes(nm)) : [];
+}
+workSectionHTML = function(o){
+  const ps = organPathologies(o); if(!ps.length) return '';
+  const chips = ps.map(p=>`<span class="wchip path-link" data-p="${escH(p.name)}" onclick="event.stopPropagation();openPathology(this.dataset.p)">${escH(p.name)}</span>`).join('');
+  return subsectionHTML('פתולוגיות ותרגילים', `<p class="path-ex-hint">התרגילים לכל פתולוגיה נמצאים בלשונית הפתולוגיות. לחיצה פותחת אותה ישירות:</p><div class="wchips">${chips}</div>`, 'practice open');
+};
+function openPathology(name){
+  const tab = document.querySelector('#tabnav [data-tab="pathologies"]'); if(tab) tab.click();
+  setTimeout(()=>{
+    const card = [...document.querySelectorAll('#pathologiesList .organ-card[data-path]')].find(c=>c.dataset.path===name);
+    if(!card) return;
+    const grp = card.closest('.path-group'); if(grp) grp.classList.add('open');
+    card.classList.add('open');
+    const y = card.getBoundingClientRect().top + window.scrollY - 120;
+    window.scrollTo({top:y, behavior:'smooth'});
+  }, 60);
+}
+renderPathologies();
+</script>
+<style>
+  .path-ex-hint{font-size:0.86rem;color:#5e6b66;margin:0 0 8px;line-height:1.6;}
+  .wchip.path-link{background:#E7EFEC;color:var(--forest-dark);cursor:pointer;}
+  .wchip.path-link:hover{background:var(--forest);color:#fff;}
+</style>
 </body>
 </html>
