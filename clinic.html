@@ -2318,6 +2318,24 @@ iqText = function(){
   return t.slice(0,i+1) + 'שפה לאבחון: פתוח או פתוחה לשפה של קבלה (סימון של יובל)\n' + t.slice(i+1);
 };
 
+/* פרטים מלשונית הפרטים מופיעים גם בשאלון */
+function iqFillFromDetails(store){
+  const p = curP(); if(!p) return;
+  const map = {f_age:'age', f_job:'job'};
+  Object.entries(map).forEach(([k,d])=>{
+    const v = (p[d]||'').trim(); if(!v) return;
+    const el = document.getElementById('iq_'+k);
+    if(store){ if(p.intake && Object.keys(p.intake).length && !p.intake[k]) p.intake[k] = v; }
+    else if(el && !el.value){ el.value = v; }
+  });
+}
+const _renderIntakeDet = renderIntake;
+renderIntake = function(){ _renderIntakeDet(); iqFillFromDetails(false); };
+const _iqStoreDet = iqStore;
+iqStore = function(){ iqFillFromDetails(true); _iqStoreDet(); };
+const _iqTextDet = iqText;
+iqText = function(){ iqFillFromDetails(true); return _iqTextDet(); };
+
 /* ===== הפעלה ===== */
 const _migrated = loadPT();
 if(window.EX_MISSING) document.querySelector('main').insertAdjacentHTML('afterbegin','<p class="ex-missing no-print" role="alert">קובץ התרגילים, exercises.js, לא נטען, ולכן התרגילים לא יופיעו. בתצוגה המקדימה בצ׳אט זה צפוי. באתר עצמו, צריך לוודא שהקובץ נמצא במאגר, באותה תיקייה.</p>');
