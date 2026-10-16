@@ -301,6 +301,10 @@ const IQ_EMO = [
   {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
 const IQ_EMO_MAX = 5;
+function iqIsoToday(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function iqFmtDate(v){ const m=String(v||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${+m[3]}.${+m[2]}.${m[1]}` : (v||""); }
+function iqToIso(v){ const m=String(v||"").trim().match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})$/); if(!m) return v||""; const y=m[3].length===2?"20"+m[3]:m[3]; return `${y}-${String(m[2]).padStart(2,"0")}-${String(m[1]).padStart(2,"0")}`; }
+
 const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על אחרים"},{id:"th_anger",label:"כעס"},{id:"th_resent",label:"טינה, משהו שקשה לי לשחרר"},{id:"th_guilt",label:"אשמה"},{id:"th_perfect",label:"דרישה לשלמות, ומדידה של עצמי לפי מי שאני אמור או אמורה להיות"}];
 function iqAlt(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.alt && it.alt.length) ? `<span class="iq-tg iq-alt">או ${it.alt.map(e=>IQ_EL[e].name).join(", ")}</span>` : ""; }
 const IQ_PRESS = [
@@ -406,7 +410,7 @@ function iqFormHTML(p){
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
     <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
-    <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div></section>`;
+    <div><label for="iq_f_date">תאריך</label><input type="date" id="iq_f_date" data-k="f_date"></div></div></section>`;
 
   h += `<section class="iq-q"><h3>התלונה העיקרית</h3><p class="iq-hint">כאן כותבים על דבר אחד בלבד, הדבר שהכי מפריע לכם עכשיו. אם יש עוד דברים, יש להם מקום בהמשך, בחלק של התלונות הנוספות.</p>`;
   h += `<div class="iq-item"><span class="iq-lbl">התלונה העיקרית היא בעיקר</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
@@ -510,6 +514,7 @@ function refresh(){
 function bind(){
   const f=document.getElementById('iqForm');
   f.querySelectorAll('[data-k]').forEach(el=>{
+    if(el.type==="date" && S[el.dataset.k]) S[el.dataset.k]=iqToIso(S[el.dataset.k]);
     el.value=S[el.dataset.k]||"";
     el.addEventListener('input',()=>{ if(el.value) S[el.dataset.k]=el.value; else delete S[el.dataset.k]; store(); });
   });
@@ -632,6 +637,13 @@ function iqAccCount(root){
 const _renderAcc = render;
 render = function(){ _renderAcc(); iqAcc(document.getElementById('iqForm'), true); };
 iqAcc(document.getElementById('iqForm'), true);
+</script>
+
+<script>
+function iqDateDefault(){ const el=document.getElementById("iq_f_date"); if(el && !el.value){ el.value=iqIsoToday(); el.dispatchEvent(new Event("input",{bubbles:true})); } }
+const _renderDate = render;
+render = function(){ _renderDate(); iqDateDefault(); };
+iqDateDefault();
 </script>
 </body>
 </html>

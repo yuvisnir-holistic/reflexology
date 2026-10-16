@@ -1437,6 +1437,10 @@ const IQ_EMO = [
   {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
 const IQ_EMO_MAX = 5;
+function iqIsoToday(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function iqFmtDate(v){ const m=String(v||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${+m[3]}.${+m[2]}.${m[1]}` : (v||""); }
+function iqToIso(v){ const m=String(v||"").trim().match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})$/); if(!m) return v||""; const y=m[3].length===2?"20"+m[3]:m[3]; return `${y}-${String(m[2]).padStart(2,"0")}-${String(m[1]).padStart(2,"0")}`; }
+
 const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על אחרים"},{id:"th_anger",label:"כעס"},{id:"th_resent",label:"טינה, משהו שקשה לי לשחרר"},{id:"th_guilt",label:"אשמה"},{id:"th_perfect",label:"דרישה לשלמות, ומדידה של עצמי לפי מי שאני אמור או אמורה להיות"}];
 function iqAlt(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.alt && it.alt.length) ? `<span class="iq-tg iq-alt">או ${it.alt.map(e=>IQ_EL[e].name).join(", ")}</span>` : ""; }
 const IQ_PRESS = [
@@ -1546,7 +1550,7 @@ function iqFormHTML(p){
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
     <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
-    <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div></section>`;
+    <div><label for="iq_f_date">תאריך</label><input type="date" id="iq_f_date" data-k="f_date"></div></div></section>`;
 
   h += `<section class="iq-q"><h3>התלונה העיקרית</h3><p class="iq-hint">כאן כותבים על דבר אחד בלבד, הדבר שהכי מפריע לכם עכשיו. אם יש עוד דברים, יש להם מקום בהמשך, בחלק של התלונות הנוספות.</p>`;
   h += `<div class="iq-item"><span class="iq-lbl">התלונה העיקרית היא בעיקר</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
@@ -1642,7 +1646,7 @@ function iqLeanHTML(p){
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
     <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
-    <div><label for="iq_f_date">תאריך</label><input type="text" id="iq_f_date" data-k="f_date"></div></div>
+    <div><label for="iq_f_date">תאריך</label><input type="date" id="iq_f_date" data-k="f_date"></div></div>
   <div class="iq-details" style="grid-template-columns:repeat(4,1fr);margin-top:8px">
     <div><label for="iq_f_weight">משקל</label><input type="text" id="iq_f_weight" data-k="f_weight"></div>
     <div><label for="iq_f_height">גובה</label><input type="text" id="iq_f_height" data-k="f_height"></div>
@@ -1732,6 +1736,7 @@ function renderIntake(){
 function iqBind(){
   const S = iqS(), f = document.getElementById('iqForm');
   f.querySelectorAll('[data-k]').forEach(el=>{
+    if(el.type==="date" && S[el.dataset.k]){ const iso=iqToIso(S[el.dataset.k]); if(iso!==S[el.dataset.k]){ S[el.dataset.k]=iso; } }
     el.value = S[el.dataset.k]||""; iqSyncPrint(el.dataset.k);
     el.addEventListener('input', ()=>{ if(iqBlank) return; S[el.dataset.k]=el.value; if(!el.value) delete S[el.dataset.k]; iqSyncPrint(el.dataset.k); iqRefreshOpts(); iqStore(); });
   });
@@ -1882,7 +1887,7 @@ function iqText(){
   const rl=(name,pairs)=>{ const f=pairs.find(x=>x[0]===S[name]); return f?f[1]:""; };
   const tg=t=>t.tags&&t.tags.length?` [${t.tags.map(e=>IQ_EL[e].name).join("/")}${t.alt&&t.alt.length?`, או: ${t.alt.map(e=>IQ_EL[e].name).join(", ")}`:""}]`:"";
   L.push(iqMode(p)==="lean" ? "שאלון היכרות, לניתוח (אבחון רזה מהקליניקה)" : "שאלון היכרות, לניתוח");
-  L.push(`שם: ${p.name} | גיל: ${v("f_age")} | עיסוק: ${v("f_job")} | תאריך: ${v("f_date")}`);
+  L.push(`שם: ${p.name} | גיל: ${v("f_age")} | עיסוק: ${v("f_job")} | תאריך: ${iqFmtDate(v("f_date"))}`);
   L.push(`משקל: ${v("f_weight")} | גובה: ${v("f_height")} | לחץ דם: ${v("f_bp")} | דופק: ${v("f_pulse")}`);
   L.push("","התלונה העיקרית");
   L.push(`סוג: ${rl("m_kind",IQ_KIND)}`);
@@ -2288,7 +2293,7 @@ window.addEventListener('afterprint', ()=>{ document.querySelectorAll('details.r
 const _iqImportDo = iqImportDo;
 iqImportDo = function(){ _iqImportDo(); const p=curP(); if(p){ syncFromIntake(p); savePT(); renderCardHead(); } };
 const _iqStore = iqStore;
-iqStore = function(){ _iqStore(); const p=curP(); if(!p) return; renderCardHead(); iqSyncActions(p); };
+iqStore = function(){ const p0=curP(); if(p0 && p0.intake && Object.keys(p0.intake).length && !p0.intake.f_date){ p0.intake.f_date=iqIsoToday(); const el=document.getElementById('iq_f_date'); if(el) el.value=p0.intake.f_date; } _iqStore(); const p=curP(); if(!p) return; renderCardHead(); iqSyncActions(p); };
 function iqSyncActions(p){
   const bar = document.querySelector('#iqWrap .sheet-actions'); if(!bar) return;
   const has = iqHas(p);
