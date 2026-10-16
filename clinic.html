@@ -689,6 +689,12 @@
   @media (max-width:600px){ .iq-xhead{display:none;} .iq-xrow{grid-template-columns:1fr 1fr;padding-bottom:8px;border-bottom:1px dotted rgba(44,95,91,0.25);} }
   @media print{ .iq-xrow input::placeholder{color:transparent;} }
 
+  .iq-paper input[type=date]{width:100%;min-height:42px;font-family:'Assistant',sans-serif;font-size:0.98rem;color:var(--ink);background:var(--field);border:1px solid rgba(44,95,91,0.3);border-radius:8px;padding:9px 11px;outline:none;-webkit-appearance:none;appearance:none;text-align:right;direction:rtl;}
+  .iq-paper input[type=date]:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(44,95,91,0.12);}
+  .iq-paper input[type=date]::-webkit-date-and-time-value{text-align:right;}
+  .iq-paper input[type=date]::-webkit-calendar-picker-indicator{opacity:0.55;cursor:pointer;}
+  @media print{ .iq-paper input[type=date]{border:none;border-bottom:1px solid #999;border-radius:0;padding:2px 0;background:transparent;min-height:0;} }
+
   .iq-tg.iq-alt{opacity:0.8;font-size:0.72rem;font-weight:600;margin-inline-start:4px;}
 
   .iq-acc > h3{display:none;}
