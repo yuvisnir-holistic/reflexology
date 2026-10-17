@@ -1159,7 +1159,23 @@ let exTab = 'el', exQ = '';
 let exAud = (()=>{ try{ return localStorage.getItem('clinic-ex-aud')||'any'; }catch(e){ return 'any'; } })();
 function audOk(id){ const e=EXR[id]; return !e ? false : (exAud==='any' || (e.aud||'all')===exAud); }
 function setExAud(v){ exAud=v; try{ localStorage.setItem('clinic-ex-aud',v); }catch(e){} exRender(); }
-function audBar(){ return `<div class="seg aud-bar" role="group" aria-label="סינון לפי סוג התרגיל">${[['any','הכול'],['src','מהמקורות'],['all','לכל אדם'],['both','לשניהם']].map(([k,l])=>`<button class="${exAud===k?'on':''}" aria-pressed="${exAud===k}" onclick="setExAud('${k}')">${l}</button>`).join('')}</div>`; }
+function exCurrentIds(){
+  const q = exQ.trim().toLowerCase();
+  if(q) return Object.values(EXR).filter(e=>(e.title+' '+e.text+' '+e.srcLabel).toLowerCase().includes(q)).map(e=>e.id);
+  const sel = exSel[exTab];
+  if(exTab==='el') return exBySrc('el:'+sel).map(e=>e.id);
+  if(exTab==='sf') return exBySrc('sf:'+sel).map(e=>e.id);
+  if(exTab==='tool') return exBySrc(sel).map(e=>e.id);
+  if(exTab==='gen') return exBySrc('gen').map(e=>e.id);
+  const ids = new Set((typeof pathExercises==='function') ? pathExercises(sel) : []);
+  (PATH_LINKS[sel]||[]).forEach(x=>{ const s=srcOfLink(x); if(s) exBySrc(s).forEach(e=>ids.add(e.id)); });
+  return [...ids];
+}
+function audBar(){
+  const ids = exCurrentIds(); const cnt = {any:ids.length, src:0, all:0, both:0};
+  ids.forEach(id=>{ const a=(EXR[id]&&EXR[id].aud)||'all'; cnt[a]++; });
+  return `<div class="seg aud-bar" role="group" aria-label="סינון לפי סוג התרגיל">${[['any','הכול'],['src','מהמקורות'],['all','לכל אדם'],['both','לשניהם']].map(([k,l])=>`<button class="${exAud===k?'on':''}" aria-pressed="${exAud===k}" onclick="setExAud('${k}')">${l} <small>${cnt[k]}</small></button>`).join('')}</div>`;
+}
 const exSel = {el:'earth', sf:SF_LIST[0], tool:Object.keys(WTOOLS)[0], path:Object.keys(PATH_LINKS)[0]};
 function exOpen(){
   const p=curP();

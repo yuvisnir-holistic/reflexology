@@ -340,7 +340,19 @@ function sefFromText(text, side){
    לכל תרגיל יש סימון: src מהמקורות, all לכל אדם, both לשניהם.
    הסימון נקבע אוטומטית לפי התוכן, ואפשר לתקן תרגיל מסוים ב־EX_AUD_OVERRIDE, לפי המזהה שלו. */
 const EX_AUD_LABEL = {src:'מהמקורות', all:'לכל אדם', both:'לשניהם'};
-const EX_AUD_OVERRIDE = {'el:fire:machshava:1':'both', 'tool-hashkata:21':'both'};
+const EX_AUD_OVERRIDE = {
+  /* תרגילים שכתובים בשפה של כל אדם, אבל מבוססים על מושג מהמקורות */
+  'el:earth:machshava:1':'both',  /* שמחה בחלקו */
+  'el:water:ratzon:0':'both',     /* תענוג פשוט, עונג */
+  'el:water:ratzon:1':'both',     /* נתינה של חיות, חסד */
+  'el:air:regesh:0':'both',       /* שמירת הדיבור */
+  'el:air:regesh:1':'both',       /* דיבור בזכות הזולת */
+  'el:air:machshava:1':'both',    /* מתוך כללי ההשקטה */
+  'el:fire:machshava:0':'both',   /* תורת המראות */
+  'el:fire:machshava:1':'both',   /* הכרת הטוב, עם בקשה לבחירה */
+  'el:fire:ratzon:0':'both',      /* שני רצונות */
+  'tool-hashkata:21':'both'
+};
 (function(){
   const T = 'ברכה|ברכות|לברך|תפילה|תפילות|להתפלל|בורא|בורא עולם|הקב"ה|אלוקים|אלוקי|השם יתברך|יתברך|תורה|מצווה|מצוות|תהילים|קדושה|הבעל שם טוב|הבעש"ט|ספירות|ספירת|חסידות|חז"ל|יראת שמיים|אותיות השם';
   const RE = new RegExp('(?:^|[^א-ת])(?:ו|ב|ה|וה|כש)?(?:'+T+')(?:[^א-ת]|$)');
