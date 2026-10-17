@@ -685,6 +685,8 @@
     .pr-paper::after{content:"יובל שניר, רפלקסולוג ומטפל הוליסטי   |   yuvalsnir.co.il";display:block;margin-top:10mm;padding-top:2.5mm;border-top:1px solid #d9e2dc;text-align:center;font-size:8.5pt;color:#7a8580;letter-spacing:0.2px;}
   }
 
+  .tr-practice{background:#F4F8F6;border-radius:12px;padding:12px 14px;}
+
   .iq-sub2{font-size:0.95rem;font-weight:800;color:var(--sefirah);margin:22px 0 2px;padding-top:12px;border-top:1px dotted rgba(44,95,91,0.3);}
   .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
   .iq-xhead{font-size:0.8rem;font-weight:700;color:var(--forest);margin:2px 0 4px;}
@@ -806,6 +808,7 @@ function normP(p){
   ['phone','age','job','source','referral','firstDate','gift'].forEach(k=>{ if(p[k]==null) p[k]=''; });
   if(!Array.isArray(p.treatments)) p.treatments = [];
   if(!Array.isArray(p.weeks) || !p.weeks.length) p.weeks = [{date:today(), items:[], note:''}];
+  p.weeks.forEach(w=>{ if(!w.id) w.id = newId('w'); });
   if(p.activeWeek==null || p.activeWeek>=p.weeks.length) p.activeWeek = p.weeks.length-1;
   if(!p.created) p.created = Date.now();
   if(!p.tab) p.tab = 'details';
@@ -995,28 +998,58 @@ function tCard(t,n){
       <div class="f"><label class="f-l" for="t_date_${t.id}">תאריך</label><input class="inp" type="date" id="t_date_${t.id}" value="${escH(t.date||'')}" onchange="tDate('${t.id}',this.value)"></div>
       ${ta('done','מה עשינו',3)}
       ${ta('foot','מה ראיתי בכף הרגל',3)}
-      <div class="f">
-        <div class="tr-hw-h"><span class="f-l">תרגול</span><button class="bm-link" onclick="tFill('${t.id}')">מילוי מלשונית התרגול</button></div>
-        ${(t.exIds||[]).filter(x=>EXR[x]).length ? `<div class="rd-exs">${t.exIds.filter(x=>EXR[x]).map(x=>{ const e=EXR[x]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span><button type="button" class="bm-link danger no-print" onclick="event.preventDefault();event.stopPropagation();tExDel('${t.id}','${x}')">הסרה</button></summary><p>${escH(e.text)}</p></details>`; }).join('')}</div>` : ''}
-        <textarea class="inp" id="t_homework_${t.id}" rows="2" placeholder="עוד על התרגול, אם צריך" aria-label="עוד על התרגול" oninput="tSet('${t.id}','homework',this.value)">${escH(t.homework||'')}</textarea>
-      </div>
       ${n>1 ? `<div class="f"><span class="f-l">איך הגיע ביחס לפעם הקודמת</span>
         <div class="seg" role="group" aria-label="איך הגיע ביחס לפעם הקודמת">${Object.entries(PROG).map(([k,l])=>`<button class="${t.progress===k?'on':''}" aria-pressed="${t.progress===k}" onclick="tProg('${t.id}','${k}')">${l}</button>`).join('')}</div>
         <textarea class="inp" id="t_pn_${t.id}" rows="2" placeholder="במילים שלו או שלה, ומה שמת לב אליו" aria-label="פירוט על איך הגיע" oninput="tSet('${t.id}','progressNote',this.value)">${escH(t.progressNote||'')}</textarea></div>`
       : `<p class="iq-hint" style="margin:0">זה הטיפול הראשון ביומן, ולכן אין עדיין השוואה לפעם הקודמת.</p>`}
       ${ta('notes','הערות',4)}
+      ${tPracticeHTML(t)}
       <div class="tr-foot no-print"><button class="bm-link danger" onclick="tDel('${t.id}')">מחיקת הטיפול</button><button class="bm-btn" onclick="tSave('${t.id}')">שמירה</button></div>
     </div>
   </details>`;
 }
 function getT(id){ return curP().treatments.find(t=>t.id===id); }
+/* התרגול של הטיפול: שבוע תרגול מקושר */
+function tPracticeHTML(t){
+  const p = curP(); const wi = weekOfTreatment(p,t);
+  const card = (x, del) => { const e=EXR[x]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span>${del?`<button type="button" class="bm-link danger no-print" onclick="event.preventDefault();event.stopPropagation();${del}">הסרה</button>`:''}</summary><p>${escH(e.text)}</p></details>`; };
+  let body = '';
+  if(wi>=0){
+    const w = p.weeks[wi]; const ids = w.items.filter(x=>EXR[x]);
+    body = `<p class="iq-hint" style="margin:0 0 6px">מקושר לשבוע ${wi+1} בלשונית התרגול, ${escH(w.date)}. מה שמוסיפים שם מופיע כאן.</p>
+      ${ids.length ? `<div class="rd-exs">${ids.map(x=>card(x, `tWeekRemove('${t.id}','${x}')`)).join('')}</div>` : `<p class="iq-hint" style="margin:0">עוד לא נבחרו תרגילים לשבוע הזה.</p>`}
+      <div class="sheet-actions no-print" style="margin:8px 0 0"><button class="bm-btn ghost" onclick="tWeekGo('${t.id}',true)">הצעות לתרגול לשבוע הזה</button><button class="bm-link" onclick="tWeekGo('${t.id}',false)">לשבוע בלשונית התרגול</button></div>`;
+  } else {
+    const old = (t.exIds||[]).filter(x=>EXR[x]);
+    body = (old.length ? `<div class="rd-exs">${old.map(x=>card(x, `tExDel('${t.id}','${x}')`)).join('')}</div>` : `<p class="iq-hint" style="margin:0 0 6px">אחרי שסיימת למלא את הטיפול, אפשר לפתוח לו שבוע תרגול. התרגילים שתבחר שם יופיעו כאן.</p>`)
+      + `<div class="sheet-actions no-print" style="margin:8px 0 0"><button class="bm-btn" onclick="tWeekNew('${t.id}')">+ פתיחת שבוע תרגול לטיפול הזה</button></div>`;
+  }
+  return `<div class="f tr-practice"><span class="f-l">תרגול לשבוע הקרוב</span>${body}
+    <textarea class="inp" id="t_homework_${t.id}" rows="2" placeholder="עוד על התרגול, אם צריך" aria-label="עוד על התרגול" oninput="tSet('${t.id}','homework',this.value)">${escH(t.homework||'')}</textarea></div>`;
+}
+function weekLinkedTo(p,w){ return w && w.id ? p.treatments.find(t=>t.weekId===w.id) : null; }
+function tWeekNew(id){
+  const p = curP(); const t = getT(id);
+  let w = p.weeks[p.weeks.length-1];
+  const reuse = w && !w.items.length && !weekLinkedTo(p,w) && !(w.note||'').trim();
+  if(!reuse){ w = {id:newId('w'), date:'', items:[], note:''}; p.weeks.push(w); }
+  if(!w.id) w.id = newId('w');
+  w.date = t.date ? isoToHe(t.date) : today();
+  t.weekId = w.id; p.activeWeek = p.weeks.indexOf(w);
+  sugOpen = sugAvail(p);
+  p.tab = 'weeks'; savePT(); renderCard(); window.scrollTo(0,0);
+  bmToast(`שבוע ${p.activeWeek+1} מקושר לטיפול. בחרו תרגילים`);
+  if(!sugOpen) exOpen();
+}
+function tWeekGo(id, sug){ const p=curP(); const wi=weekOfTreatment(p,getT(id)); if(wi<0) return; p.activeWeek=wi; sugOpen=!!sug && sugAvail(p); p.tab='weeks'; savePT(); renderCard(); window.scrollTo(0,0); }
+function tWeekRemove(id,x){ const p=curP(); const wi=weekOfTreatment(p,getT(id)); if(wi<0) return; const w=p.weeks[wi]; w.items=w.items.filter(y=>y!==x); savePT(); renderCard(); }
 function tToggle(id,open){ if(open) openT.add(id); else openT.delete(id); }
 function tSet(id,k,v){ const t=getT(id); if(!t) return; t[k]=v; savePT(); }
 function autoFirst(p){ if(!p.firstDate){ const s=tSorted(p).filter(t=>t.date); if(s.length) p.firstDate=s[0].date; } }
 function tDate(id,v){ const p=curP(); const t=getT(id); t.date=v; autoFirst(p); savePT(); renderCard(); }
 function tNew(){
   const p = curP();
-  const t = {id:newId('t'), date:isoToday(), done:'', foot:'', homework:'', progress:'', progressNote:'', notes:'', created:Date.now()};
+  const t = {id:newId('t'), date:isoToday(), done:'', foot:'', homework:'', progress:'', progressNote:'', notes:'', exIds:[], weekId:'', created:Date.now()};
   p.treatments.push(t); autoFirst(p); savePT();
   openT = new Set([t.id]); renderCard();
   const s = tSorted(p); bmToast(`נפתח טיפול ${s.findIndex(x=>x.id===t.id)+1}`);
@@ -1058,7 +1091,7 @@ function nextWeekDate(p){
   const free = tSorted(p).filter(t=>t.date && !used.has(t.date));
   return free.length ? isoToHe(free[free.length-1].date) : today();
 }
-function weekOfTreatment(p,t){ if(!t || !t.date) return -1; return p.weeks.findIndex(w=>heToIso(w.date)===t.date); }
+function weekOfTreatment(p,t){ if(!t || !t.weekId) return -1; return p.weeks.findIndex(w=>w.id===t.weekId); }
 function ptWeekDate(v){ const p=curP(); if(!v) return; curWeek().date = isoToHe(v); savePT(); renderCard(); }
 function renderWeeks(){
   const p = curP();
@@ -1071,13 +1104,14 @@ function renderWeeks(){
       <button class="wk-new" onclick="ptNewWeek()">+ שבוע חדש</button></div>
     <div class="sheet-actions no-print">
       <button class="bm-btn" onclick="exOpen()">+ הוספת תרגיל</button>
-      ${(iqHas(p)||readRecs(p).length) ? `<button class="bm-btn ghost" onclick="sugToggle()">${sugOpen?'סגירת ההצעות':'הצעות לתרגול'}</button>` : ''}
+      ${sugAvail(p) ? `<button class="bm-btn ghost" onclick="sugToggle()">${sugOpen?'סגירת ההצעות':'הצעות לתרגול'}</button>` : ''}
       <button class="bm-btn ghost" onclick="window.print()" ${items.length?'':'disabled'}>הדפסה</button>
       <button class="bm-btn ghost" onclick="copySheet()" ${items.length?'':'disabled'}>העתקה כטקסט</button>
       ${p.weeks.length>1 ? `<button class="bm-link danger" onclick="ptDeleteWeek()">מחיקת השבוע</button>` : ''}
     </div>
+    ${(()=>{ const lt=weekLinkedTo(p,w); if(!lt) return ''; const n=tSorted(p).findIndex(x=>x.id===lt.id)+1; return `<p class="iq-hint no-print" style="margin:0 0 8px">השבוע הזה מקושר לטיפול ${n} ביומן, ${fmtD(lt.date)}.</p>`; })()}
     <div class="wk-date no-print"><label class="f-l" for="wk_date">תאריך השבוע, כמו ביומן הטיפולים</label><input class="inp" type="date" id="wk_date" value="${heToIso(w.date)}" onchange="ptWeekDate(this.value)"></div>
-    ${sugOpen && (iqHas(p)||readRecs(p).length) ? sugHTML() : ''}
+    ${sugOpen && sugAvail(p) ? sugHTML() : ''}
     <div class="paper wk-paper">
       <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">שבוע ${wi+1}, ${escH(w.date)}</span></div>
       <p class="paper-brand">יובל שניר, עבודה פנימית בין המפגשים</p>
@@ -1090,7 +1124,7 @@ function renderWeeks(){
     </div>`;
 }
 function ptWeek(i){ const p=curP(); p.activeWeek=i; savePT(); renderCard(); }
-function ptNewWeek(){ const p=curP(); p.weeks.push({date:nextWeekDate(p), items:[], note:''}); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); bmToast(`נפתח שבוע ${p.weeks.length}`); }
+function ptNewWeek(){ const p=curP(); const free=tSorted(p).filter(t=>!t.weekId || weekOfTreatment(p,t)<0); const ft=free[free.length-1]; const w={id:newId('w'), date:ft&&ft.date?isoToHe(ft.date):today(), items:[], note:''}; if(ft) ft.weekId=w.id; p.weeks.push(w); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); bmToast(`נפתח שבוע ${p.weeks.length}`); }
 function ptDeleteWeek(){ const p=curP(); if(p.weeks.length<2) return; if(!confirm(`למחוק את שבוע ${p.activeWeek+1}?`)) return; p.weeks.splice(p.activeWeek,1); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); }
 function ptRemove(id){ const w=curWeek(); w.items=w.items.filter(x=>x!==id); savePT(); renderCard(); }
 function ptNote(v){ curWeek().note=v; savePT(); }
@@ -1329,6 +1363,9 @@ function suggest(p){
     named.forEach(e=>add(e.id, why));
     srcs.filter(s=>!named.some(e=>e.src===s)).forEach(s=>pick(s, why));
   };
+  { const lt = linkedTreatment(p); const tt = tSugText(lt);
+    if(tt){ if(typeof pathMatch==='function') pathMatch(tt).slice(0,2).forEach(name=>pathExercises(name,2).forEach(id=>add(id, `מהיומן של הטיפול: ${name}`)));
+            if(typeof sefFromText==='function') sefFromText(tt,'').forEach(x=>{ if(WEEK_SF[x.sf]) pick('sf:'+x.sf, `מהיומן של הטיפול: אזור של ספירת ${x.sf} (${x.words.join(', ')})`); }); } }
   if(typeof iqAreaSef==='function') iqAreaSef(S).forEach(x=>{ if(WEEK_SF[x.sf]) pick('sf:'+x.sf, `התלונה יושבת באזור של ספירת ${x.sf} (${x.words.join(', ')})`); });
   { const PAIR={'חסד':'גבורה','גבורה':'חסד','נצח':'הוד','הוד':'נצח'};
     [...IQ_SEF,...(typeof IQ_SEF_LEAN!=='undefined'?IQ_SEF_LEAN:[])].filter(x=>S[x.id]).forEach(x=>{
@@ -1359,6 +1396,11 @@ function sugHTML(){
 function sugToggle(){ sugOpen = !sugOpen; renderCard(); }
 function sugAdd(id){ const w=curWeek(); const i=w.items.indexOf(id); if(i<0) w.items.push(id); else w.items.splice(i,1); savePT(); renderCard(); }
 function sugAddAll(){ const w=curWeek(); suggest(curP()).list.forEach(([id])=>{ if(!w.items.includes(id)) w.items.push(id); }); savePT(); renderCard(); bmToast('ההצעות נוספו לשבוע'); }
+
+/* הצעות לתרגול: גם מתוך היומן של הטיפול שמקושר לשבוע */
+function linkedTreatment(p){ const w=p.weeks[curWi(p)]; return weekLinkedTo(p,w); }
+function tSugText(t){ return t ? [t.done,t.foot,t.notes,t.progressNote].filter(Boolean).join(', ') : ''; }
+function sugAvail(p){ return !!(iqHas(p) || readRecs(p).length || tSugText(linkedTreatment(p)).trim()); }
 
 const IQ_SHOW_ALT = true;
 /* ===== שאלון היכרות ואבחון בכרטיס המטופל ===== */
