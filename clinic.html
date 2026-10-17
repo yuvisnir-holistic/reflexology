@@ -708,6 +708,8 @@
 
   .iq-tg.iq-alt{opacity:0.8;font-size:0.72rem;font-weight:600;margin-inline-start:4px;}
 
+  .iq-tg .sef{background:#fff;color:var(--sefirah);box-shadow:inset 0 0 0 1px var(--sefirah);}
+
   .iq-acc > h3{display:none;}
   .iq-acc-h{width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;border-bottom:1px solid var(--sage);padding:14px 2px 12px;margin:0;cursor:pointer;font-family:'Frank Ruhl Libre',serif;font-size:1.18rem;font-weight:700;color:var(--forest-dark);text-align:start;}
   .iq-acc-h:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
@@ -1565,6 +1567,7 @@ function iqFmtDate(v){ const m=String(v||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
 function iqToIso(v){ const m=String(v||"").trim().match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})$/); if(!m) return v||""; const y=m[3].length===2?"20"+m[3]:m[3]; return `${y}-${String(m[2]).padStart(2,"0")}-${String(m[1]).padStart(2,"0")}`; }
 
 const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על אחרים"},{id:"th_anger",label:"כעס"},{id:"th_resent",label:"טינה, משהו שקשה לי לשחרר"},{id:"th_guilt",label:"אשמה"},{id:"th_perfect",label:"דרישה לשלמות, ומדידה של עצמי לפי מי שאני אמור או אמורה להיות"}];
+function iqSefTag(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.sf) ? `<span class="iq-tg"><i class="sef">${it.sf}</i></span>` : ""; }
 function iqAlt(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.alt && it.alt.length) ? `<span class="iq-tg iq-alt">או ${it.alt.map(e=>IQ_EL[e].name).join(", ")}</span>` : ""; }
 const IQ_PRESS = [
   {id:"p_medame",label:"בדמיון, בתמונות של מה שעלול לקרות או של חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
@@ -1660,7 +1663,7 @@ function iqHas(p){ return p && p.intake && Object.keys(p.intake).length>0; }
 /* ---- builders ---- */
 function iqTag(tags){ return tags&&tags.length ? `<span class="iq-tg">${tags.map(t=>`<i class="${t}">${IQ_EL[t].name}</i>`).join("")}</span>` : ""; }
 function iqTA(id,label,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
-function iqChecks(items, cls, extra){ return `<div class="iq-opts ${cls||""}" ${extra||""}>${items.map(it=>`<label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}${iqAlt(it)}${it.floor?`<span class="iq-tg"><i class="floor">${it.floor}</i></span>`:""}</span></label>`).join("")}</div>`; }
+function iqChecks(items, cls, extra){ return `<div class="iq-opts ${cls||""}" ${extra||""}>${items.map(it=>`<label class="iq-opt"><input type="checkbox" data-c="${it.id}"><span>${it.label}${iqTag(it.tags)}${iqAlt(it)}${iqSefTag(it)}${it.floor?`<span class="iq-tg"><i class="floor">${it.floor}</i></span>`:""}</span></label>`).join("")}</div>`; }
 function iqRadios(name, pairs){ return `<div class="iq-opts">${pairs.map(([v,l])=>`<label class="iq-opt"><input type="radio" name="iq_${name}" value="${v}" data-r="${name}"><span>${l}</span></label>`).join("")}</div>`; }
 function iqScale(id,lo,hi){ let h=`<div class="iq-scale" data-scale="${id}"><span class="end">${lo}</span>`; for(let i=0;i<=10;i++) h+=`<button type="button" class="iq-sc" data-sv="${i}">${i}</button>`; return h+`<span class="end">${hi}</span></div>`; }
 
@@ -1858,7 +1861,7 @@ function iqQuickHTML(p){
   h += `<section class="iq-q"><h3>מה בולט</h3><p class="iq-hint">עד ארבעה סימנים, שניים לכל יסוד.</p>`;
   h += iqChecks(iqQuickSigns(),"col iq-grid2",'data-lim="lean"');
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">איפה הלחץ מורגש</span>${iqChecks(IQ_PRESS,"col")}</div>`;
-  h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, מה הכי בולט</span><div class="iq-opts col">${IQ_SEF_LEAN.map(x=>`<label class="iq-opt"><input type="radio" name="iq_q_sef" value="${x.sf}" data-r="q_sef"><span>${x.label}</span></label>`).join("")}</div></div>`;
+  h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, מה הכי בולט</span><div class="iq-opts col">${IQ_SEF_LEAN.map(x=>`<label class="iq-opt"><input type="radio" name="iq_q_sef" value="${x.sf}" data-r="q_sef"><span>${x.label}${iqSefTag(x)}</span></label>`).join("")}</div></div>`;
   IQ_NATURE.filter(n=>n.id==="n7").forEach(n=>{ h += `<div class="iq-nature" style="margin-top:14px"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
   h += iqTA("e_notes","הערות, ומה שהמטופל הוסיף",1);
   h += `</section>`;
