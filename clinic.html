@@ -691,6 +691,14 @@
   .ex-why{font-size:0.88rem !important;color:var(--forest) !important;font-weight:600;margin:2px 0 4px !important;line-height:1.55;}
   @media print{ .pr-paper .ex-why{font-size:10pt !important;color:#2C5F5B !important;font-style:italic;margin:0 0 1.5mm !important;} }
 
+  /* מהמקורות או לכל אדם */
+  .aud-tag{font-family:'Assistant',sans-serif;font-size:0.68rem;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:6px;vertical-align:middle;white-space:nowrap;}
+  .aud-src{background:var(--sefirah-bg);color:var(--sefirah);}
+  .aud-all{background:var(--earth-bg);color:var(--earth);}
+  .aud-both{background:#ECEAE4;color:#5e6b66;}
+  .aud-bar{margin:10px 0 0;}
+  .aud-bar button{padding:5px 12px;font-size:0.82rem;}
+
   .iq-sub2{font-size:0.95rem;font-weight:800;color:var(--sefirah);margin:22px 0 2px;padding-top:12px;border-top:1px dotted rgba(44,95,91,0.3);}
   .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
   .iq-xhead{font-size:0.8rem;font-weight:700;color:var(--forest);margin:2px 0 4px;}
@@ -1148,6 +1156,10 @@ function copySheet(){ iqCopyText(sheetText(), 'הועתק'); }
 const EX_TABS = [['el','יסודות'],['sf','ספירות'],['tool','כלים'],['gen','כלליים'],['path','לפי תלונה']];
 const SF_LIST = SF_ORDER.filter(n=>WEEK_SF[n]).concat(Object.keys(WEEK_SF).filter(n=>!SF_ORDER.includes(n)));
 let exTab = 'el', exQ = '';
+let exAud = (()=>{ try{ return localStorage.getItem('clinic-ex-aud')||'any'; }catch(e){ return 'any'; } })();
+function audOk(id){ const e=EXR[id]; return !e ? false : (exAud==='any' || (e.aud||'all')===exAud); }
+function setExAud(v){ exAud=v; try{ localStorage.setItem('clinic-ex-aud',v); }catch(e){} exRender(); }
+function audBar(){ return `<div class="seg aud-bar" role="group" aria-label="סינון לפי סוג התרגיל">${[['any','הכול'],['src','מהמקורות'],['all','לכל אדם'],['both','לשניהם']].map(([k,l])=>`<button class="${exAud===k?'on':''}" aria-pressed="${exAud===k}" onclick="setExAud('${k}')">${l}</button>`).join('')}</div>`; }
 const exSel = {el:'earth', sf:SF_LIST[0], tool:Object.keys(WTOOLS)[0], path:Object.keys(PATH_LINKS)[0]};
 function exOpen(){
   const p=curP();
@@ -1160,14 +1172,15 @@ function exClose(){ $('exModal').classList.remove('show'); document.body.style.o
 function exSetTab(k){ exTab=k; exRender(); $('exList').scrollTop=0; }
 function exSetSrc(v){ exSel[exTab]=v; exRender(); $('exList').scrollTop=0; }
 function exRow(id, showSrc){
+  if(!audOk(id)) return '';
   const e = EXR[id]; const on = curWeek().items.includes(id);
   const meta = [showSrc ? e.srcLabel : '', e.floor ? floorLabel(e.floor) : ''].filter(Boolean).join(', ');
-  return `<div class="ex-item${e.mine?' mine':''}"><div class="ex-top"><div><div class="ex-title">${escH(e.title)}${e.mine?'<span class="mine-tag">שלי</span>':''}</div>${meta?`<span class="ex-src">${escH(meta)}</span>`:''}</div>
+  return `<div class="ex-item${e.mine?' mine':''}"><div class="ex-top"><div><div class="ex-title">${escH(e.title)}${e.mine?'<span class="mine-tag">שלי</span>':''}${(typeof EX_AUD_LABEL!=='undefined')?`<span class="aud-tag aud-${e.aud||'all'}">${EX_AUD_LABEL[e.aud||'all']}</span>`:''}</div>${meta?`<span class="ex-src">${escH(meta)}</span>`:''}</div>
     <button class="add-btn ${on?'on':''}" onclick="exToggle('${id}',this)">${on?'נוסף ✓':'הוספה'}</button></div>${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p>${e.mine?`<button class="bm-link danger" style="font-size:0.8rem" onclick="myDelete('${id}')">מחיקת התרגיל</button>`:''}</div>`;
 }
 function exBySrc(src){ return Object.values(EXR).filter(e=>e.src===src); }
 function exFloors(src){
-  const list = exBySrc(src);
+  const list = exBySrc(src).filter(e=>audOk(e.id));
   const noFloor = list.filter(e=>!e.floor);
   return FLOOR_ORDER.map(([fl,label])=>{
     const xs = list.filter(e=>e.floor===fl); if(!xs.length) return '';
@@ -1179,16 +1192,18 @@ function exRender(){
   if(window.EX_MISSING){ $('exTabs').hidden=true; $('exSrcs').innerHTML=''; $('exList').innerHTML='<p class="ex-none">קובץ התרגילים לא נטען, ולכן אין כרגע תרגילים לבחירה.</p>'; return; }
   const q = exQ.trim().toLowerCase();
   $('exTabs').hidden = !!q;
+  { let ab=document.getElementById('exAud'); if(!ab){ $('exTabs').insertAdjacentHTML('beforebegin','<div id="exAud"></div>'); ab=document.getElementById('exAud'); } ab.innerHTML = audBar(); }
   $('exTabs').innerHTML = EX_TABS.map(([k,l])=>`<button class="ct ${exTab===k?'on':''}" onclick="exSetTab('${k}')">${l}</button>`).join('');
   const srcs = $('exSrcs'), list = $('exList');
   if(q){
     srcs.innerHTML = '';
     const hits = Object.values(EXR).filter(e=>(e.title+' '+e.text+' '+e.srcLabel).toLowerCase().includes(q));
-    list.innerHTML = hits.length ? hits.slice(0,80).map(e=>exRow(e.id,true)).join('') : `<p class="ex-none">לא נמצא תרגיל עם המילה הזו.</p>`;
+    { const rows = hits.filter(e=>audOk(e.id)).slice(0,80).map(e=>exRow(e.id,true)).join(''); list.innerHTML = rows || `<p class="ex-none">לא נמצא תרגיל עם המילה הזו${exAud!=='any'?', בסינון שנבחר':''}.</p>`; }
     return;
   }
   const sel = exSel[exTab];
   exRenderBody(sel);
+  if(!$('exList').innerHTML.replace(/<p class="ex-lead">[\s\S]*?<\/p>/,'').trim()) $('exList').insertAdjacentHTML('beforeend','<p class="ex-none">אין כאן תרגילים מהסוג שנבחר בסינון.</p>');
   list.insertAdjacentHTML('afterbegin', myFormHTML());
 }
 function exRenderBody(sel){
@@ -1356,7 +1371,8 @@ function suggest(p){
   const pick = (src, why) => {
     const xs = Object.values(EXR).filter(e=>e.src===src && !e.mine && !picked.has(e.id));
     if(!xs.length) return;
-    const fresh = xs.filter(e=>!week.includes(e.id)); const pool = fresh.length ? fresh : xs;
+    const fresh = xs.filter(e=>!week.includes(e.id)); let pool = fresh.length ? fresh : xs;
+    if(!p.kabbalah){ const plain = pool.filter(e=>e.aud!=='src'); if(plain.length) pool = plain; }
     const e = WTOOLS[src] ? pool[0] : (pref.map(f=>pool.find(e=>e.floor===f)).find(Boolean) || pool.find(e=>e.floor==='guf') || pool[0]);
     add(e.id, why);
   };

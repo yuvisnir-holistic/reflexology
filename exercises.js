@@ -335,3 +335,15 @@ function sefFromText(text, side){
   Object.entries(PICK_ADD).forEach(([k,ids]) => { PATH_PICK[k] = (PATH_PICK[k]||[]).concat(ids.filter(id => !(PATH_PICK[k]||[]).includes(id))); });
   ["בעיות בפה, בטעם או בדיבור", "בעיות בבלוטת התריס", "שיעול כרוני", "מחלות אוטואימוניות"].forEach(k => { if (PATH_LINKS[k] && !PATH_LINKS[k].includes('tool-hatara')) PATH_LINKS[k].push('tool-hatara'); });
 })();
+
+/* ===== לפי המקורות או לכל אדם =====
+   לכל תרגיל יש סימון: src מהמקורות, all לכל אדם, both לשניהם.
+   הסימון נקבע אוטומטית לפי התוכן, ואפשר לתקן תרגיל מסוים ב־EX_AUD_OVERRIDE, לפי המזהה שלו. */
+const EX_AUD_LABEL = {src:'מהמקורות', all:'לכל אדם', both:'לשניהם'};
+const EX_AUD_OVERRIDE = {'el:fire:machshava:1':'both', 'tool-hashkata:21':'both'};
+(function(){
+  const T = 'ברכה|ברכות|לברך|תפילה|תפילות|להתפלל|בורא|בורא עולם|הקב"ה|אלוקים|אלוקי|השם יתברך|יתברך|תורה|מצווה|מצוות|תהילים|קדושה|הבעל שם טוב|הבעש"ט|ספירות|ספירת|חסידות|חז"ל|יראת שמיים|אותיות השם';
+  const RE = new RegExp('(?:^|[^א-ת])(?:ו|ב|ה|וה|כש)?(?:'+T+')(?:[^א-ת]|$)');
+  const BOTH = /^(sf:|tool-hachnaa|tool-hester|tool-hishtavut|tool-gadlut|tool-tashlich|tool-medame)/;
+  Object.values(EXR).forEach(e=>{ e.aud = EX_AUD_OVERRIDE[e.id] || (RE.test(e.title+' '+e.text) ? 'src' : BOTH.test(e.id) ? 'both' : 'all'); });
+})();
