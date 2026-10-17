@@ -1404,6 +1404,13 @@ function suggest(p){
   { const lt = linkedTreatment(p); const tt = tSugText(lt);
     if(tt){ if(typeof pathMatch==='function') pathMatch(tt).slice(0,2).forEach(name=>pathExercises(name,2).forEach(id=>add(id, `מהיומן של הטיפול: ${name}`)));
             if(typeof sefFromText==='function') sefFromText(tt,'').forEach(x=>{ if(WEEK_SF[x.sf]) pick('sf:'+x.sf, `מהיומן של הטיפול: אזור של ספירת ${x.sf} (${x.words.join(', ')})`); }); } }
+  if(typeof EX_SPECIAL!=='undefined'){
+    const K = !!p.kabbalah;
+    if(S.th_perfect||S.th_crit||S.sf_tif_self) add(EX_SPECIAL.light, 'קשיחות כלפי עצמו או דרישה לשלמות');
+    if(S.e_sad||S.e_empty) add(K?EX_SPECIAL.smile_src:EX_SPECIAL.smile, 'עצבות או כבדות, ומעוררים שמחה דרך הגוף');
+    if(S.e_burst||S.e_anger||S.th_anger) add(EX_SPECIAL.shake, 'רגש שנאגר ומחפש מוצא דרך הגוף');
+    if(S.e_habits) add(K?EX_SPECIAL.intent_src:EX_SPECIAL.intent, 'הרגלים ופעולות על טייס אוטומטי');
+  }
   if(typeof iqAreaSef==='function') iqAreaSef(S).forEach(x=>{ if(WEEK_SF[x.sf]) pick('sf:'+x.sf, `התלונה יושבת באזור של ספירת ${x.sf} (${x.words.join(', ')})`); });
   { const PAIR={'חסד':'גבורה','גבורה':'חסד','נצח':'הוד','הוד':'נצח'};
     (typeof iqSefMarked==='function'?iqSefMarked(S):[]).forEach(x=>{
@@ -1708,7 +1715,12 @@ function iqFormHTML(p){
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
     <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
-    <div><label for="iq_f_date">תאריך</label><input type="date" id="iq_f_date" data-k="f_date"></div></div></section>`;
+    <div><label for="iq_f_date">תאריך</label><input type="date" id="iq_f_date" data-k="f_date"></div></div>
+  <div class="iq-details" style="grid-template-columns:repeat(4,1fr);margin-top:8px">
+    <div><label for="iq_f_weight">משקל</label><input type="text" id="iq_f_weight" data-k="f_weight"></div>
+    <div><label for="iq_f_height">גובה</label><input type="text" id="iq_f_height" data-k="f_height"></div>
+    <div><label for="iq_f_bp">לחץ דם</label><input type="text" id="iq_f_bp" data-k="f_bp"></div>
+    <div><label for="iq_f_pulse">דופק</label><input type="text" id="iq_f_pulse" data-k="f_pulse"></div></div></section>`;
 
   h += `<section class="iq-q"><h3>התלונה העיקרית</h3><p class="iq-hint">כאן כותבים על דבר אחד בלבד, הדבר שהכי מפריע לכם עכשיו. אם יש עוד דברים, יש להם מקום בהמשך, בחלק של התלונות הנוספות.</p>`;
   h += `<div class="iq-item"><span class="iq-lbl">התלונה העיקרית היא בעיקר</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
@@ -1804,7 +1816,7 @@ function iqMode(p){ if(!p) return 'lean'; return p.intakeMode || (iqHas(p) ? 'fu
 function iqSetMode(m){ const p=curP(); p.intakeMode=m; savePT(); renderIntake(); }
 function iqLeanHTML(p){
   let h = "";
-  h += `<div class="paper-h"><h2>אבחון</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
+  h += `<div class="paper-h"><h2>שאלון</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
   h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
@@ -1873,13 +1885,18 @@ function iqQuickSigns(){ const all=[...IQ_EMO]; IQ_BODY.forEach(g=>g.items.forEa
 function iqSefMarked(S){ const a=[...IQ_SEF,...IQ_SEF_LEAN].filter(x=>S[x.id]); if(S.q_sef){ const l=IQ_SEF_LEAN.find(x=>x.sf===S.q_sef); a.push({id:"q_sef",label:l?l.label:S.q_sef,sf:S.q_sef,dir:"חוסר או עודף"}); } return a; }
 function iqQuickHTML(p){
   let h = "";
-  h += `<div class="paper-h"><h2>אבחון מהיר</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
+  h += `<div class="paper-h"><h2>שאלון מהיר</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
   h += `<p class="iq-hint" style="margin:0 0 6px">שאלון קצר, לכחמש עד עשר דקות, למטופלים במפגש בודד או במסגרת לא פרטית.</p>`;
   h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
     <div><label for="iq_f_job">עיסוק</label><input type="text" id="iq_f_job" data-k="f_job"></div>
-    <div><label for="iq_f_date">תאריך</label><input type="date" id="iq_f_date" data-k="f_date"></div></div></section>`;
+    <div><label for="iq_f_date">תאריך</label><input type="date" id="iq_f_date" data-k="f_date"></div></div>
+  <div class="iq-details" style="grid-template-columns:repeat(4,1fr);margin-top:8px">
+    <div><label for="iq_f_weight">משקל</label><input type="text" id="iq_f_weight" data-k="f_weight"></div>
+    <div><label for="iq_f_height">גובה</label><input type="text" id="iq_f_height" data-k="f_height"></div>
+    <div><label for="iq_f_bp">לחץ דם</label><input type="text" id="iq_f_bp" data-k="f_bp"></div>
+    <div><label for="iq_f_pulse">דופק</label><input type="text" id="iq_f_pulse" data-k="f_pulse"></div></div></section>`;
   h += `<section class="iq-q"><h3>התלונה העיקרית</h3><p class="iq-hint">תלונה אחת בלבד, מה שהכי מפריע עכשיו. השאר נכנס לתלונות הנוספות.</p>`;
   h += iqTA("m_what","התלונה העיקרית, במילים של המטופל",2);
   h += `<div class="iq-item iq-grid2"><div><label class="iq-lbl" for="iq_m_where">איפה בגוף</label><input type="text" id="iq_m_where" data-k="m_where"></div><div><span class="iq-lbl">צד</span>${iqRadios("m_side",IQ_SIDE)}</div></div>`;
@@ -1938,9 +1955,9 @@ function renderIntake(){
       <div class="sheet-actions" style="margin-top:8px"><button class="bm-btn" onclick="iqImportDo()">ייבוא לכרטיס</button><button class="bm-link" onclick="document.getElementById('iqImport').hidden=true">ביטול</button></div>
     </div>
     <div class="iq-secs no-print" style="max-width:460px">
-      <button class="iq-sec ${iqMode(p)==='lean'?'on':''}" onclick="iqSetMode('lean')">אבחון</button>
-      <button class="iq-sec ${iqMode(p)==='full'?'on':''}" onclick="iqSetMode('full')">אבחון מתקדם</button>
-      <button class="iq-sec ${iqMode(p)==='quick'?'on':''}" onclick="iqSetMode('quick')">אבחון מהיר</button>
+      <button class="iq-sec ${iqMode(p)==='quick'?'on':''}" onclick="iqSetMode('quick')">שאלון מהיר</button>
+      <button class="iq-sec ${iqMode(p)==='lean'?'on':''}" onclick="iqSetMode('lean')">שאלון</button>
+      <button class="iq-sec ${iqMode(p)==='full'?'on':''}" onclick="iqSetMode('full')">שאלון מתקדם</button>
     </div>
     <div id="iqSummary"></div>
     <div class="paper iq-paper" id="iqForm">${iqMode(p)==='lean' ? iqLeanHTML(p) : iqMode(p)==='quick' ? iqQuickHTML(p) : iqFormHTML(p)}</div>`;
@@ -2557,6 +2574,12 @@ const _iqStoreDet = iqStore;
 iqStore = function(){ iqFillFromDetails(true); _iqStoreDet(); };
 const _iqTextDet = iqText;
 iqText = function(){ iqFillFromDetails(true); return _iqTextDet(); };
+
+/* כשמפת הגוף מוסיפה תרגיל למטופל, הקליניקה מתעדכנת */
+window.addEventListener('storage', e=>{
+  if(e.key!==STORE || !e.newValue) return;
+  try{ const d=JSON.parse(e.newValue); const active=PT.activeId; PT=Object.assign({patients:[],custom:[],activeId:null}, d); PT.patients.forEach(normP); if(!Array.isArray(PT.custom)) PT.custom=[]; regAllCustom(); PT.activeId=active; if(active && curP()) renderCard(); else renderHome(); bmToast('עודכן ממפת הגוף'); }catch(err){}
+});
 
 /* ===== הפעלה ===== */
 const _migrated = loadPT();
