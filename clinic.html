@@ -1329,6 +1329,12 @@ function suggest(p){
     named.forEach(e=>add(e.id, why));
     srcs.filter(s=>!named.some(e=>e.src===s)).forEach(s=>pick(s, why));
   };
+  if(typeof iqAreaSef==='function') iqAreaSef(S).forEach(x=>{ if(WEEK_SF[x.sf]) pick('sf:'+x.sf, `התלונה יושבת באזור של ספירת ${x.sf} (${x.words.join(', ')})`); });
+  { const PAIR={'חסד':'גבורה','גבורה':'חסד','נצח':'הוד','הוד':'נצח'};
+    [...IQ_SEF,...(typeof IQ_SEF_LEAN!=='undefined'?IQ_SEF_LEAN:[])].filter(x=>S[x.id]).forEach(x=>{
+      if(x.dir==='עודף' && PAIR[x.sf] && WEEK_SF[PAIR[x.sf]]) pick('sf:'+PAIR[x.sf], `עודף בספירת ${x.sf}, ולכן מהשבוע של ספירת ${PAIR[x.sf]}, שמאזנת אותה`);
+      else if(WEEK_SF[x.sf]) pick('sf:'+x.sf, `סומן בקשרים ובעשייה: ספירת ${x.sf}, ${x.dir}`);
+    }); }
   IQ_STMTS.filter(s=>S[s.id]==='yes').concat(IQ_STMTS.filter(s=>S[s.id]==='part'))
     .forEach(s=>fromText(s.go, `סומן${S[s.id]==='part'?' חלקית':''}: ${s.t}`));
   IQ_ROOTS.filter(r=>{ try{ return r.when(S); }catch(e){ return false; } })
@@ -1468,6 +1474,35 @@ const IQ_EMO = [
   {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
 const IQ_EMO_MAX = 5;
+const IQ_SEF = [
+  {id:"sf_chesed_low",label:"קשה לי להרגיש שאוהבים אותי, או לפרגן ולהחמיא לאחרים",sf:"חסד",dir:"חוסר"},
+  {id:"sf_chesed_hi",label:"אני נותן או נותנת עד שלא נשאר לי כוח, וקשה לי לסרב",sf:"חסד",dir:"עודף"},
+  {id:"sf_gevura_low",label:"קשה לי לשים גבולות, לעצור את עצמי או לומר לא",sf:"גבורה",dir:"חוסר"},
+  {id:"sf_gevura_hi",label:"אני ביקורתי או ביקורתית, נוקשה, ונוטה להימנע ולהתרחק",sf:"גבורה",dir:"עודף"},
+  {id:"sf_tif_swing",label:"אני עובר או עוברת בין נתינה מוגזמת לבין סגירה וריחוק",sf:"תפארת",dir:"חוסר איזון"},
+  {id:"sf_tif_self",label:"אני רך או רכה כלפי אחרים, וקשה כלפי עצמי",sf:"תפארת",dir:"חוסר"},
+  {id:"sf_netzach_low",label:"דברים שאני מתחיל או מתחילה לא ממשיכים, וקשה לי להתמיד",sf:"נצח",dir:"חוסר"},
+  {id:"sf_netzach_hi",label:"אני עקשן או עקשנית, וקשה לי לוותר גם כשכדאי",sf:"נצח",dir:"עודף"},
+  {id:"sf_hod_low",label:"קשה לי להודות בטעות, או לומר תודה באמת",sf:"הוד",dir:"חוסר"},
+  {id:"sf_hod_hi",label:"אני מתבטל או מתבטלת מול אחרים, ומוותר או מוותרת על עצמי",sf:"הוד",dir:"עודף"},
+  {id:"sf_yesod_low",label:"קשה לי להתחבר באמת, בתשוקה ובחשק, לאנשים או למה שאני עושה",sf:"יסוד",dir:"חוסר"},
+  {id:"sf_yesod_hi",label:"תשוקות ורצונות מושכים אותי לכיוונים שונים, ואני מתפזר או מתפזרת",sf:"יסוד",dir:"עודף"},
+  {id:"sf_malchut_low",label:"לפעמים אני מרגיש או מרגישה שאין לי מקום, כאילו אני לא באמת נוכח או נוכחת",sf:"מלכות",dir:"חוסר"},
+  {id:"sf_malchut_hi",label:"קשה לי לשחרר שליטה, ואני צריך או צריכה שהדברים יהיו בדרך שלי",sf:"מלכות",dir:"עודף"}
+];
+const IQ_SEF_MAX = 5;
+function iqAreaSef(S){ if(typeof sefFromText!=='function') return []; const a=[...sefFromText([S.m_where,S.m_what].filter(Boolean).join(', '), S.m_side), ...sefFromText([S.x1_what,S.x2_what,S.x3_what,S.m_point,S.m_medical].filter(Boolean).join(', '), '')]; const by={}; a.forEach(x=>{ by[x.sf]=by[x.sf]||new Set(); x.words.forEach(w=>by[x.sf].add(w)); }); return Object.entries(by).map(([sf,ws])=>({sf,words:[...ws]})); }
+
+const IQ_SEF_LEAN = [
+  {id:"sfl_chesed",label:"חסד: קשה להרגיש אהוב, או נותן עד שנגמר הכוח",sf:"חסד",dir:"חוסר או עודף"},
+  {id:"sfl_gevura",label:"גבורה: אין גבולות, או ביקורתיות ונוקשות",sf:"גבורה",dir:"חוסר או עודף"},
+  {id:"sfl_tif",label:"תפארת: בין נתינה מוגזמת לסגירה, או קשה כלפי עצמו",sf:"תפארת",dir:"חוסר איזון"},
+  {id:"sfl_netzach",label:"נצח: לא מתמיד, או עקשן",sf:"נצח",dir:"חוסר או עודף"},
+  {id:"sfl_hod",label:"הוד: קשה להודות ולומר תודה, או מתבטל מול אחרים",sf:"הוד",dir:"חוסר או עודף"},
+  {id:"sfl_yesod",label:"יסוד: חסר חשק וחיבור, או מתפזר בין תשוקות",sf:"יסוד",dir:"חוסר או עודף"},
+  {id:"sfl_malchut",label:"מלכות: לא מרגיש נוכח, או צריך שליטה",sf:"מלכות",dir:"חוסר או עודף"}
+];
+
 function iqTAh(id,label,hint,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><p class="iq-hint" style="margin:0 0 6px">${hint}</p><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
 function iqOtherSync(root){
   if(!root) return;
@@ -1637,6 +1672,9 @@ function iqFormHTML(p){
   h += `<section class="iq-q"><h3>משפטים</h3><p class="iq-hint">סמנו ליד כל משפט כמה הוא מתאים לכם.</p>`;
   IQ_STMTS.forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
   h += `</section>`;
+  h += `<section class="iq-q"><h3>בקשרים ובעשייה</h3><p class="iq-hint">סמנו עד חמישה משפטים שהכי מוכרים לכם, בדרך כלל ולא רק בתקופה האחרונה.</p>`;
+  h += `<div data-lim="sef" class="iq-item">${iqChecks(IQ_SEF,"col")}</div>`;
+  h += `</section>`;
 
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה בלילה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">איך אתם מתעוררים</span>${iqRadios("l_wake",IQ_L.l_wake)}</div></div>`;
@@ -1716,6 +1754,7 @@ function iqLeanHTML(p){
   h += `<section class="iq-q"><h3>מה בולט עכשיו</h3><p class="iq-hint">עד ארבעה סימנים שהכי מתאימים.</p>`;
   h += iqChecks(iqLeanSigns(),"col iq-grid2",'data-lim="lean"');
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">דפוסי מחשבה מוכרים, לאורך זמן</span>${iqChecks(IQ_THOUGHT)}</div>`;
+  h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, עד שלושה</span><div data-lim="sefl">${iqChecks(IQ_SEF_LEAN,"col")}</div></div>`;
   h += `</section>`;
   h += `<section class="iq-q"><h3>הטבע לאורך השנים</h3><p class="iq-hint">בכל שאלה תשובה אחת, זו שהכי נכונה עבורו או עבורה.</p>`;
   IQ_NATURE.filter(n=>IQ_LEAN_NATURE.includes(n.id)).forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
@@ -1788,7 +1827,8 @@ function iqBind(){
       const lim = el.closest('[data-lim]');
       if(el.checked && lim){
         const n = lim.querySelectorAll('input:checked').length;
-        if(n > IQ_EMO_MAX){ el.checked=false; bmToast(`אפשר לבחור עד ${IQ_EMO_MAX}`); return; }
+        const mx = lim.dataset.lim==="sef" ? IQ_SEF_MAX : lim.dataset.lim==="sefl" ? 3 : IQ_EMO_MAX;
+        if(n > mx){ el.checked=false; bmToast(`אפשר לבחור עד ${mx}`); return; }
       }
       if(el.checked) S[el.dataset.c]=true; else delete S[el.dataset.c];
       iqRefreshOpts(); iqStore();
@@ -1898,6 +1938,8 @@ function iqInsights(S){
   if(S.l_move==="none") life.push("כמעט בלי פעילות גופנית");
   if(S.l_nature==="none") life.push("כמעט בלי זמן בטבע");
   { const TH={th_crit:"ביקורת, שלאורך זמן קשורה לדלקות מפרקים",th_anger:"כעס, שקשור לדלקת, לצריבה ולחום",th_resent:"טינה, שקשורה לגידולים ולמה שאוכל מבפנים",th_guilt:"אשמה, שמחפשת עונש ומובילה לכאב",th_perfect:"דרישה לשלמות ומדידה לפי מודל חיצוני, שמתאימה לסיפור על רבי זושא ולעבודה על קבלת עצמי"}; const th=IQ_THOUGHT.filter(x=>S[x.id]).map(x=>TH[x.id]); if(th.length) out.push(["דפוסי מחשבה",`${th.join(". ")}. לבדוק בזהירות, כאפשרות ולא כקביעה.`]); }
+  { const area=iqAreaSef(S); if(area.length){ const marked=new Set([...IQ_SEF,...IQ_SEF_LEAN].filter(x=>S[x.id]).map(x=>x.sf)); out.push(["ספירות לפי אזור התלונה", area.map(a=>`${a.sf}, לפי ${a.words.join(", ")}${marked.has(a.sf)?". מתחברת למה שסומן בקשרים ובעשייה":". כדאי לשאול על "+SEF_THEME[a.sf]}`).join(". ")+"."]); } }
+  { const sf=[...IQ_SEF,...IQ_SEF_LEAN].filter(x=>S[x.id]); if(sf.length){ const by={}; sf.forEach(x=>{ (by[x.sf]=by[x.sf]||[]).push(x.dir); }); out.push(["ספירות שבולטות", Object.entries(by).map(([n,d])=>`${n} (${[...new Set(d)].join(", ")})`).join(", ") + ". לבדוק בכף הרגל ובשיחה."]); } }
   if(S.l_bed==="late") life.push("הולכים לישון אחרי חצות");
   if(S.sl_fall) life.push("קושי להירדם");
   if(S.sl_wake||S.l_wakes) life.push(`יקיצות בלילה${S.l_wakes?", "+((IQ_L2.l_wakes.find(x=>x[0]===S.l_wakes)||[])[1]||""):""}`);
@@ -1935,6 +1977,7 @@ function iqText(){
   L.push(`מה מפריע: ${v("m_what")}`);
   L.push(`איך זה משפיע על החיים: ${v("m_effect")}`);
   L.push(`איפה: ${v("m_where")} | צד: ${rl("m_side",IQ_SIDE)} | ${rl("m_fb",IQ_FB)}`);
+  { const a=iqAreaSef(S); if(a.length) L.push(`ספירות לפי אזור בגוף: ${a.map(x=>`${x.sf} (${x.words.join(", ")})`).join(", ")}`); }
   L.push(`איך זה מרגיש: ${IQ_SENS.filter(t=>S[t.id]).map(t=>t.label+tg(t)).join(", ")}`);
   const ck=a=>a.filter(x=>S[x.id]).map(x=>x.label).join(", ");
   L.push(`אופי הכאב: ${ck(IQ_PAIN)}`);
@@ -1978,6 +2021,7 @@ function iqText(){
   const sts=IQ_STRESS.filter(x=>S[x.id]).map(x=>x.label);
   L.push(`לחץ: ${S.l_stress!==undefined?S.l_stress+"/10":""}${sts.length?" ("+sts.join(", ")+")":""}`);
   L.push(`מקור לחץ אחר: ${v("l_stress_other")}`);
+  { const sf=[...IQ_SEF,...IQ_SEF_LEAN].filter(x=>S[x.id]); if(sf.length){ L.push("","בקשרים ובעשייה (ספירות)"); sf.forEach(x=>L.push(`${x.label} [ספירת ${x.sf}, ${x.dir}]`)); } }
   L.push("","טבע לאורך השנים");
   IQ_NATURE.forEach(n=>{ if(S[n.id]){ const o=n.o.find(x=>x[0]===S[n.id]); L.push(`${n.q}: ${o[1]} [${IQ_EL[o[0]].name}]`); } });
   L.push("","לסיום");
@@ -1999,7 +2043,7 @@ function iqText(){
     l=l.replace(/(^|,\s*)[^,:()]+:\s*(?=,|$)/g,"$1").replace(/^[,\s]+|[,\s]+$/g,"").replace(/,\s*,/g,",");
     if(l) clean.push(l);
   });
-  const HEADS=["התלונה העיקרית","תלונות נוספות בגוף","רקע רפואי ותרופות","רגש ומחשבה","משפטים","אורח חיים","טבע לאורך השנים","לסיום"];
+  const HEADS=["התלונה העיקרית","תלונות נוספות בגוף","רקע רפואי ותרופות","בקשרים ובעשייה (ספירות)","רגש ומחשבה","משפטים","אורח חיים","טבע לאורך השנים","לסיום"];
   const out2=[];
   clean.forEach((l,i)=>{ if(HEADS.includes(l) && (clean[i+1]===undefined || clean[i+1]==="")) return; if(l==="" && out2[out2.length-1]==="") return; out2.push(l); });
   return out2.join("\n").trim();
