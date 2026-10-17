@@ -545,6 +545,7 @@
   .tr-n{font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:1.12rem;color:var(--forest-dark);}
   .tr-d{font-weight:700;color:var(--forest);font-size:0.92rem;}
   .prog{font-size:0.76rem;font-weight:700;padding:2px 10px;border-radius:999px;}
+  .p-much{background:var(--earth);color:#fff;}
   .p-better{background:var(--earth-bg);color:var(--earth);}
   .p-same{background:var(--air-bg);color:#7d6115;}
   .p-worse{background:var(--fire-bg);color:var(--fire);}
@@ -553,7 +554,11 @@
   .tr[open] .tr-peek{display:none;}
   .tr-body{padding:4px 16px 16px;display:flex;flex-direction:column;gap:16px;}
   .tr-hw-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
-  .tr-foot{display:flex;justify-content:flex-end;}
+  .tr-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .log-bar{justify-content:space-between;align-items:center;}
+  .log-sort button{padding:6px 14px;font-size:0.86rem;}
+  .wk-date{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;}
+  .wk-date .inp{max-width:200px;}
 
   /* בחירת תרגילים */
   #exModal{position:fixed;inset:0;z-index:90;background:rgba(30,71,68,0.45);display:none;align-items:flex-end;justify-content:center;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));}
@@ -781,7 +786,7 @@ const escH = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>'
 /* ===================== הקליניקה: מטופלים ===================== */
 const STORE = 'clinic-patients', BK_KEY = 'clinic-last-backup', MIG_KEY = 'clinic-migrated';
 const SOURCES = {private:'פרטי', movement:'מובמנט'};
-const PROG = {better:'טוב יותר', same:'דומה', worse:'פחות טוב'};
+const PROG = {much:'הקלה משמעותית', better:'הקלה', same:'ללא שינוי', worse:'הרעה במצב'};
 const SF_ORDER = ['כתר','חכמה','בינה','דעת','חסד','גבורה','תפארת','נצח','הוד','יסוד','מלכות'];
 const TABS = [['details','פרטים'],['intake','שאלון'],['reading','סיכום אבחון'],['log','יומן טיפולים'],['weeks','תרגול']];
 const $ = id => document.getElementById(id);
@@ -969,12 +974,15 @@ function ptDelete(){
 }
 
 /* ---- יומן טיפולים ---- */
+let logOrder = (()=>{ try{ return localStorage.getItem('clinic-log-order')||'new'; }catch(e){ return 'new'; } })();
+function setLogOrder(v){ logOrder=v; try{ localStorage.setItem('clinic-log-order',v); }catch(e){} renderCard(); }
 function renderLog(){
   const p = curP(); const s = tSorted(p);
   const num = new Map(s.map((t,i)=>[t.id,i+1]));
-  const desc = [...s].reverse();
+  const desc = logOrder==='old' ? [...s] : [...s].reverse();
   $('cardBody').innerHTML = `
-    <div class="sheet-actions no-print"><button class="bm-btn" onclick="tNew()">+ טיפול חדש</button></div>
+    <div class="sheet-actions no-print log-bar"><button class="bm-btn" onclick="tNew()">+ טיפול חדש</button>
+      ${s.length>1 ? `<div class="seg log-sort" role="group" aria-label="סדר הטיפולים"><button class="${logOrder==='new'?'on':''}" aria-pressed="${logOrder==='new'}" onclick="setLogOrder('new')">מהחדש לישן</button><button class="${logOrder==='old'?'on':''}" aria-pressed="${logOrder==='old'}" onclick="setLogOrder('old')">מהישן לחדש</button></div>` : ''}</div>
     ${desc.length ? desc.map(t=>tCard(t,num.get(t.id))).join('') :
       `<div class="sheet-empty"><p>עוד אין טיפולים ביומן של ${escH(p.name)}. "טיפול חדש" פותח רישום עם התאריך של היום.</p></div>`}`;
 }
@@ -997,7 +1005,7 @@ function tCard(t,n){
         <textarea class="inp" id="t_pn_${t.id}" rows="2" placeholder="במילים שלו או שלה, ומה שמת לב אליו" aria-label="פירוט על איך הגיע" oninput="tSet('${t.id}','progressNote',this.value)">${escH(t.progressNote||'')}</textarea></div>`
       : `<p class="iq-hint" style="margin:0">זה הטיפול הראשון ביומן, ולכן אין עדיין השוואה לפעם הקודמת.</p>`}
       ${ta('notes','הערות',4)}
-      <div class="tr-foot no-print"><button class="bm-link danger" onclick="tDel('${t.id}')">מחיקת הטיפול</button></div>
+      <div class="tr-foot no-print"><button class="bm-link danger" onclick="tDel('${t.id}')">מחיקת הטיפול</button><button class="bm-btn" onclick="tSave('${t.id}')">שמירה</button></div>
     </div>
   </details>`;
 }
@@ -1017,13 +1025,14 @@ function tNew(){
 function tProg(id,k){ const t=getT(id); t.progress = t.progress===k ? '' : k; savePT(); renderCard(); }
 function tFill(id){
   const p = curP(); const t = getT(id);
-  const wi = curWi(p); const ids = (p.weeks[wi].items||[]).filter(x=>EXR[x]);
+  const wt = weekOfTreatment(p,t); const wi = wt>=0 ? wt : curWi(p); const ids = (p.weeks[wi].items||[]).filter(x=>EXR[x]);
   if(!ids.length){ bmToast(`בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים`); return; }
   t.exIds = t.exIds || []; let n = 0;
   ids.forEach(x=>{ if(!t.exIds.includes(x)){ t.exIds.push(x); n++; } });
   savePT(); renderCard();
   bmToast(n ? `נוספו ${n===1?'תרגיל אחד':n+' תרגילים'} משבוע ${wi+1}` : `כל התרגילים של שבוע ${wi+1} כבר כאן`);
 }
+function tSave(id){ savePT(); openT.delete(id); renderCard(); bmToast('הטיפול נשמר'); }
 function tExDel(id,x){ const t=getT(id); t.exIds=(t.exIds||[]).filter(y=>y!==x); savePT(); renderCard(); }
 function tDel(id){
   const p = curP(); const n = tSorted(p).findIndex(x=>x.id===id)+1;
@@ -1041,6 +1050,16 @@ function weekQs(items){
   }).filter(Boolean);
 }
 function curWeek(){ const p=curP(); return p.weeks[p.activeWeek]; }
+const isoToHe = iso => fmtD(iso);
+const heToIso = he => { const m=String(he||'').match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/); return m ? `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}` : ''; };
+/* תאריך לשבוע חדש: הטיפול האחרון ביומן שעוד אין לו שבוע, ואם אין, היום */
+function nextWeekDate(p){
+  const used = new Set(p.weeks.map(w=>heToIso(w.date)));
+  const free = tSorted(p).filter(t=>t.date && !used.has(t.date));
+  return free.length ? isoToHe(free[free.length-1].date) : today();
+}
+function weekOfTreatment(p,t){ if(!t || !t.date) return -1; return p.weeks.findIndex(w=>heToIso(w.date)===t.date); }
+function ptWeekDate(v){ const p=curP(); if(!v) return; curWeek().date = isoToHe(v); savePT(); renderCard(); }
 function renderWeeks(){
   const p = curP();
   if(p.activeWeek==null || p.activeWeek>=p.weeks.length) p.activeWeek = p.weeks.length-1;
@@ -1057,6 +1076,7 @@ function renderWeeks(){
       <button class="bm-btn ghost" onclick="copySheet()" ${items.length?'':'disabled'}>העתקה כטקסט</button>
       ${p.weeks.length>1 ? `<button class="bm-link danger" onclick="ptDeleteWeek()">מחיקת השבוע</button>` : ''}
     </div>
+    <div class="wk-date no-print"><label class="f-l" for="wk_date">תאריך השבוע, כמו ביומן הטיפולים</label><input class="inp" type="date" id="wk_date" value="${heToIso(w.date)}" onchange="ptWeekDate(this.value)"></div>
     ${sugOpen && (iqHas(p)||readRecs(p).length) ? sugHTML() : ''}
     <div class="paper wk-paper">
       <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">שבוע ${wi+1}, ${escH(w.date)}</span></div>
@@ -1070,7 +1090,7 @@ function renderWeeks(){
     </div>`;
 }
 function ptWeek(i){ const p=curP(); p.activeWeek=i; savePT(); renderCard(); }
-function ptNewWeek(){ const p=curP(); p.weeks.push({date:today(), items:[], note:''}); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); bmToast(`נפתח שבוע ${p.weeks.length}`); }
+function ptNewWeek(){ const p=curP(); p.weeks.push({date:nextWeekDate(p), items:[], note:''}); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); bmToast(`נפתח שבוע ${p.weeks.length}`); }
 function ptDeleteWeek(){ const p=curP(); if(p.weeks.length<2) return; if(!confirm(`למחוק את שבוע ${p.activeWeek+1}?`)) return; p.weeks.splice(p.activeWeek,1); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); }
 function ptRemove(id){ const w=curWeek(); w.items=w.items.filter(x=>x!==id); savePT(); renderCard(); }
 function ptNote(v){ curWeek().note=v; savePT(); }
@@ -1289,6 +1309,10 @@ function suggest(p){
   const picked = new Map();
   const add = (id, why) => { if(EXR[id] && !picked.has(id)) picked.set(id, why); };
   readRecs(p).forEach(id=>add(id, 'הוצע באבחון'));
+  if(typeof pathMatch==='function'){
+    const txt = ['m_what','m_point','m_medical','b_other','x1_what','x2_what','x3_what'].map(k=>S[k]||'').join(' ');
+    pathMatch(txt).slice(0,2).forEach(name=>{ pathExercises(name,3).forEach(id=>add(id, `מתאים לפתולוגיה במפת הגוף: ${name}`)); });
+  }
   const pick = (src, why) => {
     const xs = Object.values(EXR).filter(e=>e.src===src && !e.mine && !picked.has(e.id));
     if(!xs.length) return;
