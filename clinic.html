@@ -1621,7 +1621,7 @@ function iqScale(id,lo,hi){ let h=`<div class="iq-scale" data-scale="${id}"><spa
 function iqFormHTML(p){
   let h = "";
   h += `<div class="paper-h"><h2>שאלון היכרות</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
-  h += `<p class="iq-intro">השאלון הזה לא בודק אם משהו נכון או לא. הוא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה.</p>`;
+  h += `<p class="iq-intro">השאלון הזה לא בודק אם משהו נכון או לא. הוא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה. התשובות נשמרות במכשיר, כך שאפשר לעצור באמצע ולחזור אחר כך.</p>`;
   h += `<p class="iq-intro small">השאלון לא מחליף אבחון או מעקב רפואי.</p>`;
   h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
@@ -1646,8 +1646,7 @@ function iqFormHTML(p){
   h += iqTA("m_when","מתי זה התחיל, ומה קרה בחיים שלכם באותה תקופה?",2);
   h += iqTAh("m_better","מה מחמיר את זה, ומה מקל?","למשל: בשעה מסוימת ביום, בתנוחה מסוימת, אחרי מאמץ, במצבים או מול אנשים מסוימים. ומה עוזר: חום או קור, מנוחה או תנועה, שיחה, שקט.",2);
   h += `<div class="iq-sub2">מה כבר ידוע, ומה נעשה</div>`;
-  h += iqTA("m_treated","איך זה טופל עד היום, ומה עזר?",2);
-  h += iqTA("m_medical","אבחנה רפואית ובדיקות, אם יש",2);
+  h += iqTA("m_treated","איך זה טופל עד היום, ומה עזר? ואם יש, אבחנה רפואית ובדיקות",2);
   h += iqTA("m_why","מה לדעתכם גרם לזה, ומה צריך להשתנות כדי שזה יעבור?",2);
   h += `<div class="iq-item"><span class="iq-lbl">איך אתם מתייחסים למה שקורה לכם?</span>${iqRadios("m_view",IQ_VIEW)}</div>`;
   h += `</section>`;

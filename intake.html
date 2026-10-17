@@ -310,6 +310,24 @@ const IQ_EMO = [
   {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
 const IQ_EMO_MAX = 5;
+const IQ_SEF = [
+  {id:"sf_chesed_low",label:"קשה לי להרגיש שאוהבים אותי, או לפרגן ולהחמיא לאחרים",sf:"חסד",dir:"חוסר"},
+  {id:"sf_chesed_hi",label:"אני נותן או נותנת עד שלא נשאר לי כוח, וקשה לי לסרב",sf:"חסד",dir:"עודף"},
+  {id:"sf_gevura_low",label:"קשה לי לשים גבולות, לעצור את עצמי או לומר לא",sf:"גבורה",dir:"חוסר"},
+  {id:"sf_gevura_hi",label:"אני ביקורתי או ביקורתית, נוקשה, ונוטה להימנע ולהתרחק",sf:"גבורה",dir:"עודף"},
+  {id:"sf_tif_swing",label:"אני עובר או עוברת בין נתינה מוגזמת לבין סגירה וריחוק",sf:"תפארת",dir:"חוסר איזון"},
+  {id:"sf_tif_self",label:"אני רך או רכה כלפי אחרים, וקשה כלפי עצמי",sf:"תפארת",dir:"חוסר"},
+  {id:"sf_netzach_low",label:"דברים שאני מתחיל או מתחילה לא ממשיכים, וקשה לי להתמיד",sf:"נצח",dir:"חוסר"},
+  {id:"sf_netzach_hi",label:"אני עקשן או עקשנית, וקשה לי לוותר גם כשכדאי",sf:"נצח",dir:"עודף"},
+  {id:"sf_hod_low",label:"קשה לי להודות בטעות, או לומר תודה באמת",sf:"הוד",dir:"חוסר"},
+  {id:"sf_hod_hi",label:"אני מתבטל או מתבטלת מול אחרים, ומוותר או מוותרת על עצמי",sf:"הוד",dir:"עודף"},
+  {id:"sf_yesod_low",label:"קשה לי להתחבר באמת, בתשוקה ובחשק, לאנשים או למה שאני עושה",sf:"יסוד",dir:"חוסר"},
+  {id:"sf_yesod_hi",label:"תשוקות ורצונות מושכים אותי לכיוונים שונים, ואני מתפזר או מתפזרת",sf:"יסוד",dir:"עודף"},
+  {id:"sf_malchut_low",label:"לפעמים אני מרגיש או מרגישה שאין לי מקום, כאילו אני לא באמת נוכח או נוכחת",sf:"מלכות",dir:"חוסר"},
+  {id:"sf_malchut_hi",label:"קשה לי לשחרר שליטה, ואני צריך או צריכה שהדברים יהיו בדרך שלי",sf:"מלכות",dir:"עודף"}
+];
+const IQ_SEF_MAX = 5;
+
 function iqTAh(id,label,hint,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><p class="iq-hint" style="margin:0 0 6px">${hint}</p><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
 function iqOtherSync(root){
   if(!root) return;
@@ -424,7 +442,7 @@ function iqScale(id,lo,hi){ let h=`<div class="iq-scale" data-scale="${id}"><spa
 function iqFormHTML(p){
   let h = "";
   h += `<div class="paper-h"><h2>שאלון היכרות</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
-  h += `<p class="iq-intro">השאלון הזה לא בודק אם משהו נכון או לא. הוא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה.</p>`;
+  h += `<p class="iq-intro">השאלון הזה לא בודק אם משהו נכון או לא. הוא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה. התשובות נשמרות במכשיר, כך שאפשר לעצור באמצע ולחזור אחר כך.</p>`;
   h += `<p class="iq-intro small">השאלון לא מחליף אבחון או מעקב רפואי.</p>`;
   h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
@@ -449,8 +467,7 @@ function iqFormHTML(p){
   h += iqTA("m_when","מתי זה התחיל, ומה קרה בחיים שלכם באותה תקופה?",2);
   h += iqTAh("m_better","מה מחמיר את זה, ומה מקל?","למשל: בשעה מסוימת ביום, בתנוחה מסוימת, אחרי מאמץ, במצבים או מול אנשים מסוימים. ומה עוזר: חום או קור, מנוחה או תנועה, שיחה, שקט.",2);
   h += `<div class="iq-sub2">מה כבר ידוע, ומה נעשה</div>`;
-  h += iqTA("m_treated","איך זה טופל עד היום, ומה עזר?",2);
-  h += iqTA("m_medical","אבחנה רפואית ובדיקות, אם יש",2);
+  h += iqTA("m_treated","איך זה טופל עד היום, ומה עזר? ואם יש, אבחנה רפואית ובדיקות",2);
   h += iqTA("m_why","מה לדעתכם גרם לזה, ומה צריך להשתנות כדי שזה יעבור?",2);
   h += `<div class="iq-item"><span class="iq-lbl">איך אתם מתייחסים למה שקורה לכם?</span>${iqRadios("m_view",IQ_VIEW)}</div>`;
   h += `</section>`;
@@ -474,6 +491,9 @@ function iqFormHTML(p){
 
   h += `<section class="iq-q"><h3>משפטים</h3><p class="iq-hint">סמנו ליד כל משפט כמה הוא מתאים לכם.</p>`;
   IQ_STMTS.forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>בקשרים ובעשייה</h3><p class="iq-hint">סמנו עד חמישה משפטים שהכי מוכרים לכם, בדרך כלל ולא רק בתקופה האחרונה.</p>`;
+  h += `<div data-lim="sef" class="iq-item">${iqChecks(IQ_SEF,"col")}</div>`;
   h += `</section>`;
 
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
