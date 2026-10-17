@@ -687,6 +687,10 @@
 
   .tr-practice{background:#F4F8F6;border-radius:12px;padding:12px 14px;}
 
+  /* למה בחרנו בתרגיל */
+  .ex-why{font-size:0.88rem !important;color:var(--forest) !important;font-weight:600;margin:2px 0 4px !important;line-height:1.55;}
+  @media print{ .pr-paper .ex-why{font-size:10pt !important;color:#2C5F5B !important;font-style:italic;margin:0 0 1.5mm !important;} }
+
   .iq-sub2{font-size:0.95rem;font-weight:800;color:var(--sefirah);margin:22px 0 2px;padding-top:12px;border-top:1px dotted rgba(44,95,91,0.3);}
   .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
   .iq-xhead{font-size:0.8rem;font-weight:700;color:var(--forest);margin:2px 0 4px;}
@@ -1012,7 +1016,7 @@ function getT(id){ return curP().treatments.find(t=>t.id===id); }
 /* התרגול של הטיפול: שבוע תרגול מקושר */
 function tPracticeHTML(t){
   const p = curP(); const wi = weekOfTreatment(p,t);
-  const card = (x, del) => { const e=EXR[x]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span>${del?`<button type="button" class="bm-link danger no-print" onclick="event.preventDefault();event.stopPropagation();${del}">הסרה</button>`:''}</summary><p>${escH(e.text)}</p></details>`; };
+  const card = (x, del) => { const e=EXR[x]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span>${del?`<button type="button" class="bm-link danger no-print" onclick="event.preventDefault();event.stopPropagation();${del}">הסרה</button>`:''}</summary>${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p></details>`; };
   let body = '';
   if(wi>=0){
     const w = p.weeks[wi]; const ids = w.items.filter(x=>EXR[x]);
@@ -1117,7 +1121,7 @@ function renderWeeks(){
       <p class="paper-brand">יובל שניר, עבודה פנימית בין המפגשים</p>
       ${items.length ? `<p class="paper-intro">חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. פעולה שחוזרת שלוש פעמים יוצרת אחיזה, ושבע פעמים יוצרות טבע שני. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.</p>
       <ol class="paper-list">${items.map(id=>`<li><div class="pl-h"><h3>${escH(EXR[id].title)}</h3>
-        <button class="x no-print" onclick="ptRemove('${id}')">הסרה</button></div><p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>`
+        <button class="x no-print" onclick="ptRemove('${id}')">הסרה</button></div>${EXR[id].why?`<p class="ex-why">${escH(EXR[id].why)}</p>`:''}<p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>`
       : `<p class="paper-empty no-print">השבוע עוד ריק. "הוספת תרגיל" פותח את מאגר התרגילים: יסודות, ספירות, כלים, תרגילים כלליים, או לפי תלונה.${(iqHas(p)||readRecs(p).length)?' ו"הצעות לתרגול" מציע תרגילים לפי השאלון והאבחון.':''}</p>`}
       <textarea class="note-in" placeholder="הערה אישית לשבוע הזה, אם יש" oninput="ptNote(this.value)">${escH(w.note||'')}</textarea>
       ${items.length ? `<div class="paper-q"><h3>לרישום, ולהביא למפגש הבא</h3>${(qs.length?qs:['מה עבד, מה היה קשה, ומה התגלה?']).map(q=>`<p>${escH(q)}</p>`).join('')}</div>` : ''}
@@ -1131,7 +1135,7 @@ function ptNote(v){ curWeek().note=v; savePT(); }
 function sheetText(){
   const p=curP(); const w=curWeek(); const items=w.items.filter(id=>EXR[id]);
   let t = `${p.name}\nעבודה פנימית בין המפגשים, שבוע ${p.activeWeek+1}\nחמש עד עשר דקות ביום, בזמן קבוע אם אפשר.\n\n`;
-  items.forEach((id,i)=>{ t += `${i+1}. ${EXR[id].title}\n${EXR[id].text}\n\n`; });
+  items.forEach((id,i)=>{ t += `${i+1}. ${EXR[id].title}\n${EXR[id].why?'למה: '+EXR[id].why+'\n':''}${EXR[id].text}\n\n`; });
   if(w.note) t += w.note + '\n\n';
   const qs = weekQs(items);
   return t + 'לרישום, ולהביא למפגש הבא:\n' + (qs.length ? qs.join('\n') : 'מה עבד, מה היה קשה, ומה התגלה?');
@@ -1157,7 +1161,7 @@ function exRow(id, showSrc){
   const e = EXR[id]; const on = curWeek().items.includes(id);
   const meta = [showSrc ? e.srcLabel : '', e.floor ? floorLabel(e.floor) : ''].filter(Boolean).join(', ');
   return `<div class="ex-item${e.mine?' mine':''}"><div class="ex-top"><div><div class="ex-title">${escH(e.title)}${e.mine?'<span class="mine-tag">שלי</span>':''}</div>${meta?`<span class="ex-src">${escH(meta)}</span>`:''}</div>
-    <button class="add-btn ${on?'on':''}" onclick="exToggle('${id}',this)">${on?'נוסף ✓':'הוספה'}</button></div><p>${escH(e.text)}</p>${e.mine?`<button class="bm-link danger" style="font-size:0.8rem" onclick="myDelete('${id}')">מחיקת התרגיל</button>`:''}</div>`;
+    <button class="add-btn ${on?'on':''}" onclick="exToggle('${id}',this)">${on?'נוסף ✓':'הוספה'}</button></div>${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p>${e.mine?`<button class="bm-link danger" style="font-size:0.8rem" onclick="myDelete('${id}')">מחיקת התרגיל</button>`:''}</div>`;
 }
 function exBySrc(src){ return Object.values(EXR).filter(e=>e.src===src); }
 function exFloors(src){
@@ -1389,7 +1393,7 @@ function sugHTML(){
     ${list.length ? list.map(([id,why])=>{ const e=EXR[id]; const on=w.items.includes(id);
       return `<div class="ex-item"><div class="ex-top"><div><div class="ex-title">${escH(e.title)}</div><span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></div>
         <button class="add-btn ${on?'on':''}" onclick="sugAdd('${id}')">${on?'נוסף ✓':'הוספה'}</button></div>
-        <p class="sug-why">${escH(why)}</p><p>${escH(e.text)}</p></div>`; }).join('')
+        <p class="sug-why">${escH(why)}</p>${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p></div>`; }).join('')
       : `<p class="ex-none" style="padding:6px 0">בשאלון ובאבחון עוד אין מספיק כדי להציע תרגילים.</p>`}
   </div>`;
 }
@@ -1536,13 +1540,13 @@ const IQ_SEF_MAX = 5;
 function iqAreaSef(S){ if(typeof sefFromText!=='function') return []; const a=[...sefFromText([S.m_where,S.m_what].filter(Boolean).join(', '), S.m_side), ...sefFromText([S.x1_what,S.x2_what,S.x3_what,S.b_other,S.m_point,S.m_medical].filter(Boolean).join(', '), '')]; const by={}; a.forEach(x=>{ by[x.sf]=by[x.sf]||new Set(); x.words.forEach(w=>by[x.sf].add(w)); }); return Object.entries(by).map(([sf,ws])=>({sf,words:[...ws]})); }
 
 const IQ_SEF_LEAN = [
-  {id:"sfl_chesed",label:"חסד: קשה להרגיש אהוב, או נותן עד שנגמר הכוח",sf:"חסד",dir:"חוסר או עודף"},
-  {id:"sfl_gevura",label:"גבורה: אין גבולות, או ביקורתיות ונוקשות",sf:"גבורה",dir:"חוסר או עודף"},
-  {id:"sfl_tif",label:"תפארת: בין נתינה מוגזמת לסגירה, או קשה כלפי עצמו",sf:"תפארת",dir:"חוסר איזון"},
-  {id:"sfl_netzach",label:"נצח: לא מתמיד, או עקשן",sf:"נצח",dir:"חוסר או עודף"},
-  {id:"sfl_hod",label:"הוד: קשה להודות ולומר תודה, או מתבטל מול אחרים",sf:"הוד",dir:"חוסר או עודף"},
-  {id:"sfl_yesod",label:"יסוד: חסר חשק וחיבור, או מתפזר בין תשוקות",sf:"יסוד",dir:"חוסר או עודף"},
-  {id:"sfl_malchut",label:"מלכות: לא מרגיש נוכח, או צריך שליטה",sf:"מלכות",dir:"חוסר או עודף"}
+  {id:"sfl_chesed",label:"קשה להרגיש אהוב, או נותן עד שנגמר הכוח",sf:"חסד",dir:"חוסר או עודף"},
+  {id:"sfl_gevura",label:"אין גבולות, או ביקורתיות ונוקשות",sf:"גבורה",dir:"חוסר או עודף"},
+  {id:"sfl_tif",label:"בין נתינה מוגזמת לסגירה, או קשה כלפי עצמו",sf:"תפארת",dir:"חוסר איזון"},
+  {id:"sfl_netzach",label:"לא מתמיד, או עקשן",sf:"נצח",dir:"חוסר או עודף"},
+  {id:"sfl_hod",label:"קשה להודות ולומר תודה, או מתבטל מול אחרים",sf:"הוד",dir:"חוסר או עודף"},
+  {id:"sfl_yesod",label:"חסר חשק וחיבור, או מתפזר בין תשוקות",sf:"יסוד",dir:"חוסר או עודף"},
+  {id:"sfl_malchut",label:"לא מרגיש נוכח, או צריך שליטה",sf:"מלכות",dir:"חוסר או עודף"}
 ];
 
 function iqTAh(id,label,hint,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><p class="iq-hint" style="margin:0 0 6px">${hint}</p><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
@@ -1708,13 +1712,16 @@ function iqFormHTML(p){
   h += iqChecks(IQ_EMO,"col iq-grid2",'data-lim="emo"');
   h += `<div class="iq-item" style="margin-top:16px"><span class="iq-lbl">ומה מהדברים האלה מוכר לכם, לאורך זמן? אפשר לסמן כמה</span>${iqChecks(IQ_THOUGHT)}</div>`;
   h += `<div class="iq-item" style="margin-top:16px"><span class="iq-lbl">כשיש לחץ, איפה הוא מורגש אצלכם בעיקר?</span>${iqChecks(IQ_PRESS,"col")}</div>`;
+  h += iqTA("e_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
 
   h += `<section class="iq-q"><h3>משפטים</h3><p class="iq-hint">סמנו ליד כל משפט כמה הוא מתאים לכם.</p>`;
   IQ_STMTS.forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
+  h += iqTA("s_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>בקשרים ובעשייה</h3><p class="iq-hint">סמנו עד חמישה משפטים שהכי מוכרים לכם, בדרך כלל ולא רק בתקופה האחרונה.</p>`;
   h += `<div data-lim="sef" class="iq-item">${iqChecks(IQ_SEF,"col")}</div>`;
+  h += iqTA("sf_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
 
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
@@ -1733,6 +1740,7 @@ function iqFormHTML(p){
   h += `<div class="iq-item"><span class="iq-lbl">כמה לחץ יש בחיים שלכם עכשיו</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">מאיפה מגיע הלחץ בעיקר</span>${iqChecks(IQ_STRESS)}</div>`;
   h += `<div class="iq-other" data-other="st_other" hidden>${iqInp("l_stress_other","מה עוד?")}</div>`;
+  h += iqTA("l_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
 
   h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">לא איך אתם בתקופה האחרונה, אלא איך אתם לאורך השנים. בכל שאלה אפשר לסמן תשובה אחת, את זו שהכי נכונה עבורכם.</p>`;
@@ -1796,6 +1804,7 @@ function iqLeanHTML(p){
   h += iqChecks(iqLeanSigns(),"col iq-grid2",'data-lim="lean"');
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">דפוסי מחשבה מוכרים, לאורך זמן</span>${iqChecks(IQ_THOUGHT)}</div>`;
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, עד שלושה</span><div data-lim="sefl">${iqChecks(IQ_SEF_LEAN,"col")}</div></div>`;
+  h += iqTA("e_notes","הערות, ומה שהמטופל הוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>הטבע לאורך השנים</h3><p class="iq-hint">בכל שאלה תשובה אחת, זו שהכי נכונה עבורו או עבורה.</p>`;
   IQ_NATURE.filter(n=>IQ_LEAN_NATURE.includes(n.id)).forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
@@ -1803,6 +1812,7 @@ function iqLeanHTML(p){
   h += `<section class="iq-q"><h3>איפה הלחץ, ואיפה משהו נתקע</h3>`;
   h += `<div class="iq-item"><span class="iq-lbl">איפה הלחץ מורגש</span>${iqChecks(IQ_PRESS,"col")}</div>`;
   IQ_STMTS.filter(s=>IQ_LEAN_STMTS.includes(s.id)).forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
+  h += iqTA("s_notes","הערות, ומה שהמטופל הוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולך או הולכת לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
@@ -1812,6 +1822,7 @@ function iqLeanHTML(p){
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div><span class="iq-lbl">והן</span>${iqRadios("l_stool",IQ_L2.l_stool)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
+  h += iqTA("l_notes","הערות, ומה שהמטופל הוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>לסיום</h3>`;
   h += iqTA("c_wish","אילו יכול או יכולה לעשות בדיוק את מה שהוא או היא באמת רוצים, מה היה עושה?",1);
@@ -1849,12 +1860,14 @@ function iqQuickHTML(p){
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">איפה הלחץ מורגש</span>${iqChecks(IQ_PRESS,"col")}</div>`;
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, מה הכי בולט</span><div class="iq-opts col">${IQ_SEF_LEAN.map(x=>`<label class="iq-opt"><input type="radio" name="iq_q_sef" value="${x.sf}" data-r="q_sef"><span>${x.label}</span></label>`).join("")}</div></div>`;
   IQ_NATURE.filter(n=>n.id==="n7").forEach(n=>{ h += `<div class="iq-nature" style="margin-top:14px"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
+  h += iqTA("e_notes","הערות, ומה שהמטופל הוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולך או הולכת לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
+  h += iqTA("l_notes","הערות, ומה שהמטופל הוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>לסיום</h3>`;
   h += iqTA("c_wish","אילו יכול או יכולה לעשות בדיוק את מה שהוא או היא באמת רוצים, מה היה עושה?",1);
@@ -2107,6 +2120,7 @@ function iqText(){
   L.push(`לחץ: ${S.l_stress!==undefined?S.l_stress+"/10":""}${sts.length?" ("+sts.join(", ")+")":""}`);
   L.push(`מקור לחץ אחר: ${v("l_stress_other")}`);
   { const sf=iqSefMarked(S); if(sf.length){ L.push("","בקשרים ובעשייה (ספירות)"); sf.forEach(x=>L.push(`${x.label} [ספירת ${x.sf}, ${x.dir}]`)); } }
+  { const nt=[["e_notes","הערות לרגש ולמה שבולט"],["s_notes","הערות למשפטים ולמחיצות"],["sf_notes","הערות לקשרים ולעשייה"],["l_notes","הערות לאורח החיים"]].filter(([k])=>v(k)); if(nt.length){ L.push("","הערות"); nt.forEach(([k,l])=>L.push(`${l}: ${v(k)}`)); } }
   L.push("","טבע לאורך השנים");
   IQ_NATURE.forEach(n=>{ if(S[n.id]){ const o=n.o.find(x=>x[0]===S[n.id]); L.push(`${n.q}: ${o[1]} [${IQ_EL[o[0]].name}]`); } });
   L.push("","לסיום");
@@ -2128,7 +2142,7 @@ function iqText(){
     l=l.replace(/(^|,\s*)[^,:()]+:\s*(?=,|$)/g,"$1").replace(/^[,\s]+|[,\s]+$/g,"").replace(/,\s*,/g,",");
     if(l) clean.push(l);
   });
-  const HEADS=["התלונה העיקרית","תלונות נוספות בגוף","רקע רפואי ותרופות","בקשרים ובעשייה (ספירות)","רגש ומחשבה","משפטים","אורח חיים","טבע לאורך השנים","לסיום"];
+  const HEADS=["הערות","התלונה העיקרית","תלונות נוספות בגוף","רקע רפואי ותרופות","בקשרים ובעשייה (ספירות)","רגש ומחשבה","משפטים","אורח חיים","טבע לאורך השנים","לסיום"];
   const out2=[];
   clean.forEach((l,i)=>{ if(HEADS.includes(l) && (clean[i+1]===undefined || clean[i+1]==="")) return; if(l==="" && out2[out2.length-1]==="") return; out2.push(l); });
   return out2.join("\n").trim();
@@ -2281,7 +2295,7 @@ function lastWeekItems(p){ const w = p.weeks[curWi(p)]; return (w.items||[]).fil
 function sheetTextFor(p, wi){
   const w = p.weeks[wi]; const items = w.items.filter(id=>EXR[id]);
   let t = `עבודה פנימית בין המפגשים, שבוע ${wi+1}\nחמש עד עשר דקות ביום, בזמן קבוע אם אפשר.\n\n`;
-  items.forEach((id,i)=>{ t += `${i+1}. ${EXR[id].title}\n${EXR[id].text}\n\n`; });
+  items.forEach((id,i)=>{ t += `${i+1}. ${EXR[id].title}\n${EXR[id].why?'למה: '+EXR[id].why+'\n':''}${EXR[id].text}\n\n`; });
   if(w.note) t += w.note + '\n\n';
   const qs = weekQs(items);
   return t + 'לרישום, ולהביא למפגש הבא:\n' + (qs.length ? qs.join('\n') : 'מה עבד, מה היה קשה, ומה התגלה?');
@@ -2292,7 +2306,7 @@ function sheetPaperFor(p, wi){
     <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">שבוע ${wi+1}, ${escH(w.date)}</span></div>
     <p class="paper-brand">יובל שניר, עבודה פנימית בין המפגשים</p>
     <p class="paper-intro">חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. פעולה שחוזרת שלוש פעמים יוצרת אחיזה, ושבע פעמים יוצרות טבע שני. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.</p>
-    <ol class="paper-list">${items.map(id=>`<li><h3>${escH(EXR[id].title)}</h3><p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>
+    <ol class="paper-list">${items.map(id=>`<li><h3>${escH(EXR[id].title)}</h3>${EXR[id].why?`<p class="ex-why">${escH(EXR[id].why)}</p>`:''}<p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>
     ${w.note?`<p>${escH(w.note)}</p>`:''}
     <div class="paper-q"><h3>לרישום, ולהביא למפגש הבא</h3>${(qs.length?qs:['מה עבד, מה היה קשה, ומה התגלה?']).map(q=>`<p>${escH(q)}</p>`).join('')}</div>
   </div>`;
@@ -2326,7 +2340,7 @@ renderReading = function(){
   if(n){
     const paper = $('iqRead'); const ptBox = paper && paper.querySelector(':scope > div[style*="margin-top:14px"]');
     const ids = lastWeekItems(p);
-    const html = `<div class="rd-pt-ex no-print"><div class="rd-pt-ex-h">התרגול שיצורף לאבחון, שבוע ${wi+1}</div><div class="rd-exs">${ids.map(id=>{ const e=EXR[id]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span><button type="button" class="bm-link danger" onclick="event.preventDefault();event.stopPropagation();rdAdd('${id}')">הסרה</button></summary><p>${escH(e.text)}</p></details>`; }).join('')}</div></div>`;
+    const html = `<div class="rd-pt-ex no-print"><div class="rd-pt-ex-h">התרגול שיצורף לאבחון, שבוע ${wi+1}</div><div class="rd-exs">${ids.map(id=>{ const e=EXR[id]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span><button type="button" class="bm-link danger" onclick="event.preventDefault();event.stopPropagation();rdAdd('${id}')">הסרה</button></summary>${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p></details>`; }).join('')}</div></div>`;
     if(ptBox) ptBox.insertAdjacentHTML('afterend', html); else if(paper) paper.insertAdjacentHTML('beforeend', html);
   }
   readTabs();
@@ -2413,7 +2427,7 @@ function rdExHTML(id, w){
   return `<details class="rd-ex" data-ex="${id}" ${rdOpenEx.has(id)?'open':''} ontoggle="rdExTog('${id}',this.open)">
     <summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span>
       <button type="button" class="add-btn no-print ${on?'on':''}" onclick="event.preventDefault();event.stopPropagation();rdAdd('${id}')">${on?'בתרגול ✓':'הוספה לתרגול'}</button></summary>
-    <p>${escH(e.text)}</p></details>`;
+    ${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p></details>`;
 }
 function rdBuild(){
   const p = curP(); const paper = $('iqRead'); if(!p || !paper) return;
