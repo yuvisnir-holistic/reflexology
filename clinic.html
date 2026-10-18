@@ -1591,13 +1591,13 @@ const IQ_SEF_MAX = 5;
 function iqAreaSef(S){ if(typeof sefFromText!=='function') return []; const a=[...sefFromText([S.m_where,S.m_what].filter(Boolean).join(', '), S.m_side), ...sefFromText([S.x1_what,S.x2_what,S.x3_what,S.b_other,S.m_point,S.m_medical].filter(Boolean).join(', '), '')]; const by={}; a.forEach(x=>{ by[x.sf]=by[x.sf]||new Set(); x.words.forEach(w=>by[x.sf].add(w)); }); return Object.entries(by).map(([sf,ws])=>({sf,words:[...ws]})); }
 
 const IQ_SEF_LEAN = [
-  {id:"sfl_chesed",label:"קשה להרגיש אהוב, או נותן עד שנגמר הכוח",sf:"חסד",dir:"חוסר או עודף"},
+  {id:"sfl_chesed",label:"קשה להרגיש אהובים, או נותנים עד שנגמר הכוח",sf:"חסד",dir:"חוסר או עודף"},
   {id:"sfl_gevura",label:"אין גבולות, או ביקורתיות ונוקשות",sf:"גבורה",dir:"חוסר או עודף"},
-  {id:"sfl_tif",label:"בין נתינה מוגזמת לסגירה, או קשה כלפי עצמו",sf:"תפארת",dir:"חוסר איזון"},
-  {id:"sfl_netzach",label:"לא מתמיד, או עקשן",sf:"נצח",dir:"חוסר או עודף"},
-  {id:"sfl_hod",label:"קשה להודות ולומר תודה, או מתבטל מול אחרים",sf:"הוד",dir:"חוסר או עודף"},
-  {id:"sfl_yesod",label:"חסר חשק וחיבור, או מתפזר בין תשוקות",sf:"יסוד",dir:"חוסר או עודף"},
-  {id:"sfl_malchut",label:"לא מרגיש נוכח, או צריך שליטה",sf:"מלכות",dir:"חוסר או עודף"}
+  {id:"sfl_tif",label:"בין נתינה מוגזמת לסגירה, או קשים כלפי עצמכם",sf:"תפארת",dir:"חוסר איזון"},
+  {id:"sfl_netzach",label:"קשה להתמיד, או עקשנות",sf:"נצח",dir:"חוסר או עודף"},
+  {id:"sfl_hod",label:"קשה להודות ולומר תודה, או ביטול עצמי מול אחרים",sf:"הוד",dir:"חוסר או עודף"},
+  {id:"sfl_yesod",label:"חסרים חשק וחיבור, או פיזור בין תשוקות",sf:"יסוד",dir:"חוסר או עודף"},
+  {id:"sfl_malchut",label:"לא מרגישים נוכחות, או צורך בשליטה",sf:"מלכות",dir:"חוסר או עודף"}
 ];
 
 function iqTAh(id,label,hint,lines){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><p class="iq-hint" style="margin:0 0 6px">${hint}</p><textarea id="iq_${id}" data-k="${id}" rows="${lines||2}"></textarea><div class="iq-print-lines" data-for="${id}" style="--ph:${(lines||2)*24}px"></div></div>`; }
@@ -1651,9 +1651,9 @@ const IQ_ROOTS = [
 const IQ_NATURE = [
   {id:"n1",q:"כשמשהו חדש נכנס לחיים שלי",o:[["air","סקרנות לכמה כיוונים, מחשבה ותכנון"],["fire","התלהבות, וקפיצה פנימה בלי לחכות"],["earth","צורך בזמן, והתקדמות הדרגתית כשבטוח לי"],["water","קודם לבדוק איך זה מרגיש לי, ואז להתאים את עצמי"]]},
   {id:"n2",q:"החוזקה הבולטת שלי",o:[["water","גמישות והכלה של אחרים"],["earth","יציבות והתמדה"],["fire","התלהבות ויוזמה"],["air","בהירות מחשבה ותקשורת"]]},
-  {id:"n3",q:"כשקשה לי, הנטייה שלי היא",o:[["fire","לכעוס ולהילחם"],["air","לחשוב בלי סוף, בלי מנוחה"],["water","להתכנס, לבכות או לרצות"],["earth","להיתקע, להתכבד ולהתעצב"]]},
+  {id:"n3",q:"כשקשה לי, הנטייה שלי היא",o:[["fire","לכעוס ולהילחם"],["air","לחשוב בלי סוף, בלי מנוחה"],["water","להתכנס, לבכות או לרצות"],["earth","להיתקע, להרגיש כבדות ולהתעצב"]]},
   {id:"n4",q:"הקצב הטבעי שלי",o:[["earth","איטי ויציב"],["water","משתנה לפי מה שאני מרגיש"],["air","קופצני, הרבה דברים במקביל"],["fire","מהיר ונמרץ"]]},
-  {id:"n5",q:"הגוף שלי בדרך כלל",o:[["water","רך, ונוטה לאגור נוזלים"],["fire","חם, והפנים מאדימות בקלות"],["earth","מוצק וחזק, עם נטייה לכבדות"],["air","קל, רזה, ונוטה לקור וליובש"]]},
+  {id:"n5",q:"הגוף שלי בדרך כלל",o:[["water","רך, ונוטה לאגור נוזלים"],["fire","חם, והפנים מאדימות בקלות"],["earth","מוצק וחזק, עם נטייה לכבדות"],["air","קל ורזה, קר לי בקלות, והעור שלי נוטה להיות יבש"]]},
   {id:"n6",q:"מה הכי מזין אותי",o:[["air","רעיונות, שיחות וטיולים"],["earth","שגרה, ביטחון וסדר"],["fire","עשייה והשפעה"],["water","קרבה, חום ותענוג"]]},
   {id:"n7",q:"איזו מהנטיות האלה הכי מוכרת לך, ברגעים הפחות טובים?",o:[["water","להימשך להנאות של הרגע, כמו אוכל, מסכים או קניות, ולהתקשות לעצור גם כשאני יודע או יודעת שזה לא באמת מיטיב איתי"],["earth","לשקוע בעצבות ובכבדות, ולהתקשות לזוז ולהתחיל"],["fire","לכעוס מהר, ולהיפגע כשדברים לא נעשים כמו שאני רוצה"],["air","לדבר ולחשוב הרבה, להתפזר, ולהרגיש אי שקט, כאילו אני לא מוצא או מוצאת את המקום שלי"]]}
 ];
@@ -1802,6 +1802,7 @@ function iqFormHTML(p){
 
   h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">לא איך אתם בתקופה האחרונה, אלא איך אתם לאורך השנים. בכל שאלה אפשר לסמן תשובה אחת, את זו שהכי נכונה עבורכם.</p>`;
   IQ_NATURE.forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
+  h += iqTA("n_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
 
   h += `<section class="iq-q"><h3>לסיום</h3>`;
@@ -1839,7 +1840,7 @@ function iqLeanHTML(p){
     <div><label for="iq_f_pulse">דופק</label><input type="text" id="iq_f_pulse" data-k="f_pulse"></div></div></section>`;
   h += `<section class="iq-q"><h3>התלונה העיקרית</h3><p class="iq-hint">תלונה אחת בלבד, מה שהכי מפריע עכשיו. השאר נכנס לתלונות הנוספות.</p>`;
   h += `<div class="iq-item"><span class="iq-lbl">התלונה העיקרית היא בעיקר</span>${iqRadios("m_kind",IQ_KIND)}</div>`;
-  h += iqTA("m_what","התלונה העיקרית, במילים של המטופל",2);
+  h += iqTA("m_what","התלונה העיקרית, במילים שלכם",2);
   h += `<div class="iq-sub">אם זה בגוף</div><div class="iq-bodyc">
     <div class="iq-item"><label class="iq-lbl" for="iq_m_where">איפה בגוף?</label><input type="text" id="iq_m_where" data-k="m_where"></div>
     <div class="iq-item iq-grid2"><div><span class="iq-lbl">צד</span>${iqRadios("m_side",IQ_SIDE)}</div><div><span class="iq-lbl">מלפנים או מאחור</span>${iqRadios("m_fb",IQ_FB)}</div></div>
@@ -1861,30 +1862,31 @@ function iqLeanHTML(p){
   h += iqChecks(iqLeanSigns(),"col iq-grid2",'data-lim="lean"');
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">דפוסי מחשבה מוכרים, לאורך זמן</span>${iqChecks(IQ_THOUGHT)}</div>`;
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, עד שלושה</span><div data-lim="sefl">${iqChecks(IQ_SEF_LEAN,"col")}</div></div>`;
-  h += iqTA("e_notes","הערות, ומה שהמטופל הוסיף",1);
+  h += iqTA("e_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
-  h += `<section class="iq-q"><h3>הטבע לאורך השנים</h3><p class="iq-hint">בכל שאלה תשובה אחת, זו שהכי נכונה עבורו או עבורה.</p>`;
+  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">בכל שאלה תשובה אחת, זו שהכי נכונה עבורכם.</p>`;
   IQ_NATURE.filter(n=>IQ_LEAN_NATURE.includes(n.id)).forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
+  h += iqTA("n_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>איפה הלחץ, ואיפה משהו נתקע</h3>`;
   h += `<div class="iq-item"><span class="iq-lbl">איפה הלחץ מורגש</span>${iqChecks(IQ_PRESS,"col")}</div>`;
   IQ_STMTS.filter(s=>IQ_LEAN_STMTS.includes(s.id)).forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
-  h += iqTA("s_notes","הערות, ומה שהמטופל הוסיף",1);
+  h += iqTA("s_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
-  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולך או הולכת לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">יקיצות בלילה</span>${iqRadios("l_wakes",IQ_L2.l_wakes)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div><span class="iq-lbl">והן</span>${iqRadios("l_stool",IQ_L2.l_stool)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
-  h += iqTA("l_notes","הערות, ומה שהמטופל הוסיף",1);
+  h += iqTA("l_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>לסיום</h3>`;
-  h += iqTA("c_wish","אילו יכול או יכולה לעשות בדיוק את מה שהוא או היא באמת רוצים, מה היה עושה?",1);
-  h += iqTA("c_talent","הכישרון הטבעי, ותחביבים",1);
-  h += iqTA("c_goal","מה היה רוצה שישתנה",1);
+  h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",1);
+  h += iqTA("c_talent","הכישרון הטבעי שלכם, ותחביבים",1);
+  h += iqTA("c_goal","מה הייתם רוצים שישתנה",1);
   h += `</section>`;
   return h;
 }
@@ -1896,7 +1898,7 @@ function iqSefMarked(S){ const a=[...IQ_SEF,...IQ_SEF_LEAN].filter(x=>S[x.id]); 
 function iqQuickHTML(p){
   let h = "";
   h += `<div class="paper-h"><h2>שאלון מהיר</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
-  h += `<p class="iq-hint" style="margin:0 0 6px">שאלון קצר, לכחמש עד עשר דקות, למטופלים במפגש בודד או במסגרת לא פרטית.</p>`;
+  h += `<p class="iq-hint" style="margin:0 0 6px">שאלון קצר, לכחמש עד עשר דקות.</p>`;
   h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
@@ -1908,7 +1910,7 @@ function iqQuickHTML(p){
     <div><label for="iq_f_bp">לחץ דם</label><input type="text" id="iq_f_bp" data-k="f_bp"></div>
     <div><label for="iq_f_pulse">דופק</label><input type="text" id="iq_f_pulse" data-k="f_pulse"></div></div></section>`;
   h += `<section class="iq-q"><h3>התלונה העיקרית</h3><p class="iq-hint">תלונה אחת בלבד, מה שהכי מפריע עכשיו. השאר נכנס לתלונות הנוספות.</p>`;
-  h += iqTA("m_what","התלונה העיקרית, במילים של המטופל",2);
+  h += iqTA("m_what","התלונה העיקרית, במילים שלכם",2);
   h += `<div class="iq-item iq-grid2"><div><label class="iq-lbl" for="iq_m_where">איפה בגוף</label><input type="text" id="iq_m_where" data-k="m_where"></div><div><span class="iq-lbl">צד</span>${iqRadios("m_side",IQ_SIDE)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">עוצמה</span>${iqScale("m_level","בכלל לא","מאוד")}</div>`;
   h += iqTA("m_when","מתי התחיל, ומה קרה בחיים באותה תקופה",1);
@@ -1922,19 +1924,19 @@ function iqQuickHTML(p){
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">איפה הלחץ מורגש</span>${iqChecks(IQ_PRESS,"col")}</div>`;
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, מה הכי בולט</span><div class="iq-opts col">${IQ_SEF_LEAN.map(x=>`<label class="iq-opt"><input type="radio" name="iq_q_sef" value="${x.sf}" data-r="q_sef"><span>${x.label}${iqSefTag(x)}</span></label>`).join("")}</div></div>`;
   IQ_NATURE.filter(n=>n.id==="n7").forEach(n=>{ h += `<div class="iq-nature" style="margin-top:14px"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
-  h += iqTA("e_notes","הערות, ומה שהמטופל הוסיף",1);
+  h += iqTA("e_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
-  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולך או הולכת לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
-  h += iqTA("l_notes","הערות, ומה שהמטופל הוסיף",1);
+  h += iqTA("l_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
   h += `<section class="iq-q"><h3>לסיום</h3>`;
-  h += iqTA("c_wish","אילו יכול או יכולה לעשות בדיוק את מה שהוא או היא באמת רוצים, מה היה עושה?",1);
-  h += iqTA("c_talent","הכישרון הטבעי, ותחביבים",1);
-  h += iqTA("c_goal","מה היה רוצה שישתנה",1);
+  h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",1);
+  h += iqTA("c_talent","הכישרון הטבעי שלכם, ותחביבים",1);
+  h += iqTA("c_goal","מה הייתם רוצים שישתנה",1);
   h += `</section>`;
   return h;
 }
@@ -2182,7 +2184,7 @@ function iqText(){
   L.push(`לחץ: ${S.l_stress!==undefined?S.l_stress+"/10":""}${sts.length?" ("+sts.join(", ")+")":""}`);
   L.push(`מקור לחץ אחר: ${v("l_stress_other")}`);
   { const sf=iqSefMarked(S); if(sf.length){ L.push("","בקשרים ובעשייה (ספירות)"); sf.forEach(x=>L.push(`${x.label} [ספירת ${x.sf}, ${x.dir}]`)); } }
-  { const nt=[["e_notes","הערות לרגש ולמה שבולט"],["s_notes","הערות למשפטים ולמחיצות"],["sf_notes","הערות לקשרים ולעשייה"],["l_notes","הערות לאורח החיים"]].filter(([k])=>v(k)); if(nt.length){ L.push("","הערות"); nt.forEach(([k,l])=>L.push(`${l}: ${v(k)}`)); } }
+  { const nt=[["e_notes","הערות לרגש ולמה שבולט"],["s_notes","הערות למשפטים ולמחיצות"],["sf_notes","הערות לקשרים ולעשייה"],["l_notes","הערות לאורח החיים"],["n_notes","הערות לטבע ולמי אתם בדרך כלל"]].filter(([k])=>v(k)); if(nt.length){ L.push("","הערות"); nt.forEach(([k,l])=>L.push(`${l}: ${v(k)}`)); } }
   L.push("","טבע לאורך השנים");
   IQ_NATURE.forEach(n=>{ if(S[n.id]){ const o=n.o.find(x=>x[0]===S[n.id]); L.push(`${n.q}: ${o[1]} [${IQ_EL[o[0]].name}]`); } });
   L.push("","לסיום");
