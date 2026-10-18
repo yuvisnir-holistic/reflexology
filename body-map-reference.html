@@ -3368,5 +3368,89 @@ renderPathologies();
   .sf-el{display:inline-block;font-size:0.78rem;font-weight:700;border-radius:999px;padding:2px 10px;margin-top:4px;}
   .nav-back{bottom:18px !important;}
 </style>
+
+<script>
+/* ===== לשונית חמש הדרגות ===== */
+(function(){
+  const HEAD = ["", "דרגה 1", "דרגה 2", "דרגה 3", "דרגה 4", "דרגה 5"]; const ROWS = [["יסוד", "אור", "אש", "מים", "רוח", "עפר"], ["ספירה", "כתר", "חכמה", "בינה", "זעיר אנפין (שש המידות, חסד עד יסוד)", "מלכות"], ["דצח\"מ", "", "מדבר", "חי", "צומח", "דומם"], ["דרגת הנשמה", "יחידה", "חיה", "נשמה", "רוח", "נפש"], ["אות בשם הוי\"ה", "קוצו של יו\"ד", "יו\"ד", "ה\"א ראשונה", "וא\"ו", "ה\"א אחרונה"], ["עולם", "אדם קדמון", "אצילות, עולם הייחוד העליון", "בריאה, עולם הנשמות", "יצירה, עולם המלאכים", "עשייה, עולם הגלגלים"], ["כוח בנפש", "מדמה ותענוג", "רצון", "מחשבה", "הרגש ודיבור", "מעשה"], ["איפה הנשמה פועלת", "דבוקה באין סוף, לפני שיצאה", "ברצון העמוק שבלב", "בהבנה הפנימית", "ברגש ובדיבור", "בתנועה"], ["מקום באדם", "מאין סוף ועד הבריאה", "מעל הראש", "בתוך הלב", "בקנה ובכנפי הריאה", "במחזור הדם"], ["קומת הגוף", "מוח", "עצמות", "גידים", "בשר", "עור"], ["איבר ומערכת בגוף", "הגולגולת", "המוח והלב", "מחזור הדם", "מערכת הנשימה", "מערכת העצמות והפרקים"], ["היסוד בביטוי חיובי", "קדושה והארה שמתלבשת בכלים", "חמימות והתלהבות", "צמיחה", "פתיחות, גמישות ודיבור טוב", "יציבות, התמדה ורציפות"], ["היסוד בביטוי שלילי", "הארה שלא מתלבשת בכלים, תוהו וחושך", "גאווה וכעס, התלהטות", "רדיפת תענוגות", "פיזור ודיבור לבטלה", "כבדות, קיבעון, עצבות ואטימות"], ["כשהיסוד משתלט, בגוף", "", "חימום יתר, יובש ודלקות", "לחץ דם", "בעיות נשימה וגידולים", "בעיות בעצמות ורפיון באיברים"], ["עולם התוהו שבנפש", "תהום (משותף לרצון ולמדמה)", "תהום", "חושך", "בוהו", "תוהו"], ["איך זה נראה אצל אדם", "אין נקודת אחיזה, הכול הפכפך", "אין נקודת אחיזה, הכול הפכפך", "היפוך אור וחושך, \"אין בחירה\"", "ערבוביה ברגש, דיבור מהוסס ולא מכוון", "פיזור, אין סדר בזמן ובתנועות"], ["כיוון התיקון", "חיבור מחדש לרצון הבורא מתוך אמונה", "חיבור מחדש לרצון הבורא מתוך אמונה", "תורה וקריאת שמע, קבלת עול מחדש", "עידון מידות, \"מודה אני\" כדיבור פותח", "סדר מכוון בתנועות הגוף, גם הפשוטות"], ["העבודה בנפש", "", "", "המתקה (ייחודים)", "הבדלה (בירורים)", "הכנעה (ניסיונות)"], ["משל המים", "המים במכל שעל הגג", "הצינור הראשי היורד מהגג", "הצינורות שבתוך הקירות", "הצינור שליד הברז", "המים שיוצאים מהברז אל הבית"], ["כשהדרגה בולטת באדם", "רגעים של אחדות וביטול ה\"אני\"", "רגעים של התעלות וחיבור עמוק", "חכם, רואה את התמונה הגדולה", "רגיש, עשיר ברגש, יוצר קשרים", "מעשי, יוזם, מממש"]]; const INFO = {"דרגת הנשמה": "לפי המקורות, הנשמה אחת, אבל יש בה חמש דרגות: נפש, רוח, נשמה, חיה ויחידה. הנפש היא הקרובה ביותר לגוף, ומתלבשת בדם ובתנועה, והיחידה היא הגבוהה ביותר, דבוקה במקורה. בין דרגה לדרגה יכול להיווצר נתק, ושם יושבת המחיצה.", "עולם": "ארבעת העולמות, אצילות, בריאה, יצירה ועשייה, ומעליהם אדם קדמון, הם רמות שדרכן האור יורד מהמקור עד לעולם המעשה. כל עולם מקביל לדרגה בנשמה, ליסוד ולכוח בנפש, ולכן אותו מבנה חוזר גם בעולם וגם באדם.", "כוח בנפש": "הנשמה אחת, אבל היא מתלבשת באדם בחמישה מישורים: מדמה ותענוג, רצון, מחשבה, הרגש והדיבור, ומעשה. כוחות הנפש מתווכים בין דרגות הנשמה לבין קומות הגוף. ההשתלשלות היא מלמעלה למטה: מהתענוג נולד רצון, הרצון מתלבש במחשבה, המחשבה ברגש ובדיבור, ובסוף במעשה.", "עולם התוהו שבנפש": "כנגד העולמות של הקדושה עומדים ארבעה מצבים הפוכים: תוהו, בוהו, חושך ותהום. אלה מצבים שהנפש יכולה לחוות, לפעמים כולם ביום אחד. בהלה, למשל, היא מצב שבו הנפש אינה יכולה להכיל את המציאות, ונכנס לתוכה הבוהו. הדרך חזרה היא חיבור מחדש, ובעיקר תוספת של אמונה, שמאפשרת להתמודד עם המציאות ולפרש אותה לטובה.", "משל המים": "כמו בבניין, שבו המים מגיעים מהמכל שעל הגג, דרך הצינורות שבקירות, עד לברז, כך האור יורד מהמקור דרך הדרגות עד למעשה. כשצינור באמצע נסתם, המים לא מגיעים לברז, והלחץ מצטבר מעל הסתימה. כך גם מחיצה בין דרגה לדרגה."};
+  const EL = {'אש':'fire','מים':'water','רוח':'air','עפר':'earth'};
+  const SF = {'כתר':'כתר','חכמה':'חכמה','בינה':'בינה','מלכות':'מלכות'};
+  const L = (label, js) => `<button type="button" class="dg-link" onclick="${js}">${label}</button>`;
+  const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function cell(row, txt){
+    const t = esc(txt); if(!t) return '';
+    if(row==='יסוד' && EL[txt]) return L(t, `jumpToElement('${EL[txt]}')`);
+    if(row==='ספירה'){ if(SF[txt]) return L(t, `jumpToSefirah('${SF[txt]}')`); if(txt.startsWith('זעיר אנפין')) return L(t, `jumpToSefirah('חסד')`); }
+    if(row==='איבר ומערכת בגוף'){
+      if(txt==='הגולגולת') return L(t, `dgOrgan('movement','גולגולת')`);
+      if(txt==='המוח והלב') return L('המוח', `dgOrgan('nervous','מוח')`)+' '+esc('ו')+L('הלב', `dgOrgan('cardio','הלב')`);
+      if(txt==='מחזור הדם') return L(t, `openSystem('cardio')`);
+      if(txt==='מערכת הנשימה') return L(t, `openSystem('respiratory')`);
+      if(txt==='מערכת העצמות והפרקים') return L(t, `openSystem('movement')`);
+    }
+    if(row==='קומת הגוף'){
+      if(txt==='מוח') return L(t, `dgOrgan('nervous','מוח')`);
+      if(txt==='עצמות') return L(t, `dgOrgan('movement','עצמות ומינרלים (כללי)')`);
+      if(txt==='עור') return L(t, `dgOrgan('senses','עור (חוש המגע)')`);
+    }
+    if(row==='העבודה בנפש') return L(t, `jumpToTool('tool-hachnaa')`);
+    return t;
+  }
+  window.dgOrgan = function(sys, name){
+    openSystem(sys); setActiveTab('systems');
+    setTimeout(()=>{ const c=[...document.querySelectorAll('#organsList .organ-card')].find(x=>{ const h=x.querySelector('.organ-head h3'); return h && h.textContent.trim()===name; });
+      if(c){ c.classList.add('open'); if(typeof scrollToEl==='function') scrollToEl(c); } }, 60);
+  };
+  window.dgInfo = function(row){
+    const m = document.getElementById('dgModal'); m.querySelector('.dg-m-t').textContent = row; m.querySelector('.dg-m-b').textContent = INFO[row]||''; m.classList.add('show');
+    m.querySelector('.dg-m-x').focus();
+  };
+  const table = `<div class="dg-wrap" role="region" aria-label="טבלת חמש הדרגות" tabindex="0"><table class="dg">
+    <thead><tr><th class="dg-rh" scope="col"></th>${HEAD.slice(1).map(h=>`<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
+    <tbody>${ROWS.map(r=>`<tr><th class="dg-rh" scope="row">${esc(r[0])}${INFO[r[0]]?` <button type="button" class="dg-i" aria-label="הסבר על ${esc(r[0])}" onclick="dgInfo('${r[0]}')">i</button>`:''}</th>${r.slice(1).map(c=>`<td>${cell(r[0],c)}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table></div>`;
+  const view = `<div id="degreesView" style="display:none;">
+    <p class="system-desc" style="margin-top:6px;">חמש הדרגות מחברות בין היסוד, הספירה, דרגת הנשמה, העולם, כוח הנפש והגוף. משבצת עם קו תחתון פותחת את הכרטיס המתאים באפליקציה, והסמל שליד שם השורה פותח הסבר קצר. בטלפון, גוללים את הטבלה הצידה.</p>
+    ${table}
+    <p class="dg-note">היסודות בטבלה הזו הם יסודות של הדרגות, ולכן מים מול מחשבה ורוח מול רגש ודיבור. זה שונה ממסגרת ארבעת היסודות בשאר האפליקציה, שבה המים הם הרגש והאוויר הוא המחשבה.</p>
+  </div>`;
+  const main = document.querySelector('main'); const tv = document.getElementById('toolsView');
+  (tv||main.lastElementChild).insertAdjacentHTML('afterend', view);
+  document.body.insertAdjacentHTML('beforeend', `<div id="dgModal" onclick="if(event.target===this)this.classList.remove('show')"><div class="dg-m" role="dialog" aria-modal="true"><div class="dg-m-h"><h3 class="dg-m-t"></h3><button type="button" class="dg-m-x" aria-label="סגירה" onclick="document.getElementById('dgModal').classList.remove('show')">✕</button></div><p class="dg-m-b"></p></div></div>`);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') document.getElementById('dgModal').classList.remove('show'); });
+  /* הלשונית בשורת הלשוניות, אחרי ספירות */
+  const sf = document.querySelector('#tabnav [data-tab="sefirot"]'); sf.insertAdjacentHTML('afterend','<button data-tab="degrees">חמש הדרגות</button>');
+  const _sv = showView;
+  showView = function(id){ _sv(id); const d=document.getElementById('degreesView'); if(d) d.style.display = id==='degreesView' ? 'block' : 'none'; if(id==='degreesView'){ ['homeView','systemView','elementsView','sefirotView','pathologiesView','searchView','toolsView','sheetView'].forEach(v=>{ const el=document.getElementById(v); if(el) el.style.display='none'; }); } };
+  const _tfv = tabForView; tabForView = function(v){ return v==='degreesView' ? 'degrees' : _tfv(v); };
+  document.getElementById('tabnav').addEventListener('click', e=>{ const b=e.target.closest('button'); if(b && b.dataset.tab==='degrees'){ showView('degreesView'); window.scrollTo(0,0); } });
+})();
+</script>
+<style>
+  #tabnav{overflow-x:auto;scrollbar-width:none;}
+  #tabnav::-webkit-scrollbar{display:none;}
+  #tabnav button{white-space:nowrap;flex-shrink:0;}
+  .dg-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius,16px);background:#fff;box-shadow:var(--shadow);margin-top:12px;}
+  .dg-wrap:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  table.dg{border-collapse:separate;border-spacing:0;min-width:860px;width:100%;font-size:0.9rem;line-height:1.55;}
+  table.dg th, table.dg td{padding:10px 12px;border-bottom:1px solid rgba(44,95,91,0.12);vertical-align:top;text-align:right;}
+  table.dg thead th{background:var(--forest-dark,#1E4744);color:#fff;font-family:'Frank Ruhl Libre',serif;font-weight:700;position:sticky;top:0;}
+  table.dg .dg-rh{position:sticky;right:0;background:var(--cream-soft,#FBF8F1);color:var(--forest-dark,#1E4744);font-weight:800;min-width:132px;max-width:150px;z-index:1;box-shadow:-1px 0 0 rgba(44,95,91,0.12);}
+  table.dg thead .dg-rh{background:var(--forest-dark,#1E4744);z-index:2;}
+  table.dg tbody tr:nth-child(even) td{background:#FBFAF6;}
+  .dg-link{border:none;background:none;padding:0;font:inherit;font-weight:700;color:var(--forest,#2C5F5B);text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:right;}
+  .dg-link:hover{color:var(--forest-dark,#1E4744);}
+  .dg-link:focus-visible,.dg-i:focus-visible{outline:3px solid var(--air);outline-offset:2px;border-radius:4px;}
+  .dg-i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--forest,#2C5F5B);background:#fff;color:var(--forest,#2C5F5B);font:700 0.72rem/1 Georgia,serif;font-style:italic;cursor:pointer;vertical-align:middle;margin-inline-start:4px;padding:0;}
+  .dg-note{font-size:0.86rem;color:#5e6b66;line-height:1.7;margin:14px 2px 0;}
+  #dgModal{position:fixed;inset:0;z-index:95;background:rgba(30,71,68,0.45);display:none;align-items:center;justify-content:center;padding:16px;}
+  #dgModal.show{display:flex;}
+  .dg-m{background:var(--cream-soft,#FBF8F1);border-radius:18px;padding:16px 18px;max-width:480px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,0.25);}
+  .dg-m-h{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .dg-m-h h3{margin:0;color:var(--forest-dark,#1E4744);font-family:'Frank Ruhl Libre',serif;}
+  .dg-m-x{border:none;background:none;font-size:1.1rem;cursor:pointer;color:#5e6b66;}
+  .dg-m-b{line-height:1.8;margin:10px 0 2px;}
+  @media print{ .dg-wrap{overflow:visible;box-shadow:none;} }
+</style>
 </body>
 </html>
