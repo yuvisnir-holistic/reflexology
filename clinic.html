@@ -1404,6 +1404,16 @@ function suggest(p){
   { const lt = linkedTreatment(p); const tt = tSugText(lt);
     if(tt){ if(typeof pathMatch==='function') pathMatch(tt).slice(0,2).forEach(name=>pathExercises(name,2).forEach(id=>add(id, `מהיומן של הטיפול: ${name}`)));
             if(typeof sefFromText==='function') sefFromText(tt,'').forEach(x=>{ if(WEEK_SF[x.sf]) pick('sf:'+x.sf, `מהיומן של הטיפול: אזור של ספירת ${x.sf} (${x.words.join(', ')})`); }); } }
+  if(typeof ADDICT_RE!=='undefined'){
+    const at = ['m_what','b_other','x1_what','x2_what','x3_what','e_notes','s_notes','l_notes','c_goal','c_wish','c_change','m_medical','m_why'].map(k=>S[k]||'').join(' ');
+    const hard = !!S.e_habits;
+    const isAdd = ADDICT_RE.test(at) || S.h_smoke || S.h_alcohol || (hard && (ADDICT_TOPIC.test(at) || S.h_sweet || S.h_screens || S.n7==='water'));
+    if(isAdd){
+      const why = ADDICT_RE.test(at) ? 'הוזכרה בשאלון התמכרות, או משהו שקשה להפסיק' : (S.h_smoke||S.h_alcohol) ? 'סומנו עישון או אלכוהול' : 'הרגל שקשה לשנות, יחד עם משיכה להנאה מסוימת';
+      ['tool-hitmakrut:0','tool-hitmakrut:4','tool-hitmakrut:3'].forEach(id=>add(id, why));
+      if(p.kabbalah) add('tool-hitmakrut:10', 'התמכרות, למי שמתחבר לשפת המקורות');
+    }
+  }
   if(typeof EX_SPECIAL!=='undefined'){
     const K = !!p.kabbalah;
     if(S.th_perfect||S.th_crit||S.sf_tif_self) add(EX_SPECIAL.light, 'קשיחות כלפי עצמו או דרישה לשלמות');
