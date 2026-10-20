@@ -1032,15 +1032,15 @@ function tPracticeHTML(t){
   let body = '';
   if(wi>=0){
     const w = p.weeks[wi]; const ids = w.items.filter(x=>EXR[x]);
-    body = `<p class="iq-hint" style="margin:0 0 6px">מקושר לשבוע ${wi+1} בלשונית התרגול, ${escH(w.date)}. מה שמוסיפים שם מופיע כאן.</p>
-      ${ids.length ? `<div class="rd-exs">${ids.map(x=>card(x, `tWeekRemove('${t.id}','${x}')`)).join('')}</div>` : `<p class="iq-hint" style="margin:0">עוד לא נבחרו תרגילים לשבוע הזה.</p>`}
-      <div class="sheet-actions no-print" style="margin:8px 0 0"><button class="bm-btn ghost" onclick="tWeekGo('${t.id}',true)">הצעות לתרגול לשבוע הזה</button><button class="bm-link" onclick="tWeekGo('${t.id}',false)">לשבוע בלשונית התרגול</button></div>`;
+    body = `<p class="iq-hint" style="margin:0 0 6px">מקושר למפגש ${wi+1} בלשונית התרגול, ${escH(w.date)}. מה שמוסיפים שם מופיע כאן.</p>
+      ${ids.length ? `<div class="rd-exs">${ids.map(x=>card(x, `tWeekRemove('${t.id}','${x}')`)).join('')}</div>` : `<p class="iq-hint" style="margin:0">עוד לא נבחרו תרגילים למפגש הזה.</p>`}
+      <div class="sheet-actions no-print" style="margin:8px 0 0"><button class="bm-btn ghost" onclick="tWeekGo('${t.id}',true)">הצעות לתרגול</button><button class="bm-link" onclick="tWeekGo('${t.id}',false)">לתרגול בלשונית התרגול</button></div>`;
   } else {
     const old = (t.exIds||[]).filter(x=>EXR[x]);
-    body = (old.length ? `<div class="rd-exs">${old.map(x=>card(x, `tExDel('${t.id}','${x}')`)).join('')}</div>` : `<p class="iq-hint" style="margin:0 0 6px">אחרי שסיימת למלא את הטיפול, אפשר לפתוח לו שבוע תרגול. התרגילים שתבחר שם יופיעו כאן.</p>`)
-      + `<div class="sheet-actions no-print" style="margin:8px 0 0"><button class="bm-btn" onclick="tWeekNew('${t.id}')">+ פתיחת שבוע תרגול לטיפול הזה</button></div>`;
+    body = (old.length ? `<div class="rd-exs">${old.map(x=>card(x, `tExDel('${t.id}','${x}')`)).join('')}</div>` : `<p class="iq-hint" style="margin:0 0 6px">אחרי שסיימת למלא את הטיפול, אפשר לפתוח לו תרגול. התרגילים שתבחר שם יופיעו כאן.</p>`)
+      + `<div class="sheet-actions no-print" style="margin:8px 0 0"><button class="bm-btn" onclick="tWeekNew('${t.id}')">+ פתיחת תרגול לטיפול הזה</button></div>`;
   }
-  return `<div class="f tr-practice"><span class="f-l">תרגול לשבוע הקרוב</span>${body}
+  return `<div class="f tr-practice"><span class="f-l">תרגול עד המפגש הבא</span>${body}
     <textarea class="inp" id="t_homework_${t.id}" rows="2" placeholder="עוד על התרגול, אם צריך" aria-label="עוד על התרגול" oninput="tSet('${t.id}','homework',this.value)">${escH(t.homework||'')}</textarea></div>`;
 }
 function weekLinkedTo(p,w){ return w && w.id ? p.treatments.find(t=>t.weekId===w.id) : null; }
@@ -1054,7 +1054,7 @@ function tWeekNew(id){
   t.weekId = w.id; p.activeWeek = p.weeks.indexOf(w);
   sugOpen = sugAvail(p);
   p.tab = 'weeks'; savePT(); renderCard(); window.scrollTo(0,0);
-  bmToast(`שבוע ${p.activeWeek+1} מקושר לטיפול. בחרו תרגילים`);
+  bmToast(`תרגול מפגש ${p.activeWeek+1} מקושר לטיפול. בחרו תרגילים`);
   if(!sugOpen) exOpen();
 }
 function tWeekGo(id, sug){ const p=curP(); const wi=weekOfTreatment(p,getT(id)); if(wi<0) return; p.activeWeek=wi; sugOpen=!!sug && sugAvail(p); p.tab='weeks'; savePT(); renderCard(); window.scrollTo(0,0); }
@@ -1075,11 +1075,11 @@ function tProg(id,k){ const t=getT(id); t.progress = t.progress===k ? '' : k; sa
 function tFill(id){
   const p = curP(); const t = getT(id);
   const wt = weekOfTreatment(p,t); const wi = wt>=0 ? wt : curWi(p); const ids = (p.weeks[wi].items||[]).filter(x=>EXR[x]);
-  if(!ids.length){ bmToast(`בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים`); return; }
+  if(!ids.length){ bmToast(`במפגש ${wi+1} בלשונית התרגול עוד אין תרגילים`); return; }
   t.exIds = t.exIds || []; let n = 0;
   ids.forEach(x=>{ if(!t.exIds.includes(x)){ t.exIds.push(x); n++; } });
   savePT(); renderCard();
-  bmToast(n ? `נוספו ${n===1?'תרגיל אחד':n+' תרגילים'} משבוע ${wi+1}` : `כל התרגילים של שבוע ${wi+1} כבר כאן`);
+  bmToast(n ? `נוספו ${n===1?'תרגיל אחד':n+' תרגילים'} ממפגש ${wi+1}` : `כל התרגילים של מפגש ${wi+1} כבר כאן`);
 }
 function tSave(id){ savePT(); openT.delete(id); renderCard(); bmToast('הטיפול נשמר'); }
 function tExDel(id,x){ const t=getT(id); t.exIds=(t.exIds||[]).filter(y=>y!==x); savePT(); renderCard(); }
@@ -1116,37 +1116,37 @@ function renderWeeks(){
   const items = w.items.filter(id=>EXR[id]);
   const qs = weekQs(items);
   $('cardBody').innerHTML = `
-    <div class="wk-tabs no-print">${p.weeks.map((wk,i)=>`<button class="wk-tab ${i===wi?'on':''}" onclick="ptWeek(${i})">שבוע ${i+1}<small>${escH(wk.date)}</small></button>`).join('')}
-      <button class="wk-new" onclick="ptNewWeek()">+ שבוע חדש</button></div>
+    <div class="wk-tabs no-print">${p.weeks.map((wk,i)=>`<button class="wk-tab ${i===wi?'on':''}" onclick="ptWeek(${i})">מפגש ${i+1}<small>${escH(wk.date)}</small></button>`).join('')}
+      <button class="wk-new" onclick="ptNewWeek()">+ תרגול למפגש חדש</button></div>
     <div class="sheet-actions no-print">
       <button class="bm-btn" onclick="exOpen()">+ הוספת תרגיל</button>
       ${sugAvail(p) ? `<button class="bm-btn ghost" onclick="sugToggle()">${sugOpen?'סגירת ההצעות':'הצעות לתרגול'}</button>` : ''}
       <button class="bm-btn ghost" onclick="window.print()" ${items.length?'':'disabled'}>הדפסה</button>
       <button class="bm-btn ghost" onclick="copySheet()" ${items.length?'':'disabled'}>העתקה כטקסט</button>
-      ${p.weeks.length>1 ? `<button class="bm-link danger" onclick="ptDeleteWeek()">מחיקת השבוע</button>` : ''}
+      ${p.weeks.length>1 ? `<button class="bm-link danger" onclick="ptDeleteWeek()">מחיקת התרגול הזה</button>` : ''}
     </div>
-    ${(()=>{ const lt=weekLinkedTo(p,w); if(!lt) return ''; const n=tSorted(p).findIndex(x=>x.id===lt.id)+1; return `<p class="iq-hint no-print" style="margin:0 0 8px">השבוע הזה מקושר לטיפול ${n} ביומן, ${fmtD(lt.date)}.</p>`; })()}
-    <div class="wk-date no-print"><label class="f-l" for="wk_date">תאריך השבוע, כמו ביומן הטיפולים</label><input class="inp" type="date" id="wk_date" value="${heToIso(w.date)}" onchange="ptWeekDate(this.value)"></div>
+    ${(()=>{ const lt=weekLinkedTo(p,w); if(!lt) return ''; const n=tSorted(p).findIndex(x=>x.id===lt.id)+1; return `<p class="iq-hint no-print" style="margin:0 0 8px">התרגול הזה מקושר לטיפול ${n} ביומן, ${fmtD(lt.date)}.</p>`; })()}
+    <div class="wk-date no-print"><label class="f-l" for="wk_date">תאריך המפגש, כמו ביומן הטיפולים</label><input class="inp" type="date" id="wk_date" value="${heToIso(w.date)}" onchange="ptWeekDate(this.value)"></div>
     ${sugOpen && sugAvail(p) ? sugHTML() : ''}
     <div class="paper wk-paper">
-      <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">שבוע ${wi+1}, ${escH(w.date)}</span></div>
+      <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">מפגש ${wi+1}, ${escH(w.date)}</span></div>
       <p class="paper-brand">יובל שניר, עבודה פנימית בין המפגשים</p>
       ${items.length ? `<p class="paper-intro">חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. פעולה שחוזרת שלוש פעמים יוצרת אחיזה, ושבע פעמים יוצרות טבע שני. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.</p>
       <ol class="paper-list">${items.map(id=>`<li><div class="pl-h"><h3>${escH(EXR[id].title)}</h3>
         <button class="x no-print" onclick="ptRemove('${id}')">הסרה</button></div>${EXR[id].why?`<p class="ex-why">${escH(EXR[id].why)}</p>`:''}<p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>`
-      : `<p class="paper-empty no-print">השבוע עוד ריק. "הוספת תרגיל" פותח את מאגר התרגילים: יסודות, ספירות, כלים, תרגילים כלליים, או לפי תלונה.${(iqHas(p)||readRecs(p).length)?' ו"הצעות לתרגול" מציע תרגילים לפי השאלון והאבחון.':''}</p>`}
-      <textarea class="note-in" placeholder="הערה אישית לשבוע הזה, אם יש" oninput="ptNote(this.value)">${escH(w.note||'')}</textarea>
+      : `<p class="paper-empty no-print">התרגול עוד ריק. "הוספת תרגיל" פותח את מאגר התרגילים: יסודות, ספירות, כלים, תרגילים כלליים, או לפי תלונה.${(iqHas(p)||readRecs(p).length)?' ו"הצעות לתרגול" מציע תרגילים לפי השאלון והאבחון.':''}</p>`}
+      <textarea class="note-in" placeholder="הערה אישית לתרגול הזה, אם יש" oninput="ptNote(this.value)">${escH(w.note||'')}</textarea>
       ${items.length ? `<div class="paper-q"><h3>לרישום, ולהביא למפגש הבא</h3>${(qs.length?qs:['מה עבד, מה היה קשה, ומה התגלה?']).map(q=>`<p>${escH(q)}</p>`).join('')}</div>` : ''}
     </div>`;
 }
 function ptWeek(i){ const p=curP(); p.activeWeek=i; savePT(); renderCard(); }
-function ptNewWeek(){ const p=curP(); const free=tSorted(p).filter(t=>!t.weekId || weekOfTreatment(p,t)<0); const ft=free[free.length-1]; const w={id:newId('w'), date:ft&&ft.date?isoToHe(ft.date):today(), items:[], note:''}; if(ft) ft.weekId=w.id; p.weeks.push(w); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); bmToast(`נפתח שבוע ${p.weeks.length}`); }
-function ptDeleteWeek(){ const p=curP(); if(p.weeks.length<2) return; if(!confirm(`למחוק את שבוע ${p.activeWeek+1}?`)) return; p.weeks.splice(p.activeWeek,1); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); }
+function ptNewWeek(){ const p=curP(); const free=tSorted(p).filter(t=>!t.weekId || weekOfTreatment(p,t)<0); const ft=free[free.length-1]; const w={id:newId('w'), date:ft&&ft.date?isoToHe(ft.date):today(), items:[], note:''}; if(ft) ft.weekId=w.id; p.weeks.push(w); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); bmToast(`נפתח תרגול למפגש ${p.weeks.length}`); }
+function ptDeleteWeek(){ const p=curP(); if(p.weeks.length<2) return; if(!confirm(`למחוק את התרגול של מפגש ${p.activeWeek+1}?`)) return; p.weeks.splice(p.activeWeek,1); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); }
 function ptRemove(id){ const w=curWeek(); w.items=w.items.filter(x=>x!==id); savePT(); renderCard(); }
 function ptNote(v){ curWeek().note=v; savePT(); }
 function sheetText(){
   const p=curP(); const w=curWeek(); const items=w.items.filter(id=>EXR[id]);
-  let t = `${p.name}\nעבודה פנימית בין המפגשים, שבוע ${p.activeWeek+1}\nחמש עד עשר דקות ביום, בזמן קבוע אם אפשר.\n\n`;
+  let t = `${p.name}\nעבודה פנימית בין המפגשים, מפגש ${p.activeWeek+1}\nחמש עד עשר דקות ביום, בזמן קבוע אם אפשר.\n\n`;
   items.forEach((id,i)=>{ t += `${i+1}. ${EXR[id].title}\n${EXR[id].why?'למה: '+EXR[id].why+'\n':''}${EXR[id].text}\n\n`; });
   if(w.note) t += w.note + '\n\n';
   const qs = weekQs(items);
@@ -1163,7 +1163,7 @@ function audOk(id){ const e=EXR[id]; return !e ? false : (exAud==='any' || (e.au
 function setExAud(v){ exAud=v; try{ localStorage.setItem('clinic-ex-aud',v); }catch(e){} exRender(); }
 function exCurrentIds(){
   const q = exQ.trim().toLowerCase();
-  if(q) return Object.values(EXR).filter(e=>(e.title+' '+e.text+' '+e.srcLabel).toLowerCase().includes(q)).map(e=>e.id);
+  if(q) return (typeof exSearch==='function' ? exSearch(q) : []);
   const sel = exSel[exTab];
   if(exTab==='el') return exBySrc('el:'+sel).map(e=>e.id);
   if(exTab==='sf') return exBySrc('sf:'+sel).map(e=>e.id);
@@ -1181,7 +1181,7 @@ function audBar(){
 const exSel = {el:'earth', sf:SF_LIST[0], tool:Object.keys(WTOOLS)[0], path:Object.keys(PATH_LINKS)[0]};
 function exOpen(){
   const p=curP();
-  $('exFor').textContent = `לתרגול של ${p.name}, שבוע ${p.activeWeek+1}`;
+  $('exFor').textContent = `לתרגול של ${p.name}, מפגש ${p.activeWeek+1}`;
   exQ=''; $('exQ').value='';
   $('exModal').classList.add('show'); document.body.style.overflow='hidden';
   exRender();
@@ -1215,7 +1215,7 @@ function exRender(){
   const srcs = $('exSrcs'), list = $('exList');
   if(q){
     srcs.innerHTML = '';
-    const hits = Object.values(EXR).filter(e=>(e.title+' '+e.text+' '+e.srcLabel).toLowerCase().includes(q));
+    const hits = (typeof exSearch==='function' ? exSearch(q) : []).map(id=>EXR[id]).filter(Boolean);
     { const rows = hits.filter(e=>audOk(e.id)).slice(0,80).map(e=>exRow(e.id,true)).join(''); list.innerHTML = rows || `<p class="ex-none">לא נמצא תרגיל עם המילה הזו${exAud!=='any'?', בסינון שנבחר':''}.</p>`; }
     return;
   }
@@ -1366,7 +1366,7 @@ function myFormHTML(){
       <optgroup label="כללי">${opt('gen','תרגילים כלליים')}</optgroup>
     </select></div>
     ${isTool ? '' : `<div class="f"><span class="f-l">קומה</span><div class="seg">${FLOOR_ORDER.map(([k,l])=>`<button class="${d.floor===k?'on':''}" onclick="myDraft.floor='${k}';exRender()">${l}</button>`).join('')}</div></div>`}
-    <div class="sheet-actions" style="margin:4px 0 0"><button class="bm-btn" onclick="mySave()">שמירה והוספה לשבוע</button><button class="bm-link" onclick="myOpen=false;exRender()">ביטול</button></div>
+    <div class="sheet-actions" style="margin:4px 0 0"><button class="bm-btn" onclick="mySave()">שמירה והוספה לתרגול</button><button class="bm-link" onclick="myOpen=false;exRender()">ביטול</button></div>
   </div>`;
 }
 function myStart(){ myOpen = true; myDraft = {title:'', text:'', src:myDefaultSrc(), floor:'guf'}; exRender(); $('exList').scrollTop = 0; const i=$('my_t'); if(i) i.focus(); }
@@ -1382,7 +1382,7 @@ function mySave(){
   else if(WTOOLS[d.src]){ exTab='tool'; exSel.tool=d.src; }
   else exTab='gen';
   exQ=''; $('exQ').value='';
-  exRender(); bmToast('התרגיל נשמר ונוסף לשבוע');
+  exRender(); bmToast('התרגיל נשמר ונוסף לתרגול');
 }
 function myDelete(id){
   const e = EXR[id]; if(!e || !e.mine) return;
@@ -1494,7 +1494,7 @@ function sugHTML(){
 }
 function sugToggle(){ sugOpen = !sugOpen; renderCard(); }
 function sugAdd(id){ const w=curWeek(); const i=w.items.indexOf(id); if(i<0) w.items.push(id); else w.items.splice(i,1); savePT(); renderCard(); }
-function sugAddAll(){ const w=curWeek(); suggest(curP()).list.forEach(([id])=>{ if(!w.items.includes(id)) w.items.push(id); }); savePT(); renderCard(); bmToast('ההצעות נוספו לשבוע'); }
+function sugAddAll(){ const w=curWeek(); suggest(curP()).list.forEach(([id])=>{ if(!w.items.includes(id)) w.items.push(id); }); savePT(); renderCard(); bmToast('ההצעות נוספו לתרגול'); }
 
 /* הצעות לתרגול: גם מתוך היומן של הטיפול שמקושר לשבוע */
 function linkedTreatment(p){ const w=p.weeks[curWi(p)]; return weekLinkedTo(p,w); }
@@ -2403,7 +2403,7 @@ function curWi(p){ return (p.activeWeek!=null && p.activeWeek<p.weeks.length) ? 
 function lastWeekItems(p){ const w = p.weeks[curWi(p)]; return (w.items||[]).filter(id=>EXR[id]); }
 function sheetTextFor(p, wi){
   const w = p.weeks[wi]; const items = w.items.filter(id=>EXR[id]);
-  let t = `עבודה פנימית בין המפגשים, שבוע ${wi+1}\nחמש עד עשר דקות ביום, בזמן קבוע אם אפשר.\n\n`;
+  let t = `עבודה פנימית בין המפגשים, מפגש ${wi+1}\nחמש עד עשר דקות ביום, בזמן קבוע אם אפשר.\n\n`;
   items.forEach((id,i)=>{ t += `${i+1}. ${EXR[id].title}\n${EXR[id].why?'למה: '+EXR[id].why+'\n':''}${EXR[id].text}\n\n`; });
   if(w.note) t += w.note + '\n\n';
   const qs = weekQs(items);
@@ -2412,7 +2412,7 @@ function sheetTextFor(p, wi){
 function sheetPaperFor(p, wi){
   const w = p.weeks[wi]; const items = w.items.filter(id=>EXR[id]); const qs = weekQs(items);
   return `<div class="paper rd-sheet">
-    <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">שבוע ${wi+1}, ${escH(w.date)}</span></div>
+    <div class="paper-h"><span class="paper-name">${escH(p.name)}</span><span class="paper-week">מפגש ${wi+1}, ${escH(w.date)}</span></div>
     <p class="paper-brand">יובל שניר, עבודה פנימית בין המפגשים</p>
     <p class="paper-intro">חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. פעולה שחוזרת שלוש פעמים יוצרת אחיזה, ושבע פעמים יוצרות טבע שני. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.</p>
     <ol class="paper-list">${items.map(id=>`<li><h3>${escH(EXR[id].title)}</h3>${EXR[id].why?`<p class="ex-why">${escH(EXR[id].why)}</p>`:''}<p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>
@@ -2429,7 +2429,7 @@ function readCopyPatient(){
   const p = curP(); if(!p || !p.reading) return;
   const n = lastWeekItems(p).length;
   const txt = readPatientText(p) + (n ? '\n\n\n' + sheetTextFor(p, curWi(p)) : '');
-  iqCopyText(txt, n ? 'האבחון והתרגול הועתקו' : `האבחון הועתק. בשבוע ${curWi(p)+1} בתרגול עוד אין תרגילים`);
+  iqCopyText(txt, n ? 'האבחון והתרגול הועתקו' : `האבחון הועתק. בתרגול של מפגש ${curWi(p)+1} עוד אין תרגילים`);
 }
 const _renderReading = renderReading;
 renderReading = function(){
@@ -2442,14 +2442,14 @@ renderReading = function(){
   const bF = bar.querySelector('button[onclick="iqReadPrint(false)"]'); if(bF){ bF.textContent = 'הדפסה כולל החלק שלי'; bF.classList.add('ghost'); }
   const wi = curWi(p), n = lastWeekItems(p).length, recs = readRecs(p);
   const note = n
-    ? `ב"PDF והדפסה למטופל" וב"העתקה למטופל" יוצאים האבחון למטופל והתרגול של שבוע ${wi+1}, ${n===1?'תרגיל אחד':n+' תרגילים'}, בלי החלק שלך.`
-    : `בשבוע ${wi+1} בלשונית התרגול עוד אין תרגילים, ולכן בהדפסה ובהעתקה יופיע רק האבחון. אם הוספת תרגילים לשבוע אחר, צריך לבחור אותו בלשונית התרגול.`;
+    ? `ב"PDF והדפסה למטופל" וב"העתקה למטופל" יוצאים האבחון למטופל והתרגול של מפגש ${wi+1}, ${n===1?'תרגיל אחד':n+' תרגילים'}, בלי החלק שלך.`
+    : `בתרגול של מפגש ${wi+1} עוד אין תרגילים, ולכן בהדפסה ובהעתקה יופיע רק האבחון. אם הוספת תרגילים למפגש אחר, צריך לבחור אותו בלשונית התרגול.`;
   bar.insertAdjacentHTML('afterend', `<p class="iq-hint no-print rd-note">${note}${recs.length?` באבחון הוצעו ${recs.length===1?'תרגיל אחד':recs.length+' תרגילים'} מהמאגר, והם מחכים בלשונית התרגול, תחת "הצעות לתרגול".`:''}</p>`);
   if(n) wrap.insertAdjacentHTML('beforeend', sheetPaperFor(p, wi));
   if(n){
     const paper = $('iqRead'); const ptBox = paper && paper.querySelector(':scope > div[style*="margin-top:14px"]');
     const ids = lastWeekItems(p);
-    const html = `<div class="rd-pt-ex no-print"><div class="rd-pt-ex-h">התרגול שיצורף לאבחון, שבוע ${wi+1}</div><div class="rd-exs">${ids.map(id=>{ const e=EXR[id]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span><button type="button" class="bm-link danger" onclick="event.preventDefault();event.stopPropagation();rdAdd('${id}')">הסרה</button></summary>${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p></details>`; }).join('')}</div></div>`;
+    const html = `<div class="rd-pt-ex no-print"><div class="rd-pt-ex-h">התרגול שיצורף לאבחון, מפגש ${wi+1}</div><div class="rd-exs">${ids.map(id=>{ const e=EXR[id]; return `<details class="rd-ex"><summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span><button type="button" class="bm-link danger" onclick="event.preventDefault();event.stopPropagation();rdAdd('${id}')">הסרה</button></summary>${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p></details>`; }).join('')}</div></div>`;
     if(ptBox) ptBox.insertAdjacentHTML('afterend', html); else if(paper) paper.insertAdjacentHTML('beforeend', html);
   }
   readTabs();
@@ -2602,7 +2602,7 @@ function rdAdd(id){
   const p = curP(); const w = p.weeks[curWi(p)]; const i = w.items.indexOf(id);
   if(i<0) w.items.push(id); else w.items.splice(i,1);
   savePT(); const y = window.scrollY; renderReading(); window.scrollTo(0,y);
-  bmToast(i<0 ? `נוסף לתרגול, שבוע ${curWi(p)+1}` : 'הוסר מהתרגול');
+  bmToast(i<0 ? `נוסף לתרגול, מפגש ${curWi(p)+1}` : 'הוסר מהתרגול');
 }
 function rdJump(id){
   const d = document.querySelector(`details.rd-ex[data-ex="${id}"]`); if(!d) return;
@@ -2617,6 +2617,107 @@ function exOpenAt(tab, sel){
 /* בהדפסה כל הכרטיסים נפתחים, ואחריה חוזרים למצב הקודם */
 window.addEventListener('beforeprint', ()=>{ document.querySelectorAll('details.rd-card, details.rd-ex').forEach(d=>{ d.dataset.was = d.open?'1':''; d.open = true; }); });
 window.addEventListener('afterprint', ()=>{ document.querySelectorAll('details.rd-card, details.rd-ex').forEach(d=>{ d.open = d.dataset.was==='1'; }); });
+
+/* ===================== שאלון אמצע ===================== */
+const MID_CH = [['much','הקלה משמעותית'],['better','הקלה'],['same','ללא שינוי'],['worse','הרעה במצב']];
+const MID_GEN = [['better','טוב יותר'],['same','ללא שינוי'],['worse','פחות טוב'],['na','לא רלוונטי']];
+const MID_EX = [['yes','עזר'],['some','עזר קצת'],['no','לא עזר'],['skip','לא עשיתי']];
+const MID_SIGNS = [['energy','אנרגיה'],['sleep','שינה'],['mood','מצב רוח'],['digest','עיכול']];
+function midP(){ const p=curP(); if(!p.mid) p.mid={}; return p; }
+function midExIds(p){ const s=new Set(); (p.weeks||[]).forEach(w=>(w.items||[]).forEach(id=>{ if(EXR[id]) s.add(id); })); return [...s]; }
+function midExtras(p){ const i=p.intake||{}; const out=[]; ['x1','x2','x3'].forEach(k=>{ if((i[k+'_what']||'').trim()) out.push([k, i[k+'_what']]); }); if((i.b_other||'').trim()) out.push(['bo', i.b_other]); return out; }
+function midRadios(key, pairs){ const v=(curP().mid||{})[key]; return `<div class="iq-opts">${pairs.map(([val,l])=>`<label class="iq-opt"><input type="radio" name="mid_${key}" ${v===val?'checked':''} onchange="midSet('${key}','${val}',true)"><span>${l}</span></label>`).join('')}</div>`; }
+function midTA(key, label, rows){ const v=(curP().mid||{})[key]||''; return `<div class="iq-item"><label class="iq-lbl" for="mid_${key}">${label}</label><textarea id="mid_${key}" rows="${rows||2}" oninput="midSet('${key}',this.value,true)">${escH(v)}</textarea></div>`; }
+function midScale(key, lo, hi){ const v=(curP().mid||{})[key]; let h=`<div class="iq-scale">`+`<span class="end">${lo}</span>`; for(let i=0;i<=10;i++) h+=`<button type="button" class="iq-sc ${String(v)===String(i)?'on':''}" onclick="midSet('${key}',${i},true);[...this.parentElement.children].forEach(b=>b.classList.remove('on'));this.classList.add('on')">${i}</button>`; return h+`<span class="end">${hi}</span></div>`; }
+function midSet(k, v, quiet){ const p=midP(); if(v===''||v===null) delete p.mid[k]; else p.mid[k]=v; if(!p.mid.date) p.mid.date=isoToday(); savePT(); if(!quiet) renderIntake(); }
+function midHTML(p){
+  const i = p.intake||{}; const m = p.mid||{}; const n = (p.treatments||[]).length;
+  let h = `<div class="paper-h"><h2>שאלון אמצע</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
+  h += `<p class="iq-hint" style="margin:0 0 10px">${escH(p.name)}, אחרי ${n===1?'טיפול אחד':n+' טיפולים'}. ${m.date?'מולא ב־'+fmtD(m.date)+'.':''} השאלון בודק מה השתנה מאז ההתחלה, מה עזר, ועל מה כדאי להתמקד הלאה.</p>`;
+  h += `<section class="iq-q"><h3>התלונה העיקרית</h3>`;
+  if((i.m_what||'').trim()) h += `<p class="iq-hint" style="margin:0 0 8px">בהתחלה נכתב: "${escH(i.m_what)}"${i.m_level!==undefined?`, בעוצמה ${escH(String(i.m_level))} מתוך 10`:''}.</p>`;
+  h += `<div class="iq-item"><span class="iq-lbl">איך זה עכשיו, לעומת ההתחלה?</span>${midRadios('change', MID_CH)}</div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">עוצמה היום</span>${midScale('level','בכלל לא','מאוד')}</div>`;
+  h += midTA('what','מה השתנה, ומתי שמת לב לשינוי?',2);
+  h += `</section>`;
+  const ex = midExtras(p);
+  if(ex.length){ h += `<section class="iq-q"><h3>תלונות נוספות</h3>`; ex.forEach(([k,t])=>{ h += `<div class="iq-item"><span class="iq-lbl">${escH(t)}</span>${midRadios('x_'+k, MID_GEN)}</div>`; }); h += `</section>`; }
+  h += `<section class="iq-q"><h3>סימנים כלליים</h3><p class="iq-hint">גם אם לא הגעת בגללם. אם זה לא נוגע לך, אפשר לסמן לא רלוונטי.</p>`;
+  MID_SIGNS.forEach(([k,l])=>{ h += `<div class="iq-item"><span class="iq-lbl">${l}</span>${midRadios('g_'+k, MID_GEN)}</div>`; });
+  h += `</section>`;
+  const ids = midExIds(p);
+  h += `<section class="iq-q"><h3>התרגול</h3>`;
+  if(ids.length){ h += `<p class="iq-hint">ליד כל תרגיל: האם הוא עזר?</p>`; ids.forEach(id=>{ h += `<div class="iq-item"><span class="iq-lbl">${escH(EXR[id].title)}</span>${midRadios('ex_'+id.replace(/[^\w\u0590-\u05FF]/g,'_'), MID_EX)}</div>`; }); }
+  else h += `<p class="iq-hint">עוד לא נשמרו תרגילים בלשונית התרגול.</p>`;
+  h += midTA('helped','מה עזר הכי הרבה, בטיפולים או בתרגול?',2);
+  h += midTA('hard','מה היה קשה, או פחות עזר?',2);
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>החיים היום</h3>`;
+  h += midTA('life','איך החיים נראים היום, לעומת ההתחלה?',2);
+  h += midTA('good','מה הלך טוב בתקופה הזו?',2);
+  h += midTA('less','ומה פחות?',2);
+  h += midTA('style','שינויים באורח החיים: שינה, אוכל, תנועה, עבודה, קשרים',2);
+  h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ היום</span>${midScale('stress','מעט','הרבה')}</div>`;
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>הלאה</h3>`;
+  h += midTA('next','על מה היית רוצה שנתמקד עכשיו?',2);
+  h += midTA('notes','הערות, או משהו להוסיף',1);
+  h += `</section>`;
+  return h;
+}
+function midText(p){
+  const m=p.mid||{}; const i=p.intake||{}; const L=[];
+  const lab=(pairs,v)=>{ const x=pairs.find(q=>q[0]===v); return x?x[1]:''; };
+  L.push(`ניתוח אמצע: ${p.name}`, `תאריך שאלון האמצע: ${m.date?fmtD(m.date):''} | מספר טיפולים עד עכשיו: ${(p.treatments||[]).length}`, '');
+  L.push('=== השאלון הראשון ===');
+  L.push(iqHas(p) ? iqText() : 'לא מולא שאלון ראשון.');
+  L.push('', '=== האבחון הקודם ===', (p.reading&&p.reading.text) ? p.reading.text : 'אין אבחון שמור.');
+  L.push('', '=== יומן הטיפולים ===');
+  tSorted(p).forEach((t,k)=>{
+    L.push(`טיפול ${k+1}, ${fmtD(t.date)}`);
+    if(t.done) L.push(`מה עשינו: ${t.done}`); if(t.foot) L.push(`בכף הרגל: ${t.foot}`);
+    if(t.progress) L.push(`איך הגיע: ${PROG[t.progress]||t.progress}${t.progressNote?', '+t.progressNote:''}`);
+    const wi = weekOfTreatment(p,t); const ids = wi>=0 ? p.weeks[wi].items.filter(x=>EXR[x]) : (t.exIds||[]).filter(x=>EXR[x]);
+    if(ids.length) L.push(`תרגול: ${ids.map(x=>EXR[x].title).join(', ')}`);
+    if(t.homework) L.push(`עוד על התרגול: ${t.homework}`); if(t.notes) L.push(`הערות: ${t.notes}`);
+    L.push('');
+  });
+  L.push('=== שאלון האמצע ===');
+  if(i.m_what) L.push(`התלונה העיקרית בהתחלה: ${i.m_what}${i.m_level!==undefined?` (עוצמה ${i.m_level}/10)`:''}`);
+  L.push(`עכשיו: ${lab(MID_CH,m.change)}${m.level!==undefined?` | עוצמה היום ${m.level}/10`:''}`);
+  if(m.what) L.push(`מה השתנה: ${m.what}`);
+  midExtras(p).forEach(([k,t])=>{ if(m['x_'+k]) L.push(`${t}: ${lab(MID_GEN,m['x_'+k])}`); });
+  L.push(`סימנים כלליים: ${MID_SIGNS.map(([k,l])=>m['g_'+k]?`${l} ${lab(MID_GEN,m['g_'+k])}`:'').filter(Boolean).join(', ')}`);
+  const ex = midExIds(p).map(id=>{ const v=m['ex_'+id.replace(/[^\w\u0590-\u05FF]/g,'_')]; return v?`${EXR[id].title}: ${lab(MID_EX,v)}`:''; }).filter(Boolean);
+  if(ex.length) L.push(`התרגילים: ${ex.join(' | ')}`);
+  [['helped','מה עזר הכי הרבה'],['hard','מה היה קשה'],['life','החיים היום'],['good','מה הלך טוב'],['less','מה פחות'],['style','שינויים באורח החיים'],['next','על מה להתמקד'],['notes','הערות']].forEach(([k,l])=>{ if(m[k]) L.push(`${l}: ${m[k]}`); });
+  if(m.stress!==undefined) L.push(`רמת לחץ היום: ${m.stress}/10${i.l_stress!==undefined?` (בהתחלה ${i.l_stress}/10)`:''}`);
+  return L.join('\n');
+}
+function midCopy(){ const p=curP(); const t=midText(p); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(()=>bmToast('הועתק לניתוח אמצע'), ()=>{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); bmToast('הועתק לניתוח אמצע'); }); }
+function midClear(){ const p=curP(); if(!confirm('לנקות את שאלון האמצע?')) return; p.mid={}; savePT(); renderIntake(); }
+const _renderIntakeMid = renderIntake;
+renderIntake = function(){
+  const p = curP(); const wrap = document.getElementById('iqWrap');
+  if(!p || !wrap || p.iqView!=='mid'){ _renderIntakeMid.apply(this, arguments); midButton(); return; }
+  wrap.className='';
+  wrap.innerHTML = `<div class="sheet-actions no-print">
+      <button class="bm-btn" onclick="midCopy()">העתקה לניתוח אמצע</button>
+      <button class="bm-btn ghost" onclick="window.print()">הדפסה</button>
+      ${Object.keys(p.mid||{}).length?`<button class="bm-link danger" onclick="midClear()">ניקוי שאלון האמצע</button>`:''}
+    </div>
+    <div class="iq-secs no-print" style="max-width:600px">
+      <button class="iq-sec" onclick="midBack('quick')">שאלון מהיר</button>
+      <button class="iq-sec" onclick="midBack('lean')">שאלון</button>
+      <button class="iq-sec" onclick="midBack('full')">שאלון מתקדם</button>
+      <button class="iq-sec on">שאלון אמצע</button>
+    </div>
+    <div class="paper iq-paper" id="iqForm">${midHTML(p)}</div>`;
+  if(typeof iqAcc==='function') iqAcc(document.getElementById('iqForm'), true);
+};
+function midBack(m){ const p=curP(); p.iqView=''; p.intakeMode=m; savePT(); renderIntake(); }
+function midOpen(){ const p=curP(); p.iqView='mid'; savePT(); renderIntake(); }
+function midButton(){ const secs=document.querySelector('#iqWrap .iq-secs'); if(secs && !secs.querySelector('.mid-btn')){ secs.style.maxWidth='600px'; secs.insertAdjacentHTML('beforeend','<button class="iq-sec mid-btn" onclick="midOpen()">שאלון אמצע</button>'); } }
 
 
 /* ===== חיבורים ===== */
