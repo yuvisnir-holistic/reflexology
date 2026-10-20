@@ -3372,7 +3372,7 @@ renderPathologies();
 <script>
 /* ===== לשונית חמש הדרגות ===== */
 (function(){
-  const HEAD = ["", "דרגה 1", "דרגה 2", "דרגה 3", "דרגה 4", "דרגה 5"]; const ROWS = [["יסוד", "אור", "אש", "מים", "רוח", "עפר"], ["ספירה", "כתר", "חכמה", "בינה", "זעיר אנפין (שש המידות, חסד עד יסוד)", "מלכות"], ["דצח\"מ", "", "מדבר", "חי", "צומח", "דומם"], ["דרגת הנשמה", "יחידה", "חיה", "נשמה", "רוח", "נפש"], ["אות בשם הוי\"ה", "קוצו של יו\"ד", "יו\"ד", "ה\"א ראשונה", "וא\"ו", "ה\"א אחרונה"], ["עולם", "אדם קדמון", "אצילות, עולם הייחוד העליון", "בריאה, עולם הנשמות", "יצירה, עולם המלאכים", "עשייה, עולם הגלגלים"], ["כוח בנפש", "מדמה ותענוג", "רצון", "מחשבה", "הרגש ודיבור", "מעשה"], ["איפה הנשמה פועלת", "דבוקה באין סוף, לפני שיצאה", "ברצון העמוק שבלב", "בהבנה הפנימית", "ברגש ובדיבור", "בתנועה"], ["מקום באדם", "מאין סוף ועד הבריאה", "מעל הראש", "בתוך הלב", "בקנה ובכנפי הריאה", "במחזור הדם"], ["קומת הגוף", "מוח", "עצמות", "גידים", "בשר", "עור"], ["איבר ומערכת בגוף", "הגולגולת", "המוח והלב", "מחזור הדם", "מערכת הנשימה", "מערכת העצמות והפרקים"], ["היסוד בביטוי חיובי", "קדושה והארה שמתלבשת בכלים", "חמימות והתלהבות", "צמיחה", "פתיחות, גמישות ודיבור טוב", "יציבות, התמדה ורציפות"], ["היסוד בביטוי שלילי", "הארה שלא מתלבשת בכלים, תוהו וחושך", "גאווה וכעס, התלהטות", "רדיפת תענוגות", "פיזור ודיבור לבטלה", "כבדות, קיבעון, עצבות ואטימות"], ["כשהיסוד משתלט, בגוף", "", "חימום יתר, יובש ודלקות", "לחץ דם", "בעיות נשימה וגידולים", "בעיות בעצמות ורפיון באיברים"], ["עולם התוהו שבנפש", "תהום (משותף לרצון ולמדמה)", "תהום", "חושך", "בוהו", "תוהו"], ["איך זה נראה אצל אדם", "אין נקודת אחיזה, הכול הפכפך", "אין נקודת אחיזה, הכול הפכפך", "היפוך אור וחושך, \"אין בחירה\"", "ערבוביה ברגש, דיבור מהוסס ולא מכוון", "פיזור, אין סדר בזמן ובתנועות"], ["כיוון התיקון", "חיבור מחדש לרצון הבורא מתוך אמונה", "חיבור מחדש לרצון הבורא מתוך אמונה", "תורה וקריאת שמע, קבלת עול מחדש", "עידון מידות, \"מודה אני\" כדיבור פותח", "סדר מכוון בתנועות הגוף, גם הפשוטות"], ["העבודה בנפש", "", "", "המתקה (ייחודים)", "הבדלה (בירורים)", "הכנעה (ניסיונות)"], ["משל המים", "המים במכל שעל הגג", "הצינור הראשי היורד מהגג", "הצינורות שבתוך הקירות", "הצינור שליד הברז", "המים שיוצאים מהברז אל הבית"], ["כשהדרגה בולטת באדם", "רגעים של אחדות וביטול ה\"אני\"", "רגעים של התעלות וחיבור עמוק", "חכם, רואה את התמונה הגדולה", "רגיש, עשיר ברגש, יוצר קשרים", "מעשי, יוזם, מממש"]]; const INFO = {"דרגת הנשמה": "לפי המקורות, הנשמה אחת, אבל יש בה חמש דרגות: נפש, רוח, נשמה, חיה ויחידה. הנפש היא הקרובה ביותר לגוף, ומתלבשת בדם ובתנועה, והיחידה היא הגבוהה ביותר, דבוקה במקורה. בין דרגה לדרגה יכול להיווצר נתק, ושם יושבת המחיצה.", "עולם": "ארבעת העולמות, אצילות, בריאה, יצירה ועשייה, ומעליהם אדם קדמון, הם רמות שדרכן האור יורד מהמקור עד לעולם המעשה. כל עולם מקביל לדרגה בנשמה, ליסוד ולכוח בנפש, ולכן אותו מבנה חוזר גם בעולם וגם באדם.", "כוח בנפש": "הנשמה אחת, אבל היא מתלבשת באדם בחמישה מישורים: מדמה ותענוג, רצון, מחשבה, הרגש והדיבור, ומעשה. כוחות הנפש מתווכים בין דרגות הנשמה לבין קומות הגוף. ההשתלשלות היא מלמעלה למטה: מהתענוג נולד רצון, הרצון מתלבש במחשבה, המחשבה ברגש ובדיבור, ובסוף במעשה.", "עולם התוהו שבנפש": "כנגד העולמות של הקדושה עומדים ארבעה מצבים הפוכים: תוהו, בוהו, חושך ותהום. אלה מצבים שהנפש יכולה לחוות, לפעמים כולם ביום אחד. בהלה, למשל, היא מצב שבו הנפש אינה יכולה להכיל את המציאות, ונכנס לתוכה הבוהו. הדרך חזרה היא חיבור מחדש, ובעיקר תוספת של אמונה, שמאפשרת להתמודד עם המציאות ולפרש אותה לטובה.", "משל המים": "כמו בבניין, שבו המים מגיעים מהמכל שעל הגג, דרך הצינורות שבקירות, עד לברז, כך האור יורד מהמקור דרך הדרגות עד למעשה. כשצינור באמצע נסתם, המים לא מגיעים לברז, והלחץ מצטבר מעל הסתימה. כך גם מחיצה בין דרגה לדרגה."};
+  const HEAD = ["ממד", "שורש", "דרגה 1", "דרגה 2", "דרגה 3", "דרגה 4"]; const ROWS = [["יסוד", "אור", "אש", "מים", "רוח", "עפר"], ["ספירה", "כתר", "חכמה", "בינה", "זעיר אנפין (שש המידות, חסד עד יסוד)", "מלכות"], ["דצח\"מ", "", "מדבר", "חי", "צומח", "דומם"], ["דרגת הנשמה", "יחידה", "חיה", "נשמה", "רוח", "נפש"], ["אות בשם הוי\"ה", "קוצו של יו\"ד", "יו\"ד", "ה\"א ראשונה", "וא\"ו", "ה\"א אחרונה"], ["עולם", "אדם קדמון", "אצילות, עולם הייחוד העליון", "בריאה, עולם הנשמות", "יצירה, עולם המלאכים", "עשייה, עולם הגלגלים"], ["כוח בנפש", "מדמה ותענוג", "רצון", "מחשבה", "הרגש ודיבור", "מעשה"], ["איפה הנשמה פועלת", "דבוקה באין סוף, לפני שיצאה", "ברצון העמוק שבלב", "בהבנה הפנימית", "ברגש ובדיבור", "בתנועה"], ["מקום באדם", "מאין סוף ועד הבריאה", "מעל הראש", "בתוך הלב", "בקנה ובכנפי הריאה", "במחזור הדם"], ["קומת הגוף", "מוח", "עצמות", "גידים", "בשר", "עור"], ["איבר ומערכת בגוף", "הגולגולת", "המוח והלב", "מחזור הדם", "מערכת הנשימה", "מערכת העצמות והפרקים"], ["היסוד בביטוי חיובי", "קדושה והארה שמתלבשת בכלים", "חמימות והתלהבות", "צמיחה", "פתיחות, גמישות ודיבור טוב", "יציבות, התמדה ורציפות"], ["היסוד בביטוי שלילי", "הארה שלא מתלבשת בכלים, תוהו וחושך", "גאווה וכעס, התלהטות", "רדיפת תענוגות", "פיזור ודיבור לבטלה", "כבדות, קיבעון, עצבות ואטימות"], ["כשהיסוד משתלט, בגוף", "", "חימום יתר, יובש ודלקות", "לחץ דם", "בעיות נשימה וגידולים", "בעיות בעצמות ורפיון באיברים"], ["עולם התוהו שבנפש", "תהום (משותף לרצון ולמדמה)", "תהום", "חושך", "בוהו", "תוהו"], ["איך זה נראה אצל אדם", "אין נקודת אחיזה, הכול הפכפך", "אין נקודת אחיזה, הכול הפכפך", "היפוך אור וחושך, \"אין בחירה\"", "ערבוביה ברגש, דיבור מהוסס ולא מכוון", "פיזור, אין סדר בזמן ובתנועות"], ["כיוון התיקון", "חיבור מחדש לרצון הבורא מתוך אמונה", "חיבור מחדש לרצון הבורא מתוך אמונה", "תורה וקריאת שמע, קבלת עול מחדש", "עידון מידות, \"מודה אני\" כדיבור פותח", "סדר מכוון בתנועות הגוף, גם הפשוטות"], ["העבודה בנפש", "", "", "המתקה (ייחודים)", "הבדלה (בירורים)", "הכנעה (ניסיונות)"], ["משל המים", "המים במכל שעל הגג", "הצינור הראשי היורד מהגג", "הצינורות שבתוך הקירות", "הצינור שליד הברז", "המים שיוצאים מהברז אל הבית"], ["כשהדרגה בולטת באדם", "רגעים של אחדות וביטול ה\"אני\"", "רגעים של התעלות וחיבור עמוק", "חכם, רואה את התמונה הגדולה", "רגיש, עשיר ברגש, יוצר קשרים", "מעשי, יוזם, מממש"]]; const INFO = {"דרגת הנשמה": "לפי המקורות, הנשמה אחת, אבל יש בה חמש דרגות: נפש, רוח, נשמה, חיה ויחידה. הנפש היא הקרובה ביותר לגוף, ומתלבשת בדם ובתנועה, והיחידה היא הגבוהה ביותר, דבוקה במקורה. בין דרגה לדרגה יכול להיווצר נתק, ושם יושבת המחיצה.", "עולם": "ארבעת העולמות, אצילות, בריאה, יצירה ועשייה, ומעליהם אדם קדמון, הם רמות שדרכן האור יורד מהמקור עד לעולם המעשה. כל עולם מקביל לדרגה בנשמה, ליסוד ולכוח בנפש, ולכן אותו מבנה חוזר גם בעולם וגם באדם.", "כוח בנפש": "הנשמה אחת, אבל היא מתלבשת באדם בחמישה מישורים: מדמה ותענוג, רצון, מחשבה, הרגש והדיבור, ומעשה. כוחות הנפש מתווכים בין דרגות הנשמה לבין קומות הגוף. ההשתלשלות היא מלמעלה למטה: מהתענוג נולד רצון, הרצון מתלבש במחשבה, המחשבה ברגש ובדיבור, ובסוף במעשה.", "עולם התוהו שבנפש": "כנגד העולמות של הקדושה עומדים ארבעה מצבים הפוכים: תוהו, בוהו, חושך ותהום. אלה מצבים שהנפש יכולה לחוות, לפעמים כולם ביום אחד. בהלה, למשל, היא מצב שבו הנפש אינה יכולה להכיל את המציאות, ונכנס לתוכה הבוהו. הדרך חזרה היא חיבור מחדש, ובעיקר תוספת של אמונה, שמאפשרת להתמודד עם המציאות ולפרש אותה לטובה.", "משל המים": "כמו בבניין, שבו המים מגיעים מהמכל שעל הגג, דרך הצינורות שבקירות, עד לברז, כך האור יורד מהמקור דרך הדרגות עד למעשה. כשצינור באמצע נסתם, המים לא מגיעים לברז, והלחץ מצטבר מעל הסתימה. כך גם מחיצה בין דרגה לדרגה.", "יסוד": "כל דרגה קשורה ליסוד אחד, מתוך חמשת יסודות הדרגות: אור, אש, מים, רוח ועפר. האור הוא השורש שמעל היסודות, והעפר הוא המעשה, הגשמי ביותר. אלה יסודות של הדרגות, ולכן הם שונים מעט ממסגרת ארבעת היסודות בשאר האתר.", "ספירה": "כל דרגה מקבילה לספירה או לקבוצת ספירות: הכתר בשורש, החכמה, הבינה, זעיר אנפין, שהוא שש הספירות מחסד עד יסוד, והמלכות. כך עץ הספירות כולו נפרש על פני חמש הדרגות.", "דצח\"מ": "דצח\"מ הם ארבע הממלכות: דומם, צומח, חי ומדבר. כל ממלכה מכילה את שמתחתיה, והאדם כולל את כולן. כל דרגה מתאימה לממלכה אחת, ומלמדת איזה חלק באדם פועל דרכה.", "אות בשם הוי\"ה": "לשם הוי\"ה ארבע אותיות, ומעליהן קוצו של יו\"ד, שהוא השורש. כל אות מבטאת שלב בהשתלשלות האור, מהנקודה העליונה ועד ההתפשטות במעשה, ולכן כל דרגה מקבילה לאות אחת.", "איפה הנשמה פועלת": "הנשמה אחת, אבל בכל דרגה היא פועלת במקום אחר באדם, מהמקיף שמעל הגוף ועד מה שמתלבש בגוף עצמו. השורה מראה עד כמה הדרגה קרובה לגוף או רחוקה ממנו.", "מקום באדם": "המקום באדם שבו הדרגה מתגלה, מהראש ומה שמעליו ועד הגוף כולו. כך אפשר לקשר בין מה שעולה בשיחה לבין המקום שבו זה פועל.", "קומת הגוף": "לפי המקורות, לגוף חמש קומות, מהפנימית לחיצונית: מוח, עצמות, גידים, בשר ועור. כל קומה מקבילה לדרגה בנשמה ולכוח בנפש, ובריאות היא מצב שבו כולן מתואמות.", "איבר ומערכת בגוף": "האיבר או המערכת בגוף שבהם הדרגה מתלבשת. כשיש בעיה במערכת מסוימת, אפשר לשאול מה קורה בדרגה ובכוח הנפש שמקבילים לה.", "היסוד בביטוי חיובי": "לכל יסוד יש ביטוי חיובי, כשהוא מאוזן ומתוקן: האור מאיר, האש מחממת ומלהיבה, המים מצמיחים, הרוח פותחת ומאפשרת דיבור טוב, והעפר נותן יציבות והתמדה.", "היסוד בביטוי שלילי": "אותו יסוד, כשהוא יוצא מאיזון, מתבטא בצורה שלילית: האש בגאווה ובכעס, המים ברדיפת תענוגות, הרוח בפיזור ובדיבור לבטלה, והעפר בכבדות, בעצבות ובקיבעון.", "כשהיסוד משתלט, בגוף": "כשיסוד אחד משתלט, הוא מתבטא גם בגוף, בצורה שמתאימה לטבע שלו. השורה עוזרת לראות את הקשר בין המידה שיצאה מאיזון לבין מה שקורה בגוף.", "איך זה נראה אצל אדם": "תיאור של איך המצב נראה בחיים, אצל אדם שהדרגה הזו אצלו בתוהו, כדי שיהיה אפשר לזהות אותו במפגש ובשיחה.", "כיוון התיקון": "הכיוון שבו הולכים כדי להחזיר את הדרגה לאיזון. התיקון אינו מלחמה ביסוד, אלא החזרה שלו לביטוי החיובי שלו.", "העבודה בנפש": "דרך העבודה הפנימית שמתאימה לכל דרגה. ההכנעה, ההבדלה וההמתקה הן שלוש תנועות שעוברות מהנפש אל הרוח ואל הנשמה, ובכלים יש כרטיס שמסביר אותן.", "כשהדרגה בולטת באדם": "תיאור של אדם שהדרגה הזו בולטת אצלו, בטבע ובאופי, ולא בהכרח בחוסר איזון. זה עוזר להבין את הנטייה הבסיסית של המטופל."};
   const EL = {'אש':'fire','מים':'water','רוח':'air','עפר':'earth'};
   const SF = {'כתר':'כתר','חכמה':'חכמה','בינה':'בינה','מלכות':'מלכות'};
   const L = (label, js) => `<button type="button" class="dg-link" onclick="${js}">${label}</button>`;
@@ -3401,18 +3401,19 @@ renderPathologies();
     setTimeout(()=>{ const c=[...document.querySelectorAll('#organsList .organ-card')].find(x=>{ const h=x.querySelector('.organ-head h3'); return h && h.textContent.trim()===name; });
       if(c){ c.classList.add('open'); if(typeof scrollToEl==='function') scrollToEl(c); } }, 60);
   };
+  window.dgInfoN = function(i){ dgInfo(ROWS[i][0]); };
   window.dgInfo = function(row){
     const m = document.getElementById('dgModal'); m.querySelector('.dg-m-t').textContent = row; m.querySelector('.dg-m-b').textContent = INFO[row]||''; m.classList.add('show');
     m.querySelector('.dg-m-x').focus();
   };
   const table = `<div class="dg-wrap" role="region" aria-label="טבלת חמש הדרגות" tabindex="0"><table class="dg">
-    <thead><tr><th class="dg-rh" scope="col"></th>${HEAD.slice(1).map(h=>`<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
-    <tbody>${ROWS.map(r=>`<tr><th class="dg-rh" scope="row">${esc(r[0])}${INFO[r[0]]?` <button type="button" class="dg-i" aria-label="הסבר על ${esc(r[0])}" onclick="dgInfo('${r[0]}')">i</button>`:''}</th>${r.slice(1).map(c=>`<td>${cell(r[0],c)}</td>`).join('')}</tr>`).join('')}</tbody>
+    <thead><tr><th class="dg-rh" scope="col">${esc(HEAD[0])}</th>${HEAD.slice(1).map(h=>`<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
+    <tbody>${ROWS.map(r=>`<tr><th class="dg-rh" scope="row">${esc(r[0])}${INFO[r[0]]?` <button type="button" class="dg-i" aria-label="הסבר על ${esc(r[0])}" onclick="dgInfoN(${ROWS.indexOf(r)})">i</button>`:''}</th>${r.slice(1).map(c=>`<td>${cell(r[0],c)}</td>`).join('')}</tr>`).join('')}</tbody>
   </table></div>`;
   const view = `<div id="degreesView" style="display:none;">
-    <p class="system-desc" style="margin-top:6px;">חמש הדרגות מחברות בין היסוד, הספירה, דרגת הנשמה, העולם, כוח הנפש והגוף. משבצת עם קו תחתון פותחת את הכרטיס המתאים באפליקציה, והסמל שליד שם השורה פותח הסבר קצר. בטלפון, גוללים את הטבלה הצידה.</p>
+    <p class="system-desc" style="margin-top:6px;">חמש הדרגות מחברות בין היסוד, הספירה, דרגת הנשמה, העולם, כוח הנפש והגוף. משבצת עם קו תחתון פותחת את הכרטיס המתאים באתר, והסמל שליד שם השורה פותח הסבר קצר. בטלפון, גוללים את הטבלה הצידה.</p>
     ${table}
-    <p class="dg-note">היסודות בטבלה הזו הם יסודות של הדרגות, ולכן מים מול מחשבה ורוח מול רגש ודיבור. זה שונה ממסגרת ארבעת היסודות בשאר האפליקציה, שבה המים הם הרגש והאוויר הוא המחשבה.</p>
+    <p class="dg-note">היסודות בטבלה הזו הם יסודות של הדרגות, ולכן מים מול מחשבה ורוח מול רגש ודיבור. זה שונה ממסגרת ארבעת היסודות בשאר האתר, שבה המים הם הרגש והאוויר הוא המחשבה.</p>
   </div>`;
   const main = document.querySelector('main'); const tv = document.getElementById('toolsView');
   (tv||main.lastElementChild).insertAdjacentHTML('afterend', view);
@@ -3451,6 +3452,89 @@ renderPathologies();
   .dg-m-x{border:none;background:none;font-size:1.1rem;cursor:pointer;color:#5e6b66;}
   .dg-m-b{line-height:1.8;margin:10px 0 2px;}
   @media print{ .dg-wrap{overflow:visible;box-shadow:none;} }
+</style>
+
+<script>
+/* ===== למעלה, וסגירת כל הכרטיסים ===== */
+(function(){
+  document.body.insertAdjacentHTML('beforeend', `<div id="fabTools" class="fab-tools no-print" hidden>
+    <button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="לראש העמוד"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>למעלה</button>
+    <button type="button" onclick="bmCloseAll()" aria-label="לסגור את כל הכרטיסים הפתוחים"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M7 10l5-5 5 5M7 19l5-5 5 5"/></svg>לסגור הכול</button>
+  </div>`);
+  window.bmCloseAll = function(){
+    const v = document.getElementById(currentView) || document;
+    let n = 0; v.querySelectorAll('.open').forEach(el=>{ if(el.id==='dgModal' || el.classList.contains('modal')) return; el.classList.remove('open'); n++; });
+    window.scrollTo({top:0,behavior:'smooth'}); if(typeof bmToast==='function') bmToast(n ? 'כל הכרטיסים נסגרו' : 'אין כרטיסים פתוחים');
+  };
+  const box = document.getElementById('fabTools');
+  const upd = () => { box.hidden = window.scrollY < 500; };
+  window.addEventListener('scroll', upd, {passive:true}); upd();
+})();
+</script>
+<style>
+  .fab-tools{position:fixed;left:16px;bottom:70px;z-index:60;display:flex;flex-direction:column;gap:8px;}
+  .fab-tools[hidden]{display:none;}
+  .fab-tools button{display:inline-flex;align-items:center;gap:6px;background:var(--cream-soft,#FBF8F1);color:var(--forest-dark,#1E4744);border:1.5px solid var(--forest,#2C5F5B);border-radius:999px;padding:7px 14px 7px 12px;font-family:'Assistant',sans-serif;font-weight:700;font-size:0.86rem;box-shadow:0 4px 14px rgba(0,0,0,0.12);cursor:pointer;}
+  .fab-tools button:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+</style>
+
+<script>
+/* ===== שביל הפיוס כקבוצה אחת עם שלוש כרטיסיות, ותרגילי התבוננות בכרטיסי האיברים ===== */
+(function(){
+  const PIUS = [['tool-pius','פיוס עם האחר'],['tool-pius-bore','פיוס עם הבורא'],['tool-pius-atzmi','פיוס עם עצמי']];
+  const CARET = '<svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>';
+  const _rtv = renderToolsView;
+  renderToolsView = function(){
+    _rtv.apply(this, arguments);
+    const list = document.getElementById('toolsList'); if(!list) return;
+    const cards = PIUS.map(([id])=>document.getElementById('tool-card-'+id)).filter(Boolean);
+    if(!cards.length) return;
+    const grp = document.createElement('div'); grp.className='organ-card pius-group'; grp.id='tool-card-pius-group';
+    grp.innerHTML = `<div class="organ-head" onclick="this.parentElement.classList.toggle('open')"><div><h3>שביל הפיוס</h3><p class="tool-lead">שלוש כרטיסיות: פיוס עם האחר, פיוס עם הבורא, ופיוס עם עצמי.</p></div>${CARET}</div><div class="organ-body pius-body"></div>`;
+    cards[0].parentNode.insertBefore(grp, cards[0]);
+    const body = grp.querySelector('.pius-body');
+    PIUS.forEach(([id,label])=>{ const c=document.getElementById('tool-card-'+id); if(c){ const h=c.querySelector('.organ-head h3'); if(h) h.textContent = label; body.appendChild(c); } });
+  };
+  const _jt = jumpToTool;
+  jumpToTool = function(id){
+    const r = _jt.apply(this, arguments);
+    const c = document.getElementById('tool-card-'+id); const g = c && c.closest('.pius-group'); if(g) g.classList.add('open');
+    return r;
+  };
+  if(document.getElementById('toolsList') && document.getElementById('toolsList').innerHTML) renderToolsView();
+
+  /* חלונית של תרגיל */
+  document.body.insertAdjacentHTML('beforeend', `<div id="exPop" onclick="if(event.target===this)this.classList.remove('show')"><div class="dg-m" role="dialog" aria-modal="true"><div class="dg-m-h"><h3 class="ep-t"></h3><button type="button" class="dg-m-x" aria-label="סגירה" onclick="document.getElementById('exPop').classList.remove('show')">✕</button></div><p class="ep-w"></p><p class="ep-b"></p><p class="ep-f"></p><div class="ep-a"></div></div></div>`);
+  window.bmShowEx = function(id){
+    const e = EXR[id]; if(!e) return; const m = document.getElementById('exPop');
+    m.querySelector('.ep-t').textContent = e.title; m.querySelector('.ep-w').textContent = e.why||''; m.querySelector('.ep-b').textContent = e.text;
+    m.querySelector('.ep-f').textContent = e.fit ? 'מתאים: '+e.fit : '';
+    m.querySelector('.ep-a').innerHTML = `<button type="button" class="ex-add" onclick="document.getElementById('exPop').classList.remove('show');openPicker('${id}')">+ לדף לבית</button>`;
+    m.classList.add('show');
+  };
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') document.getElementById('exPop').classList.remove('show'); });
+  const _oc2 = organCardHTML;
+  organCardHTML = function(o){
+    let h = _oc2.apply(this, arguments);
+    const ids = (typeof ORGAN_EX!=='undefined' && ORGAN_EX[o.name]) || [];
+    if(!ids.length) return h;
+    const block = `<div class="org-ex"><div class="org-ex-h">תרגילי התבוננות</div><div class="pl-list">${ids.filter(id=>EXR[id]).map(id=>`<button type="button" class="pl-link" onclick="event.stopPropagation();bmShowEx('${id}')">${EXR[id].title}</button>`).join('')}</div></div>`;
+    const m = h.match(/<div class="organ-body[^"]*">/); if(!m) return h;
+    const at = h.indexOf(m[0]) + m[0].length;
+    return h.slice(0,at) + block + h.slice(at);
+  };
+})();
+</script>
+<style>
+  .pius-body > .organ-card{box-shadow:none;border:1px solid rgba(44,95,91,0.15);margin:8px 0;}
+  #exPop{position:fixed;inset:0;z-index:95;background:rgba(30,71,68,0.45);display:none;align-items:center;justify-content:center;padding:16px;}
+  #exPop.show{display:flex;}
+  #exPop .dg-m{max-height:86vh;overflow:auto;}
+  .ep-w{color:var(--forest);font-weight:600;font-size:0.92rem;line-height:1.7;margin:10px 0 4px;}
+  .ep-b{line-height:1.8;margin:6px 0;}
+  .ep-f{font-size:0.84rem;color:#6a756f;margin:4px 0 8px;}
+  .org-ex{margin:6px 14px 14px;}
+  .org-ex-h{font-weight:800;color:var(--forest-dark);font-size:0.92rem;margin-bottom:6px;}
 </style>
 </body>
 </html>
