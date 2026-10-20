@@ -2001,6 +2001,7 @@ function renderIntake(){
       <button class="bm-btn" onclick="iqPrint(false)">הדפסה</button>
       <button class="bm-btn ghost" onclick="iqPrint(true)">הדפסת שאלון ריק</button>
       <button class="bm-btn ghost" onclick="iqImportOpen()">ייבוא מהמטופל</button>
+      <button class="bm-btn ghost" onclick="iqSendFull()">שליחה למטופל להשלמה</button>
       <button class="bm-btn ghost" onclick="iqCopy()" ${filled?'':'disabled'}>העתקה לניתוח</button>
       <label class="iq-switch"><input type="checkbox" ${iqThera?'checked':''} onchange="iqSetThera(this.checked)"><span class="track"></span>תצוגת מטפל</label>
       ${filled ? `<button class="bm-link danger" onclick="iqClear()">ניקוי השאלון</button>` : ''}
@@ -2076,9 +2077,9 @@ function iqImportDo(){
   if(!m){ bmToast('לא נמצא קוד שאלון בהודעה'); return; }
   let d; try{ d=JSON.parse(decodeURIComponent(escape(atob(m[1])))); }catch(e){ bmToast('הקוד לא תקין או שנחתך'); return; }
   const a=(d&&d.a)||{}, p=curP();
-  if(iqHas(p) && !confirm(`לכרטיס של ${p.name} כבר יש תשובות. להחליף אותן בתשובות שהתקבלו?`)) return;
   const nm=(a.f_name||"").trim(); delete a.f_name;
-  p.intake=a; p.intakeMode='full'; if(nm && !p.intakeName) p.intakeName=nm;
+  if(iqHas(p) && !confirm(`לכרטיס של ${p.name} כבר יש תשובות. לעדכן אותן בתשובות שהתקבלו? תשובות שקיימות רק בכרטיס יישמרו.`)) return;
+  p.intake=Object.assign({}, p.intake||{}, a); p.intakeMode='full'; if(nm && !p.intakeName) p.intakeName=nm;
   savePT(); renderIntake(); bmToast(nm?`התשובות של ${nm} יובאו`:'התשובות יובאו');
 }
 function iqClear(){ const p=curP(); if(!confirm(`לנקות את כל התשובות של ${p.name} בשאלון?`)) return; p.intake={}; savePT(); renderIntake(); bmToast('השאלון נוקה'); }
@@ -2479,6 +2480,35 @@ iqReadPrint = function(patientOnly){
   }
   setTimeout(()=>window.print(), 30);
 };
+
+
+/* ===== שליחת השאלון המלא למטופל, עם מה שכבר מולא בקליניקה ===== */
+const INTAKE_URL = 'https://yuvisnir-holistic.github.io/reflexology/intake.html';
+function iqPrefillLink(p){
+  const a = Object.assign({}, p.intake||{});
+  a.f_name = p.name; if(!a.f_age && p.age) a.f_age = p.age; if(!a.f_job && p.job) a.f_job = p.job;
+  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify({v:1, a}))));
+  return INTAKE_URL + '#pre=' + encodeURIComponent(b64);
+}
+function iqWaPhone(ph){ const d=String(ph||'').replace(/\D/g,''); if(!d) return ''; return d.startsWith('0') ? '972'+d.slice(1) : d; }
+function iqSendFull(){
+  const p = curP(); if(!p) return;
+  const link = iqPrefillLink(p);
+  const n = Object.keys(p.intake||{}).length;
+  const msg = `היי ${p.name}, כאן יובל.\nמצרף את שאלון ההיכרות המלא. חלק מהתשובות כבר מילאנו יחד במפגש, ונשאר להשלים את השאר. אפשר לעצור ולחזור, והתשובות נשמרות. בסוף יש כפתור שליחה.\n${link}`;
+  const ph = iqWaPhone(p.phone);
+  let box = document.getElementById('iqSend');
+  if(!box){ const imp=document.getElementById('iqImport'); imp.insertAdjacentHTML('afterend','<div id="iqSend" class="iq-import no-print"></div>'); box=document.getElementById('iqSend'); }
+  box.hidden = false;
+  box.innerHTML = `<p class="iq-hint" style="margin:0 0 8px">${n ? `השאלון המלא ייפתח אצל ${escH(p.name)} עם ${n} התשובות שכבר מולאו, ויישאר להשלים את השאר.` : 'עוד לא מולאו תשובות, והשאלון ייפתח עם השם בלבד.'} כשהמטופל ישלח, מייבאים כרגיל, והתשובות שלו יתווספו לכרטיס.</p>
+    <textarea class="inp" readonly style="min-height:110px">${escH(msg)}</textarea>
+    <div class="sheet-actions" style="margin-top:8px">
+      <a class="bm-btn" href="https://wa.me/${ph}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">שליחה בוואטסאפ${ph?'':' (בחירת איש קשר)'}</a>
+      <button class="bm-btn ghost" onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.value).then(()=>bmToast('ההודעה הועתקה'))">העתקת ההודעה</button>
+      <button class="bm-link" onclick="document.getElementById('iqSend').hidden=true">סגירה</button>
+    </div>`;
+  box.scrollIntoView({behavior:'smooth', block:'center'});
+}
 
 
 /* ===================== החלק למטפל: כרטיסים מתקפלים, קישורים ותרגילים ===================== */

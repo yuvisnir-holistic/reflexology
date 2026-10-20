@@ -699,5 +699,31 @@ const _renderDate = render;
 render = function(){ _renderDate(); iqDateDefault(); };
 iqDateDefault();
 </script>
+
+<script>
+/* שאלון שנשלח מהקליניקה עם תשובות שכבר מולאו */
+function iqPrefillFromHash(){
+  const m = location.hash.match(/#pre=([^&]+)/); if(!m) return;
+  let a = null; try{ a = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(m[1]))))).a; }catch(e){ a = null; }
+  try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+  if(!a) return;
+  let added = 0; Object.keys(a).forEach(k=>{ if(S[k]===undefined || S[k]===''){ S[k]=a[k]; added++; } });
+  store(); try{ localStorage.setItem('iq-prefilled','1'); }catch(e){}
+  render();
+  bmToast(added ? 'חלק מהשאלון כבר מולא במפגש. אפשר להשלים את השאר' : 'השאלון נפתח');
+  if(typeof iqPreNote==='function') iqPreNote();
+}
+iqPrefillFromHash();
+window.addEventListener('hashchange', iqPrefillFromHash);
+function iqPreNote(){
+  let pre=false; try{ pre = localStorage.getItem('iq-prefilled')==='1'; }catch(e){}
+  if(!pre || window.__preNote) return; window.__preNote = true;
+  const _r = render;
+  const note = () => { const f=document.getElementById('iqForm'); if(f && !document.getElementById('preNote')) f.insertAdjacentHTML('afterbegin','<p id="preNote" class="iq-hint" style="background:#EEF4F1;border-radius:10px;padding:10px 12px;margin:0 0 12px">חלק מהשאלון כבר מולא יחד במפגש. החלקים שבהם כבר יש תשובות מסומנים במספר התשובות. אפשר לעבור עליהם, לתקן אם צריך, ולהשלים את השאר.</p>'); };
+  render = function(){ _r.apply(this, arguments); note(); };
+  note();
+}
+iqPreNote();
+</script>
 </body>
 </html>
