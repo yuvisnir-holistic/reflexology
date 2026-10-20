@@ -160,6 +160,40 @@
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .ashurit-link{color:var(--yud);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+
+  .tap-hint{font-size:.84rem;color:var(--muted);text-align:center;margin:4px 0 10px;}
+  .stam-hit{cursor:pointer;}
+  .shem-chip{font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:1.05em;color:var(--gold);background:transparent;border:1px solid rgba(180,135,44,.35);border-radius:999px;padding:1px 10px 1px 8px;margin-right:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;vertical-align:middle;transition:background .2s,border-color .2s;}
+  .shem-chip:hover,.shem-chip:focus-visible{background:rgba(180,135,44,.08);border-color:var(--gold);outline:none;}
+  .shem-chip svg{opacity:.7;}
+  .hero-shem{display:block;margin:14px auto 0;background:none;border:none;cursor:pointer;font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:2.4rem;letter-spacing:10px;color:#F3EFE2;line-height:1.2;}
+  .hero-shem span{display:block;font-family:'Assistant',sans-serif;font-weight:400;font-size:.72rem;letter-spacing:0;opacity:.6;margin-top:2px;}
+
+  /* ---------- viewer ---------- */
+  .viewer{position:fixed;inset:0;z-index:1000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:10vh;opacity:0;pointer-events:none;transition:opacity .35s ease;}
+  .viewer.show{opacity:1;pointer-events:auto;}
+  .viewer svg.v-art{display:block;width:min(86vw,920px);height:auto;max-height:62vh;overflow:visible;animation:vglow 5s ease-in-out infinite;}
+  .viewer svg.v-art.letter{width:auto;height:min(58vh,72vw);}
+  @keyframes vglow{
+    0%,100%{filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 10px rgba(255,255,255,.55)) drop-shadow(0 0 28px rgba(200,200,255,.28));}
+    50%{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 15px rgba(255,255,255,.65)) drop-shadow(0 0 42px rgba(200,200,255,.36));}
+  }
+  .v-label{color:#555577;font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.1rem,2.4vw,1.6rem);letter-spacing:.1em;margin-top:4vh;min-height:1.5em;}
+  .v-btn{position:absolute;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s;}
+  .v-btn:hover{background:rgba(255,255,255,.14);color:#fff;}
+  .v-close{top:calc(16px + env(safe-area-inset-top,0px));left:16px;}
+  .v-prev{right:14px;top:50%;transform:translateY(-50%);}
+  .v-next{left:14px;top:50%;transform:translateY(-50%);}
+  .viewer:not(.letters) .v-prev,.viewer:not(.letters) .v-next{display:none;}
+
+  /* ---------- floating buttons ---------- */
+  .fabs{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:900;display:flex;flex-direction:column;gap:10px;}
+  .fab{width:42px;height:42px;border-radius:50%;border:1px solid rgba(44,95,91,.14);background:rgba(251,247,238,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--navy);box-shadow:0 3px 14px rgba(44,95,91,.16);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:translateY(8px) scale(.9);pointer-events:none;transition:opacity .25s,transform .25s;}
+  .fab.show{opacity:1;transform:none;pointer-events:auto;}
+  .fab:hover{background:#fff;}
+  .fab-tip{position:absolute;left:52px;white-space:nowrap;background:var(--navy);color:#fff;font-size:.78rem;padding:4px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s;}
+  .fab{position:relative;}
+  @media (hover:hover){.fab:hover .fab-tip{opacity:1;}}
   .koma{max-width:380px;margin:12px auto 16px;border-radius:14px;background:#1f2a33;padding:10px 16px;}
   .koma-row{display:flex;align-items:center;gap:14px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);}
   .koma-row:last-child{border-bottom:none;}
@@ -187,6 +221,18 @@
 </style>
 </head>
 <body>
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="צפייה בגדול">
+  <button class="v-btn v-close" onclick="closeViewer()" aria-label="סגירה"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <button class="v-btn v-prev" onclick="stepLetter(-1)" aria-label="האות הקודמת"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  <button class="v-btn v-next" onclick="stepLetter(1)" aria-label="האות הבאה"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <div id="vStage"></div>
+  <div class="v-label" id="vLabel"></div>
+</div>
+<div class="fabs">
+  <button class="fab" id="fabCollapse" onclick="collapseAll()" aria-label="סגירת כל הכרטיסיות"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l5 5 5-5M7 20l5-5 5 5"/></svg><span class="fab-tip">סגירת הכרטיסיות</span></button>
+  <button class="fab" id="fabTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="לראש העמוד"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg><span class="fab-tip">לראש העמוד</span></button>
+</div>
+
 <header>
   <h1>נשמה ונשימה</h1>
   <div class="sub">אור ואוויר, ודרך של חיבור בכל נשימה</div>
@@ -479,7 +525,7 @@ const CHAPTERS = [
 
   <h4>לבן על גבי שחור</h4>
   <p>הגמרא מתארת את התורה שלפני הבריאה כאש לבנה על גבי אש לבנה, זרימות של אור בתוך אור. בבריאה, כשנעשה מקום פנוי, האותיות האירו כלבן על גבי שחור. בספר התורה הן כתובות שחור על גבי לבן. כשקוראים בתורה מעלים אותן מהקלף אל המחשבה, וכשמעלים אותן בתפילה הן חוזרות להיות לבן על גבי לבן.</p>
-  <p>לכן בתרגול רואים את האותיות לבנות, מאירות, על רקע כהה, כמו <span class="name-dark">יהו״ה</span>. החלל שבתוכן הוא המקום שבו מתקבל האור.</p>
+  <p>לכן בתרגול רואים את האותיות לבנות, מאירות, על רקע כהה, כמו <button class="name-dark" style="border:none;cursor:pointer;" onclick="openShem('plain')">יהו״ה</button>. החלל שבתוכן הוא המקום שבו מתקבל האור.</p>
 
   <h4>שלוש תנועות של התבוננות</h4>
   <p>אברהם אבינו הסתכל בכוכבים וראה שלא יהיה לו בן. בורא עולם הוציא אותו החוצה, מעל כל המערכות, ואמר לו ״הבט נא״. מכאן לומדים שלוש תנועות של המדמה.</p>
@@ -800,11 +846,12 @@ function renderPractice(){
 
   const arousalPractice = `
     <p>הרחבה עדינה יותר של תרגול הניקוד: עוררות כוחות נפש ספציפיים, על ידי ראיית שם הוי״ה עם ניקוד שמתאים לכוח המבוקש. הרעיון הוא שכל כוח נפשי, גם אם הוא רדום או חסום, כבר קיים באדם, כי בורא עולם השקיע אותו בו, וההתבוננות באותיות עם הניקוד המתאים מעוררת אותו מחדש, לא יוצרת אותו מחדש.</p>
-    <div class="step-row"><div class="step-num">1</div><div class="step-content"><h4>לעוררות אהבה <span style="font-family:'Frank Ruhl Libre',serif;color:var(--gold);margin-right:10px;">יַהֲוָ״ה</span></h4><p>רואים מעל מסך המחשבה את שם הוי״ה בניקוד של אהבה: פתח תחת היוד, חטף פתח תחת ה״א הראשונה, קמץ תחת הוא״ו, וה״א האחרונה בלי כלום. מומלץ במיוחד למי שמרגיש חסום ברגש, מתקשה לבטא חיבה גם כשהיא קיימת בפנים.</p></div></div>
-    <div class="step-row"><div class="step-num">2</div><div class="step-content"><h4>לעוררות יראה <span style="font-family:'Frank Ruhl Libre',serif;color:var(--gold);margin-right:10px;">יִהְוָ״ה</span></h4><p>רואים את שם הוי״ה בניקוד חיריק, שווא וקמץ.</p></div></div>
-    <div class="step-row"><div class="step-num">3</div><div class="step-content"><h4>לעוררות אמונה <span style="font-family:'Frank Ruhl Libre',serif;color:var(--gold);margin-right:10px;">יֱהוּ״הָ</span></h4><p>רואים את שם הוי״ה בניקוד חטף סגול, שורוק וקמץ. אפשר גם לכתוב את זה בעצמכם כמה פעמים, ולהביט במה שכתבתם.</p></div></div>
-    <div class="step-row"><div class="step-num">4</div><div class="step-content"><h4>לעוררות שמחה <span style="font-family:'Frank Ruhl Libre',serif;color:var(--gold);margin-right:10px;">יִהְוָ״ה</span></h4><p>רואים את שם הוי״ה באותיות גדולות, בהירות ופתוחות, עם ניקוד שמחה, שהוא אותו ניקוד כמו יראה, מה שמלמד שאין שמחה אמיתית בלי יראת שמיים.</p></div></div>
-    <div class="step-row"><div class="step-num">5</div><div class="step-content"><h4>לעוררות מלכות שמיים <span style="font-family:'Frank Ruhl Libre',serif;color:var(--gold);margin-right:10px;">יַהְוּ״ה</span></h4><p>בייחוד בשעת ניסיון או קושי, מכוונים דרך ערוצי אותיות השם עם ניקוד מלכות, כדי לזכור מי מנהיג את העולם, ולא לשכוח את זה דווקא ברגעים שבהם קשה. פתח תחת היוד, שווא תחת ה״א הראשונה, שורוק בתוך הוא״ו, וה״א האחרונה בלי כלום.</p></div></div>
+    <p class="tap-hint">לחיצה על השם שליד כל מידה פותחת אותו בגדול, באותיות סת״ם על רקע שחור, כדי להתבונן בו.</p>
+    <div class="step-row"><div class="step-num">1</div><div class="step-content"><h4>לעוררות אהבה <button class="shem-chip" onclick="openShem('ahava')" aria-label="לצפייה בגדול">יַהֲוָ״ה<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button></h4><p>רואים מעל מסך המחשבה את שם הוי״ה בניקוד של אהבה: פתח תחת היוד, חטף פתח תחת ה״א הראשונה, קמץ תחת הוא״ו, וה״א האחרונה בלי כלום. מומלץ במיוחד למי שמרגיש חסום ברגש, מתקשה לבטא חיבה גם כשהיא קיימת בפנים.</p></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-content"><h4>לעוררות יראה <button class="shem-chip" onclick="openShem('yira')" aria-label="לצפייה בגדול">יִהְוָ״ה<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button></h4><p>רואים את שם הוי״ה בניקוד חיריק, שווא וקמץ.</p></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-content"><h4>לעוררות אמונה <button class="shem-chip" onclick="openShem('emuna')" aria-label="לצפייה בגדול">יֱהוּ״הָ<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button></h4><p>רואים את שם הוי״ה בניקוד חטף סגול, שורוק וקמץ. אפשר גם לכתוב את זה בעצמכם כמה פעמים, ולהביט במה שכתבתם.</p></div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-content"><h4>לעוררות שמחה <button class="shem-chip" onclick="openShem('simcha')" aria-label="לצפייה בגדול">יִהְוָ״ה<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button></h4><p>רואים את שם הוי״ה באותיות גדולות, בהירות ופתוחות, עם ניקוד שמחה, שהוא אותו ניקוד כמו יראה, מה שמלמד שאין שמחה אמיתית בלי יראת שמיים.</p></div></div>
+    <div class="step-row"><div class="step-num">5</div><div class="step-content"><h4>לעוררות מלכות שמיים <button class="shem-chip" onclick="openShem('malchut')" aria-label="לצפייה בגדול">יַהְוּ״ה<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button></h4><p>בייחוד בשעת ניסיון או קושי, מכוונים דרך ערוצי אותיות השם עם ניקוד מלכות, כדי לזכור מי מנהיג את העולם, ולא לשכוח את זה דווקא ברגעים שבהם קשה. פתח תחת היוד, שווא תחת ה״א הראשונה, שורוק בתוך הוא״ו, וה״א האחרונה בלי כלום.</p></div></div>
     <div class="box note"><span class="label">מתי לבחור כל ניקוד</span><p>לכל מידה יש גם צורה נפולה. אהבה נפולה היא תאווה. יראה נפולה היא כעס ופחד, גם פחד מעונש. אמונה נפולה היא אמונה בנבראים, באדם או במפלגה שיצילו אותנו. אותיות השם הן צינורות ששואבים את המידות הנפולות ומעלים אותן, ולכן כשמזהים אחת מהן, בוחרים את הניקוד של המידה שהיא נפלה ממנה.</p></div>
     <div class="box practice"><span class="label">דחילו ורחימו, ורחימו ודחילו</span><p>יראה בלי אהבה מביאה למרה שחורה, ואהבה בלי יראה מביאה לפריצות. לכן מחברים ביניהן בארבעה צעדים: קודם רואים את השם בניקוד יראה, אחריו בניקוד אהבה, ואז בסדר ההפוך, אהבה ואחריה יראה. אפשר לעשות את זה לפני כל מצווה, ובכל פעם שמרגישים שאחת המידות גוברת על השנייה.</p></div>
   `;
@@ -999,7 +1046,8 @@ function renderPractice(){
 
   const ashuritChart = `
     <p>האלף בית באשורית, כתב סת״ם, בלי התגים. אפשר להתבונן בו, להעתיק ממנו ולצייר, וכך להכיר את צורת כל אות. את התגים מוסיפים אחר כך, כמו שמתואר ב"ראיית התגים".</p>
-    <div style="max-width:440px;margin:6px auto 12px;"><svg xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;" viewBox="0 0 10748 10876" role="img" aria-label="האלף בית האשורי">
+    <p class="tap-hint">לחיצה על אות פותחת אותה בגדול, על רקע כהה.</p>
+    <div style="max-width:440px;margin:6px auto 12px;"><svg id="stamChart" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;" viewBox="0 0 10748 10876" role="img" aria-label="האלף בית האשורי">
 <g fill="#2A2620">
 <path d="M9061.5 501Q9120.5 549 9257.5 647.5Q9394.5 746 9497 833.5Q9599.5 921 9687.5 1028Q9817.5 996 9817.5 948Q9817.5 944 9813.5 932Q9795.5 895 9757.5 864.5Q9719.5 834 9685 818.5Q9650.5 803 9618.5 790.5Q9586.5 778 9581.5 774Q9601.5 753 9643.5 717.5Q9685.5 682 9710.5 658.5Q9735.5 635 9757 596Q9778.5 557 9778.5 515Q9778.5 488 9771.5 460Q9810.5 520 9867 577.5Q9923.5 635 9964.5 668.5Q10005.5 702 10035.5 740Q10065.5 778 10065.5 811Q10065.5 826 10059.5 842Q10056.5 861 10049.5 878Q10042.5 895 10035 909Q10027.5 923 10012 938Q9996.5 953 9986 963Q9975.5 973 9953 987Q9930.5 1001 9919 1008Q9907.5 1015 9880 1028Q9852.5 1041 9841.5 1046.5Q9830.5 1052 9799 1066Q9767.5 1080 9757.5 1084Q9788.5 1114 9826 1156Q9863.5 1198 9883.5 1219.5Q9903.5 1241 9940 1264Q9976.5 1287 10023.5 1300Q10030.5 1303 10036.5 1303Q10049.5 1303 10062.5 1292.5Q10075.5 1282 10093 1262.5Q10110.5 1243 10118.5 1236Q10102.5 1333 10102.5 1476Q10102.5 1551 10116.5 1618Q10102.5 1650 10041.5 1650Q9958.5 1621 9882.5 1571.5Q9806.5 1522 9738.5 1456Q9670.5 1390 9612.5 1326.5Q9554.5 1263 9479.5 1180Q9404.5 1097 9343.5 1040L9277.5 1294Q9298.5 1300 9339 1309.5Q9379.5 1319 9402 1325Q9424.5 1331 9457.5 1343.5Q9490.5 1356 9511 1370Q9531.5 1384 9552 1408Q9572.5 1432 9585.5 1462Q9602.5 1503 9602.5 1547Q9602.5 1576 9594 1608Q9585.5 1640 9578.5 1660Q9571.5 1680 9550 1717Q9528.5 1754 9523.5 1762Q9518.5 1770 9493.5 1808Q9486.5 1790 9479.5 1765Q9472.5 1740 9465 1720Q9457.5 1700 9445.5 1680Q9440.5 1672 9433 1667Q9425.5 1662 9415 1658Q9404.5 1654 9397.5 1650H9091.5L9245.5 968L9091.5 873Q9098.5 831 9098.5 784Q9098.5 742 9093 697Q9087.5 652 9076.5 588.5Q9065.5 525 9061.5 501Z"/>
 <path d="M7634.5 600V599H7633.5Q7658.5 664 7669 713.5Q7679.5 763 7679.5 834Q7679.5 884 7672.5 950H8490.5V1300H7622.5Q7626.5 1317 7636.5 1353.5Q7646.5 1390 7652 1416.5Q7657.5 1443 7657.5 1465V1503Q7657.5 1603 7627.5 1650H8680.5Q8668.5 1585 8668.5 1503Q8668.5 1428 8680.5 1318Q8680.5 1290 8697.5 1250L8680.5 1252Q8674.5 1256 8658.5 1268Q8642.5 1280 8626.5 1287.5Q8610.5 1295 8584.5 1300V680Q8587.5 657 8595 636Q8602.5 615 8608.5 604Q8614.5 593 8626 573Q8637.5 553 8642.5 545L8558.5 599H7837.5V600Z"/>
@@ -1029,6 +1077,7 @@ function renderPractice(){
 <path d="M4666 9045H3977Q3935 9045 3913.5 9080.5Q3892 9116 3892 9167Q3892 9223 3915.5 9267.5Q3939 9312 3977 9312H4193Q4176 9411 4176 9533Q4176 9581 4187 9608Q4198 9635 4220 9663H4098H3865Q3837 9663 3822.5 9640Q3808 9617 3799 9566Q3799 9482 3786.5 9335.5Q3774 9189 3774 9124Q3774 8912 3799 8698Q3799 8675 3800.5 8654Q3802 8633 3805.5 8610.5Q3809 8588 3811 8574.5Q3813 8561 3818 8536Q3823 8511 3825 8502Q3841 8644 3856 8700H4731Q4747 8704 4759 8728.5Q4771 8753 4778 8794.5Q4785 8836 4789 8874.5Q4793 8913 4797.5 8967.5Q4802 9022 4805 9049Q4805 9134 4806.5 9302Q4808 9470 4808 9551Q4808 9849 4786 10066.5Q4764 10284 4700 10450Q4700 10211 4683 9740.5Q4666 9270 4666 9045Z"/>
 <path d="M2370 8866Q2370 8896 2365 8956.5Q2360 9017 2360 9049H2503Q2463 9202 2463 9356Q2463 9526 2484.5 9947.5Q2506 10369 2532 10450Q2557 10375 2581.5 10051Q2606 9727 2606 9510Q2638 9507 2715 9474.5Q2792 9442 2891.5 9387.5Q2991 9333 3086 9268.5Q3181 9204 3256 9126Q3331 9048 3353 8979Q3384 8888 3384 8850Q3384 8794 3336 8751L3119 8654Q3093 8650 3083 8626Q3073 8602 3069.5 8564.5Q3066 8527 3059 8511Q3059 8567 3040 8677.5Q3021 8788 3001 8833Q2992 8852 2979.5 8871Q2967 8890 2945.5 8918.5Q2924 8947 2918 8955Q2979 8955 3027 8973.5Q3075 8992 3075 9034Q3077 9043 3077 9059Q3077 9083 3071 9099Q3055 9135 2966.5 9203.5Q2878 9272 2771.5 9327.5Q2665 9383 2609 9383Q2609 9208 2566 9049H2710Q2700 8959 2700 8865Q2700 8808 2711 8700H2360Q2370 8777 2370 8866Z"/>
 </g>
+<rect class="stam-hit" data-i="0" x="8902" y="300" width="1377" height="1668" fill="#000" fill-opacity="0" onclick="openLetter(0)"/><rect class="stam-hit" data-i="1" x="7463" y="385" width="1395" height="1425" fill="#000" fill-opacity="0" onclick="openLetter(1)"/><rect class="stam-hit" data-i="2" x="6450" y="440" width="950" height="1430" fill="#000" fill-opacity="0" onclick="openLetter(2)"/><rect class="stam-hit" data-i="3" x="5024" y="318" width="1384" height="1512" fill="#000" fill-opacity="0" onclick="openLetter(3)"/><rect class="stam-hit" data-i="4" x="3551" y="371" width="1420" height="1463" fill="#000" fill-opacity="0" onclick="openLetter(4)"/><rect class="stam-hit" data-i="5" x="2785" y="339" width="674" height="1471" fill="#000" fill-opacity="0" onclick="openLetter(5)"/><rect class="stam-hit" data-i="6" x="1986" y="440" width="671" height="1370" fill="#000" fill-opacity="0" onclick="openLetter(6)"/><rect class="stam-hit" data-i="7" x="529" y="226" width="1371" height="1584" fill="#000" fill-opacity="0" onclick="openLetter(7)"/><rect class="stam-hit" data-i="8" x="9195" y="3138" width="1361" height="1372" fill="#000" fill-opacity="0" onclick="openLetter(8)"/><rect class="stam-hit" data-i="9" x="8405" y="2993" width="710" height="1124" fill="#000" fill-opacity="0" onclick="openLetter(9)"/><rect class="stam-hit" data-i="10" x="6964" y="3140" width="1384" height="1370" fill="#000" fill-opacity="0" onclick="openLetter(10)"/><rect class="stam-hit" data-i="11" x="5184" y="1936" width="1735" height="2574" fill="#000" fill-opacity="0" onclick="openLetter(11)"/><rect class="stam-hit" data-i="12" x="4059" y="3104" width="1417" height="1438" fill="#000" fill-opacity="0" onclick="openLetter(12)"/><rect class="stam-hit" data-i="13" x="3061" y="3140" width="939" height="1370" fill="#000" fill-opacity="0" onclick="openLetter(13)"/><rect class="stam-hit" data-i="14" x="1682" y="3140" width="1372" height="1370" fill="#000" fill-opacity="0" onclick="openLetter(14)"/><rect class="stam-hit" data-i="15" x="145" y="3098" width="1476" height="1667" fill="#000" fill-opacity="0" onclick="openLetter(15)"/><rect class="stam-hit" data-i="16" x="8301" y="5641" width="1432" height="1919" fill="#000" fill-opacity="0" onclick="openLetter(16)"/><rect class="stam-hit" data-i="17" x="6948" y="5700" width="1329" height="1510" fill="#000" fill-opacity="0" onclick="openLetter(17)"/><rect class="stam-hit" data-i="18" x="5515" y="5778" width="1348" height="2178" fill="#000" fill-opacity="0" onclick="openLetter(18)"/><rect class="stam-hit" data-i="19" x="4009" y="5833" width="1444" height="1425" fill="#000" fill-opacity="0" onclick="openLetter(19)"/><rect class="stam-hit" data-i="20" x="2522" y="5666" width="1429" height="1544" fill="#000" fill-opacity="0" onclick="openLetter(20)"/><rect class="stam-hit" data-i="21" x="1035" y="5840" width="1389" height="1394" fill="#000" fill-opacity="0" onclick="openLetter(21)"/><rect class="stam-hit" data-i="22" x="7324" y="8540" width="1252" height="2196" fill="#000" fill-opacity="0" onclick="openLetter(22)"/><rect class="stam-hit" data-i="23" x="5866" y="8540" width="1371" height="1370" fill="#000" fill-opacity="0" onclick="openLetter(23)"/><rect class="stam-hit" data-i="24" x="5073" y="8540" width="671" height="2070" fill="#000" fill-opacity="0" onclick="openLetter(24)"/><rect class="stam-hit" data-i="25" x="3614" y="8342" width="1354" height="2268" fill="#000" fill-opacity="0" onclick="openLetter(25)"/><rect class="stam-hit" data-i="26" x="2200" y="8351" width="1344" height="2259" fill="#000" fill-opacity="0" onclick="openLetter(26)"/>
 </svg></div>
     <p class="small" style="font-size:.8rem;color:#7d8a85;">האותיות נוצרו מהגופן החופשי Stam Ashkenaz CLM, מפרויקט Culmus, בסגנון כתב אשכנז.</p>
   `;
@@ -1092,7 +1141,7 @@ function renderPractice(){
   <div class="intro-card">
     <h2>התרגול המלא</h2>
     <p>נשימה רוחנית דרך שם הוי״ה: בורא עולם ברא את העולמות בשם אלהי״ם, אך את האדם ברא בשם יהו״ה. נשמת האדם נמשכת דרך ארבעה אותיות השם הקדוש באמצעות הנשימה.</p>
-    <div style="text-align:center;font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:2.4rem;letter-spacing:10px;color:#F3EFE2;margin-top:14px;">יהו״ה</div>
+    <button class="hero-shem" onclick="openShem('plain')" aria-label="לצפייה בשם בגדול">יהו״ה<span>לחיצה לצפייה בגדול</span></button>
   </div>
 
   <div id="ashuritBox">${outerBox('להעתקה ולציור', 'האלף בית האשורי, כתב סת״ם', ashuritChart, false)}</div>
@@ -1219,7 +1268,11 @@ function openAshurit(){
   setTimeout(()=>{ window.scrollTo({top: box.getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth'}); }, 60);
 }
 
-function switchTab(tab){
+function switchTab(tab, fromHistory){
+  if(!fromHistory && !_restoring){
+    const cur = history.state && history.state.tab;
+    if(cur !== tab) history.pushState({tab}, '', location.pathname + location.search);
+  }
   showHeader();
   document.querySelectorAll('#tabnav button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
   ['homeView','studyView','practiceView','journalView','searchView'].forEach(v=>{
@@ -1319,6 +1372,142 @@ renderHomeList();
 renderChapters();
 renderPractice();
 renderJournal();
+
+
+/* ===================== VIEWER: STAM LETTERS & SHEM ===================== */
+const STAM_BOX = [[9062, 460, 1057, 1348], [7623, 545, 1075, 1105], [6610, 600, 630, 1110], [5184, 478, 1064, 1192], [3711, 531, 1100, 1143], [2945, 499, 354, 1151], [2146, 600, 351, 1050], [689, 386, 1051, 1264], [9355, 3298, 1041, 1052], [8565, 3153, 390, 804], [7124, 3300, 1064, 1050], [5344, 2096, 1415, 2254], [4219, 3264, 1097, 1118], [3221, 3300, 619, 1050], [1842, 3300, 1052, 1050], [305, 3258, 1156, 1347], [8461, 5801, 1112, 1599], [7108, 5860, 1009, 1190], [5675, 5938, 1028, 1858], [4169, 5993, 1124, 1105], [2682, 5826, 1109, 1224], [1195, 6000, 1069, 1074], [7484, 8700, 932, 1876], [6026, 8700, 1051, 1050], [5233, 8700, 351, 1750], [3774, 8502, 1034, 1948], [2360, 8511, 1024, 1939]];
+const STAM_NAMES = ['אָלֶף','בֵּית','גִּימֶל','דָּלֶת','הֵא','וָו','זַיִן','חֵית','טֵית','יוֹד','כַּף','לָמֶד','מֵם','נוּן','סָמֶךְ','עַיִן','פֵּא','צָדִי','קוֹף','רֵישׁ','שִׁין','תָּו','כַּף סוֹפִית','מֵם סוֹפִית','נוּן סוֹפִית','פֵּא סוֹפִית','צָדִי סוֹפִית'];
+const SHEM_SETS = {
+  plain:  {label:'', n:[null,null,null,null]},
+  ahava:  {label:'אַהֲבָה', n:['patach','chatafPatach','kamatz',null]},
+  yira:   {label:'יִרְאָה', n:['chirik','shva','kamatz',null]},
+  simcha: {label:'שִׂמְחָה', n:['chirik','shva','kamatz',null]},
+  emuna:  {label:'אֱמוּנָה', n:['chatafSegol',null,'shuruk','kamatz']},
+  malchut:{label:'מַלְכוּת', n:['patach','shva','shuruk',null]}
+};
+let _letterIdx = 0, _restoring = false;
+function stamPath(i){
+  const p = document.querySelectorAll('#stamChart path')[i];
+  return p ? p.getAttribute('d') : '';
+}
+function nikudShapes(type, cx, y){
+  const r=55, T=86, L=470, out=[];
+  const dot=(x,yy)=>out.push(`<circle cx="${x}" cy="${yy}" r="${r}"/>`);
+  const bar=(x,len)=>out.push(`<rect x="${x-len/2}" y="${y}" width="${len}" height="${T}" rx="14"/>`);
+  const shva=(x)=>{dot(x,y+r); dot(x,y+r+190);};
+  const segol=(x)=>{dot(x-125,y+r); dot(x+125,y+r); dot(x,y+r+190);};
+  switch(type){
+    case 'patach': bar(cx,L); break;
+    case 'kamatz': bar(cx,L); out.push(`<rect x="${cx-T/2}" y="${y+T-4}" width="${T}" height="150" rx="12"/>`); break;
+    case 'chirik': dot(cx,y+r); break;
+    case 'shva': shva(cx); break;
+    case 'segol': segol(cx); break;
+    case 'chatafPatach': bar(cx+150,380); shva(cx-200); break;
+    case 'chatafSegol': segol(cx+160); shva(cx-230); break;
+  }
+  return out.join('');
+}
+function shemSVG(key){
+  const set = SHEM_SETS[key] || SHEM_SETS.plain;
+  const G = 240, NY = 1830;
+  // left-to-right drawing order: ה (last), ו, ה (first), י
+  const order = [{i:4,slot:3},{i:5,slot:2},{i:4,slot:1},{i:9,slot:0}];
+  let x = 0, parts = [], nik = [];
+  order.forEach(o=>{
+    const [bx,by,bw] = STAM_BOX[o.i];
+    const dy = o.i===9 ? -2630 : 0;
+    parts.push(`<path transform="translate(${x-bx},${dy})" d="${stamPath(o.i)}"/>`);
+    const type = set.n[o.slot];
+    if(type==='shuruk') nik.push(`<circle cx="${x-170}" cy="1120" r="55"/>`);
+    else if(type) nik.push(nikudShapes(type, x+bw/2, NY));
+    x += bw + G;
+  });
+  const W = x - G, hasNik = set.n.some(Boolean);
+  const vb = `-260 300 ${W+520} ${hasNik ? 2050 : 1580}`;
+  return `<svg class="v-art" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" aria-label="שם הוי״ה"><g fill="#eeeeee">${parts.join('')}${nik.join('')}</g></svg>`;
+}
+function letterSVG(i){
+  const [x,y,w,h] = STAM_BOX[i], pad = 260;
+  return `<svg class="v-art letter" viewBox="${x-pad} ${y-pad} ${w+pad*2} ${h+pad*2}" xmlns="http://www.w3.org/2000/svg"><g fill="#eeeeee"><path d="${stamPath(i)}"/></g></svg>`;
+}
+function showViewer(html, label, isLetters, fromHistory){
+  const v = document.getElementById('viewer');
+  document.getElementById('vStage').innerHTML = html;
+  document.getElementById('vLabel').textContent = label || '';
+  v.classList.toggle('letters', !!isLetters);
+  if(!v.classList.contains('show')){
+    v.classList.add('show');
+    document.body.style.overflow='hidden';
+    if(!fromHistory) history.pushState(Object.assign({}, history.state||{}, {viewer:true}), '', location.pathname + location.search + location.hash);
+  }
+}
+function openShem(key){ showViewer(shemSVG(key), (SHEM_SETS[key]||{}).label, false); }
+function openLetter(i){ _letterIdx = i; showViewer(letterSVG(i), STAM_NAMES[i], true); }
+function stepLetter(d){
+  _letterIdx = (_letterIdx + d + STAM_BOX.length) % STAM_BOX.length;
+  document.getElementById('vStage').innerHTML = letterSVG(_letterIdx);
+  document.getElementById('vLabel').textContent = STAM_NAMES[_letterIdx];
+}
+function hideViewer(){
+  document.getElementById('viewer').classList.remove('show');
+  document.body.style.overflow='';
+}
+function closeViewer(){
+  if(history.state && history.state.viewer) history.back(); else hideViewer();
+}
+document.addEventListener('keydown', e=>{
+  const v = document.getElementById('viewer');
+  if(!v.classList.contains('show')) return;
+  if(e.key==='Escape') closeViewer();
+  if(v.classList.contains('letters')){
+    if(e.key==='ArrowLeft') stepLetter(1);
+    if(e.key==='ArrowRight') stepLetter(-1);
+  }
+});
+(function(){
+  let sx=null;
+  const v = document.getElementById('viewer');
+  v.addEventListener('touchstart', e=>{ sx = e.touches[0].clientX; }, {passive:true});
+  v.addEventListener('touchend', e=>{
+    if(sx===null || !v.classList.contains('letters')) return;
+    const dx = e.changedTouches[0].clientX - sx; sx=null;
+    if(Math.abs(dx) > 50) stepLetter(dx < 0 ? 1 : -1);
+  });
+})();
+
+/* ===================== HISTORY (phone back gesture) ===================== */
+window.addEventListener('popstate', e=>{
+  const st = e.state || {tab:'home'};
+  if(!st.viewer) hideViewer();
+  const activeBtn = document.querySelector('#tabnav button.active');
+  if(st.tab && (!activeBtn || activeBtn.dataset.tab !== st.tab)){
+    _restoring = true; switchTab(st.tab, true); _restoring = false;
+  }
+});
+
+/* ===================== FLOATING BUTTONS ===================== */
+function visibleOpenCards(){
+  return [...document.querySelectorAll('.card.open')].filter(c=>c.offsetParent!==null);
+}
+function collapseAll(){
+  visibleOpenCards().forEach(c=>c.classList.remove('open'));
+  updateFabs();
+}
+function updateFabs(){
+  document.getElementById('fabTop').classList.toggle('show', window.scrollY > 500);
+  document.getElementById('fabCollapse').classList.toggle('show', visibleOpenCards().length > 0);
+}
+window.addEventListener('scroll', updateFabs, {passive:true});
+document.addEventListener('click', ()=>setTimeout(updateFabs, 30));
+
+/* ===================== DIRECT LINK: #ashurit ===================== */
+function handleHash(){
+  if(location.hash === '#ashurit') setTimeout(openAshurit, 120);
+}
+window.addEventListener('hashchange', handleHash);
+history.replaceState({tab:'home'}, '', location.pathname + location.search + location.hash);
+handleHash();
+updateFabs();
 </script>
 </body>
 </html>
