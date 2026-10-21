@@ -1456,6 +1456,7 @@ function suggest(p){
       add(K ? 'tool-emuna:0' : 'tool-emuna:5', 'דאגה, פחד או חרדה, וחיזוק האמונה והאמון');
     }
   }
+  if(Number(S.c_ready)>=7 && typeof iqSefMarked==='function' && iqSefMarked(S).length){ add('tool-omek:41','מוכנות גבוהה לעבודה עצמית, ומידה שיצאה מאיזון: חיבור המידות באור הדעת'); }
   if(typeof EX_SPECIAL!=='undefined'){
     const K = !!p.kabbalah;
     if(S.th_perfect||S.th_crit||S.sf_tif_self) add(EX_SPECIAL.light, 'קשיחות כלפי עצמו או דרישה לשלמות');
@@ -1763,7 +1764,7 @@ function iqScale(id,lo,hi){ let h=`<div class="iq-scale" data-scale="${id}"><spa
 function iqFormHTML(p){
   let h = "";
   h += `<div class="paper-h"><h2>שאלון היכרות</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
-  h += `<p class="iq-intro">השאלון הזה לא בודק אם משהו נכון או לא. הוא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה. התשובות נשמרות במכשיר, כך שאפשר לעצור באמצע ולחזור אחר כך.</p>`;
+  h += `<p class="iq-intro">השאלון הזה נועד לדייק את הטיפול, כך שיתאים בדיוק לכם. הוא לא בודק אם משהו נכון או לא, אלא עוזר לנו לראות יחד איפה הכוחות שלכם זורמים, ואיפה משהו נתקע. ענו בכנות ובקצרה, ואין צורך לחשוב יותר מדי. אפשר לדלג על כל שאלה שלא מתאימה. התשובות נשמרות במכשיר, כך שאפשר לעצור באמצע ולחזור אחר כך.</p>`;
   h += `<p class="iq-intro small">השאלון לא מחליף אבחון או מעקב רפואי.</p>`;
   h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
@@ -1856,6 +1857,7 @@ function iqFormHTML(p){
   h += iqTA("c_hard","ומה תמיד היה לכם קשה, יותר מלאחרים?",1);
   h += iqTA("c_world","אם הייתם מתארים את העולם בתמונה אחת, הוא כמו... (גן, ג׳ונגל, שדה קרב, מסלול, או משהו אחר)",1);
   h += iqTA("c_goal","מה הייתם רוצים שישתנה בעקבות הטיפולים?",2);
+  h += `<div class="iq-item"><span class="iq-lbl">עד כמה אתם רוצים ומוכנים לעבוד על עצמכם גם בין המפגשים?</span>${iqScale("c_ready","מעט","מאוד")}</div>`;
   h += iqTA("c_more","עוד משהו שחשוב לכם שאדע?",2);
   h += `</section>`;
   return h;
@@ -1931,6 +1933,7 @@ function iqLeanHTML(p){
   h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",1);
   h += iqTA("c_talent","הכישרון הטבעי שלכם, ותחביבים",1);
   h += iqTA("c_goal","מה הייתם רוצים שישתנה",1);
+  h += `<div class="iq-item"><span class="iq-lbl">עד כמה אתם רוצים ומוכנים לעבוד על עצמכם גם בין המפגשים?</span>${iqScale("c_ready","מעט","מאוד")}</div>`;
   h += `</section>`;
   return h;
 }
@@ -1981,6 +1984,7 @@ function iqQuickHTML(p){
   h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",1);
   h += iqTA("c_talent","הכישרון הטבעי שלכם, ותחביבים",1);
   h += iqTA("c_goal","מה הייתם רוצים שישתנה",1);
+  h += `<div class="iq-item"><span class="iq-lbl">עד כמה אתם רוצים ומוכנים לעבוד על עצמכם גם בין המפגשים?</span>${iqScale("c_ready","מעט","מאוד")}</div>`;
   h += `</section>`;
   return h;
 }
@@ -2230,6 +2234,7 @@ function iqText(){
   L.push(`מקור לחץ אחר: ${v("l_stress_other")}`);
   { const sf=iqSefMarked(S); if(sf.length){ L.push("","בקשרים ובעשייה (ספירות)"); sf.forEach(x=>L.push(`${x.label} [ספירת ${x.sf}, ${x.dir}]`)); } }
   { const nt=[["e_notes","הערות לרגש ולמה שבולט"],["s_notes","הערות למשפטים ולמחיצות"],["sf_notes","הערות לקשרים ולעשייה"],["l_notes","הערות לאורח החיים"],["n_notes","הערות לטבע ולמי אתם בדרך כלל"]].filter(([k])=>v(k)); if(nt.length){ L.push("","הערות"); nt.forEach(([k,l])=>L.push(`${l}: ${v(k)}`)); } }
+  if(S.c_ready!==undefined) L.push(`מוכנות לעבודה עצמית בין המפגשים: ${S.c_ready}/10`);
   L.push("","טבע לאורך השנים");
   IQ_NATURE.forEach(n=>{ if(S[n.id]){ const o=n.o.find(x=>x[0]===S[n.id]); L.push(`${n.q}: ${o[1]} [${IQ_EL[o[0]].name}]`); } });
   L.push("","לסיום");
