@@ -3439,7 +3439,8 @@ renderPathologies();
 <style>
   #tabnav{overflow-x:auto;scrollbar-width:none;}
   #tabnav::-webkit-scrollbar{display:none;}
-  #tabnav button{white-space:nowrap;flex-shrink:0;}
+  #tabnav{max-width:640px;gap:4px;}
+  #tabnav button{white-space:nowrap;flex:1 1 auto;padding:9px 14px !important;}
   .dg-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius,16px);background:#fff;box-shadow:var(--shadow);margin-top:12px;}
   .dg-wrap:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
   table.dg{border-collapse:separate;border-spacing:0;min-width:860px;width:100%;font-size:0.9rem;line-height:1.55;}
@@ -3548,6 +3549,37 @@ renderPathologies();
   .ep-f{font-size:0.84rem;color:#6a756f;margin:4px 0 8px;}
   .org-ex{margin:6px 14px 14px;}
   .org-ex-h{font-weight:800;color:var(--forest-dark);font-size:0.92rem;margin-bottom:6px;}
+</style>
+
+<script>
+/* ===== לשונית הכלים: שתי קבוצות, כלים מהמקורות ולפי נושא ===== */
+(function(){
+  const TOPIC = ['tool-omek','tool-evarim','tool-dibur','tool-hitmakrut','tool-emuna'];
+  const CARET = '<svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>';
+  const grp = (id, title, lead) => { const g=document.createElement('div'); g.className='organ-card tools-group'; g.id=id;
+    g.innerHTML = `<div class="organ-head" onclick="this.parentElement.classList.toggle('open')"><div><h3>${title}</h3><p class="tool-lead">${lead}</p></div>${CARET}</div><div class="organ-body tg-body"></div>`; return g; };
+  const _rtv2 = renderToolsView;
+  renderToolsView = function(){
+    _rtv2.apply(this, arguments);
+    const list = document.getElementById('toolsList'); if(!list || list.querySelector('.tools-group')) return;
+    const src = grp('tool-group-src','כלים מהמקורות','הכלים מתוך משנת הבעל שם טוב ומהעבודה בקליניקה: נשימה, השקטה, פיוס, מראות, גדלות וקטנות, הסתר וגילוי, ועוד.');
+    const top = grp('tool-group-topic','לפי נושא','אוספי תרגילים לפי נושא: עבודה לעומק, איברים, דיבור לאיברים, התמכרות, ואמונה.');
+    const cards = [...list.children].filter(c=>c.classList.contains('organ-card'));
+    list.prepend(top); list.prepend(src);
+    cards.forEach(c=>{ const id=(c.id||'').replace('tool-card-',''); (TOPIC.includes(id) ? top : src).querySelector('.tg-body').appendChild(c); });
+  };
+  const _jt2 = jumpToTool;
+  jumpToTool = function(id){ const r=_jt2.apply(this, arguments); const c=document.getElementById('tool-card-'+id); const g=c && c.closest('.tools-group'); if(g) g.classList.add('open'); return r; };
+  if(document.getElementById('toolsList') && document.getElementById('toolsList').children.length) renderToolsView();
+})();
+</script>
+<style>
+  .tg-body > .organ-card{box-shadow:none;border:1px solid rgba(44,95,91,0.15);margin:8px 0;}
+  .tg-body > .organ-card > .organ-body{display:none !important;}
+  .tg-body > .organ-card.open > .organ-body{display:block !important;}
+  .tg-body > .organ-card > .organ-head .caret{transform:none !important;}
+  .tg-body > .organ-card.open > .organ-head .caret{transform:rotate(180deg) !important;}
+  .tools-group > .organ-head h3{font-size:1.25rem;}
 </style>
 </body>
 </html>
