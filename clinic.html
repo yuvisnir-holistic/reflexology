@@ -701,6 +701,14 @@
 
   .ex-fit{font-size:0.82rem !important;color:#6a756f !important;margin:4px 0 0 !important;line-height:1.5;}
 
+  /* אנימציית פתיחה אחידה */
+  @keyframes accIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+  .acc-in{animation:accIn .26s ease;}
+  details[open] > :not(summary){animation:accIn .26s ease;}
+  @media (prefers-reduced-motion: reduce){ .acc-in, details[open] > :not(summary){animation:none;} }
+
+  header{background:#24524D !important;}
+
   .iq-sub2{font-size:0.95rem;font-weight:800;color:var(--sefirah);margin:22px 0 2px;padding-top:12px;border-top:1px dotted rgba(44,95,91,0.3);}
   .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
   .iq-xhead{font-size:0.8rem;font-weight:700;color:var(--forest);margin:2px 0 4px;}
@@ -1000,7 +1008,7 @@ function renderLog(){
   const num = new Map(s.map((t,i)=>[t.id,i+1]));
   const desc = logOrder==='old' ? [...s] : [...s].reverse();
   $('cardBody').innerHTML = `
-    <div class="sheet-actions no-print log-bar"><button class="bm-btn" onclick="tNew()">+ טיפול חדש</button>
+    <div class="sheet-actions no-print log-bar"><button class="bm-btn" onclick="tNew()">+ טיפול חדש</button><button class="bm-btn ghost" onclick="sumOpen()">סיכום לפני מפגש</button>
       ${s.length>1 ? `<div class="seg log-sort" role="group" aria-label="סדר הטיפולים"><button class="${logOrder==='new'?'on':''}" aria-pressed="${logOrder==='new'}" onclick="setLogOrder('new')">מהחדש לישן</button><button class="${logOrder==='old'?'on':''}" aria-pressed="${logOrder==='old'}" onclick="setLogOrder('old')">מהישן לחדש</button></div>` : ''}</div>
     ${desc.length ? desc.map(t=>tCard(t,num.get(t.id))).join('') :
       `<div class="sheet-empty"><p>עוד אין טיפולים ביומן של ${escH(p.name)}. "טיפול חדש" פותח רישום עם התאריך של היום.</p></div>`}`;
@@ -2723,6 +2731,100 @@ renderIntake = function(){
 function midBack(m){ const p=curP(); p.iqView=''; p.intakeMode=m; savePT(); renderIntake(); }
 function midOpen(){ const p=curP(); p.iqView='mid'; savePT(); renderIntake(); }
 function midButton(){ const secs=document.querySelector('#iqWrap .iq-secs'); if(secs && !secs.querySelector('.mid-btn')){ secs.style.maxWidth='600px'; secs.insertAdjacentHTML('beforeend','<button class="iq-sec mid-btn" onclick="midOpen()">שאלון אמצע</button>'); } }
+
+/* ===== אקורדיון אחיד: פתיחת כרטיס סוגרת את הכרטיס הפתוח שלידו, באנימציה ===== */
+(function(){
+  const DUR = 260;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isToggleHead = el => el && /toggle\(\s*['"]open['"]\s*\)/.test(el.getAttribute('onclick')||'');
+  const isAccBox = el => el && el.firstElementChild && isToggleHead(el.firstElementChild);
+  const bodiesOf = el => [...el.children].slice(1);
+  function animClose(el, done){
+    if(reduce){ done(); return; }
+    const kids = bodiesOf(el).filter(k=>k.offsetHeight>0);
+    kids.forEach(k=>{ k.style.height=k.scrollHeight+'px'; k.style.overflow='hidden'; k.style.transition=`height ${DUR}ms ease, opacity ${DUR}ms ease`; });
+    requestAnimationFrame(()=>requestAnimationFrame(()=>kids.forEach(k=>{ k.style.height='0px'; k.style.opacity='0'; })));
+    setTimeout(()=>{ done(); kids.forEach(k=>{ ['height','overflow','transition','opacity'].forEach(p=>k.style.removeProperty(p)); }); }, DUR);
+  }
+  function animOpen(el){
+    if(reduce) return;
+    bodiesOf(el).forEach(k=>{ k.classList.remove('acc-in'); void k.offsetWidth; k.classList.add('acc-in'); });
+  }
+  function keepInView(el){
+    setTimeout(()=>{ const r=el.getBoundingClientRect(); const top = (document.querySelector('header')||{}).offsetHeight || 0;
+      if(r.top < top + 8) window.scrollBy({top: r.top - top - 12, behavior: reduce?'auto':'smooth'}); }, DUR + 20);
+  }
+  function closeSiblings(box){
+    const par = box.parentElement; if(!par) return false;
+    let any = false;
+    [...par.children].forEach(sib=>{ if(sib!==box && sib.classList.contains('open') && isAccBox(sib)){ any = true; animClose(sib, ()=>sib.classList.remove('open')); } });
+    return any;
+  }
+  /* כרטיסים שנפתחים בלחיצה על הכותרת */
+  document.addEventListener('click', e=>{
+    const head = e.target.closest && e.target.closest('[onclick]'); if(!isToggleHead(head)) return;
+    const box = head.parentElement; if(!box) return;
+    setTimeout(()=>{ if(!box.classList.contains('open')) return; animOpen(box); if(closeSiblings(box)) keepInView(box); }, 0);
+  });
+  /* רכיבי details */
+  document.addEventListener('toggle', e=>{
+    const d = e.target; if(!(d instanceof HTMLDetailsElement) || !d.open || d.dataset.accBusy) return;
+    const par = d.parentElement; if(!par) return;
+    let any=false;
+    [...par.children].forEach(sib=>{
+      if(sib!==d && sib instanceof HTMLDetailsElement && sib.open){
+        any=true; sib.dataset.accBusy='1';
+        const kids=[...sib.children].filter(k=>k.tagName!=='SUMMARY');
+        if(reduce){ sib.open=false; delete sib.dataset.accBusy; return; }
+        kids.forEach(k=>{ k.style.height=k.scrollHeight+'px'; k.style.overflow='hidden'; k.style.transition=`height ${DUR}ms ease, opacity ${DUR}ms ease`; });
+        requestAnimationFrame(()=>requestAnimationFrame(()=>kids.forEach(k=>{ k.style.height='0px'; k.style.opacity='0'; })));
+        setTimeout(()=>{ sib.open=false; kids.forEach(k=>['height','overflow','transition','opacity'].forEach(p=>k.style.removeProperty(p))); delete sib.dataset.accBusy; }, DUR);
+      }
+    });
+    if(any) keepInView(d);
+  }, true);
+})();
+
+/* ===== סיכום לפני מפגש ===== */
+function sumOpen(){
+  const p=curP(); const ts=tSorted(p); const bar=document.querySelector('.log-bar'); if(!bar) return;
+  let box=document.getElementById('sumBox');
+  if(box){ box.remove(); return; }
+  if(!ts.length){ bmToast('עוד אין טיפולים ביומן'); return; }
+  const last=new Set(ts.slice(-3).map(t=>t.id));
+  bar.insertAdjacentHTML('afterend', `<div id="sumBox" class="iq-import no-print" style="margin:10px 0">
+    <p class="iq-hint" style="margin:0 0 8px">בחרו את המפגשים לסיכום. ההעתקה כוללת גם את התלונה העיקרית ותמצית האבחון.</p>
+    <div class="iq-opts col">${ts.map((t,k)=>`<label class="iq-opt"><input type="checkbox" value="${t.id}" ${last.has(t.id)?'checked':''}><span>טיפול ${k+1}, ${fmtD(t.date)}${t.done?' | '+escH(String(t.done).slice(0,40)):''}</span></label>`).join('')}</div>
+    <div class="sheet-actions" style="margin-top:8px"><button class="bm-btn" onclick="sumCopy()">העתקה לסיכום</button><button class="bm-link" onclick="document.getElementById('sumBox').remove()">סגירה</button></div>
+  </div>`);
+}
+function sumText(p, ids){
+  const i=p.intake||{}; const L=[];
+  L.push(`סיכום לפני מפגש: ${p.name}`, `מספר טיפולים עד עכשיו: ${(p.treatments||[]).length}`, '');
+  if(i.m_what) L.push(`התלונה העיקרית: ${i.m_what}${i.m_level!==undefined?` (עוצמה בהתחלה ${i.m_level}/10)`:''}`);
+  ['x1_what','x2_what','x3_what','b_other'].forEach(k=>{ if(i[k]) L.push(`תלונה נוספת: ${i[k]}`); });
+  if(i.c_goal) L.push(`מה רצה שישתנה: ${i.c_goal}`);
+  if(p.reading && p.reading.text){ const t=p.reading.text; const k=t.indexOf('למטפל בלבד'); L.push('', 'תמצית האבחון:', (k>0?t.slice(k):t).slice(0,1500)); }
+  if(p.mid && Object.keys(p.mid).length) L.push('', 'יש שאלון אמצע: '+((p.mid.change&&({much:'הקלה משמעותית',better:'הקלה',same:'ללא שינוי',worse:'הרעה'})[p.mid.change])||'')+(p.mid.level!==undefined?`, עוצמה ${p.mid.level}/10`:''));
+  L.push('', 'המפגשים שנבחרו:');
+  tSorted(p).forEach((t,k)=>{ if(!ids.includes(t.id)) return;
+    L.push(`טיפול ${k+1}, ${fmtD(t.date)}`);
+    if(t.done) L.push(`מה עשינו: ${t.done}`); if(t.foot) L.push(`בכף הרגל: ${t.foot}`);
+    if(t.progress) L.push(`איך הגיע: ${PROG[t.progress]||t.progress}${t.progressNote?', '+t.progressNote:''}`);
+    const wi=weekOfTreatment(p,t); const ex=wi>=0?p.weeks[wi].items.filter(x=>EXR[x]):(t.exIds||[]).filter(x=>EXR[x]);
+    if(ex.length) L.push(`תרגול: ${ex.map(x=>EXR[x].title).join(', ')}`);
+    if(t.homework) L.push(`עוד על התרגול: ${t.homework}`); if(t.notes) L.push(`הערות: ${t.notes}`);
+    L.push('');
+  });
+  L.push('בקשה: סיכום לפני מפגש, לפי ההנחיות.');
+  return L.join('\n');
+}
+function sumCopy(){
+  const p=curP(); const ids=[...document.querySelectorAll('#sumBox input:checked')].map(x=>x.value);
+  if(!ids.length){ bmToast('לא נבחרו מפגשים'); return; }
+  const t=sumText(p, ids);
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>bmToast('הועתק. אפשר להדביק בשיחה'),()=>{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); bmToast('הועתק. אפשר להדביק בשיחה'); });
+}
 
 
 /* ===== חיבורים ===== */

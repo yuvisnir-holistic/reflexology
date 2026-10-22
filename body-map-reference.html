@@ -483,6 +483,8 @@
   @media print{ .hdr-link{display:none !important;} }
 
   .pick-list{max-height:46vh;overflow:auto;}
+  main{min-height:calc(100vh + 160px);}
+  header{background:#24524D !important;}
 </style>
 </head>
 <body>
@@ -2376,7 +2378,11 @@ function copySheet(){
 function openSheet(){ if(currentView!=='sheetView') pushHistory(); showView('sheetView'); renderSheet(); window.scrollTo(0,0); }
 
 /* כותרת מתכווצת בגלילה */
-window.addEventListener('scroll', ()=>{ document.querySelector('header').classList.toggle('compact', window.scrollY > 40); }, {passive:true});
+window.addEventListener('scroll', ()=>{ const h=document.querySelector('header'); const y=window.scrollY;
+  /* מרווח בין הכיווץ להרחבה, כדי שהכותרת לא תקפוץ הלוך ושוב בעמודים קצרים */
+  if(!h.classList.contains('compact') && y > 120) h.classList.add('compact');
+  else if(h.classList.contains('compact') && y < 8) h.classList.remove('compact');
+}, {passive:true});
 
 /* ===== ניווט ===== */
 function scrollToEl(el){
@@ -3580,6 +3586,140 @@ renderPathologies();
   .tg-body > .organ-card > .organ-head .caret{transform:none !important;}
   .tg-body > .organ-card.open > .organ-head .caret{transform:rotate(180deg) !important;}
   .tools-group > .organ-head h3{font-size:1.25rem;}
+</style>
+<script>
+/* ===== אקורדיון אחיד: פתיחת כרטיס סוגרת את הכרטיס הפתוח שלידו, באנימציה ===== */
+(function(){
+  const DUR = 260;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isToggleHead = el => el && /toggle\(\s*['"]open['"]\s*\)/.test(el.getAttribute('onclick')||'');
+  const isAccBox = el => el && el.firstElementChild && isToggleHead(el.firstElementChild);
+  const bodiesOf = el => [...el.children].slice(1);
+  function animClose(el, done){
+    if(reduce){ done(); return; }
+    const kids = bodiesOf(el).filter(k=>k.offsetHeight>0);
+    kids.forEach(k=>{ k.style.height=k.scrollHeight+'px'; k.style.overflow='hidden'; k.style.transition=`height ${DUR}ms ease, opacity ${DUR}ms ease`; });
+    requestAnimationFrame(()=>requestAnimationFrame(()=>kids.forEach(k=>{ k.style.height='0px'; k.style.opacity='0'; })));
+    setTimeout(()=>{ done(); kids.forEach(k=>{ ['height','overflow','transition','opacity'].forEach(p=>k.style.removeProperty(p)); }); }, DUR);
+  }
+  function animOpen(el){
+    if(reduce) return;
+    bodiesOf(el).forEach(k=>{ k.classList.remove('acc-in'); void k.offsetWidth; k.classList.add('acc-in'); });
+  }
+  function keepInView(el){
+    setTimeout(()=>{ const r=el.getBoundingClientRect(); const top = (document.querySelector('header')||{}).offsetHeight || 0;
+      if(r.top < top + 8) window.scrollBy({top: r.top - top - 12, behavior: reduce?'auto':'smooth'}); }, DUR + 20);
+  }
+  function closeSiblings(box){
+    const par = box.parentElement; if(!par) return false;
+    let any = false;
+    [...par.children].forEach(sib=>{ if(sib!==box && sib.classList.contains('open') && isAccBox(sib)){ any = true; animClose(sib, ()=>sib.classList.remove('open')); } });
+    return any;
+  }
+  /* כרטיסים שנפתחים בלחיצה על הכותרת */
+  document.addEventListener('click', e=>{
+    const head = e.target.closest && e.target.closest('[onclick]'); if(!isToggleHead(head)) return;
+    const box = head.parentElement; if(!box) return;
+    setTimeout(()=>{ if(!box.classList.contains('open')) return; animOpen(box); if(closeSiblings(box)) keepInView(box); }, 0);
+  });
+  /* רכיבי details */
+  document.addEventListener('toggle', e=>{
+    const d = e.target; if(!(d instanceof HTMLDetailsElement) || !d.open || d.dataset.accBusy) return;
+    const par = d.parentElement; if(!par) return;
+    let any=false;
+    [...par.children].forEach(sib=>{
+      if(sib!==d && sib instanceof HTMLDetailsElement && sib.open){
+        any=true; sib.dataset.accBusy='1';
+        const kids=[...sib.children].filter(k=>k.tagName!=='SUMMARY');
+        if(reduce){ sib.open=false; delete sib.dataset.accBusy; return; }
+        kids.forEach(k=>{ k.style.height=k.scrollHeight+'px'; k.style.overflow='hidden'; k.style.transition=`height ${DUR}ms ease, opacity ${DUR}ms ease`; });
+        requestAnimationFrame(()=>requestAnimationFrame(()=>kids.forEach(k=>{ k.style.height='0px'; k.style.opacity='0'; })));
+        setTimeout(()=>{ sib.open=false; kids.forEach(k=>['height','overflow','transition','opacity'].forEach(p=>k.style.removeProperty(p))); delete sib.dataset.accBusy; }, DUR);
+      }
+    });
+    if(any) keepInView(d);
+  }, true);
+})();
+
+</script>
+<style>
+  /* אנימציית פתיחה אחידה */
+  @keyframes accIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+  .acc-in{animation:accIn .26s ease;}
+  details[open] > :not(summary){animation:accIn .26s ease;}
+  @media (prefers-reduced-motion: reduce){ .acc-in, details[open] > :not(summary){animation:none;} }
+
+</style>
+
+<script>
+/* ===== תיקוני זרימה: לשונית שנלחצת שוב חוזרת להתחלה, איחוד חלקים בכרטיסי איברים, תרגילים לאיבר, וחיפוש מדויק ===== */
+(function(){
+  /* לחיצה על הלשונית הפעילה מחזירה אותה למצב ההתחלתי */
+  const nav = document.getElementById('tabnav');
+  if(nav) nav.addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b || !b.classList.contains('active')) return;
+    const v = document.getElementById(currentView); if(!v) return;
+    v.querySelectorAll('.open').forEach(el=>el.classList.remove('open'));
+    window.scrollTo({top:0, behavior:'smooth'});
+  }, true);
+
+  /* כרטיסי איברים: לאחד חלקים, ולהוסיף תרגילים מהפתולוגיות של האיבר */
+  function tidyCard(card){
+    if(!card || card.dataset.tidy) return; card.dataset.tidy='1';
+    const subs = [...card.querySelectorAll('.subsection')];
+    const byTitle = t => subs.find(x=>{ const h=x.querySelector('.sub-head, .sub-title, h4'); return h && h.textContent.trim().startsWith(t); });
+    const merge = (fromT, intoT, newTitle) => {
+      const a = byTitle(fromT), b = byTitle(intoT); if(!a || !b) return;
+      const ab = a.querySelector('.sub-body'), bb = b.querySelector('.sub-body'); if(!ab || !bb) return;
+      [...ab.children].forEach(ch=>bb.appendChild(ch)); a.remove();
+      if(newTitle){ const h=b.querySelector('.sub-head span, .sub-title, h4'); if(h) h.textContent = newTitle; }
+    };
+    merge('פתולוגיות ותרגילים','פתולוגיות אופייניות');
+    merge('שאלות להתבוננות','כיוונים לעבודה','כיוונים לעבודה ושאלות להתבוננות');
+    /* כפילויות של כפתורי פתולוגיה */
+    const seen = new Set();
+    card.querySelectorAll('.pl-link, .path-chip, [onclick*="openPathology"]').forEach(btn=>{ const k=(btn.getAttribute('onclick')||'')+btn.textContent.trim(); if(seen.has(k)) btn.remove(); else seen.add(k); });
+  }
+  const _os = openSystem;
+  openSystem = function(){ const r=_os.apply(this, arguments); setTimeout(()=>document.querySelectorAll('#organsList .organ-card').forEach(tidyCard), 0); return r; };
+  /* תרגילי ההתבוננות של איבר כוללים גם תרגילים מהפתולוגיות שלו */
+  const _oc3 = organCardHTML;
+  organCardHTML = function(o){
+    if(typeof ORGAN_EX!=='undefined' && typeof pathMatch==='function' && !o._exMerged){
+      o._exMerged = true;
+      const base = ORGAN_EX[o.name] ? [...ORGAN_EX[o.name]] : [];
+      const paths = pathMatch([o.name, o._pl||''].join(', '));
+      paths.slice(0,2).forEach(n=>pathExercises(n,6).forEach(id=>{ if(!base.includes(id) && base.length<6) base.push(id); }));
+      if(base.length) ORGAN_EX[o.name] = base;
+    }
+    return _oc3.apply(this, arguments);
+  };
+
+  /* חיפוש: קודם איבר או פתולוגיה בשם הזה, ואחר כך כל השאר */
+  const _rs = runSearch;
+  runSearch = function(q){
+    const r = _rs.apply(this, arguments);
+    const raw = String(q||'').trim(); if(!raw) return r;
+    const res = document.getElementById('searchResults') || document.querySelector('#searchView'); if(!res) return r;
+    const old = document.getElementById('topHits'); if(old) old.remove();
+    const organs = []; SYSTEMS.forEach(sy=>sy.organs.forEach(o=>{ const n=o.name.replace(/\s*\(.*\)/,''); if(n.includes(raw) || raw.includes(n)) organs.push([sy.id,o.name]); }));
+    const paths = PATHOLOGIES.flatMap(g=>g.items).map(p=>p.name).filter(n=>n.includes(raw));
+    (typeof pathMatch==='function' ? pathMatch(raw) : []).forEach(n=>{ if(!paths.includes(n)) paths.push(n); });
+    if(!organs.length && !paths.length) return r;
+    const btns = organs.map(([sy,n])=>`<button type="button" class="pl-link" onclick="dgOrgan('${sy}','${n.replace(/'/g,"\\'")}')">${n}</button>`).join('') + paths.map(n=>`<button type="button" class="pl-link" onclick="openPathology('${n.replace(/'/g,"\\'")}')">${n}</button>`).join('');
+    res.insertAdjacentHTML('afterbegin', `<div id="topHits" class="top-hits"><div class="org-ex-h">תוצאות מובילות</div><div class="pl-list">${btns}</div></div>`);
+    return r;
+  };
+})();
+</script>
+<style>
+  /* כרטיסים ארוכים לא נחתכים */
+  .organ-card.open > .organ-body{max-height:none !important;}
+  .subsection.open > .sub-body{max-height:none !important;}
+  .top-hits{background:var(--cream-soft);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;margin:0 0 14px;}
+  /* כותרת יציבה בגלילה */
+  html{overflow-anchor:none;}
+  header{transition:padding .2s ease;}
 </style>
 </body>
 </html>
