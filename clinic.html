@@ -1465,6 +1465,11 @@ function suggest(p){
     }
   }
   if(Number(S.c_ready)>=7 && typeof iqSefMarked==='function' && iqSefMarked(S).length){ add('tool-omek:41','מוכנות גבוהה לעבודה עצמית, ומידה שיצאה מאיזון: חיבור המידות באור הדעת'); }
+  { /* כללי ההשקטה לפי הקומה שבה הלחץ מורגש */
+    const HK = {p_guf:['tool-hashkata:13','tool-hashkata:7'], p_regesh:['tool-hashkata:21','tool-hashkata:14'], p_mach:['tool-hashkata:1','tool-hashkata:25'], p_ratzon:['tool-hashkata:4','tool-hashkata:19'], p_medame:['tool-hashkata:2','tool-hashkata:12']};
+    const NM = {p_guf:'מעשה וגוף',p_regesh:'רגש ודיבור',p_mach:'מחשבה',p_ratzon:'רצון',p_medame:'מדמה ותענוג'};
+    Object.keys(HK).forEach(k=>{ if(S[k]) HK[k].forEach(id=>add(id, `כללי ההשקטה, לחץ שמורגש ב${NM[k]}`)); });
+  }
   if(typeof EX_SPECIAL!=='undefined'){
     const K = !!p.kabbalah;
     if(S.th_perfect||S.th_crit||S.sf_tif_self) add(EX_SPECIAL.light, 'קשיחות כלפי עצמו או דרישה לשלמות');
@@ -1672,7 +1677,7 @@ const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על �
 function iqSefTag(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.sf) ? `<span class="iq-tg"><i class="sef">${it.sf}</i></span>` : ""; }
 function iqAlt(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.alt && it.alt.length) ? `<span class="iq-tg iq-alt">או ${it.alt.map(e=>IQ_EL[e].name).join(", ")}</span>` : ""; }
 const IQ_PRESS = [
-  {id:"p_medame",label:"בדמיון, בתמונות של מה שעלול לקרות או של חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
+  {id:"p_medame",label:"בדמיון: אני מדמיין או מדמיינת שוב ושוב מה עלול לקרות, או חי או חיה בראש חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
   {id:"p_ratzon",label:"ברצונות שאין להם מוצא, בתחושה שיש בי יותר ממה שיוצא לפועל",floor:"רצון",key:"לחץ נשמתי, העבודה ברצון"},
   {id:"p_mach",label:"במחשבות שחוזרות על עצמן ולא נותנות מנוחה",floor:"מחשבה",key:"העבודה במחשבה, ניתוב והתמרת מחשבות"},
   {id:"p_regesh",label:"ברגש שמחפש מישהו לשמוע ולדבר איתו",floor:"רגש ודיבור",key:"לחץ רוחני, העבודה ברגש ובדיבור"},
@@ -2576,7 +2581,7 @@ function rdLinkify(text, recs, found){
 function rdExHTML(id, w){
   const e = EXR[id]; const on = w.items.includes(id);
   return `<details class="rd-ex" data-ex="${id}" ${rdOpenEx.has(id)?'open':''} ontoggle="rdExTog('${id}',this.open)">
-    <summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span></span>
+    <summary><span class="rd-ex-t">${escH(e.title)}<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}${(typeof EX_AUD_LABEL!=='undefined')?` <span class="aud-tag aud-${e.aud||'all'}">${EX_AUD_LABEL[e.aud||'all']}</span>`:''}</span></span>
       <button type="button" class="add-btn no-print ${on?'on':''}" onclick="event.preventDefault();event.stopPropagation();rdAdd('${id}')">${on?'בתרגול ✓':'הוספה לתרגול'}</button></summary>
     ${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p>${escH(e.text)}</p></details>`;
 }
@@ -2586,7 +2591,12 @@ function rdBuild(){
   if(rdLastP !== p.id){ rdOpen = new Set(); rdOpenEx = new Set(); rdLastP = p.id; }
   const {th} = iqReadParts(p.reading.text);
   const recs = readRecs(p); const w = p.weeks[curWi(p)];
-  const cards = rdCards(th); const used = new Set();
+  const cards = rdCards(th).reduce((acc,c)=>{
+    /* "להתחלה" ו"אפשרויות נוספות" הם חלק מכרטיס התרגילים, ולא כרטיסים נפרדים */
+    if(acc.length && /^(להתחלה|אפשרויות נוספות)/.test(c.title.trim()) && /תרגיל/.test(acc[acc.length-1].title)){ acc[acc.length-1].paras.push(`**${c.title}:** `+(c.paras[0]||''), ...c.paras.slice(1)); }
+    else acc.push(c);
+    return acc;
+  }, []); const used = new Set();
   const cardHTML = cards.map((c,i)=>{
     const found = {ex:new Set(), el:new Set(), sf:new Set()};
     let body = c.paras.map(x=>rdLinkify(x, recs, found)).join('');
@@ -2594,13 +2604,14 @@ function rdBuild(){
     if(isFocus && (found.el.size || found.sf.size)){
       body += `<div class="rd-chips no-print"><span>לתרגילים של:</span>${[...found.el].map(k=>`<button type="button" class="wchip" style="background:${ELEMENTS[k].bg};color:${ELEMENTS[k].color}" onclick="exOpenAt('el','${k}')">יסוד ה${EX_EL_NAMES[k]}</button>`).join('')}${[...found.sf].map(n=>`<button type="button" class="wchip" style="background:var(--sefirah-bg);color:var(--sefirah)" onclick="exOpenAt('sf','${n}')">ספירת ${n}</button>`).join('')}</div>`;
     }
+    let exIds = [];
     if(isEx){
-      const ids = (found.ex.size ? [...found.ex] : recs).filter(id=>!used.has(id));
-      ids.forEach(id=>used.add(id));
-      if(ids.length) body += `<div class="rd-exs">${ids.map(id=>rdExHTML(id,w)).join('')}</div>`;
+      exIds = (found.ex.size ? [...found.ex] : recs).filter(id=>!used.has(id));
+      exIds.forEach(id=>used.add(id));
+      if(exIds.length) body += `<div class="rd-exs">${exIds.map(id=>rdExHTML(id,w)).join('')}</div>`;
     }
     const key = c.title;
-    return `<details class="rd-card" data-card="${escH(key)}" ${rdOpen.has(key)?'open':''} ontoggle="rdCardTog(this)"><summary>${escH(c.title)}${isEx&&recs.length?`<span class="rd-badge">${recs.filter(id=>w.items.includes(id)).length} מתוך ${recs.length} בתרגול</span>`:''}</summary><div class="rd-card-b">${body}</div></details>`;
+    return `<details class="rd-card" data-card="${escH(key)}" ${rdOpen.has(key)?'open':''} ontoggle="rdCardTog(this)"><summary>${escH(c.title)}${isEx&&exIds.length?`<span class="rd-badge">${exIds.filter(id=>w.items.includes(id)).length} מתוך ${exIds.length} בתרגול</span>`:''}</summary><div class="rd-card-b">${body}</div></details>`;
   }).join('');
   box.innerHTML = `<div class="iq-tp-h">למטפל בלבד<button type="button" class="bm-link no-print rd-all" onclick="rdAll()">${cards.length && rdOpen.size===cards.length?'סגירת הכול':'פתיחת הכול'}</button></div>${cardHTML}`;
 }

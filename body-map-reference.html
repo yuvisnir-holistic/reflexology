@@ -2543,7 +2543,7 @@ const IQ_EMO = [
 ];
 const IQ_EMO_MAX = 4;
 const IQ_PRESS = [
-  {id:"p_medame",label:"בדמיון, בתמונות של מה שעלול לקרות או של חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
+  {id:"p_medame",label:"בדמיון: אני מדמיין שוב ושוב מה עלול לקרות, או חי בראש חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
   {id:"p_ratzon",label:"ברצונות שאין להם מוצא, בתחושה שיש בי יותר ממה שיוצא לפועל",floor:"רצון",key:"לחץ נשמתי, העבודה ברצון"},
   {id:"p_mach",label:"במחשבות שחוזרות על עצמן ולא נותנות מנוחה",floor:"מחשבה",key:"העבודה במחשבה, ניתוב והתמרת מחשבות"},
   {id:"p_regesh",label:"ברגש שמחפש מישהו לשמוע ולדבר איתו",floor:"רגש ודיבור",key:"לחץ רוחני, העבודה ברגש ובדיבור"},
@@ -3720,6 +3720,40 @@ renderPathologies();
   /* כותרת יציבה בגלילה */
   html{overflow-anchor:none;}
   header{transition:padding .2s ease;}
+</style>
+
+<script>
+/* ===== סימון ומסנן: מהמקורות, לכל אדם, לשניהם, בתרגילים של מפת הגוף ===== */
+(function(){
+  if(typeof EX_AUD_LABEL==='undefined') return;
+  let aud = 'any'; try{ aud = localStorage.getItem('bm-aud')||'any'; }catch(e){}
+  function tag(root){
+    (root||document).querySelectorAll('button.add-btn[onclick*="openPicker("]').forEach(b=>{
+      const m=(b.getAttribute('onclick')||'').match(/openPicker\('([^']+)'\)/); if(!m) return;
+      const e=EXR[m[1]]; const item=b.parentElement; if(!e||!item||item.dataset.aud) return;
+      const a=e.aud||'all'; item.dataset.aud=a;
+      const t=item.querySelector('h4, .ex-title, strong, .wx-t') || item.firstElementChild;
+      if(t && t!==b) t.insertAdjacentHTML('beforeend', ` <span class="aud-tag aud-${a}">${EX_AUD_LABEL[a]}</span>`);
+      const box = item.closest('.ex-item, .work-ex, li, .wx') || item;
+      box.dataset.aud = a;
+    });
+    apply();
+  }
+  function apply(){ document.querySelectorAll('[data-aud]').forEach(el=>{ el.style.display = (aud==='any' || el.dataset.aud===aud) ? '' : 'none'; }); document.querySelectorAll('.bm-aud button').forEach(b=>b.classList.toggle('on', b.dataset.v===aud)); }
+  window.bmSetAud = function(v){ aud=v; try{ localStorage.setItem('bm-aud',v); }catch(e){} apply(); };
+  const bar = `<div class="seg bm-aud no-print" role="group" aria-label="סינון תרגילים">${[['any','הכול'],['src','מהמקורות'],['all','לכל אדם'],['both','לשניהם']].map(([v,l])=>`<button type="button" data-v="${v}" onclick="bmSetAud('${v}')">${l}</button>`).join('')}</div>`;
+  const tv = document.getElementById('toolsView'); if(tv && !tv.querySelector('.bm-aud')) tv.insertAdjacentHTML('afterbegin', bar);
+  ['renderToolsView','openPathology','selectElement','renderSefirot','openSystem','jumpToSefirahWeek','jumpToElementWeek'].forEach(n=>{ const f=window[n]; if(typeof f!=='function') return; window[n]=function(){ const r=f.apply(this,arguments); setTimeout(()=>tag(document),30); return r; }; });
+  new MutationObserver(()=>{ clearTimeout(window.__audT); window.__audT=setTimeout(()=>tag(document),80); }).observe(document.querySelector('main')||document.body,{childList:true,subtree:true});
+  tag(document);
+})();
+</script>
+<style>
+  .aud-tag{font-family:'Assistant',sans-serif;font-size:0.68rem;font-weight:700;border-radius:999px;padding:1px 8px;vertical-align:middle;white-space:nowrap;}
+  .aud-src{background:var(--sefirah-bg);color:var(--sefirah);} .aud-all{background:var(--earth-bg);color:var(--earth);} .aud-both{background:#ECEAE4;color:#5e6b66;}
+  .bm-aud{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px;}
+  .bm-aud button{border:1.5px solid var(--forest);background:#fff;color:var(--forest);border-radius:999px;padding:5px 12px;font-family:'Assistant',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;}
+  .bm-aud button.on{background:var(--forest);color:#fff;}
 </style>
 </body>
 </html>

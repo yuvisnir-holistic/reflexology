@@ -351,7 +351,7 @@ const IQ_THOUGHT = [{id:"th_crit",label:"ביקורת, על עצמי או על �
 function iqSefTag(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.sf) ? `<span class="iq-tg"><i class="sef">${it.sf}</i></span>` : ""; }
 function iqAlt(it){ return (typeof IQ_SHOW_ALT!=="undefined" && it.alt && it.alt.length) ? `<span class="iq-tg iq-alt">או ${it.alt.map(e=>IQ_EL[e].name).join(", ")}</span>` : ""; }
 const IQ_PRESS = [
-  {id:"p_medame",label:"בדמיון, בתמונות של מה שעלול לקרות או של חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
+  {id:"p_medame",label:"בדמיון: אני מדמיין או מדמיינת שוב ושוב מה עלול לקרות, או חי או חיה בראש חיים אחרים",floor:"מדמה ותענוג",key:"העבודה בכוח המדמה, דמיון מודרך ועבודת ההשתוות"},
   {id:"p_ratzon",label:"ברצונות שאין להם מוצא, בתחושה שיש בי יותר ממה שיוצא לפועל",floor:"רצון",key:"לחץ נשמתי, העבודה ברצון"},
   {id:"p_mach",label:"במחשבות שחוזרות על עצמן ולא נותנות מנוחה",floor:"מחשבה",key:"העבודה במחשבה, ניתוב והתמרת מחשבות"},
   {id:"p_regesh",label:"ברגש שמחפש מישהו לשמוע ולדבר איתו",floor:"רגש ודיבור",key:"לחץ רוחני, העבודה ברגש ובדיבור"},
