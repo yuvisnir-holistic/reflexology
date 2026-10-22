@@ -1696,7 +1696,11 @@ const IQ_STMTS = [
   {id:"s3",n:3,t:"יש בי הרבה רגשות, אבל הם לא מתורגמים למעשים",gap:"נתק בין הרגש למעשה",go:"שבוע של יסוד, צעד אחד ביום"},
   {id:"s1",n:1,t:"קשה לי לקיים הבטחות, לעצמי ולאחרים",gap:"נתק בין הדיבור למעשה",go:"שבוע של מלכות, לומר ולעשות באותו יום"},
   {id:"s12",n:12,t:"יש בי כישרון או רצון שלא קיבלו מקום בחיים שלי",gap:"שורש המחילה",go:"עבודת התשליך, שבוע של יסוד"},
-  {id:"s14",n:14,t:"יש תחושה של מאבק מתמיד, עם עצמי או עם אחרים",gap:"שורש המלחמה",go:"שבוע של אש, שביל הפיוס"}
+  {id:"s14",n:14,t:"יש תחושה של מאבק מתמיד, עם עצמי או עם אחרים",gap:"שורש המלחמה",go:"שבוע של אש, שביל הפיוס"},
+  {id:"s20",n:20,t:"יש בי הרבה מחשבות, וכשאני מנסה לומר אותן, זה לא יוצא, או יוצא עקום",gap:"נתק בין המחשבה לדיבור",go:"שבוע של רוח, כתיבה לפני דיבור"},
+  {id:"s21",n:21,t:"יש לי הרבה מחשבות ותוכניות, אבל הן נשארות בראש ולא הופכות למעשים",gap:"נתק בין המחשבה למעשה",go:"שבוע של נצח, צעד אחד ביום"},
+  {id:"s22",n:22,t:"קשה לי לפעול בלי שמישהו אחר יאשר או יחליט בשבילי",gap:"קו האמונה, תלות",go:"אמונה וביטחון, אמונה בעצמי"},
+  {id:"s23",n:23,t:"אני שם או שמה לב לסימנים, למזל או לעין הרע, ולפעמים משנה את מה שאני עושה בגללם",gap:"קו האמונה, אמונות תפלות",go:"אמונה וביטחון, השגחה ואין מקרה"}
 ];
 const IQ_ROOTS = [
   {when:S=>S.e_scatter, name:"חול", what:"פיזור הכוחות", cure:"ריכוז הכוחות, כללי ההשקטה"},
@@ -1871,6 +1875,7 @@ function iqFormHTML(p){
   h += iqTA("c_world","אם הייתם מתארים את העולם בתמונה אחת, הוא כמו... (גן, ג׳ונגל, שדה קרב, מסלול, או משהו אחר)",1);
   h += iqTA("c_goal","מה הייתם רוצים שישתנה בעקבות הטיפולים?",2);
   h += `<div class="iq-item"><span class="iq-lbl">עד כמה אתם רוצים ומוכנים לעבוד על עצמכם גם בין המפגשים?</span>${iqScale("c_ready","מעט","מאוד")}</div>`;
+  h += iqTA("c_events","אירועים משמעותיים בחיים, טובים או קשים, שכדאי שאדע עליהם",2);
   h += iqTA("c_more","עוד משהו שחשוב לכם שאדע?",2);
   h += `</section>`;
   return h;
@@ -1879,7 +1884,7 @@ function iqFormHTML(p){
 
 /* ---- אבחון רזה לקליניקה ---- */
 const IQ_LEAN_SIGNS = ["e_anger","b_heartburn","e_burst","e_fear","e_flood","b_edema","e_mind","b_shallow","e_analyze","e_sad","e_habits","b_slowdig"];
-const IQ_LEAN_STMTS = ["s7","s6","s4","s2","s1","s12"];
+const IQ_LEAN_STMTS = ["s7","s6","s4","s2","s20","s1","s12","s22"];
 const IQ_LEAN_NATURE = ["n2","n3","n5","n7"];
 function iqLeanSigns(){ const all=[...IQ_EMO]; IQ_BODY.forEach(g=>g.items.forEach(i=>all.push(i))); return IQ_LEAN_SIGNS.map(id=>all.find(x=>x.id===id)); }
 function iqMode(p){ if(!p) return 'lean'; return p.intakeMode || (iqHas(p) ? 'full' : 'lean'); }
@@ -1939,6 +1944,7 @@ function iqLeanHTML(p){
   h += `<div class="iq-item"><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div><span class="iq-lbl">והן</span>${iqRadios("l_stool",IQ_L2.l_stool)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div>`;
+  h += `<div class="iq-item">${iqChecks([IQ_SLEEPQ[2]])}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
   h += iqTA("l_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
@@ -1946,6 +1952,7 @@ function iqLeanHTML(p){
   h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",1);
   h += iqTA("c_talent","הכישרון הטבעי שלכם, ותחביבים",1);
   h += iqTA("c_goal","מה הייתם רוצים שישתנה",1);
+  h += iqTA("c_events","אירועים משמעותיים בחיים, טובים או קשים, שכדאי שאדע עליהם",2);
   h += `<div class="iq-item"><span class="iq-lbl">עד כמה אתם רוצים ומוכנים לעבוד על עצמכם גם בין המפגשים?</span>${iqScale("c_ready","מעט","מאוד")}</div>`;
   h += `</section>`;
   return h;
@@ -1990,6 +1997,7 @@ function iqQuickHTML(p){
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div></div>`;
+  h += `<div class="iq-item">${iqChecks([IQ_SLEEPQ[2]])}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
   h += iqTA("l_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
@@ -1997,6 +2005,7 @@ function iqQuickHTML(p){
   h += iqTA("c_wish","אילו יכולתם לעשות בדיוק את מה שאתם באמת רוצים, מה הייתם עושים?",1);
   h += iqTA("c_talent","הכישרון הטבעי שלכם, ותחביבים",1);
   h += iqTA("c_goal","מה הייתם רוצים שישתנה",1);
+  h += iqTA("c_events","אירועים משמעותיים בחיים, טובים או קשים, שכדאי שאדע עליהם",2);
   h += `<div class="iq-item"><span class="iq-lbl">עד כמה אתם רוצים ומוכנים לעבוד על עצמכם גם בין המפגשים?</span>${iqScale("c_ready","מעט","מאוד")}</div>`;
   h += `</section>`;
   return h;
@@ -2247,6 +2256,7 @@ function iqText(){
   L.push(`מקור לחץ אחר: ${v("l_stress_other")}`);
   { const sf=iqSefMarked(S); if(sf.length){ L.push("","בקשרים ובעשייה (ספירות)"); sf.forEach(x=>L.push(`${x.label} [ספירת ${x.sf}, ${x.dir}]`)); } }
   { const nt=[["e_notes","הערות לרגש ולמה שבולט"],["s_notes","הערות למשפטים ולמחיצות"],["sf_notes","הערות לקשרים ולעשייה"],["l_notes","הערות לאורח החיים"],["n_notes","הערות לטבע ולמי אתם בדרך כלל"]].filter(([k])=>v(k)); if(nt.length){ L.push("","הערות"); nt.forEach(([k,l])=>L.push(`${l}: ${v(k)}`)); } }
+  if(S.c_events) L.push(`אירועים משמעותיים בחיים: ${S.c_events}`);
   if(S.c_ready!==undefined) L.push(`מוכנות לעבודה עצמית בין המפגשים: ${S.c_ready}/10`);
   L.push("","טבע לאורך השנים");
   IQ_NATURE.forEach(n=>{ if(S[n.id]){ const o=n.o.find(x=>x[0]===S[n.id]); L.push(`${n.q}: ${o[1]} [${IQ_EL[o[0]].name}]`); } });
