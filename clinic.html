@@ -1623,7 +1623,7 @@ const IQ_EMO = [
   {id:"e_belong",label:"יש בי תחושה שאני לא שייך או שייכת באחד המקומות בחיים שלי",tags:["air"]},
   {id:"e_absorb",label:"אני סופג או סופגת כל מה שקורה סביבי",tags:["water"]}
 ];
-const IQ_EMO_MAX = 5;
+const IQ_EMO_MAX = 7;
 const IQ_SEF = [
   {id:"sf_chesed_low",label:"קשה לי להרגיש שאוהבים אותי, או לפרגן ולהחמיא לאחרים",sf:"חסד",dir:"חוסר"},
   {id:"sf_chesed_hi",label:"אני נותן או נותנת עד שלא נשאר לי כוח, וקשה לי לסרב",sf:"חסד",dir:"עודף"},
@@ -1640,7 +1640,7 @@ const IQ_SEF = [
   {id:"sf_malchut_low",label:"לפעמים אני מרגיש או מרגישה שאין לי מקום, כאילו אני לא באמת נוכח או נוכחת",sf:"מלכות",dir:"חוסר"},
   {id:"sf_malchut_hi",label:"קשה לי לשחרר שליטה, ואני צריך או צריכה שהדברים יהיו בדרך שלי",sf:"מלכות",dir:"עודף"}
 ];
-const IQ_SEF_MAX = 5;
+const IQ_SEF_MAX = 7;
 function iqAreaSef(S){ if(typeof sefFromText!=='function') return []; const a=[...sefFromText([S.m_where,S.m_what].filter(Boolean).join(', '), S.m_side), ...sefFromText([S.x1_what,S.x2_what,S.x3_what,S.b_other,S.m_point,S.m_medical].filter(Boolean).join(', '), '')]; const by={}; a.forEach(x=>{ by[x.sf]=by[x.sf]||new Set(); x.words.forEach(w=>by[x.sf].add(w)); }); return Object.entries(by).map(([sf,ws])=>({sf,words:[...ws]})); }
 
 const IQ_SEF_LEAN = [
@@ -1818,7 +1818,7 @@ function iqFormHTML(p){
   h += `</section>`;
   h += iqHistory();
 
-  h += `<section class="iq-q"><h3>רגש ומחשבה</h3><p class="iq-hint">בחרו עד חמישה דברים שהכי מתארים אתכם בתקופה האחרונה.</p>`;
+  h += `<section class="iq-q"><h3>רגש ומחשבה</h3><p class="iq-hint">בחרו את הדברים שהכי מתארים אתכם בתקופה האחרונה, עד שבעה.</p>`;
   h += iqChecks(IQ_EMO,"col iq-grid2",'data-lim="emo"');
   h += `<div class="iq-item" style="margin-top:16px"><span class="iq-lbl">ומה מהדברים האלה מוכר לכם, לאורך זמן? אפשר לסמן כמה</span>${iqChecks(IQ_THOUGHT)}</div>`;
   h += `<div class="iq-item" style="margin-top:16px"><span class="iq-lbl">כשיש לחץ, איפה הוא מורגש אצלכם בעיקר?</span>${iqChecks(IQ_PRESS,"col")}</div>`;
@@ -1829,7 +1829,7 @@ function iqFormHTML(p){
   IQ_STMTS.forEach(s=>{ h += `<div class="iq-stmt"><span class="t">${s.t}<span class="iq-tg"><i class="floor">${s.gap}</i></span></span><span class="iq-tri" data-tri="${s.id}"><button type="button" data-tv="yes">מתאים</button><button type="button" data-tv="part">חלקית</button><button type="button" data-tv="no">לא מתאים</button></span></div>`; });
   h += iqTA("s_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
-  h += `<section class="iq-q"><h3>בקשרים ובעשייה</h3><p class="iq-hint">סמנו עד חמישה משפטים שהכי מוכרים לכם, בדרך כלל ולא רק בתקופה האחרונה.</p>`;
+  h += `<section class="iq-q"><h3>בקשרים ובעשייה</h3><p class="iq-hint">סמנו את המשפטים שהכי מוכרים לכם, בדרך כלל ולא רק בתקופה האחרונה, עד שבעה.</p>`;
   h += `<div data-lim="sef" class="iq-item">${iqChecks(IQ_SEF,"col")}</div>`;
   h += iqTA("sf_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
@@ -1853,7 +1853,7 @@ function iqFormHTML(p){
   h += iqTA("l_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
 
-  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">לא איך אתם בתקופה האחרונה, אלא איך אתם לאורך השנים. בכל שאלה אפשר לסמן תשובה אחת, את זו שהכי נכונה עבורכם.</p>`;
+  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">לא איך אתם בתקופה האחרונה, אלא איך אתם לאורך השנים. בכל שאלה אפשר לסמן תשובה אחת, את זו שהכי נכונה עבורכם. אם אף תשובה לא מתאימה, אפשר להשאיר ריק.</p>`;
   IQ_NATURE.forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
   h += iqTA("n_notes","עוד משהו שתרצו להוסיף כאן, שלא מופיע ברשימה?",1);
   h += `</section>`;
@@ -1912,13 +1912,13 @@ function iqLeanHTML(p){
   h += `</section>`;
   h += `<section class="iq-q"><h3>תלונות נוספות</h3>${iqExtra()}</section>`;
   h += `<section class="iq-q"><h3>רקע רפואי ותרופות</h3>${iqTA("m_meds","תרופות, ויטמינים ותוספים",1)}${iqInp("h_surg","ניתוחים, פציעות וצלקות, ובאיזו שנה")}</section>`;
-  h += `<section class="iq-q"><h3>מה בולט עכשיו</h3><p class="iq-hint">עד ארבעה סימנים שהכי מתאימים.</p>`;
+  h += `<section class="iq-q"><h3>מה בולט עכשיו</h3><p class="iq-hint">הסימנים שהכי מתאימים, עד שבעה.</p>`;
   h += iqChecks(iqLeanSigns(),"col iq-grid2",'data-lim="lean"');
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">דפוסי מחשבה מוכרים, לאורך זמן</span>${iqChecks(IQ_THOUGHT)}</div>`;
-  h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, עד שלושה</span><div data-lim="sefl">${iqChecks(IQ_SEF_LEAN,"col")}</div></div>`;
+  h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה</span><div data-lim="sefl">${iqChecks(IQ_SEF_LEAN,"col")}</div></div>`;
   h += iqTA("e_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
-  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">בכל שאלה תשובה אחת, זו שהכי נכונה עבורכם.</p>`;
+  h += `<section class="iq-q"><h3>מי אתם בדרך כלל</h3><p class="iq-hint">בכל שאלה תשובה אחת, זו שהכי נכונה עבורכם. אם אף תשובה לא מתאימה, אפשר להשאיר ריק.</p>`;
   IQ_NATURE.filter(n=>IQ_LEAN_NATURE.includes(n.id)).forEach(n=>{ h += `<div class="iq-nature"><span class="iq-lbl">${n.q}</span><div class="iq-opts col">${n.o.map(([el,l])=>`<label class="iq-opt"><input type="radio" name="iq_${n.id}" value="${el}" data-r="${n.id}"><span>${l}${iqTag([el])}</span></label>`).join("")}</div></div>`; });
   h += iqTA("n_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
@@ -1974,7 +1974,7 @@ function iqQuickHTML(p){
   h += iqTA("b_other","תלונות נוספות: מה, ממתי, ואיך טופלו",2);
   h += iqTA("m_meds","תרופות, ורקע רפואי חשוב כמו ניתוחים ופציעות",1);
   h += `</section>`;
-  h += `<section class="iq-q"><h3>מה בולט</h3><p class="iq-hint">עד ארבעה סימנים, שניים לכל יסוד.</p>`;
+  h += `<section class="iq-q"><h3>מה בולט</h3><p class="iq-hint">שני סימנים לכל יסוד. אפשר לסמן כמה שמתאים.</p>`;
   h += iqChecks(iqQuickSigns(),"col iq-grid2",'data-lim="lean"');
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">איפה הלחץ מורגש</span>${iqChecks(IQ_PRESS,"col")}</div>`;
   h += `<div class="iq-item" style="margin-top:14px"><span class="iq-lbl">בקשרים ובעשייה, מה הכי בולט</span><div class="iq-opts col">${IQ_SEF_LEAN.map(x=>`<label class="iq-opt"><input type="radio" name="iq_q_sef" value="${x.sf}" data-r="q_sef"><span>${x.label}${iqSefTag(x)}</span></label>`).join("")}</div></div>`;
@@ -2046,7 +2046,7 @@ function iqBind(){
       const lim = el.closest('[data-lim]');
       if(el.checked && lim){
         const n = lim.querySelectorAll('input:checked').length;
-        const mx = lim.dataset.lim==="sef" ? IQ_SEF_MAX : lim.dataset.lim==="sefl" ? 3 : IQ_EMO_MAX;
+        const mx = lim.dataset.lim==="sef" ? IQ_SEF_MAX : lim.dataset.lim==="sefl" ? 7 : IQ_EMO_MAX;
         if(n > mx){ el.checked=false; bmToast(`אפשר לבחור עד ${mx}`); return; }
       }
       if(el.checked) S[el.dataset.c]=true; else delete S[el.dataset.c];
