@@ -1398,5 +1398,56 @@ navigateTo('cat-colors');
 
 
 </script>
+<style>
+  /* קישור ישיר מהקליניקה וממפת הגוף: הכרטיס שנפתח מסומן לרגע */
+  .foot-target{outline:3px solid var(--gold,#A9821F);outline-offset:4px;border-radius:10px;transition:outline-color 1.6s ease;}
+  .foot-target.fade{outline-color:transparent;}
+  @media (prefers-reduced-motion: reduce){ .foot-target{transition:none;} }
+</style>
+<script>
+/* ============================================================
+   קישורים ישירים לאתר, מהקליניקה וממפת הגוף
+   index.html#organ:הכבד   איבר בפרק הוליסטיקה של האיברים
+   index.html#path:עצירות   פתולוגיה
+   index.html#elem:earth    יסוד (earth, water, fire, air)
+   index.html#signs:colors  קטגוריה בסימנים בכף הרגל
+   index.html#maps:age      תרשים מעגלי הזמנים
+   ============================================================ */
+(function(){
+  function mark(el){
+    if(!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 90;
+    window.scrollTo({top:Math.max(0,top), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+    el.classList.add('foot-target'); el.classList.remove('fade');
+    setTimeout(()=>el.classList.add('fade'), 1800);
+    setTimeout(()=>el.classList.remove('foot-target','fade'), 3600);
+  }
+  function openBlock(viewId, name){
+    navigateTo(viewId);
+    const view = document.getElementById(viewId); if(!view) return null;
+    const hit = [...view.querySelectorAll('details.organ-block')].find(d=>{ const h = d.querySelector('summary h4'); return h && h.textContent.trim()===name; });
+    if(!hit) return null;
+    view.querySelectorAll('details.system-card[open]').forEach(d=>{ if(!d.contains(hit)) d.open = false; });
+    const card = hit.closest('details.system-card'); if(card) card.open = true;
+    hit.open = true;
+    return hit;
+  }
+  function route(){
+    let h = location.hash.slice(1); if(!h) return;
+    try{ h = decodeURIComponent(h); }catch(e){}
+    const i = h.indexOf(':'); if(i<0) return;
+    const kind = h.slice(0,i), val = h.slice(i+1).trim();
+    let el = null;
+    if(kind==='organ') el = openBlock('view-ch4', val);
+    else if(kind==='path') el = openBlock('view-pathologies', val);
+    else if(kind==='elem' && document.getElementById('elem-'+val)){ navigateTo('view-ch3'); navigateTo('elem-'+val); el = document.getElementById('elem-'+val); }
+    else if(kind==='signs' && document.getElementById('cat-'+val)){ navigateTo('view-signs'); navigateTo('cat-'+val); el = document.getElementById('cat-'+val); }
+    else if(kind==='maps'){ navigateTo('view-maps'); const m = document.getElementById(val==='age' ? 'svg-age-map' : 'svg-elements-map'); el = m && m.closest('.map-card'); }
+    if(el) setTimeout(()=>mark(el), 350);
+  }
+  window.addEventListener('hashchange', route);
+  if(document.readyState==='complete') route(); else window.addEventListener('load', route);
+})();
+</script>
 </body>
 </html>

@@ -485,6 +485,13 @@
   .pick-list{max-height:46vh;overflow:auto;}
   main{min-height:calc(100vh + 160px);}
   header{background:#24524D !important;}
+  .ex-txt{white-space:pre-line;}
+  /* קישור לאתר הרפלקסולוגיה בכרטיסי האיברים והפתולוגיות */
+  .foot-link{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px;padding:5px 14px;border-radius:999px;border:1px solid var(--earth);color:var(--earth);background:var(--earth-bg);font-weight:700;font-size:0.84rem;text-decoration:none;}
+  .foot-link::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--earth);}
+  .foot-link:hover{background:#d9ddc9;}
+  .foot-link:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  @media print{ .foot-link{display:none;} }
 </style>
 </head>
 <body>
@@ -1700,6 +1707,11 @@ function organCardHTML(o, sysName){
       <div class="organ-body">${sections}</div>
     </div>`;
 }
+/* קישור "בכף הרגל" לאתר הרפלקסולוגיה. מפת הגוף עצמה נשארת בלי תוכן של רפלקסולוגיה */
+function footLinkHTML(target){
+  if(!target || typeof footHref!=='function') return '';
+  return `<a class="foot-link" href="${footHref(target)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">בכף הרגל</a>`;
+}
 
 /* ===================== SYSTEMS TAB ===================== */
 
@@ -1921,7 +1933,7 @@ function pathologyCardHTML(p){
         </div>
         <svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
       </div>
-      <div class="organ-body">
+      <div class="organ-body">${footLinkHTML(typeof FOOT_PATH!=='undefined' && FOOT_PATH[p.name] && 'path:'+FOOT_PATH[p.name])}
         ${subsectionHTML("ברמה הפיזית", `<p>${linkifyText(p.physical)}</p>`)}
         ${subsectionHTML("ברמה הרגשית והרוחנית", `<p>${linkifyText(p.emotional)}</p>`, 'reflect')}
         ${subsectionHTML("כלים להתמודדות", toolsHTML, 'practice')}
@@ -2153,7 +2165,7 @@ function exItemHTML(id, showSrc){
     <div class="ex-top"><span class="ex-title">${escH(e.title)}</span>
       <button class="add-btn" onclick="event.stopPropagation();openPicker('${id}')">+ לדף לבית</button></div>
     ${showSrc ? `<span class="ex-src">${escH(e.srcLabel)}${e.floor?', '+floorLabel(e.floor):''}</span>` : ''}
-    <p>${escH(e.text)}</p></div>`;
+    <p class="ex-txt">${escH(e.text)}</p></div>`;
 }
 /* צ'יפים */
 function elChip(k){ const e=ELEMENTS[k]; return `<span class="wchip" style="background:${e.bg};color:${e.color};" onclick="event.stopPropagation();jumpToElementWeek('${k}')">שבוע של ${e.name}</span>`; }
@@ -2294,7 +2306,8 @@ function toolCardFull(id){
       ${blk('למי זה מתאים', t.fits, 'reflect')}
       ${blk('מתי לא', t.not, 'pathology')}
       ${blk('הכלי לעומק, לפי המקור', t.deep + (t.dx ? ' ' + t.dx : ''))}
-      <div class="work-box"><div class="work-head">לתרגול השבועי</div>${t.ex.map((e,i)=>exItemHTML(`${id}:${i}`)).join('')}</div>
+      ${t.refs ? t.refs.map(([label,ids])=>`<div class="work-box"><div class="work-head">${escH(label)}</div>${ids.map(x=>exItemHTML(x,true)).join('')}</div>`).join('')
+        : `<div class="work-box"><div class="work-head">לתרגול השבועי</div>${t.ex.map((e,i)=>exItemHTML(`${id}:${i}`)).join('')}</div>`}
     </div></div>`;
 }
 function renderToolsView(){
@@ -2347,7 +2360,7 @@ function renderSheet(){
       <p class="paper-brand">יובל שניר, עבודה פנימית בין המפגשים</p>
       ${items.length ? `<p class="paper-intro">חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. פעולה שחוזרת שלוש פעמים יוצרת אחיזה, ושבע פעמים יוצרות טבע שני. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.</p>
       <ol class="paper-list">${items.map(id=>`<li><div class="pl-h"><h3>${escH(EXR[id].title)}</h3>
-        <button class="x no-print" onclick="ptRemove('${id}')">הסרה</button></div><p>${escH(EXR[id].text)}</p></li>`).join('')}</ol>`
+        <button class="x no-print" onclick="ptRemove('${id}')">הסרה</button></div><p class="ex-txt">${escH(EXR[id].text)}</p></li>`).join('')}</ol>`
       : `<p class="paper-empty no-print">השבוע עוד ריק. לחצו "+ לדף לבית" ליד תרגיל באיבר, ביסוד, בספירה או בכלי, ובחרו את ${escH(p.name)}.</p>`}
       <textarea class="note-in" placeholder="הערה אישית לשבוע הזה, אם יש" oninput="ptNote(this.value)">${escH(w.note||'')}</textarea>
       ${items.length ? `<div class="paper-q"><h3>לרישום, ולהביא למפגש הבא</h3>${(qs.length?qs:['מה עבד, מה היה קשה, ומה התגלה?']).map(q=>`<p>${escH(q)}</p>`).join('')}</div>` : ''}
@@ -3523,7 +3536,7 @@ renderPathologies();
   document.body.insertAdjacentHTML('beforeend', `<div id="exPop" onclick="if(event.target===this)this.classList.remove('show')"><div class="dg-m" role="dialog" aria-modal="true"><div class="dg-m-h"><h3 class="ep-t"></h3><button type="button" class="dg-m-x" aria-label="סגירה" onclick="document.getElementById('exPop').classList.remove('show')">✕</button></div><p class="ep-w"></p><p class="ep-b"></p><p class="ep-f"></p><div class="ep-a"></div></div></div>`);
   window.bmShowEx = function(id){
     const e = EXR[id]; if(!e) return; const m = document.getElementById('exPop');
-    m.querySelector('.ep-t').textContent = e.title; m.querySelector('.ep-w').textContent = e.why||''; m.querySelector('.ep-b').textContent = e.text;
+    m.querySelector('.ep-t').textContent = e.title; m.querySelector('.ep-w').textContent = e.why||''; m.querySelector('.ep-b').textContent = e.text; m.querySelector('.ep-b').style.whiteSpace = 'pre-line';
     m.querySelector('.ep-f').textContent = e.fit ? 'מתאים: '+e.fit : '';
     m.querySelector('.ep-a').innerHTML = `<button type="button" class="ex-add" onclick="document.getElementById('exPop').classList.remove('show');openPicker('${id}')">+ לדף לבית</button>`;
     m.classList.add('show');
@@ -3755,5 +3768,19 @@ renderPathologies();
   .bm-aud button{border:1.5px solid var(--forest);background:#fff;color:var(--forest);border-radius:999px;padding:5px 12px;font-family:'Assistant',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;}
   .bm-aud button.on{background:var(--forest);color:#fff;}
 </style>
+<script>
+/* קישור "בכף הרגל" בכרטיסי האיברים: עטיפה אחרונה, אחרי כל ההרחבות של organCardHTML */
+(function(){
+  if(typeof organCardHTML!=='function') return;
+  const _ocFoot = organCardHTML;
+  organCardHTML = function(o){
+    const h = _ocFoot.apply(this, arguments);
+    const link = footLinkHTML(typeof FOOT_ORGAN!=='undefined' && FOOT_ORGAN[o.name]);
+    const m = link && h.match(/<div class="organ-body[^"]*">/); if(!m) return h;
+    const at = h.indexOf(m[0]) + m[0].length;
+    return h.slice(0,at) + link + h.slice(at);
+  };
+})();
+</script>
 </body>
 </html>
