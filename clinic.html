@@ -707,7 +707,7 @@
   details[open] > :not(summary){animation:accIn .26s ease;}
   @media (prefers-reduced-motion: reduce){ .acc-in, details[open] > :not(summary){animation:none;} }
 
-  header{background:#24524D !important;}
+  header{background:#3A6863 !important;}
 
   .iq-sub2{font-size:0.95rem;font-weight:800;color:var(--sefirah);margin:22px 0 2px;padding-top:12px;border-top:1px dotted rgba(44,95,91,0.3);}
   .iq-xhead,.iq-xrow{display:grid;grid-template-columns:2fr 1fr 1.6fr 0.9fr;gap:6px;}
@@ -755,6 +755,25 @@
   .rd-foot-h{font-weight:700;color:var(--forest-dark);margin-bottom:2px;}
   .rd-foot-note{font-size:0.85rem;color:#6a756f;}
   @media print{ a.rd-link.foot{color:inherit;text-decoration:none;} }
+  /* חלקים מתקפלים בכלי גדול, וסינון */
+  details.ex-sec{border:1px solid rgba(44,95,91,0.12);border-radius:12px;margin:8px 0;background:var(--cream-soft);}
+  details.ex-sec > summary{cursor:pointer;list-style:none;padding:10px 14px;font-weight:700;color:var(--forest-dark);font-family:'Frank Ruhl Libre',serif;}
+  details.ex-sec > summary::-webkit-details-marker{display:none;}
+  details.ex-sec > summary::after{content:"⌄";float:left;color:#6a756f;transition:transform .2s;}
+  details.ex-sec[open] > summary::after{transform:rotate(180deg);}
+  details.ex-sec.start{border-color:var(--forest);}
+  details.ex-sec > .ex-item{margin:0 8px 8px;}
+  .sub-count{display:inline-block;font-family:'Assistant',sans-serif;font-size:0.72rem;font-weight:700;background:var(--practice-bg);color:var(--practice);border-radius:999px;padding:1px 8px;margin-inline-start:6px;vertical-align:middle;}
+  details.ex-filter{margin:8px 0;border:1px dashed var(--sage);border-radius:12px;padding:6px 12px;}
+  details.ex-filter > summary{cursor:pointer;font-weight:700;color:var(--forest);font-size:0.9rem;}
+  .f-row-l{font-size:0.78rem;color:#6a756f;margin:8px 0 4px;}
+  .fchips{display:flex;flex-wrap:wrap;gap:6px;}
+  .fchip{border:1px solid var(--sage);background:#fff;color:var(--ink);border-radius:999px;padding:5px 12px;font:inherit;font-size:0.82rem;cursor:pointer;min-height:32px;}
+  .fchip.on{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .fchip.pref.yes{background:var(--earth-bg);border-color:var(--earth);color:var(--earth);font-weight:700;}
+  .fchip.pref.no{background:var(--fire-bg);border-color:var(--fire);color:var(--fire);text-decoration:line-through;}
+  .fchip:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  .fit-opt{display:flex;gap:8px;align-items:center;font-size:0.85rem;margin:4px 2px 8px;color:var(--forest-dark);}
 </style>
 </head>
 <body>
@@ -983,6 +1002,7 @@ function renderDetails(){
       <div class="f"><span class="f-l">מקור המטופל</span><div class="seg" role="group" aria-label="מקור המטופל">${Object.entries(SOURCES).map(([k,l])=>`<button class="${p.source===k?'on':''}" aria-pressed="${p.source===k}" onclick="dSource('${k}')">${l}</button>`).join('')}</div></div>
       <div class="f"><label class="f-l" for="d_first">תאריך טיפול ראשון</label><input class="inp" id="d_first" type="date" value="${escH(p.firstDate)}" onchange="dSet('firstDate',this.value)"></div>
       <div class="f wide"><span class="f-l">שפה לאבחון</span><label class="kb-opt"><input type="checkbox" id="d_kb" ${p.kabbalah?'checked':''} onchange="dKb(this.checked)"> פתוח או פתוחה לשפה של קבלה</label><span class="iq-hint" style="margin:0">רק אצלך. המטופל לא רואה את זה. הסימון נכנס לטקסט של "העתקה לניתוח", והאבחון ייכתב בהתאם.</span></div>
+      <div class="f wide"><span class="f-l">סגנון תרגול</span><div class="fchips">${(typeof EX_STYLES!=='undefined'?EX_STYLES:[]).map(([k,l])=>{ const v=exPrefsOf(p)[k]||0; return `<button class="fchip pref ${v>0?'yes':v<0?'no':''}" onclick="dStyle('${k}')" aria-label="${l}: ${v>0?'מתחבר':v<0?'פחות מתחבר':'לא סומן'}">${v>0?'✓ ':v<0?'✕ ':''}${l}</button>`; }).join('')}</div><span class="iq-hint" style="margin:0">לחיצה אחת: מתחבר. שתיים: פחות מתחבר. שלוש: ביטול. ההצעות לתרגול ובחירת התרגילים מתחשבות בזה. כשהמטופל ענה בשאלון, הסימון שלו מופיע כאן עד שתשנה.${(p.intake||{}).pr_any && !p.exStyles ? ' בשאלון סימן או סימנה: כל סוג מתאים.' : ''}</span></div>
       <div class="f wide"><label class="f-l" for="d_gift">קריסטל שקיבל או קיבלה במתנה</label><input class="inp" id="d_gift" value="${escH(p.gift||'')}" placeholder="איזו אבן, ומתי" autocomplete="off" oninput="dSet('gift',this.value)"></div>
       <div class="f wide"><label class="f-l" for="d_ref">איך הגיע אליי</label><textarea class="inp" id="d_ref" rows="2" oninput="dSet('referral',this.value)">${escH(p.referral)}</textarea></div>
     </div>
@@ -998,6 +1018,7 @@ function dSet(k,v){
 }
 function dName(v){ const p=curP(); if(!v.trim()) return; p.name=v.trim(); savePT(); $('cardName').textContent=p.name; }
 function dKb(v){ const p=curP(); p.kabbalah=!!v; savePT(); }
+function dStyle(k){ const p=curP(); p.exStyles = p.exStyles||Object.assign({}, exPrefsOf(p)); const v=p.exStyles[k]||0; const n = v===0?1:v===1?-1:0; if(n) p.exStyles[k]=n; else delete p.exStyles[k]; savePT(); renderDetails(); }
 function dSource(k){ const p=curP(); p.source = p.source===k ? '' : k; savePT(); renderCard(); }
 function ptDeleteId(id){
   const p = getP(id); if(!p) return;
@@ -1177,7 +1198,48 @@ const EX_TABS = [['el','יסודות'],['sf','ספירות'],['tool','כלים']
 const SF_LIST = SF_ORDER.filter(n=>WEEK_SF[n]).concat(Object.keys(WEEK_SF).filter(n=>!SF_ORDER.includes(n)));
 let exTab = 'el', exQ = '';
 let exAud = (()=>{ try{ return localStorage.getItem('clinic-ex-aud')||'any'; }catch(e){ return 'any'; } })();
-function audOk(id){ const e=EXR[id]; return !e ? false : (exAud==='any' || (e.aud||'all')===exAud); }
+function audOk(id){ const e=EXR[id]; return !e ? false : (exAud==='any' || (e.aud||'all')===exAud) && exFilterOk(id); }
+/* ===== סינון לפי סגנון, מצב ואורך, והתאמה למטופל ===== */
+const exF = {st:[], sit:'', len:'', fit:(()=>{ try{ return localStorage.getItem('clinic-ex-fit')==='1'; }catch(e){ return false; } })()};
+/* העדפות הסגנון: מה שסימנת בכרטיס, ואם עוד לא סימנת, מה שהמטופל סימן בשאלון */
+function exPrefsOf(p){
+  if(!p) return {};
+  if(p.exStyles) return p.exStyles;
+  const a = p.intake || {}, out = {};
+  Object.keys(a).forEach(k=>{ if(/^pr_/.test(k) && k!=='pr_any' && a[k]) out[k.slice(3)] = 1; });
+  return out;
+}
+function exPrefs(p){ p = p || (typeof curP==='function' ? curP() : null); return exPrefsOf(p); }
+function exDisliked(id, p){ if(typeof exTags!=='function') return false; const pr = exPrefs(p); const st = exTags(id).st; return st.length>0 && st.every(x=>pr[x]===-1); }
+function exFilterOn(){ return !!(exF.st.length || exF.sit || exF.len || (exF.fit && Object.keys(exPrefs()).length)); }
+function exFilterOk(id){
+  if(typeof exTags!=='function') return true;
+  const t = exTags(id);
+  if(exF.st.length && !exF.st.some(x=>t.st.includes(x))) return false;
+  if(exF.sit && !t.sit.includes(exF.sit)) return false;
+  if(exF.len && t.len!==exF.len) return false;
+  if(exF.fit && exDisliked(id)) return false;
+  return true;
+}
+function exFSet(k,v){
+  if(k==='st'){ const i=exF.st.indexOf(v); if(i>=0) exF.st.splice(i,1); else exF.st.push(v); }
+  else if(k==='fit'){ exF.fit=!exF.fit; try{ localStorage.setItem('clinic-ex-fit', exF.fit?'1':'0'); }catch(e){} }
+  else exF[k] = exF[k]===v ? '' : v;
+  exRender();
+}
+function exFClear(){ exF.st=[]; exF.sit=''; exF.len=''; exRender(); }
+function exFilterBar(){
+  if(typeof EX_STYLES==='undefined') return '';
+  const p = curP(), pr = exPrefs(p), hasPr = Object.keys(pr).length>0;
+  const n = exF.st.length + (exF.sit?1:0) + (exF.len?1:0);
+  const chip = (k,v,l,on) => `<button class="fchip ${on?'on':''}" aria-pressed="${on}" onclick="exFSet('${k}','${v}')">${l}</button>`;
+  return `<details class="ex-filter" ${n?'open':''}><summary>סינון לפי סגנון, מצב ואורך${n?` <span class="sub-count">${n}</span>`:''}</summary>
+    <div class="f-row-l">סגנון</div><div class="fchips">${EX_STYLES.map(([k,l])=>chip('st',k,l,exF.st.includes(k))).join('')}</div>
+    <div class="f-row-l">מצב</div><div class="fchips">${EX_SITS.map(([k,l])=>chip('sit',k,l,exF.sit===k)).join('')}</div>
+    <div class="f-row-l">אורך</div><div class="fchips">${EX_LENS.map(([k,l])=>chip('len',k,l,exF.len===k)).join('')}</div>
+    ${n?'<button class="bm-link" onclick="exFClear()">ניקוי הסינון</button>':''}
+  </details>${hasPr?`<label class="fit-opt"><input type="checkbox" ${exF.fit?'checked':''} onchange="exFSet('fit')"> להסתיר סגנונות שפחות מתאימים ל${escH(p.name)}</label>`:''}`;
+}
 function setExAud(v){ exAud=v; try{ localStorage.setItem('clinic-ex-aud',v); }catch(e){} exRender(); }
 function exCurrentIds(){
   const q = exQ.trim().toLowerCase();
@@ -1210,7 +1272,7 @@ function exSetSrc(v){ exSel[exTab]=v; exRender(); $('exList').scrollTop=0; }
 function exRow(id, showSrc){
   if(!audOk(id)) return '';
   const e = EXR[id]; const on = curWeek().items.includes(id);
-  const meta = [showSrc ? e.srcLabel : '', e.floor ? floorLabel(e.floor) : ''].filter(Boolean).join(', ');
+  const meta = [showSrc ? e.srcLabel : '', e.floor ? floorLabel(e.floor) : '', (typeof exTags==='function') ? exTags(id).st.map(x=>EX_STYLE_NAME[x]).join(', ') : ''].filter(Boolean).join(' · ');
   return `<div class="ex-item${e.mine?' mine':''}"><div class="ex-top"><div><div class="ex-title">${escH(e.title)}${e.mine?'<span class="mine-tag">שלי</span>':''}${(typeof EX_AUD_LABEL!=='undefined')?`<span class="aud-tag aud-${e.aud||'all'}">${EX_AUD_LABEL[e.aud||'all']}</span>`:''}</div>${meta?`<span class="ex-src">${escH(meta)}</span>`:''}</div>
     <button class="add-btn ${on?'on':''}" onclick="exToggle('${id}',this)">${on?'נוסף ✓':'הוספה'}</button></div>${e.why?`<p class="ex-why">${escH(e.why)}</p>`:''}<p class="ex-txt">${escH(e.text)}</p>${e.fit?`<p class="ex-fit">מתאים: ${escH(e.fit)}</p>`:''}${e.mine?`<button class="bm-link danger" style="font-size:0.8rem" onclick="myDelete('${id}')">מחיקת התרגיל</button>`:''}</div>`;
 }
@@ -1221,6 +1283,15 @@ function exFloors(src){
     return WTOOLS[src].refs.map(([label,ids])=>{
       const rows = ids.filter(id=>EXR[id] && audOk(id)).map(id=>exRow(id,true)).join('');
       return rows ? `<div class="floor-block"><div class="floor-name">${escH(label)}</div>${rows}</div>` : '';
+    }).join('');
+  }
+  if(typeof exLayout==='function' && exLayout(src)){
+    /* כלי גדול: "להתחלה" פתוח, והשאר בחלקים מתקפלים לפי נושא. כשיש סינון, כל החלקים נפתחים */
+    const open = exFilterOn();
+    return exLayout(src).map(sec=>{
+      const rows = sec.ids.map(id=>exRow(id,false)).filter(Boolean);
+      if(!rows.length) return '';
+      return `<details class="ex-sec${sec.start?' start':''}" ${sec.start||open?'open':''}><summary>${escH(sec.label)} <span class="sub-count">${rows.length}</span></summary>${rows.join('')}</details>`;
     }).join('');
   }
   const list = exBySrc(src).filter(e=>audOk(e.id));
@@ -1235,7 +1306,7 @@ function exRender(){
   if(window.EX_MISSING){ $('exTabs').hidden=true; $('exSrcs').innerHTML=''; $('exList').innerHTML='<p class="ex-none">קובץ התרגילים לא נטען, ולכן אין כרגע תרגילים לבחירה.</p>'; return; }
   const q = exQ.trim().toLowerCase();
   $('exTabs').hidden = !!q;
-  { let ab=document.getElementById('exAud'); if(!ab){ $('exTabs').insertAdjacentHTML('beforebegin','<div id="exAud"></div>'); ab=document.getElementById('exAud'); } ab.innerHTML = audBar(); }
+  { let ab=document.getElementById('exAud'); if(!ab){ $('exTabs').insertAdjacentHTML('beforebegin','<div id="exAud"></div>'); ab=document.getElementById('exAud'); } ab.innerHTML = audBar() + exFilterBar(); }
   $('exTabs').innerHTML = EX_TABS.map(([k,l])=>`<button class="ct ${exTab===k?'on':''}" onclick="exSetTab('${k}')">${l}</button>`).join('');
   const srcs = $('exSrcs'), list = $('exList');
   if(q){
@@ -1527,7 +1598,7 @@ function suggest(p){
     .forEach(r=>fromText(r.cure, `שורש אפשרי: ${r.name}, ${r.what}`));
   const {body, emo} = iqTally(S); const comb = {}; IQ_ORDER.forEach(k=>comb[k]=body[k]+emo[k]);
   iqLead(comb).slice(0,2).forEach(k=>pick('el:'+k, `היסוד הכי מסומן בשאלון: ${IQ_EL[k].name}`));
-  return {list:[...picked.entries()].slice(0,8), floors};
+  return {list:[...picked.entries()].filter(([id])=>!EXR[id] || !exDisliked(id, p)).slice(0,8), floors};
 }
 function sugHTML(){
   const p = curP(); const {list, floors} = suggest(p); const w = curWeek();
@@ -1764,6 +1835,15 @@ const IQ_L = {
   l_move:[["none","כמעט לא"],["some","מדי פעם"],["regular","באופן קבוע"]],
   l_nature:[["none","כמעט לא"],["some","לפעמים"],["much","הרבה"]]
 };
+/* סוג הכלים לתרגול. המזהים תואמים לסגנונות שבמאגר התרגילים (EX_STYLES), עם pr_ לפניהם */
+const IQ_PRACTICE = [{id:"pr_write",label:"כתיבה"},{id:"pr_breath",label:"נשימה"},{id:"pr_still",label:"התבוננות, ושאלות שאפשר לשאול את עצמי"},{id:"pr_imagine",label:"דמיון ותמונות"},{id:"pr_body",label:"תנועה, ומשהו שעושים עם הגוף"},{id:"pr_voice",label:"קול, דיבור או ניגון"},{id:"pr_act",label:"מעשה קטן ביום יום"},{id:"pr_any",label:"כל סוג מתאים לי, אין לי העדפה"}];
+/* "כל סוג מתאים לי" מבטל את השאר, וסימון של סוג מסוים מבטל אותו */
+document.addEventListener('change', e=>{
+  const t = e.target; if(!t.matches || !t.matches('input[data-c^="pr_"]') || !t.checked || t.dataset.prSync) return;
+  const box = t.closest('.iq-practice'); if(!box) return;
+  const off = t.dataset.c==='pr_any' ? [...box.querySelectorAll('input[data-c^="pr_"]:not([data-c="pr_any"])')] : [box.querySelector('input[data-c="pr_any"]')];
+  off.forEach(x=>{ if(x && x.checked){ x.checked=false; x.dataset.prSync='1'; x.dispatchEvent(new Event('change',{bubbles:true})); delete x.dataset.prSync; } });
+});
 const IQ_HABITS = [{id:"h_coffee",label:"קפה"},{id:"h_sweet",label:"מתוקים"},{id:"h_alcohol",label:"אלכוהול"},{id:"h_smoke",label:"עישון"},{id:"h_screens",label:"מסכים לפני השינה"},{id:"h_late",label:"אכילה מאוחרת"}];
 const IQ_STRESS = [{id:"st_work",label:"עבודה"},{id:"st_family",label:"משפחה"},{id:"st_couple",label:"זוגיות"},{id:"st_money",label:"כסף ופרנסה"},{id:"st_health",label:"בריאות"},{id:"st_other",label:"משהו אחר"}];
 
@@ -1911,6 +1991,7 @@ function iqFormHTML(p){
   h += iqTA("c_world","אם הייתם מתארים את העולם בתמונה אחת, הוא כמו... (גן, ג׳ונגל, שדה קרב, מסלול, או משהו אחר)",1);
   h += iqTA("c_goal","מה הייתם רוצים שישתנה בעקבות הטיפולים?",2);
   h += `<div class="iq-item"><span class="iq-lbl">עד כמה אתם רוצים ומוכנים לעבוד על עצמכם גם בין המפגשים?</span>${iqScale("c_ready","מעט","מאוד")}</div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">איזה סוג של כלים לתרגול בבית מתאים לכם יותר? אפשר לסמן כמה</span><span class="iq-hint">אין תשובה נכונה. זה רק עוזר לי להתאים לכם את מה שאתן.</span>${iqChecks(IQ_PRACTICE,"iq-practice")}</div>`;
   h += iqTA("c_events","אירועים משמעותיים בחיים, טובים או קשים, שכדאי שאדע עליהם",2);
   h += iqTA("c_more","עוד משהו שחשוב לכם שאדע?",2);
   h += `</section>`;
@@ -2931,9 +3012,15 @@ function iqSyncActions(p){
 const _iqTextKb = iqText;
 iqText = function(){
   const t = _iqTextKb(); const p = curP();
-  if(!p || !p.kabbalah) return t;
+  if(!p) return t;
+  const pr = exPrefsOf(p), nm = k => (typeof EX_STYLE_NAME!=='undefined' && EX_STYLE_NAME[k]) || k;
+  const yes = Object.keys(pr).filter(k=>pr[k]>0).map(nm), no = Object.keys(pr).filter(k=>pr[k]<0).map(nm);
+  let add = p.kabbalah ? 'שפה לאבחון: פתוח או פתוחה לשפה של קבלה (סימון של יובל)\n' : '';
+  if(yes.length || no.length) add += `סגנון תרגול: ${yes.length?'מתחבר או מתחברת ל'+yes.join(', '):''}${yes.length&&no.length?'. ':''}${no.length?'פחות מתחבר או מתחברת ל'+no.join(', '):''}\n`;
+  if(!yes.length && !no.length && (p.intake||{}).pr_any) add += 'סגנון תרגול: כל סוג מתאים\n';
+  if(!add) return t;
   const i = t.indexOf('\n');
-  return t.slice(0,i+1) + 'שפה לאבחון: פתוח או פתוחה לשפה של קבלה (סימון של יובל)\n' + t.slice(i+1);
+  return t.slice(0,i+1) + add + t.slice(i+1);
 };
 
 /* פרטים מלשונית הפרטים מופיעים גם בשאלון */
