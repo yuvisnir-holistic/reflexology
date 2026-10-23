@@ -2260,7 +2260,7 @@ const _origSefCard = sefirahCardHTML;
 sefirahCardHTML = function(s){
   const h = _origSefCard(s);
   if(!WEEK_SF[s.name]) return h;
-  const week = subsectionHTML('שבוע תרגול', weekBodyHTML('sf', s.name), 'practice week');
+  const week = subsectionHTML('תרגול', weekBodyHTML('sf', s.name), 'practice week');
   return h.replace(/<\/div>\s*<\/div>\s*$/, week + '</div></div>');
 };
 
@@ -2272,7 +2272,7 @@ renderElementDetail = function(){
   const div = document.createElement('div');
   div.id = 'elementWeek';
   div.className = 'element-week';
-  div.innerHTML = `<div class="ew-head" style="background:${e.bg};color:${e.color};">שבוע תרגול: יסוד ה${e.name}</div><div class="ew-body">${weekBodyHTML('el', currentElement)}</div>`;
+  div.innerHTML = `<div class="ew-head" style="background:${e.bg};color:${e.color};">תרגול: יסוד ה${e.name}</div><div class="ew-body">${weekBodyHTML('el', currentElement)}</div>`;
   document.getElementById('elementDetail').appendChild(div);
 };
 
@@ -2306,8 +2306,8 @@ function toolCardFull(id){
       ${blk('למי זה מתאים', t.fits, 'reflect')}
       ${blk('מתי לא', t.not, 'pathology')}
       ${blk('הכלי לעומק, לפי המקור', t.deep + (t.dx ? ' ' + t.dx : ''))}
-      ${t.refs ? t.refs.map(([label,ids])=>`<div class="work-box"><div class="work-head">${escH(label)}</div>${ids.map(x=>exItemHTML(x,true)).join('')}</div>`).join('')
-        : `<div class="work-box"><div class="work-head">לתרגול השבועי</div>${t.ex.map((e,i)=>exItemHTML(`${id}:${i}`)).join('')}</div>`}
+      ${t.refs ? t.refs.map(([label,ids])=>subsectionHTML(`${escH(label)} <span class="sub-count">${ids.filter(x=>EXR[x]).length}</span>`, ids.map(x=>exItemHTML(x,true)).join(''), 'practice')).join('')
+        : subsectionHTML(`תרגולים <span class="sub-count">${t.ex.length}</span>`, t.ex.map((e,i)=>exItemHTML(`${id}:${i}`)).join(''), 'practice')}
     </div></div>`;
 }
 function renderToolsView(){
@@ -3422,6 +3422,7 @@ renderPathologies();
       if(txt==='עור') return L(t, `dgOrgan('senses','עור (חוש המגע)')`);
     }
     if(row==='העבודה בנפש') return L(t, `jumpToTool('tool-hachnaa')`);
+    if(row==='עולם' && txt.includes(', ')){ const k = txt.indexOf(', '); return `${esc(txt.slice(0,k))} <small class="dg-sub">(${esc(txt.slice(k+2))})</small>`; }
     return t;
   }
   window.dgOrgan = function(sys, name){
@@ -3573,7 +3574,7 @@ renderPathologies();
 <script>
 /* ===== לשונית הכלים: שתי קבוצות, כלים מהמקורות ולפי נושא ===== */
 (function(){
-  const TOPIC = ['tool-omek','tool-evarim','tool-dibur','tool-hitmakrut','tool-emuna'];
+  const TOPIC = ['tool-omek','tool-evarim','tool-dibur','tool-hitmakrut','tool-emuna','tool-dumiya','tool-guf-neshama'];
   const CARET = '<svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>';
   const grp = (id, title, lead) => { const g=document.createElement('div'); g.className='organ-card tools-group'; g.id=id;
     g.innerHTML = `<div class="organ-head" onclick="this.parentElement.classList.toggle('open')"><div><h3>${title}</h3><p class="tool-lead">${lead}</p></div>${CARET}</div><div class="organ-body tg-body"></div>`; return g; };
@@ -3780,6 +3781,57 @@ renderPathologies();
     const at = h.indexOf(m[0]) + m[0].length;
     return h.slice(0,at) + link + h.slice(at);
   };
+})();
+</script>
+<style>
+  /* לשונית רקע */
+  #backgroundView .bg-lead{margin:6px 0 14px;}
+  #backgroundView .organ-body p{line-height:1.8;margin:0 0 10px;}
+  #backgroundView .bg-sub{display:block;font-family:'Assistant',sans-serif;font-weight:400;font-size:0.9rem;color:#6a756f;margin-top:2px;}
+  #backgroundView .bg-deg{margin-top:6px;}
+  #backgroundView .pl-link{margin-inline-end:6px;}
+  .dg-sub{display:block;font-size:0.78em;font-weight:400;color:#6a756f;line-height:1.4;margin-top:2px;}
+  .sub-count{display:inline-block;font-family:'Assistant',sans-serif;font-size:0.72rem;font-weight:700;background:var(--practice-bg);color:var(--practice);border-radius:999px;padding:1px 8px;margin-inline-start:6px;vertical-align:middle;}
+</style>
+<script>
+/* ===== לשונית רקע: הקשר בין הגוף לנשמה, בריאות ומחלה, וטבלת חמש הדרגות =====
+   הכרטיסים נבנים מ־BG_CARDS. כל כרטיס: כותרת, שורת משנה, תוכן. בכרטיס של חמש הדרגות
+   הסימן __DEGREES__ מוחלף בטבלה, שעוברת לכאן מהלשונית שהייתה לה קודם. */
+(function(){
+  const BG_CARDS = [["גוף ונשמה, אדם אחד", "מה נוצר מהמפגש בין העפר לנשמת החיים", "<p>בתורה, בריאת האדם מתוארת כמפגש: וייצר ה' אלוקים את האדם עפר מן האדמה, וייפח באפיו נשמת חיים, ויהי האדם לנפש חיה. העפר הוא הגוף, החומרי. נשמת החיים היא הממד הרוחני שנותן חיים. והתוצאה היא לא גוף שלצדו נשמה, אלא אדם חי אחד.</p><p>במסורת היהודית נאמר שנשמה בלי גוף היא מלאך ולא אדם, וגוף בלי נשמה הוא חומר בלי חיות. גם כשיש גוף ויש נשמה, עדיין אין אדם: רק הנפש החיה, זו שמלבישה את הנשמה בגוף ונותנת לו חיות, יוצרת אותו. ושם, במקום שבו הנשמה פוגשת את הגוף, עומדת הבחירה החופשית. לכן השאלה הראשונה בטיפול היא מה החיות של האדם שמולנו.</p><p>חז\"ל מביאים משל על מלך שהפקיד פרדס בידי שני שומרים, אחד עיוור ואחד חיגר. לבד אף אחד מהם לא יכול לעשות דבר, ויחד הם מצליחים, ולכן גם נידונים יחד (סנהדרין צא). הגוף מאפשר לנשמה לפעול בעולם הממשי, והנשמה נותנת לגוף כיוון ומשמעות.</p><p>רבי חיים ויטאל, בשערי קדושה, מתאר את הגוף כלבוש של הנפש: כוחות הנפש פועלים דרך איברי הגוף, כמו בעל מלאכה שעובד בכלי שלו. הגוף אינו מעטפת חיצונית, אלא הדרך שבה החיים הפנימיים יוצאים לעולם. מכאן גם המבנה של מפת הגוף כולה: לכל איבר יש רובד גופני ורובד רוחני.</p>"], ["מהי בריאות", "שלום ושיתוף פעולה בין הנשמה לגוף", "<p>הבעל שם טוב מלמד שיש ארבעה מצבים ביחס שבין הנשמה לגוף. במצב הראשון הם מתואמים ופועלים יחד למטרה משותפת. בשני הם לא מתואמים, למשל אדם שחי כולו בעולם הרוח ומתקשה עם ענייני היום יום, או להפך, אדם שמתכחש לגמרי לנשמה. בשלישי הם פועלים בנפרד, בלי קשר ממשי. וברביעי הם נלחמים זה בזה, והגוף דוחה את הנשמה שמנסה להתבטא דרכו. כל אדם יכול לעבור בין המצבים, אפילו בתוך יום אחד.</p><p>מכאן ההגדרה: בריאות היא שיתוף פעולה בין הנשמה לגוף, ברית שלום בין תוכן לצורה, בין פנימיות לחיצוניות. מאבק מתמיד בין השניים מתיש את כוחות הנפש ואת הגוף, ושלום ותיאום ביניהם מחזקים את שניהם. ובלשונו: כאשר מפריד גופו מנשמתו ונשמתו מגופו, הוא מקור המחלה.</p><p>כדי לדעת איפה יושב הפירוד, שואלים: האם הגוף הוא אויב, ידיד או שותף? יש מי שכועס על גופו בכל פעם שהוא נהנה, ויש מי שנותן לגוף את מה שהוא צריך, אבל בלי קשר אמיתי בינו לבין מה שחשוב לו. ועוד שאלה: מי מוביל את מי, הנשמה את הגוף, או הגוף והדחפים שלו את האדם?</p><p>במובן העמוק, בריאות היא מלשון בריאה: להיות מי שנבראת, לא פחות ולא יותר. היא ניכרת גם ביחס של האדם לתענוג ולקושי: האם יש מידתיות, או שהוא מתפרק.</p><p>לתרגול: <button type=\"button\" class=\"pl-link\" onclick=\"event.stopPropagation();bmShowEx('tool-guf-neshama:0')\">אויב, ידיד או שותף</button></p>"], ["הכוח החיוני", "תוכנת הריפוי, ומה זו מחלה", "<p>לכל אדם יש כוח חיוני, שאפשר לקרוא לו גם תוכנת הריפוי. זו חוכמה פנימית שנולדים איתה, חלק מהצד הרוחני של האדם, והיא מנהלת את הכול: אומרת ללב ולכבד מה לעשות, קובעת מתי רעבים, מתי חם ומתי קר, ועובדת בכל רגע, גם בשינה. היא שואפת תמיד לאיזון, ופותרת בשקט אינספור בעיות לפני שבכלל מרגישים בהן.</p><p>רק כשמשהו גדול ממנה, מכה, טראומה, אורח חיים לא נכון או מילה שפוגעת, היא מייצרת סימפטום. הסימפטום הוא הפתרון הטוב ביותר שהיא מצאה באותו רגע, וגם האות שהיא שולחת כדי שנבין שמשהו פנימי צריך תיקון. כמו נורת אזהרה ברכב: לא כועסים על הנורה, אלא שמחים שבזכותה נמנעת תקלה גדולה יותר.</p><p>המקום והצורה של הסימפטום רומזים על מה שצריך לתקן. לכן שואלים למה דווקא כאן, למה דווקא עכשיו, ולמה דווקא בצורה הזו. ולפעמים הסימפטום מופיע בנקודה החלשה של המשפחה, ואז המסר כללי יותר, שצריך לשנות משהו בחיים.</p><p>ריפוי הוא לא רק הקלה. הוא הסרת הגורם ותיקון הבעיה בשורש. כשמטפלים רק בסימפטום, הוא עלול לעבור למקום פנימי יותר. כשמטפלים בשורש, התופעות שנובעות ממנו משתפרות מעצמן. הטיפול לא מחליף את הכוח החיוני, אלא מעורר אותו.</p>"], ["הכאב כשליח", "המקום שכואב הוא המקום החי", "<p>כאב אינו אויב. מי שנוגע במשהו רותח, היד שלו נרתעת בגלל הכאב, ובלעדיו היה נגרם נזק. הכאב בא להתריע, ולפעמים להגביל, כדי שלא ייעשה נזק נוסף לאותו מקום.</p><p>הבעל שם טוב לימד שמי שחולה לגמרי אינו מרגיש שום כאב, כי אין בו איבר בריא שירגיש אותו. אבל כשאדם בריא ואיבר אחד כואב לו, כל האיברים מרגישים בכאב. לכן הכאב הוא סימן חיים: המקום שכואב הוא המקום החי, ושם מתחיל הריפוי. ומקום רדום, בלי כאב ובלי כוח, מצביע לפעמים על מחלה עמוקה יותר.</p><p>והוא היה אומר: אדם שטובע בנהר, ממה שולפים אותו? לא תמיד מהיד ולא תמיד מהרגל, אלא ממה שצף. כל אדם שונה, וממה שצף אצלו, משם מתחילים.</p>"], ["שורשי המחלה", "שש סיבות, ושש דרכי תיקון", "<p>במסורת היהודית דורשים את סיבות המחלה משורש המילה מחלה. כל שורש מתאר דרך אחרת שבה האדם יוצא מאיזון, ולכל אחד יש דרך תיקון משלו.</p><p>חול הוא פיזור הכוחות, והתיקון הוא ריכוז הכוחות, בכללי ההשקטה. ${toolChip('tool-hashkata')}</p><p>חלל הוא נתק וחיסרון, והתיקון הוא חיבור מחדש של הנפש והרוח לנשמה.</p><p>מחילה היא התחפרות וחוסר ביטוי, כוחות שלא יצאו לאור, והתיקון הוא גילוי הכוחות, בסדר התשליך. ${toolChip('tool-tashlich')}</p><p>מלח הוא קיבעון, והתיקון הוא פריצת דרך כנגד ההרגל, בפעולה קטנה שחוזרת שלוש פעמים.</p><p>מלחמה היא הפניית הכוחות כלפי גורם חיצוני, והתיקון הוא משימת הפיוס. ${toolChip('tool-pius')}</p><p>חלם הוא דמיון שמנותק מהמציאות, והתיקון הוא עבודת ההשתוות והענווה. ${toolChip('tool-hishtavut')}</p>"], ["מלמטה למעלה", "המעשה מעצב את הלב", "<p>עיקר העבודה היא מלמעלה למטה: אור הנשמה יורד ומאיר בגוף דרך כוחות הנפש. אבל יש גם תנועה הפוכה, מלמטה למעלה. כשהגוף פועל מתוך בחירה נכונה, הוא מעורר ומשפיע בחזרה על הפנים.</p><p>במסורת היהודית נאמר שאחרי הפעולות נמשכים הלבבות. המעשים שאדם עושה מעצבים את הרגשות שלו, את התודעה, ואת האופן שבו הוא רואה את העולם. לכן לא תמיד צריך לחכות שהלב ירגיש כדי לעשות. לפעמים דווקא העשייה הקטנה, שחוזרת יום אחרי יום, היא שמעוררת את הלב.</p><p>מכאן גם הכלל בבחירת התרגילים: כשאין חיות, בעייפות, בכבדות או בדכדוך, מתחילים בגוף ובנשימה, ולא בשיחה על מה צריך לשנות.</p><p>לתרגול: <button type=\"button\" class=\"pl-link\" onclick=\"event.stopPropagation();bmShowEx('tool-guf-neshama:1')\">אחרי המעשים נמשכים הלבבות</button> <button type=\"button\" class=\"pl-link\" onclick=\"event.stopPropagation();bmShowEx('gen:guf:3')\">ללכת עם חיוך</button></p>"], ["כשהדמיון מדבר אל הגוף", "מחשבה על מה שעלול לקרות, ותגובה בגוף", "<p>הדמיון יכול להציג תרחיש עתידי כאילו הוא כבר כאן, והגוף מגיב אליו בהווה: כיווץ בבטן, בחילה, נשימה קצרה. התגובה הגופנית הופכת את התרחיש למוחשי עוד יותר, ופתאום זה כבר לא רק רעיון. כמה שהגוף מגיב חזק, זה לא אומר שהדבר יקרה.</p><p>בספר התניא מוסבר שהתבוננות בדבר מעוררת רגש, וככל שאדם מעמיק ומדמה לעצמו את התרחיש, הרגש מתחזק. עוד מוסבר שם שאדם לא תמיד שולט במה שעולה במחשבתו, אבל הוא יכול לבחור לאן להפנות את תשומת הלב, ושאין צורך להיבהל ממחשבות לא רצויות או לראות בהן כישלון.</p><p>מכאן שלושה צעדים. להבחין בין מה שאני יודע לבין מה שאני מדמיין. לא להזין כל מחשבה בעוד ועוד פרטים, ולא לבדוק שוב ושוב איך הגוף מגיב. ולשאול אם יש משהו שאפשר לעשות עכשיו, ואם לא, לתת לאי הוודאות להישאר. ויש הבדל בין התבוננות סקרנית, שעוזרת לזהות דפוס, לבין חקירה כפייתית, שמחזקת את המעגל.</p><p>לתרגול: <button type=\"button\" class=\"pl-link\" onclick=\"event.stopPropagation();bmShowEx('tool-guf-neshama:2')\">זו אפשרות, לא מציאות</button> <button type=\"button\" class=\"pl-link\" onclick=\"event.stopPropagation();bmShowEx('tool-guf-neshama:3')\">עלתה מחשבה, הגוף מגיב</button> <button type=\"button\" class=\"pl-link\" onclick=\"event.stopPropagation();bmShowEx('tool-guf-neshama:4')\">סקרנות, לא חקירה</button> ${toolChip('tool-medame')}</p>"], ["כיוון, לא קביעה", "הגבולות של השפה הזו, ולצד הרפואה", "<p>הקבלה והחסידות נותנות שפה להבין את האדם כמכלול, שבו הגוף, הרגש, המחשבה והעולם הפנימי קשורים זה לזה. אבל לא כל כאב נובע ממצוקה רגשית, ואי אפשר לקבוע בעיה רוחנית רק לפי האיבר שכואב. כל מה שעולה מהמפה הוא כיוון לבירור, וכף הרגל והשיחה משלימות ולפעמים משנות את התמונה.</p><p>התורה נותנת רשות לרופא לרפא, והעבודה כאן היא לצד המעקב הרפואי ולא במקומו. כשיש סימפטום חדש או מחמיר, קודם בירור רפואי. וכשתגובות של הגוף למחשבות חוזרות בתדירות גבוהה ומפריעות לחיים, גם ליווי פסיכולוגי יכול לעזור.</p><p>ועוד עיקרון: אין הקדוש ברוך הוא בא בטרוניה עם בריותיו. אנשים יגיעו מכל הרקעים ומכל התפיסות, ועובדים עם עולם הערכים של האדם שמולנו, ולא מכניסים לתוכו מושגים שאינם שלו. מושגים כמו גוף, רגש, מחשבה ומעשה, כל אחד מכיר, ואפשר לעבוד איתם עם כל מטופל.</p>"], ["חמש הדרגות", "הנשמה, כוחות הנפש וקומות הגוף", "<p>הנשמה אחת, אבל יש בה חמש דרגות: נפש, רוח, נשמה, חיה ויחידה. כנגדן חמישה כוחות בנפש, מעשה, רגש ודיבור, מחשבה, רצון, ומדמה ותענוג, וחמש קומות בגוף. כוחות הנפש מתווכים בין הנשמה לגוף.</p><p>יש שלושה אופנים שבהם הנשמה מתלבשת בגוף. בהשתלשלות כל כוח עומד במקומו כמו קומה בבניין, ונוגע בקומה שמעליו ושמתחתיו. בהתלבשות מה שיש בקומה העליונה נכנס ממש לתוך הקומה שמתחתיה: רגש שחושב, מחשבה שרוצה. ובהשראה המחיצות בין הקומות כמעט לא ניכרות, והזרימה טבעית ורציפה. במקום שבו נוצר נתק בין קומה לקומה יושבת המחיצה, ושם מקום התיקון.</p>", "__DEGREES__"]];
+  const fill = h => h.replace(/\$\{toolChip\('([^']+)'\)\}/g, (m,id)=>toolChip(id));
+  const caret = '<svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>';
+  const html = `<div id="backgroundView" style="display:none;">
+    <p class="system-desc bg-lead">הרקע לכל מה שבאתר: איך המסורת היהודית רואה את הקשר בין הגוף לנשמה, מהי בריאות, מה הסימפטום מנסה לספר, ואיך זה מתחבר לעבודה בקליניקה.</p>
+    ${BG_CARDS.map((c,i)=>`<div class="organ-card" id="bg-card-${i}">
+      <div class="organ-head" role="button" tabindex="0" onclick="this.parentElement.classList.toggle('open')"><div><h3>${c[0]}</h3><span class="bg-sub">${c[1]}</span></div>${caret}</div>
+      <div class="organ-body">${c[2]}${c[3]==='__DEGREES__' ? '<div class="bg-deg" id="bgDegrees"></div>' : ''}</div></div>`).join('')}
+  </div>`;
+  document.querySelector('main').insertAdjacentHTML('afterbegin', html);
+  document.querySelectorAll('#backgroundView .organ-body').forEach(b=>{ b.innerHTML = fill(b.innerHTML); });
+  /* הטבלה עוברת לכרטיס, והלשונית שלה יורדת */
+  const dv = document.getElementById('degreesView'), slot = document.getElementById('bgDegrees');
+  if(dv && slot){ while(dv.firstChild) slot.appendChild(dv.firstChild); }
+  const db = document.querySelector('#tabnav [data-tab="degrees"]'); if(db) db.remove();
+  /* הלשונית הראשונה בשורה */
+  document.getElementById('tabnav').insertAdjacentHTML('afterbegin','<button data-tab="background">רקע</button>');
+  const ALL = ['homeView','systemView','elementsView','sefirotView','pathologiesView','searchView','toolsView','sheetView','degreesView'];
+  const _sv = showView;
+  showView = function(id){
+    if(id==='degreesView'){ openBg('bg-card-'+(BG_CARDS.length-1)); return; }
+    _sv(id);
+    const bv = document.getElementById('backgroundView');
+    if(id==='backgroundView'){ ALL.forEach(v=>{ const el=document.getElementById(v); if(el) el.style.display='none'; }); bv.style.display='block'; }
+    else bv.style.display='none';
+  };
+  window.openBg = function(cardId){
+    showView('backgroundView'); setActiveTab('background');
+    if(cardId){ const c = document.getElementById(cardId); if(c){ c.classList.add('open'); setTimeout(()=>c.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'}), 60); } }
+    else window.scrollTo(0,0);
+  };
+  if(typeof tabForView==='function'){ const _t = tabForView; tabForView = function(v){ return v==='backgroundView' ? 'background' : v==='degreesView' ? 'background' : _t(v); }; }
+  document.getElementById('tabnav').addEventListener('click', e=>{ const b=e.target.closest('button'); if(b && b.dataset.tab==='background'){ showView('backgroundView'); window.scrollTo(0,0); } });
+  document.querySelectorAll('#backgroundView .organ-head').forEach(h=>h.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); h.click(); } }));
 })();
 </script>
 </body>
