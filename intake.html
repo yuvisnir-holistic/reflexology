@@ -400,7 +400,8 @@ const IQ_L = {
   l_water:[["lt1","פחות מליטר"],["1to2","ליטר עד שניים"],["gt2","יותר משניים"]],
   l_temp:[["warm","חום ומשקאות חמים"],["cold","קור ומשקאות קרים"],["none","לא משנה לי"]],
   l_move:[["none","כמעט לא"],["some","מדי פעם"],["regular","באופן קבוע"]],
-  l_nature:[["none","כמעט לא"],["some","לפעמים"],["much","הרבה"]]
+  l_nature:[["none","כמעט לא"],["some","לפעמים"],["much","הרבה"]],
+  l_smoke:[["no","לא"],["some","לפעמים"],["daily","כן, כל יום"],["past","עישנתי בעבר והפסקתי"]]
 };
 /* סוג הכלים לתרגול. המזהים תואמים לסגנונות שבמאגר התרגילים (EX_STYLES), עם pr_ לפניהם */
 const IQ_PRACTICE = [{id:"pr_write",label:"כתיבה"},{id:"pr_breath",label:"נשימה"},{id:"pr_still",label:"התבוננות, ושאלות שאפשר לשאול את עצמי"},{id:"pr_imagine",label:"דמיון ותמונות"},{id:"pr_body",label:"תנועה, ומשהו שעושים עם הגוף"},{id:"pr_voice",label:"קול, דיבור או ניגון"},{id:"pr_act",label:"מעשה קטן ביום יום"},{id:"pr_any",label:"כל סוג מתאים לי, אין לי העדפה"}];
@@ -411,7 +412,7 @@ document.addEventListener('change', e=>{
   const off = t.dataset.c==='pr_any' ? [...box.querySelectorAll('input[data-c^="pr_"]:not([data-c="pr_any"])')] : [box.querySelector('input[data-c="pr_any"]')];
   off.forEach(x=>{ if(x && x.checked){ x.checked=false; x.dataset.prSync='1'; x.dispatchEvent(new Event('change',{bubbles:true})); delete x.dataset.prSync; } });
 });
-const IQ_HABITS = [{id:"h_coffee",label:"קפה"},{id:"h_sweet",label:"מתוקים"},{id:"h_alcohol",label:"אלכוהול"},{id:"h_smoke",label:"עישון"},{id:"h_screens",label:"מסכים לפני השינה"},{id:"h_late",label:"אכילה מאוחרת"}];
+const IQ_HABITS = [{id:"h_coffee",label:"קפה"},{id:"h_sweet",label:"מתוקים"},{id:"h_alcohol",label:"אלכוהול"},{id:"h_screens",label:"מסכים לפני השינה"},{id:"h_late",label:"אכילה מאוחרת"}];
 const IQ_STRESS = [{id:"st_work",label:"עבודה"},{id:"st_family",label:"משפחה"},{id:"st_couple",label:"זוגיות"},{id:"st_money",label:"כסף ופרנסה"},{id:"st_health",label:"בריאות"},{id:"st_other",label:"משהו אחר"}];
 
 const IQ_PAIN = [{id:"q_sharp",label:"חד"},{id:"q_dull",label:"עמום"},{id:"q_throb",label:"פועם"},{id:"q_radiate",label:"מקרין לאזור אחר"}];
@@ -519,6 +520,7 @@ function iqFormHTML(p){
 
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה בלילה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">איך אתם מתעוררים</span>${iqRadios("l_wake",IQ_L.l_wake)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מעשנים? סיגריות, נרגילה או אחר</span>${iqRadios("l_smoke",IQ_L.l_smoke)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מתי הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div><div><span class="iq-lbl">בשינה יש</span>${iqChecks(IQ_SLEEPQ)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">אם יש יקיצות, כמה פעמים בלילה?</span>${iqRadios("l_wakes",IQ_L2.l_wakes)}</div>`;
   h += iqTA("l_dreams","אם יש חלום שחוזר, על מה הוא?",1);

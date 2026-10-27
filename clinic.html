@@ -774,6 +774,8 @@
   .fchip.pref.no{background:var(--fire-bg);border-color:var(--fire);color:var(--fire);text-decoration:line-through;}
   .fchip:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
   .fit-opt{display:flex;gap:8px;align-items:center;font-size:0.85rem;margin:4px 2px 8px;color:var(--forest-dark);}
+  /* טקסט רציף של תרגילים, מיושר לשני הצדדים */
+  .ex-txt, .ex-why, .ex-fit{text-align:justify;}
 </style>
 </head>
 <body>
@@ -840,7 +842,7 @@ const escH = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>'
 
 /* ===================== הקליניקה: מטופלים ===================== */
 const STORE = 'clinic-patients', BK_KEY = 'clinic-last-backup', MIG_KEY = 'clinic-migrated';
-const SOURCES = {private:'פרטי', movement:'מובמנט'};
+const SOURCES = {private:'פרטי', movement:'מובמנט/עמית'};
 const PROG = {much:'הקלה משמעותית', better:'הקלה', same:'ללא שינוי', worse:'הרעה במצב'};
 const SF_ORDER = ['כתר','חכמה','בינה','דעת','חסד','גבורה','תפארת','נצח','הוד','יסוד','מלכות'];
 const TABS = [['details','פרטים'],['intake','שאלון'],['reading','סיכום אבחון'],['log','יומן טיפולים'],['weeks','תרגול']];
@@ -920,7 +922,7 @@ function renderList(){
   const nPriv = all.filter(p=>p.source==='private').length, nMov = all.filter(p=>p.source==='movement').length;
   $('ptCount').textContent = !all.length ? '' :
     (q ? `נמצאו ${list.length} מתוך ${all.length} מטופלים` :
-     `${all.length===1?'מטופל אחד':all.length+' מטופלים'}${(nPriv||nMov)?', מתוכם '+[nPriv?nPriv+' פרטי':'',nMov?nMov+' מובמנט':''].filter(Boolean).join(' ו־'):''}`);
+     `${all.length===1?'מטופל אחד':all.length+' מטופלים'}${(nPriv||nMov)?', מתוכם '+[nPriv?nPriv+' פרטי':'',nMov?nMov+' מובמנט/עמית':''].filter(Boolean).join(' ו־'):''}`);
   if(!all.length){
     $('ptList').innerHTML = `<div class="sheet-empty"><p>עוד אין מטופלים. כתבו שם למעלה ולחצו "פתיחת כרטיס", או שחזרו גיבוי מקובץ כאן למטה.</p></div>`;
     return;
@@ -1059,7 +1061,7 @@ function tCard(t,n){
       : `<p class="iq-hint" style="margin:0">זה הטיפול הראשון ביומן, ולכן אין עדיין השוואה לפעם הקודמת.</p>`}
       ${ta('notes','הערות',4)}
       ${tPracticeHTML(t)}
-      <div class="tr-foot no-print"><button class="bm-link danger" onclick="tDel('${t.id}')">מחיקת הטיפול</button><button class="bm-btn" onclick="tSave('${t.id}')">שמירה</button></div>
+      <div class="tr-foot no-print"><button class="bm-link danger" onclick="tDel('${t.id}')">מחיקת הטיפול</button>${(t.exIds||[]).some(x=>EXR[x]) ? `<button class="bm-btn ghost" onclick="tCopyEx('${t.id}')">העתקת התרגילים למטופל</button>` : ''}<button class="bm-btn" onclick="tSave('${t.id}')">שמירה</button></div>
     </div>
   </details>`;
 }
@@ -1120,6 +1122,17 @@ function tFill(id){
   savePT(); renderCard();
   bmToast(n ? `נוספו ${n===1?'תרגיל אחד':n+' תרגילים'} ממפגש ${wi+1}` : `כל התרגילים של מפגש ${wi+1} כבר כאן`);
 }
+/* התרגילים של טיפול, בנוסח שנשלח למטופל: הקדמה קצרה ותרגילים, בלי האבחון */
+function tCopyEx(id){
+  const p = curP(), t = getT(id); const ids = (t.exIds||[]).filter(x=>EXR[x]);
+  if(!ids.length){ bmToast('בטיפול הזה עוד אין תרגילים'); return; }
+  const first = (p.name||'').trim().split(/\s+/)[0];
+  let txt = `${first ? 'היי '+first+',' : 'היי,'}\nהנה מה שעשינו היום לתרגול בבית. חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.\n\n`;
+  ids.forEach((x,i)=>{ const e = EXR[x]; txt += `${i+1}. ${e.title}\n${e.why ? 'למה: '+e.why+'\n' : ''}${e.text}\n\n`; });
+  const qs = weekQs(ids);
+  txt += 'לרישום, ולהביא למפגש הבא:\n' + (qs.length ? qs.join('\n') : 'מה עבד, מה היה קשה, ומה התגלה?');
+  iqCopyText(txt, ids.length===1 ? 'התרגיל הועתק' : 'התרגילים הועתקו');
+}
 function tSave(id){ savePT(); openT.delete(id); renderCard(); bmToast('הטיפול נשמר'); }
 function tExDel(id,x){ const t=getT(id); t.exIds=(t.exIds||[]).filter(y=>y!==x); savePT(); renderCard(); }
 function tDel(id){
@@ -1161,7 +1174,7 @@ function renderWeeks(){
       <button class="bm-btn" onclick="exOpen()">+ הוספת תרגיל</button>
       ${sugAvail(p) ? `<button class="bm-btn ghost" onclick="sugToggle()">${sugOpen?'סגירת ההצעות':'הצעות לתרגול'}</button>` : ''}
       <button class="bm-btn ghost" onclick="window.print()" ${items.length?'':'disabled'}>הדפסה</button>
-      <button class="bm-btn ghost" onclick="copySheet()" ${items.length?'':'disabled'}>העתקה כטקסט</button>
+      <button class="bm-btn ghost" onclick="copySheet()" ${items.length?'':'disabled'}>העתקה למטופל</button>
       ${p.weeks.length>1 ? `<button class="bm-link danger" onclick="ptDeleteWeek()">מחיקת התרגול הזה</button>` : ''}
     </div>
     ${(()=>{ const lt=weekLinkedTo(p,w); if(!lt) return ''; const n=tSorted(p).findIndex(x=>x.id===lt.id)+1; return `<p class="iq-hint no-print" style="margin:0 0 8px">התרגול הזה מקושר לטיפול ${n} ביומן, ${fmtD(lt.date)}.</p>`; })()}
@@ -1537,9 +1550,9 @@ function suggest(p){
   if(typeof ADDICT_RE!=='undefined'){
     const at = ['m_what','b_other','x1_what','x2_what','x3_what','e_notes','s_notes','l_notes','c_goal','c_wish','c_change','m_medical','m_why'].map(k=>S[k]||'').join(' ');
     const hard = !!S.e_habits;
-    const isAdd = ADDICT_RE.test(at) || S.h_smoke || S.h_alcohol || (hard && (ADDICT_TOPIC.test(at) || S.h_sweet || S.h_screens || S.n7==='water'));
+    const isAdd = ADDICT_RE.test(at) || S.h_smoke || S.l_smoke==='daily' || S.l_smoke==='some' || S.h_alcohol || (hard && (ADDICT_TOPIC.test(at) || S.h_sweet || S.h_screens || S.n7==='water'));
     if(isAdd){
-      const why = ADDICT_RE.test(at) ? 'הוזכרה בשאלון התמכרות, או משהו שקשה להפסיק' : (S.h_smoke||S.h_alcohol) ? 'סומנו עישון או אלכוהול' : 'הרגל שקשה לשנות, יחד עם משיכה להנאה מסוימת';
+      const why = ADDICT_RE.test(at) ? 'הוזכרה בשאלון התמכרות, או משהו שקשה להפסיק' : (S.h_smoke||S.l_smoke==='daily'||S.l_smoke==='some'||S.h_alcohol) ? 'סומנו עישון או אלכוהול' : 'הרגל שקשה לשנות, יחד עם משיכה להנאה מסוימת';
       ['tool-hitmakrut:0','tool-hitmakrut:4','tool-hitmakrut:3'].forEach(id=>add(id, why));
       if(p.kabbalah) add('tool-hitmakrut:10', 'התמכרות, למי שמתחבר לשפת המקורות');
     }
@@ -1833,7 +1846,8 @@ const IQ_L = {
   l_water:[["lt1","פחות מליטר"],["1to2","ליטר עד שניים"],["gt2","יותר משניים"]],
   l_temp:[["warm","חום ומשקאות חמים"],["cold","קור ומשקאות קרים"],["none","לא משנה לי"]],
   l_move:[["none","כמעט לא"],["some","מדי פעם"],["regular","באופן קבוע"]],
-  l_nature:[["none","כמעט לא"],["some","לפעמים"],["much","הרבה"]]
+  l_nature:[["none","כמעט לא"],["some","לפעמים"],["much","הרבה"]],
+  l_smoke:[["no","לא"],["some","לפעמים"],["daily","כן, כל יום"],["past","עישנתי בעבר והפסקתי"]]
 };
 /* סוג הכלים לתרגול. המזהים תואמים לסגנונות שבמאגר התרגילים (EX_STYLES), עם pr_ לפניהם */
 const IQ_PRACTICE = [{id:"pr_write",label:"כתיבה"},{id:"pr_breath",label:"נשימה"},{id:"pr_still",label:"התבוננות, ושאלות שאפשר לשאול את עצמי"},{id:"pr_imagine",label:"דמיון ותמונות"},{id:"pr_body",label:"תנועה, ומשהו שעושים עם הגוף"},{id:"pr_voice",label:"קול, דיבור או ניגון"},{id:"pr_act",label:"מעשה קטן ביום יום"},{id:"pr_any",label:"כל סוג מתאים לי, אין לי העדפה"}];
@@ -1844,7 +1858,7 @@ document.addEventListener('change', e=>{
   const off = t.dataset.c==='pr_any' ? [...box.querySelectorAll('input[data-c^="pr_"]:not([data-c="pr_any"])')] : [box.querySelector('input[data-c="pr_any"]')];
   off.forEach(x=>{ if(x && x.checked){ x.checked=false; x.dataset.prSync='1'; x.dispatchEvent(new Event('change',{bubbles:true})); delete x.dataset.prSync; } });
 });
-const IQ_HABITS = [{id:"h_coffee",label:"קפה"},{id:"h_sweet",label:"מתוקים"},{id:"h_alcohol",label:"אלכוהול"},{id:"h_smoke",label:"עישון"},{id:"h_screens",label:"מסכים לפני השינה"},{id:"h_late",label:"אכילה מאוחרת"}];
+const IQ_HABITS = [{id:"h_coffee",label:"קפה"},{id:"h_sweet",label:"מתוקים"},{id:"h_alcohol",label:"אלכוהול"},{id:"h_screens",label:"מסכים לפני השינה"},{id:"h_late",label:"אכילה מאוחרת"}];
 const IQ_STRESS = [{id:"st_work",label:"עבודה"},{id:"st_family",label:"משפחה"},{id:"st_couple",label:"זוגיות"},{id:"st_money",label:"כסף ופרנסה"},{id:"st_health",label:"בריאות"},{id:"st_other",label:"משהו אחר"}];
 
 const IQ_PAIN = [{id:"q_sharp",label:"חד"},{id:"q_dull",label:"עמום"},{id:"q_throb",label:"פועם"},{id:"q_radiate",label:"מקרין לאזור אחר"}];
@@ -1961,6 +1975,7 @@ function iqFormHTML(p){
 
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה בלילה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">איך אתם מתעוררים</span>${iqRadios("l_wake",IQ_L.l_wake)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מעשנים? סיגריות, נרגילה או אחר</span>${iqRadios("l_smoke",IQ_L.l_smoke)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">מתי הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div><div><span class="iq-lbl">בשינה יש</span>${iqChecks(IQ_SLEEPQ)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">אם יש יקיצות, כמה פעמים בלילה?</span>${iqRadios("l_wakes",IQ_L2.l_wakes)}</div>`;
   h += iqTA("l_dreams","אם יש חלום שחוזר, על מה הוא?",1);
@@ -2056,6 +2071,7 @@ function iqLeanHTML(p){
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מעשנים? סיגריות, נרגילה או אחר</span>${iqRadios("l_smoke",IQ_L.l_smoke)}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">יקיצות בלילה</span>${iqRadios("l_wakes",IQ_L2.l_wakes)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div>`;
@@ -2112,6 +2128,7 @@ function iqQuickHTML(p){
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">מעשנים? סיגריות, נרגילה או אחר</span>${iqRadios("l_smoke",IQ_L.l_smoke)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div></div>`;
   h += `<div class="iq-item">${iqChecks([IQ_SLEEPQ[2]])}</div>`;
@@ -2359,6 +2376,7 @@ function iqText(){
   L.push("","משפטים");
   IQ_STMTS.forEach(s=>{ if(S[s.id]) L.push(`${s.n}. ${s.t}: ${{yes:"מתאים",part:"חלקית",no:"לא מתאים"}[S[s.id]]}`); });
   L.push("","אורח חיים");
+  if(S.l_smoke) L.push(`עישון: ${rl("l_smoke",IQ_L.l_smoke)}`);
   L.push(`שינה: ${rl("l_sleep",IQ_L.l_sleep)}, קימה: ${rl("l_wake",IQ_L.l_wake)}, הולכים לישון: ${rl("l_bed",IQ_L2.l_bed)}`);
   L.push(`בשינה: ${ck(IQ_SLEEPQ)}${S.l_wakes?`, יקיצות: ${rl("l_wakes",IQ_L2.l_wakes)}`:""}${v("l_wakehour")?`, יקיצה בסביבות ${v("l_wakehour")}`:""}`);
   L.push(`חלום חוזר: ${v("l_dreams")}`);
@@ -3018,10 +3036,28 @@ iqText = function(){
   let add = p.kabbalah ? 'שפה לאבחון: פתוח או פתוחה לשפה של קבלה (סימון של יובל)\n' : '';
   if(yes.length || no.length) add += `סגנון תרגול: ${yes.length?'מתחבר או מתחברת ל'+yes.join(', '):''}${yes.length&&no.length?'. ':''}${no.length?'פחות מתחבר או מתחברת ל'+no.join(', '):''}\n`;
   if(!yes.length && !no.length && (p.intake||{}).pr_any) add += 'סגנון תרגול: כל סוג מתאים\n';
-  if(!add) return t;
-  const i = t.indexOf('\n');
-  return t.slice(0,i+1) + add + t.slice(i+1);
+  const out = add ? (()=>{ const i = t.indexOf('\n'); return t.slice(0,i+1) + add + t.slice(i+1); })() : t;
+  return out + iqLogText(p);
 };
+
+/* טיפולים שכבר היו, מהיומן: נכנסים לסוף הטקסט לניתוח, כשהשאלון נשלח אחרי כמה מפגשים */
+function iqLogText(p){
+  const ts = (typeof tSorted==='function') ? tSorted(p) : [];
+  const has = t => t.done || t.foot || t.notes || t.progressNote || (t.exIds||[]).length;
+  const list = ts.map((t,i)=>[t,i+1]).filter(([t])=>has(t));
+  if(!list.length) return '';
+  const L = ['', '', 'טיפולים שכבר היו, מהיומן של יובל'];
+  list.forEach(([t,n])=>{
+    L.push('', `טיפול ${n}${t.date?', '+fmtD(t.date):''}`);
+    if(t.done) L.push(`מה עשינו: ${t.done}`);
+    if(t.foot) L.push(`מה ראיתי בכף הרגל: ${t.foot}`);
+    if(n>1 && (t.progress || t.progressNote)) L.push(`איך הגיע ביחס לפעם הקודמת: ${[t.progress?PROG[t.progress]:'', t.progressNote||''].filter(Boolean).join(', ')}`);
+    if(t.notes) L.push(`הערות: ${t.notes}`);
+    const ex = (t.exIds||[]).filter(x=>EXR[x]).map(x=>EXR[x].title);
+    if(ex.length) L.push(`תרגול לבית: ${ex.join(', ')}`);
+  });
+  return L.join('\n');
+}
 
 /* פרטים מלשונית הפרטים מופיעים גם בשאלון */
 function iqFillFromDetails(store){
