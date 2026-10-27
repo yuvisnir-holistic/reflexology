@@ -3943,5 +3943,22 @@ document.getElementById('tabnav').addEventListener('click', e=>{ if(e.target.clo
   view.querySelector('.tools-search .fchips').addEventListener('click', e=>{ const b=e.target.closest('.fchip'); if(!b) return; sit = sit===b.dataset.sit ? '' : b.dataset.sit; run(); });
 })();
 </script>
+<style>
+  .ns-link{display:inline-block;margin-top:6px;font-size:0.82rem;color:var(--forest);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+  @media print{ .ns-link{display:none;} }
+</style>
+<script>
+/* קישור מתרגיל שמקורו באתר נשמה ונשימה אל התרגיל באתר, עם ההסבר המלא */
+(function(){
+  if(typeof exItemHTML!=='function' || typeof nsHref!=='function') return;
+  const _f = exItemHTML;
+  exItemHTML = function(id){
+    const h = _f.apply(this, arguments), href = nsHref(id);
+    if(!href || !h) return h;
+    const k = h.lastIndexOf('</div>'); if(k<0) return h;
+    return h.slice(0,k) + `<a class="ns-link" href="${href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">באתר נשמה ונשימה</a>` + h.slice(k);
+  };
+})();
+</script>
 </body>
 </html>

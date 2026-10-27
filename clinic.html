@@ -776,6 +776,26 @@
   .fit-opt{display:flex;gap:8px;align-items:center;font-size:0.85rem;margin:4px 2px 8px;color:var(--forest-dark);}
   /* טקסט רציף של תרגילים, מיושר לשני הצדדים */
   .ex-txt, .ex-why, .ex-fit{text-align:justify;}
+  /* תמונות */
+  .ph-grid{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px;}
+  .ph-thumb{position:relative;border:1px solid var(--sage);border-radius:10px;padding:0;overflow:hidden;background:#fff;cursor:pointer;width:96px;height:96px;}
+  .ph-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .ph-thumb span{position:absolute;inset:auto 0 0 0;background:rgba(30,71,68,0.75);color:#fff;font-size:0.68rem;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ph-thumb.big{width:100%;height:auto;aspect-ratio:3/4;}
+  .ph-thumb:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  .ph-add{display:inline-flex;align-items:center;cursor:pointer;margin-inline-end:8px;}
+  .ph-cmp-bar:empty{display:none;}
+  .ph-cmp-bar{margin:0 0 10px;}
+  #phModal{position:fixed;inset:0;z-index:95;background:rgba(30,71,68,0.55);display:none;align-items:center;justify-content:center;padding:12px;}
+  #phModal.show{display:flex;}
+  .ph-box{background:var(--cream-soft);border-radius:18px;padding:14px;width:100%;max-width:900px;max-height:92vh;overflow:auto;}
+  .ph-v-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;color:var(--forest-dark);}
+  .ph-view > img{width:100%;max-height:62vh;object-fit:contain;border-radius:12px;background:#fff;margin-bottom:10px;}
+  .ph-cmp{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:10px;overflow-x:auto;padding-bottom:6px;}
+  .ph-cmp-col{display:flex;flex-direction:column;gap:8px;}
+  .ph-cmp-h{font-weight:700;color:var(--forest-dark);font-family:'Frank Ruhl Libre',serif;}
+  .ph-cmp-h small{display:block;font-family:'Assistant',sans-serif;font-weight:400;color:#6a756f;}
+  @media print{ .ph-sec{display:none;} }
 </style>
 </head>
 <body>
@@ -1043,6 +1063,7 @@ function renderLog(){
   $('cardBody').innerHTML = `
     <div class="sheet-actions no-print log-bar"><button class="bm-btn" onclick="tNew()">+ טיפול חדש</button><button class="bm-btn ghost" onclick="sumOpen()">סיכום לפני מפגש</button>
       ${s.length>1 ? `<div class="seg log-sort" role="group" aria-label="סדר הטיפולים"><button class="${logOrder==='new'?'on':''}" aria-pressed="${logOrder==='new'}" onclick="setLogOrder('new')">מהחדש לישן</button><button class="${logOrder==='old'?'on':''}" aria-pressed="${logOrder==='old'}" onclick="setLogOrder('old')">מהישן לחדש</button></div>` : ''}</div>
+    <div class="ph-cmp-bar no-print" id="phCmpBar"></div>
     ${desc.length ? desc.map(t=>tCard(t,num.get(t.id))).join('') :
       `<div class="sheet-empty"><p>עוד אין טיפולים ביומן של ${escH(p.name)}. "טיפול חדש" פותח רישום עם התאריך של היום.</p></div>`}`;
 }
@@ -1060,8 +1081,9 @@ function tCard(t,n){
         <textarea class="inp" id="t_pn_${t.id}" rows="2" placeholder="במילים שלו או שלה, ומה שמת לב אליו" aria-label="פירוט על איך הגיע" oninput="tSet('${t.id}','progressNote',this.value)">${escH(t.progressNote||'')}</textarea></div>`
       : `<p class="iq-hint" style="margin:0">זה הטיפול הראשון ביומן, ולכן אין עדיין השוואה לפעם הקודמת.</p>`}
       ${ta('notes','הערות',4)}
+      ${phSectionHTML(t)}
       ${tPracticeHTML(t)}
-      <div class="tr-foot no-print"><button class="bm-link danger" onclick="tDel('${t.id}')">מחיקת הטיפול</button>${(t.exIds||[]).some(x=>EXR[x]) ? `<button class="bm-btn ghost" onclick="tCopyEx('${t.id}')">העתקת התרגילים למטופל</button>` : ''}<button class="bm-btn" onclick="tSave('${t.id}')">שמירה</button></div>
+      <div class="tr-foot no-print"><button class="bm-link danger" onclick="tDel('${t.id}')">מחיקת הטיפול</button>${tExIds(curP(),t).length ? `<button class="bm-btn ghost" onclick="tCopyEx('${t.id}')">העתקת התרגילים למטופל</button>` : ''}<button class="bm-btn" onclick="tSave('${t.id}')">שמירה</button></div>
     </div>
   </details>`;
 }
@@ -1122,9 +1144,11 @@ function tFill(id){
   savePT(); renderCard();
   bmToast(n ? `נוספו ${n===1?'תרגיל אחד':n+' תרגילים'} ממפגש ${wi+1}` : `כל התרגילים של מפגש ${wi+1} כבר כאן`);
 }
+/* התרגילים של טיפול: מהתרגול המקושר בלשונית התרגול, ואם אין, מהרשימה הישנה שבטיפול */
+function tExIds(p,t){ const wi = weekOfTreatment(p,t); const ids = wi>=0 ? (p.weeks[wi].items||[]) : (t.exIds||[]); return ids.filter(x=>EXR[x]); }
 /* התרגילים של טיפול, בנוסח שנשלח למטופל: הקדמה קצרה ותרגילים, בלי האבחון */
 function tCopyEx(id){
-  const p = curP(), t = getT(id); const ids = (t.exIds||[]).filter(x=>EXR[x]);
+  const p = curP(), t = getT(id); const ids = tExIds(p,t);
   if(!ids.length){ bmToast('בטיפול הזה עוד אין תרגילים'); return; }
   const first = (p.name||'').trim().split(/\s+/)[0];
   let txt = `${first ? 'היי '+first+',' : 'היי,'}\nהנה מה שעשינו היום לתרגול בבית. חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.\n\n`;
@@ -1133,6 +1157,99 @@ function tCopyEx(id){
   txt += 'לרישום, ולהביא למפגש הבא:\n' + (qs.length ? qs.join('\n') : 'מה עבד, מה היה קשה, ומה התגלה?');
   iqCopyText(txt, ids.length===1 ? 'התרגיל הועתק' : 'התרגילים הועתקו');
 }
+
+/* ===================================================================
+   תמונות לטיפולים
+   התמונות נשמרות רק במכשיר, במאגר נפרד בדפדפן (IndexedDB), כי הן כבדות מדי לשמירה הרגילה.
+   לפני השמירה הן מוקטנות לכ־1400 פיקסלים. הגיבוי לקובץ כולל אותן, והשחזור מחזיר אותן.
+   =================================================================== */
+const PH = {db:null};
+function phOpen(){
+  if(PH.db) return Promise.resolve(PH.db);
+  return new Promise((res,rej)=>{
+    const r = indexedDB.open('clinic-photos', 1);
+    r.onupgradeneeded = () => { const os = r.result.createObjectStore('photos', {keyPath:'id'}); os.createIndex('pid','pid'); };
+    r.onsuccess = () => { PH.db = r.result; res(PH.db); };
+    r.onerror = () => rej(r.error);
+  });
+}
+function phTx(mode, fn){ return phOpen().then(db=>new Promise((res,rej)=>{ const tx = db.transaction('photos', mode); const st = tx.objectStore('photos'); const out = fn(st); tx.oncomplete = () => res(out && out.result!==undefined ? out.result : out); tx.onerror = () => rej(tx.error); })); }
+function phAll(pid){ return phTx('readonly', st => pid ? st.index('pid').getAll(pid) : st.getAll()); }
+function phPut(x){ return phTx('readwrite', st => st.put(x)); }
+function phDelete(id){ return phTx('readwrite', st => st.delete(id)); }
+/* הקטנה לפני שמירה */
+function phShrink(file){
+  return new Promise((res,rej)=>{
+    const fr = new FileReader();
+    fr.onload = () => { const img = new Image(); img.onload = () => {
+      const max = 1400, k = Math.min(1, max/Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = Math.round(img.width*k); c.height = Math.round(img.height*k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', 0.78));
+    }; img.onerror = rej; img.src = fr.result; };
+    fr.onerror = rej; fr.readAsDataURL(file);
+  });
+}
+function phSectionHTML(t){
+  return `<div class="f ph-sec"><span class="f-l">תמונות</span>
+    <div class="ph-grid" id="phg_${t.id}" data-tid="${t.id}"><span class="iq-hint" style="margin:0">טוען...</span></div>
+    <label class="bm-btn ghost ph-add no-print">+ הוספת תמונה<input type="file" accept="image/*" multiple hidden onchange="phAdd('${t.id}', this)"></label>
+    <span class="iq-hint" style="margin:0">התמונות נשמרות רק במכשיר הזה, ונכנסות לגיבוי לקובץ.</span></div>`;
+}
+async function phAdd(tid, inp){
+  const p = curP(), t = getT(tid), files = [...(inp.files||[])]; if(!files.length) return;
+  try{
+    for(const f of files){
+      const data = await phShrink(f);
+      await phPut({id:'ph'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), pid:p.id, tid, date:t.date||'', added:new Date().toISOString(), label:'', data});
+    }
+    bmToast(files.length>1 ? `${files.length} תמונות נשמרו` : 'התמונה נשמרה');
+  }catch(e){ bmToast('לא הצלחתי לשמור את התמונה'); }
+  inp.value = ''; phHydrate();
+}
+async function phHydrate(){
+  const p = curP(); if(!p || !window.indexedDB) return;
+  let all = []; try{ all = await phAll(p.id); }catch(e){}
+  document.querySelectorAll('.ph-grid').forEach(g=>{
+    const xs = all.filter(x=>x.tid===g.dataset.tid).sort((a,b)=>a.added.localeCompare(b.added));
+    g.innerHTML = xs.length ? xs.map(x=>`<button type="button" class="ph-thumb" onclick="phView('${x.id}')" aria-label="פתיחת התמונה"><img src="${x.data}" alt="${escH(x.label||'תמונה מהטיפול')}" loading="lazy">${x.label?`<span>${escH(x.label)}</span>`:''}</button>`).join('') : '<span class="iq-hint" style="margin:0">עוד אין תמונות לטיפול הזה.</span>';
+  });
+  const bar = document.getElementById('phCmpBar');
+  if(bar) bar.innerHTML = all.length>1 ? `<button class="bm-btn ghost" onclick="phCompare()">השוואת תמונות (${all.length})</button>` : '';
+}
+/* צפייה בתמונה אחת: כיתוב, מחיקה */
+async function phView(id){
+  const p = curP(); const all = await phAll(p.id); const x = all.find(y=>y.id===id); if(!x) return;
+  const t = (p.treatments||[]).find(y=>y.id===x.tid); const n = tSorted(p).findIndex(y=>y.id===x.tid)+1;
+  phModal(`<div class="ph-view">
+      <div class="ph-v-head"><strong>טיפול ${n||''}${t&&t.date?', '+fmtD(t.date):''}</strong><button class="bm-btn" onclick="phClose()">סגירה</button></div>
+      <img src="${x.data}" alt="${escH(x.label||'תמונה מהטיפול')}">
+      <input class="inp" id="phLabel" value="${escH(x.label||'')}" placeholder="כיתוב, למשל: כף רגל ימין, מבט מלמטה">
+      <div class="sheet-actions"><button class="bm-link danger" onclick="phDel('${x.id}')">מחיקת התמונה</button><button class="bm-btn" onclick="phSaveLabel('${x.id}')">שמירת הכיתוב</button></div>
+    </div>`);
+}
+async function phSaveLabel(id){ const p = curP(); const all = await phAll(p.id); const x = all.find(y=>y.id===id); if(!x) return; x.label = (document.getElementById('phLabel').value||'').trim(); await phPut(x); phClose(); phHydrate(); bmToast('נשמר'); }
+async function phDel(id){ if(!confirm('למחוק את התמונה? אי אפשר לבטל, אלא משחזור גיבוי.')) return; await phDelete(id); phClose(); phHydrate(); bmToast('התמונה נמחקה'); }
+/* השוואה: כל התמונות של המטופל, לפי טיפול, מהישן לחדש */
+async function phCompare(){
+  const p = curP(); const all = await phAll(p.id); const ts = tSorted(p);
+  const groups = ts.map((t,i)=>({t, n:i+1, xs:all.filter(x=>x.tid===t.id)})).filter(g=>g.xs.length);
+  phModal(`<div class="ph-view"><div class="ph-v-head"><strong>השוואת תמונות, ${escH(p.name)}</strong><button class="bm-btn" onclick="phClose()">סגירה</button></div>
+    <div class="ph-cmp">${groups.map(g=>`<div class="ph-cmp-col"><div class="ph-cmp-h">טיפול ${g.n}${g.t.date?'<small>'+fmtD(g.t.date)+'</small>':''}</div>${g.xs.map(x=>`<button type="button" class="ph-thumb big" onclick="phView('${x.id}')"><img src="${x.data}" alt="${escH(x.label||'תמונה')}">${x.label?`<span>${escH(x.label)}</span>`:''}</button>`).join('')}</div>`).join('')}</div></div>`);
+}
+function phModal(html){
+  let m = document.getElementById('phModal');
+  if(!m){ m = document.createElement('div'); m.id = 'phModal'; m.addEventListener('click', e=>{ if(e.target===m) phClose(); }); document.body.appendChild(m); }
+  m.innerHTML = `<div class="ph-box" role="dialog" aria-label="תמונות">${html}</div>`; m.classList.add('show');
+}
+function phClose(){ const m = document.getElementById('phModal'); if(m) m.classList.remove('show'); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') phClose(); });
+(function(){
+  const _rl = renderLog; renderLog = function(){ _rl.apply(this, arguments); phHydrate(); };
+  const _pd = ptDeleteId; ptDeleteId = function(id){ const before = PT.patients.length; _pd(id); if(PT.patients.length<before) phAll(id).then(xs=>xs.forEach(x=>phDelete(x.id))).catch(()=>{}); };
+  const _pd2 = ptDelete; ptDelete = function(){ const p = curP(); const id = p && p.id; const before = PT.patients.length; _pd2(); if(id && PT.patients.length<before) phAll(id).then(xs=>xs.forEach(x=>phDelete(x.id))).catch(()=>{}); };
+  const _td = tDel; tDel = function(id){ const p = curP(); const n = (p.treatments||[]).length; _td(id); if((p.treatments||[]).length<n) phAll(p.id).then(xs=>xs.filter(x=>x.tid===id).forEach(x=>phDelete(x.id))).catch(()=>{}); };
+})();
+
 function tSave(id){ savePT(); openT.delete(id); renderCard(); bmToast('הטיפול נשמר'); }
 function tExDel(id,x){ const t=getT(id); t.exIds=(t.exIds||[]).filter(y=>y!==x); savePT(); renderCard(); }
 function tDel(id){
@@ -1381,9 +1498,10 @@ function bkBar(){
       <input type="file" id="bkFile" accept=".json,application/json" hidden onchange="bkImport(this)">
     </div></div>`;
 }
-function bkExport(){
+async function bkExport(){
   const now = new Date(), ds = now.toISOString().slice(0,10);
-  const data = {app:'clinic', v:1, saved:now.toISOString(), patients:PT};
+  let photos = []; try{ photos = window.indexedDB ? await phAll() : []; }catch(e){}
+  const data = {app:'clinic', v:1, saved:now.toISOString(), patients:PT, photos};
   const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `clinic-backup-${ds}.json`;
   document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
@@ -1416,6 +1534,7 @@ function bkImport(inp){
   const r = new FileReader();
   r.onload = () => {
     let d; try{ d = JSON.parse(r.result); }catch(e){ bmToast('הקובץ לא תקין'); inp.value=''; return; }
+    if(d && Array.isArray(d.photos) && d.photos.length && window.indexedDB){ phAll().then(have=>{ const ids = new Set(have.map(x=>x.id)); d.photos.filter(x=>x && x.id && !ids.has(x.id)).forEach(x=>phPut(x)); }).catch(()=>{}); }
     const ok = d && (d.app==='clinic' || d.app==='body-map') && d.patients && Array.isArray(d.patients.patients);
     if(!ok){ bmToast('זה לא קובץ גיבוי של הקליניקה או של מפת הגוף'); inp.value=''; return; }
     const n = d.patients.patients.length, when = (d.saved||'').slice(0,10).split('-').reverse().join('.');
@@ -3043,7 +3162,7 @@ iqText = function(){
 /* טיפולים שכבר היו, מהיומן: נכנסים לסוף הטקסט לניתוח, כשהשאלון נשלח אחרי כמה מפגשים */
 function iqLogText(p){
   const ts = (typeof tSorted==='function') ? tSorted(p) : [];
-  const has = t => t.done || t.foot || t.notes || t.progressNote || (t.exIds||[]).length;
+  const has = t => t.done || t.foot || t.notes || t.progressNote || t.homework || tExIds(p,t).length;
   const list = ts.map((t,i)=>[t,i+1]).filter(([t])=>has(t));
   if(!list.length) return '';
   const L = ['', '', 'טיפולים שכבר היו, מהיומן של יובל'];
@@ -3053,8 +3172,9 @@ function iqLogText(p){
     if(t.foot) L.push(`מה ראיתי בכף הרגל: ${t.foot}`);
     if(n>1 && (t.progress || t.progressNote)) L.push(`איך הגיע ביחס לפעם הקודמת: ${[t.progress?PROG[t.progress]:'', t.progressNote||''].filter(Boolean).join(', ')}`);
     if(t.notes) L.push(`הערות: ${t.notes}`);
-    const ex = (t.exIds||[]).filter(x=>EXR[x]).map(x=>EXR[x].title);
+    const ex = tExIds(p,t).map(x=>EXR[x].title);
     if(ex.length) L.push(`תרגול לבית: ${ex.join(', ')}`);
+    if(t.homework) L.push(`עוד על התרגול: ${t.homework}`);
   });
   return L.join('\n');
 }
@@ -3089,6 +3209,23 @@ const _migrated = loadPT();
 if(window.EX_MISSING) document.querySelector('main').insertAdjacentHTML('afterbegin','<p class="ex-missing no-print" role="alert">קובץ התרגילים, exercises.js, לא נטען, ולכן התרגילים לא יופיעו. בתצוגה המקדימה בצ׳אט זה צפוי. באתר עצמו, צריך לוודא שהקובץ נמצא במאגר, באותה תיקייה.</p>');
 renderHome();
 if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגוף`);
+</script>
+<style>
+  .ns-link{display:inline-block;margin-top:6px;font-size:0.82rem;color:var(--forest);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+  @media print{ .ns-link{display:none;} }
+</style>
+<script>
+/* קישור מתרגיל שמקורו באתר נשמה ונשימה אל התרגיל באתר, עם ההסבר המלא */
+(function(){
+  if(typeof exRow!=='function' || typeof nsHref!=='function') return;
+  const _f = exRow;
+  exRow = function(id){
+    const h = _f.apply(this, arguments), href = nsHref(id);
+    if(!href || !h) return h;
+    const k = h.lastIndexOf('</div>'); if(k<0) return h;
+    return h.slice(0,k) + `<a class="ns-link" href="${href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">באתר נשמה ונשימה</a>` + h.slice(k);
+  };
+})();
 </script>
 </body>
 </html>

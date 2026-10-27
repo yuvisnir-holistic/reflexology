@@ -1586,5 +1586,90 @@ history.replaceState({tab:'home'}, '', location.pathname + location.search + loc
 handleHash();
 updateFabs();
 </script>
+<style>
+  /* חיבור לקליניקה: כפתור "+ למטופל" ליד כל תרגיל. התוכן של האתר לא משתנה */
+  .ns-add{display:inline-flex;align-items:center;gap:4px;margin-top:10px;border:1px solid #2C5F5B;color:#2C5F5B;background:transparent;border-radius:999px;padding:7px 16px;font:inherit;font-size:0.88rem;font-weight:700;cursor:pointer;min-height:36px;}
+  .ns-add:hover{background:rgba(44,95,91,0.08);}
+  .ns-add:focus-visible,.ns-pick button:focus-visible{outline:3px solid #A9821F;outline-offset:2px;}
+  #nsPick{position:fixed;inset:0;z-index:200;background:rgba(30,71,68,0.45);display:none;align-items:center;justify-content:center;padding:12px;}
+  #nsPick.show{display:flex;}
+  .ns-pick{background:#FBF7EF;border-radius:18px;padding:16px;width:100%;max-width:480px;max-height:80vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.25);direction:rtl;}
+  .ns-pick h3{margin:0 0 4px;font-family:'Frank Ruhl Libre',serif;color:#1E4744;}
+  .ns-pick .ns-sub{color:#6a756f;font-size:0.88rem;margin:0 0 12px;}
+  .ns-pick .ns-p{display:block;width:100%;text-align:start;border:1px solid #AEBFAE;background:#fff;border-radius:12px;padding:10px 14px;margin:0 0 8px;font:inherit;cursor:pointer;min-height:44px;color:#28312E;}
+  .ns-pick .ns-p small{display:block;color:#6a756f;font-size:0.8rem;}
+  .ns-pick .ns-p.has{opacity:0.6;}
+  .ns-pick .ns-close{border:none;background:#2C5F5B;color:#fff;border-radius:999px;padding:9px 20px;font:inherit;font-weight:700;cursor:pointer;float:left;}
+  .ns-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E4744;color:#fff;border-radius:999px;padding:9px 18px;z-index:210;font-size:0.9rem;}
+</style>
+<script>
+/* ===== חיבור לקליניקה =====
+   ליד כל תרגיל בלשונית התרגול נוסף כפתור "+ למטופל". הוא מוסיף את התרגיל המתאים מהמאגר
+   לתרגול של המפגש האחרון של המטופל בקליניקה. רשימת המטופלים נשמרת בדפדפן הזה, ולכן זה עובד
+   רק באותו מכשיר שבו עובדים עם הקליניקה. התוכן של האתר עצמו לא משתנה.
+   NS_LINKS זהה לזה שב־exercises.js. כשמוסיפים תרגיל לאתר, מוסיפים אותו בשני המקומות. */
+(function(){
+  const NS_LINKS = {
+    'לרגע של לחץ או מתח':'tool-neshima:3', 'לרגע של כעס':'tool-neshima:4', 'להעלאת מרץ':'tool-neshima:6',
+    'להרגעה מהירה בזמן דאגה':'tool-neshima:5', 'לכאב ראש':'tool-neshima:7', 'למתח בכתפיים':'tool-neshima:8',
+    'לכאבי גב':'tool-neshima:8', 'נשימה אחת בכל רגע פנוי':'tool-neshima:2', 'נשיפה טובה לעולם':'tool-neshima:11',
+    'לצוואר ולחוליות':'tool-neshima:9', 'לאיבר מסוים שכואב':'tool-neshima:42', 'אנחה מכוונת':'tool-neshima:10',
+    'ברגע של ייאוש':'tool-neshima:12', 'כשמשהו לא עוזב אותי':'tool-neshima:48', 'שמחה בלי סיבה':'tool-neshima:49',
+    'בזמן פעילות גופנית':'tool-neshima:13', 'כשהנשימה נעצרת מבהלה':'tool-neshima:38', 'ברגעים עם ילדים קטנים':'tool-neshima:37'
+  };
+  const STORE = 'clinic-patients';
+  const load = () => { try{ return JSON.parse(localStorage.getItem(STORE)||'null') || {patients:[]}; }catch(e){ return {patients:[]}; } };
+  const esc = t => String(t||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function toast(m){ const t=document.createElement('div'); t.className='ns-toast'; t.textContent=m; document.body.appendChild(t); setTimeout(()=>t.remove(), 2200); }
+  let cur = '';
+  window.nsPick = function(title){
+    cur = title; const id = NS_LINKS[title]; const PT = load();
+    let m = document.getElementById('nsPick');
+    if(!m){ m=document.createElement('div'); m.id='nsPick'; m.addEventListener('click', e=>{ if(e.target===m) nsClose(); }); document.body.appendChild(m); }
+    const ps = (PT.patients||[]).slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'','he'));
+    m.innerHTML = `<div class="ns-pick" role="dialog" aria-label="הוספה למטופל"><button class="ns-close" onclick="nsClose()">סגירה</button>
+      <h3>הוספה למטופל</h3><p class="ns-sub">${esc(title)}. התרגיל ייכנס לתרגול של המפגש האחרון.</p>
+      ${ps.length ? ps.map(p=>{ const w = (p.weeks||[])[(p.weeks||[]).length-1]; const has = w && (w.items||[]).includes(id);
+        return `<button class="ns-p ${has?'has':''}" onclick="nsAdd('${esc(p.id)}')">${esc(p.name)}<small>${has?'כבר בתרגול של המפגש האחרון':'מפגש '+(p.weeks||[]).length+(w&&w.date?', '+esc(w.date):'')}</small></button>`; }).join('')
+        : `<p>עוד אין מטופלים בקליניקה במכשיר הזה. פותחים מטופל בקליניקה, ואז אפשר להוסיף לו תרגילים מכאן.</p>`}</div>`;
+    m.classList.add('show');
+  };
+  window.nsClose = function(){ const m=document.getElementById('nsPick'); if(m) m.classList.remove('show'); };
+  window.nsAdd = function(pid){
+    const PT = load(); const p = (PT.patients||[]).find(x=>x.id===pid); const id = NS_LINKS[cur]; if(!p || !id) return;
+    if(!Array.isArray(p.weeks) || !p.weeks.length) p.weeks = [{date:new Date().toLocaleDateString('he-IL'), items:[], note:''}];
+    const w = p.weeks[p.weeks.length-1]; w.items = w.items || [];
+    if(w.items.includes(id)){ toast('התרגיל כבר נמצא בתרגול'); nsClose(); return; }
+    w.items.push(id); p.activeWeek = p.weeks.length-1;
+    try{ localStorage.setItem(STORE, JSON.stringify(PT)); toast(`נוסף לתרגול של ${p.name}`); }catch(e){ toast('השמירה נכשלה'); }
+    nsClose();
+  };
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') nsClose(); });
+  function decorate(){
+    const root = document.getElementById('practiceContent'); if(!root) return;
+    root.querySelectorAll('.card').forEach(c=>{
+      const h = c.querySelector('.card-head h3'), b = c.querySelector('.card-body');
+      if(!h || !b || c.dataset.ns) return; const t = h.textContent.trim(); if(!NS_LINKS[t]) return;
+      c.dataset.ns = '1';
+      const btn = document.createElement('button'); btn.type='button'; btn.className='ns-add'; btn.textContent='+ למטופל';
+      btn.addEventListener('click', e=>{ e.stopPropagation(); nsPick(t); });
+      b.appendChild(btn);
+    });
+  }
+  /* קישור מהקליניקה או ממפת הגוף: neshama-neshima.html#practice:שם התרגיל */
+  function route(){
+    let h = location.hash.slice(1); try{ h = decodeURIComponent(h); }catch(e){}
+    if(!h.startsWith('practice:')) return;
+    const t = h.slice(9);
+    if(typeof switchTab==='function') switchTab('practice');
+    setTimeout(()=>{ decorate(); const c = [...document.querySelectorAll('#practiceContent .card')].find(x=>{ const hh=x.querySelector('.card-head h3'); return hh && hh.textContent.trim()===t; });
+      if(c){ let x = c; while(x){ x.classList.add('open'); x = x.parentElement && x.parentElement.closest('.card'); } setTimeout(()=>c.scrollIntoView({behavior:'smooth', block:'start'}), 80); } }, 120);
+  }
+  if(typeof renderPractice==='function'){ const _rp = renderPractice; renderPractice = function(){ const r = _rp.apply(this, arguments); decorate(); return r; }; }
+  decorate();
+  window.addEventListener('hashchange', route);
+  if(document.readyState==='complete') route(); else window.addEventListener('load', route);
+})();
+</script>
 </body>
 </html>
