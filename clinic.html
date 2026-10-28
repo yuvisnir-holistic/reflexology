@@ -796,6 +796,7 @@
   .ph-cmp-h{font-weight:700;color:var(--forest-dark);font-family:'Frank Ruhl Libre',serif;}
   .ph-cmp-h small{display:block;font-family:'Assistant',sans-serif;font-weight:400;color:#6a756f;}
   @media print{ .ph-sec{display:none;} }
+  .arch-why{font-size:0.8rem;color:#6a756f;margin:-4px 8px 12px;}
 </style>
 </head>
 <body>
@@ -1324,13 +1325,13 @@ function sheetText(){
 function copySheet(){ iqCopyText(sheetText(), 'הועתק'); }
 
 /* ---- בחירת תרגילים ---- */
-const EX_TABS = [['el','יסודות'],['sf','ספירות'],['tool','כלים'],['gen','כלליים'],['path','לפי תלונה']];
+const EX_TABS = [['el','יסודות'],['sf','ספירות'],['tool','כלים'],['gen','כלליים'],['path','לפי תלונה']].concat((typeof EX_ARCHIVE!=='undefined' && EX_ARCHIVE.size) ? [['arch','ארכיון']] : []);
 const SF_LIST = SF_ORDER.filter(n=>WEEK_SF[n]).concat(Object.keys(WEEK_SF).filter(n=>!SF_ORDER.includes(n)));
 let exTab = 'el', exQ = '';
 let exAud = (()=>{ try{ return localStorage.getItem('clinic-ex-aud')||'any'; }catch(e){ return 'any'; } })();
 function audOk(id){ const e=EXR[id]; return !e ? false : (exAud==='any' || (e.aud||'all')===exAud) && exFilterOk(id); }
 /* ===== סינון לפי סגנון, מצב ואורך, והתאמה למטופל ===== */
-const exF = {st:[], sit:'', len:'', fit:(()=>{ try{ return localStorage.getItem('clinic-ex-fit')==='1'; }catch(e){ return false; } })()};
+const exF = {arch:false, st:[], sit:'', len:'', fit:(()=>{ try{ return localStorage.getItem('clinic-ex-fit')==='1'; }catch(e){ return false; } })()};
 /* העדפות הסגנון: מה שסימנת בכרטיס, ואם עוד לא סימנת, מה שהמטופל סימן בשאלון */
 function exPrefsOf(p){
   if(!p) return {};
@@ -1343,6 +1344,7 @@ function exPrefs(p){ p = p || (typeof curP==='function' ? curP() : null); return
 function exDisliked(id, p){ if(typeof exTags!=='function') return false; const pr = exPrefs(p); const st = exTags(id).st; return st.length>0 && st.every(x=>pr[x]===-1); }
 function exFilterOn(){ return !!(exF.st.length || exF.sit || exF.len || (exF.fit && Object.keys(exPrefs()).length)); }
 function exFilterOk(id){
+  if(typeof exArchived==='function' && exArchived(id) && !exF.arch && exTab!=='arch') return false;
   if(typeof exTags!=='function') return true;
   const t = exTags(id);
   if(exF.st.length && !exF.st.some(x=>t.st.includes(x))) return false;
@@ -1353,6 +1355,7 @@ function exFilterOk(id){
 }
 function exFSet(k,v){
   if(k==='st'){ const i=exF.st.indexOf(v); if(i>=0) exF.st.splice(i,1); else exF.st.push(v); }
+  else if(k==='arch'){ exF.arch=!exF.arch; window.EX_SHOW_ARCHIVE = exF.arch; }
   else if(k==='fit'){ exF.fit=!exF.fit; try{ localStorage.setItem('clinic-ex-fit', exF.fit?'1':'0'); }catch(e){} }
   else exF[k] = exF[k]===v ? '' : v;
   exRender();
@@ -1367,6 +1370,7 @@ function exFilterBar(){
     <div class="f-row-l">סגנון</div><div class="fchips">${EX_STYLES.map(([k,l])=>chip('st',k,l,exF.st.includes(k))).join('')}</div>
     <div class="f-row-l">מצב</div><div class="fchips">${EX_SITS.map(([k,l])=>chip('sit',k,l,exF.sit===k)).join('')}</div>
     <div class="f-row-l">אורך</div><div class="fchips">${EX_LENS.map(([k,l])=>chip('len',k,l,exF.len===k)).join('')}</div>
+    ${(typeof EX_ARCHIVE!=='undefined' && EX_ARCHIVE.size) ? `<label class="fit-opt"><input type="checkbox" ${exF.arch?'checked':''} onchange="exFSet('arch')"> להציג גם תרגילים שבארכיון (${EX_ARCHIVE.size})</label>` : ''}
     ${n?'<button class="bm-link" onclick="exFClear()">ניקוי הסינון</button>':''}
   </details>${hasPr?`<label class="fit-opt"><input type="checkbox" ${exF.fit?'checked':''} onchange="exFSet('fit')"> להסתיר סגנונות שפחות מתאימים ל${escH(p.name)}</label>`:''}`;
 }
@@ -1379,6 +1383,7 @@ function exCurrentIds(){
   if(exTab==='sf') return exBySrc('sf:'+sel).map(e=>e.id);
   if(exTab==='tool') return (WTOOLS[sel] && WTOOLS[sel].refs && typeof toolRefIds==='function') ? [...new Set(toolRefIds(sel))] : exBySrc(sel).map(e=>e.id);
   if(exTab==='gen') return exBySrc('gen').map(e=>e.id);
+  if(exTab==='arch') return [...EX_ARCHIVE].filter(id=>EXR[id]);
   const ids = new Set((typeof pathExercises==='function') ? pathExercises(sel) : []);
   (PATH_LINKS[sel]||[]).forEach(x=>{ const s=srcOfLink(x); if(s) exBySrc(s).forEach(e=>ids.add(e.id)); });
   return [...ids];
@@ -1464,6 +1469,12 @@ function exRenderBody(sel){
     srcs.innerHTML = Object.entries(WTOOLS).map(([k,t])=>`<button class="wchip tool ${sel===k?'on':''}" onclick="exSetSrc('${k}')">${escH(t.name)}</button>`).join('');
     const t = WTOOLS[sel];
     list.innerHTML = (t.lead?`<p class="ex-lead">${escH(t.lead)}</p>`:'') + exFloors(sel);
+  } else if(exTab==='arch'){
+    /* ארכיון: תרגילים שהוסתרו כי הם כפולים או חופפים. אפשר עדיין להוסיף אותם למטופל */
+    srcs.innerHTML = '';
+    const ids = [...EX_ARCHIVE].filter(id=>EXR[id] && audOk(id));
+    list.innerHTML = `<p class="ex-lead">תרגילים שהועברו לארכיון כי הם כפולים או חופפים לתרגיל אחר. הם לא מופיעים בבחירה ובהצעות, אבל אפשר עדיין להוסיף אותם למטופל מכאן, ומטופל שכבר קיבל אחד מהם ממשיך לראות אותו.</p>` +
+      ids.map(id=>exRow(id,true) + (EX_ARCHIVE_WHY[id] ? `<p class="arch-why">${escH(EX_ARCHIVE_WHY[id])}</p>` : '')).join('');
   } else if(exTab==='gen'){
     srcs.innerHTML = '';
     list.innerHTML = exFloors('gen');
@@ -1730,7 +1741,7 @@ function suggest(p){
     .forEach(r=>fromText(r.cure, `שורש אפשרי: ${r.name}, ${r.what}`));
   const {body, emo} = iqTally(S); const comb = {}; IQ_ORDER.forEach(k=>comb[k]=body[k]+emo[k]);
   iqLead(comb).slice(0,2).forEach(k=>pick('el:'+k, `היסוד הכי מסומן בשאלון: ${IQ_EL[k].name}`));
-  return {list:[...picked.entries()].filter(([id])=>!EXR[id] || !exDisliked(id, p)).slice(0,8), floors};
+  return {list:[...picked.entries()].filter(([id])=>!EXR[id] || (!exDisliked(id, p) && !(typeof exArchived==='function' && exArchived(id)))).slice(0,8), floors};
 }
 function sugHTML(){
   const p = curP(); const {list, floors} = suggest(p); const w = curWeek();

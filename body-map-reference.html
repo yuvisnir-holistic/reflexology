@@ -3960,5 +3960,22 @@ document.getElementById('tabnav').addEventListener('click', e=>{ if(e.target.clo
   };
 })();
 </script>
+<script>
+/* תרגילים שבארכיון לא מוצגים במפת הגוף, חוץ מכרטיס "ארכיון" בסוף לשונית הכלים */
+(function(){ if(typeof exItemHTML!=='function' || typeof exArchived!=='function') return;
+  const _f = exItemHTML; window.exItemHTMLRaw = _f;
+  exItemHTML = function(id){ return exArchived(id) ? '' : _f.apply(this, arguments); };
+  function archCard(){
+    const list = document.getElementById('toolsList'); if(!list || !EX_ARCHIVE.size || document.getElementById('tool-card-archive')) return;
+    const ids = [...EX_ARCHIVE].filter(id=>EXR[id]);
+    list.insertAdjacentHTML('beforeend', `<div class="organ-card tools-group" id="tool-card-archive">
+      <div class="organ-head" role="button" tabindex="0" onclick="this.parentElement.classList.toggle('open')"><div><h3>ארכיון <span class="sub-count">${ids.length}</span></h3><p class="tool-lead">תרגילים שהוסתרו כי הם כפולים או חופפים לתרגיל אחר. הם לא נמחקו, ואפשר עדיין להוסיף אותם למטופל.</p></div><svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="organ-body tg-body">${ids.map(id=>_f(id,true) + (typeof EX_ARCHIVE_WHY!=='undefined' && EX_ARCHIVE_WHY[id] ? `<p class="arch-why">${escH(EX_ARCHIVE_WHY[id])}</p>` : '')).join('')}</div></div>`);
+  }
+  if(typeof renderToolsView==='function'){ const _r = renderToolsView; renderToolsView = function(){ const x = _r.apply(this, arguments); archCard(); return x; }; }
+  archCard();
+})();
+</script>
+<style>.arch-why{font-size:0.8rem;color:#6a756f;margin:-4px 8px 12px;}</style>
 </body>
 </html>
