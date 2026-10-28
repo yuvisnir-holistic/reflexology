@@ -1468,7 +1468,7 @@ function exRenderBody(sel){
   } else if(exTab==='tool'){
     srcs.innerHTML = Object.entries(WTOOLS).map(([k,t])=>`<button class="wchip tool ${sel===k?'on':''}" onclick="exSetSrc('${k}')">${escH(t.name)}</button>`).join('');
     const t = WTOOLS[sel];
-    list.innerHTML = (t.lead?`<p class="ex-lead">${escH(t.lead)}</p>`:'') + exFloors(sel);
+    list.innerHTML = (t.lead?`<p class="ex-lead">${escH(t.lead)}</p>`:'') + (sel==='tool-neshima' ? '<p class="ex-lead"><a class="ns-link" href="neshama-neshima.html" target="_blank" rel="noopener">לאתר נשמה ונשימה, עם ההסברים המלאים</a></p>' : '') + exFloors(sel);
   } else if(exTab==='arch'){
     /* ארכיון: תרגילים שהוסתרו כי הם כפולים או חופפים. אפשר עדיין להוסיף אותם למטופל */
     srcs.innerHTML = '';

@@ -3977,5 +3977,26 @@ document.getElementById('tabnav').addEventListener('click', e=>{ if(e.target.clo
 })();
 </script>
 <style>.arch-why{font-size:0.8rem;color:#6a756f;margin:-4px 8px 12px;}</style>
+<style>
+  .site-link{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px;padding:6px 14px;border-radius:999px;border:1px solid var(--forest);color:var(--forest);background:transparent;font-weight:700;font-size:0.86rem;text-decoration:none;}
+  .site-link:hover{background:rgba(44,95,91,0.08);}
+  .site-link:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  @media print{ .site-link{display:none;} }
+</style>
+<script>
+/* קישור מהכלי נשמה ונשימה, בלשונית הכלים, אל אתר נשמה ונשימה */
+(function(){
+  if(typeof toolCardFull!=='function') return;
+  const SITES = {'tool-neshima':['neshama-neshima.html','לאתר נשמה ונשימה']};
+  const _t = toolCardFull;
+  toolCardFull = function(id){
+    const h = _t.apply(this, arguments), s = SITES[id]; if(!s || !h) return h;
+    const m = h.match(/<div class="organ-body[^"]*">/); if(!m) return h;
+    const at = h.indexOf(m[0]) + m[0].length;
+    return h.slice(0,at) + `<a class="site-link" href="${s[0]}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${s[1]} ←</a>` + h.slice(at);
+  };
+  if(typeof renderToolsView==='function' && document.getElementById('toolsList') && document.getElementById('toolsList').innerHTML) renderToolsView();
+})();
+</script>
 </body>
 </html>
