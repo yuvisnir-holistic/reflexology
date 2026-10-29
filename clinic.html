@@ -351,6 +351,8 @@
   .pt-name{font-family:'Frank Ruhl Libre',serif;font-size:1.5rem;font-weight:900;color:var(--forest-dark);border:none;border-bottom:1.5px dashed transparent;background:transparent;outline:none;flex:1;min-width:0;}
   .pt-name:focus{border-bottom-color:var(--sage);}
   .danger{color:var(--fire) !important;}
+  .wk-sum{margin:14px 0 0;padding:14px 16px;background:var(--cream-soft);border:1.5px solid var(--sage);border-radius:var(--radius);}
+  .wk-sum textarea{min-height:110px;}
   .wk-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;}
   .wk-tab{flex-shrink:0;display:flex;flex-direction:column;align-items:center;border:1.5px solid rgba(44,95,91,0.2);background:#fff;border-radius:12px;padding:6px 14px;font-family:'Assistant',sans-serif;font-weight:700;font-size:0.92rem;color:var(--ink);cursor:pointer;}
   .wk-tab small{font-weight:500;font-size:0.72rem;color:#6a756f;}
@@ -1307,8 +1309,15 @@ function renderWeeks(){
       : `<p class="paper-empty no-print">התרגול עוד ריק. "הוספת תרגיל" פותח את מאגר התרגילים: יסודות, ספירות, כלים, תרגילים כלליים, או לפי תלונה.${(iqHas(p)||readRecs(p).length)?' ו"הצעות לתרגול" מציע תרגילים לפי השאלון והאבחון.':''}</p>`}
       <textarea class="note-in" placeholder="הערה אישית לתרגול הזה, אם יש" oninput="ptNote(this.value)">${escH(w.note||'')}</textarea>
       ${items.length ? `<div class="paper-q"><h3>לרישום, ולהביא למפגש הבא</h3>${(qs.length?qs:['מה עבד, מה היה קשה, ומה התגלה?']).map(q=>`<p>${escH(q)}</p>`).join('')}</div>` : ''}
+    </div>
+    <div class="wk-sum no-print">
+      <label class="f-l" for="wk_sum">סיכום השבוע מהמטופל</label>
+      <p class="iq-hint" style="margin:0 0 6px">מדביקים כאן את הסיכום שהגיע בוואטסאפ מאתר עבודת המידות והיסודות, או רושמים מה המטופל סיפר במפגש.</p>
+      <textarea class="note-in" id="wk_sum" placeholder="הסיכום של המטופל לשבוע הזה" oninput="ptSummary(this.value)">${escH(w.summary||'')}</textarea>
     </div>`;
 }
+let _sumT;
+function ptSummary(v){ const w=curWeek(); w.summary=v; clearTimeout(_sumT); _sumT=setTimeout(()=>{ savePT(); bmToast('הסיכום נשמר'); },700); }
 function ptWeek(i){ const p=curP(); p.activeWeek=i; savePT(); renderCard(); }
 function ptNewWeek(){ const p=curP(); const free=tSorted(p).filter(t=>!t.weekId || weekOfTreatment(p,t)<0); const ft=free[free.length-1]; const w={id:newId('w'), date:ft&&ft.date?isoToHe(ft.date):today(), items:[], note:''}; if(ft) ft.weekId=w.id; p.weeks.push(w); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); bmToast(`נפתח תרגול למפגש ${p.weeks.length}`); }
 function ptDeleteWeek(){ const p=curP(); if(p.weeks.length<2) return; if(!confirm(`למחוק את התרגול של מפגש ${p.activeWeek+1}?`)) return; p.weeks.splice(p.activeWeek,1); p.activeWeek=p.weeks.length-1; savePT(); renderCard(); }

@@ -265,7 +265,7 @@
     <div class="prose">
       <p>העבודה הפנימית לא קורית רק במדיטציה או ברגעים של שקט. היא קורית בחיים עצמם: בבית, בעבודה, עם המשפחה ועם האנשים שסביבנו. שם הכוחות שלנו פוגשים את המציאות, ושם אפשר לראות אותם ולשנות אותם.</p>
       <p>מתחילים כבר ביום הטיפול. בוחרים תרגיל אחד ועושים אותו כל יום. בערב, אחרי שהיום עבר, עונים על השאלה של אותו יום, אפילו במשפט אחד. יום שפוספס לא משלימים, פשוט ממשיכים.</p>
-      <p>את התשובות אפשר לכתוב כאן באתר, או במחברת שמיועדת רק לזה. מה שכותבים כאן נשמר בטלפון או במחשב הזה בלבד, ולא נשלח לשום מקום. למפגש מביאים את המחברת, או את הטלפון.</p>
+      <p>את התשובות אפשר לכתוב כאן באתר, או במחברת שמיועדת רק לזה. מה שכותבים כאן נשמר בטלפון או במחשב הזה בלבד. לקראת המפגש עונים על השאלה לסיום השבוע, ואותה בלבד שולחים לי בוואטסאפ או מביאים במחברת. אם עלו שאלות במהלך השבוע, נדבר עליהן במפגש.</p>
     </div>
   </section>
 
@@ -449,12 +449,13 @@ const WEEKS = {
       {l:'נתינה שמחברת', lens:'יסוד שבחסד', ex:'החיבור שבנתינה. כמו ברית בין שני אנשים, נתינה שלא תלויה בחשק של הרגע, ושלא שואלת מה ייצא לי ממנה.', q:'האם האהבה שבי יצאה היום החוצה, במילה, במגע או בקשר, גם ברגע שלא היה לי חשק? ואיפה תפסתי את עצמי מחשב או מחשבת מה ייצא לי מהנתינה?'},
       {l:'נתינה במעשה', lens:'מלכות שבחסד', ex:'הנתינה כשהיא יוצאת לעולם. האהבה הופכת למעשה ממשי. ומלכות היא גם הכלי שמקבל, ולכן יש כאן גם את היכולת לקבל.', q:'מה עשיתי היום, בפועל, שהאהבה שלי הייתה בו? והאם הרשיתי לעצמי גם לקבל?'}
     ],
-    endQ:'את מי אני אוהב או אוהבת, ואיך זה נראה במעשים?'
+    endQ:'כשאני מסתכל.ת על השבוע שעבר, מה גיליתי על הנתינה שלי? איפה הרגשתי שמשהו זז, ואיפה עדיין קשה לי?'
   }
 };
 
 /* ===== שמירה במכשיר ===== */
 const KEY = 'middot-yesodot-v1';
+const WA_NUMBER = '972506818811'; /* מספר הוואטסאפ של יובל בפורמט בינלאומי, למשל 9725XXXXXXXX. ריק = המטופל בוחר איש קשר */
 let S = {current:null, weeks:{}};
 try{ const raw = localStorage.getItem(KEY); if(raw) S = Object.assign(S, JSON.parse(raw)); }catch(e){}
 function save(msg){ try{ localStorage.setItem(KEY, JSON.stringify(S)); if(msg) toast(msg); }catch(e){ toast('לא הצלחנו לשמור במכשיר הזה'); } }
@@ -595,8 +596,9 @@ function renderWeek(id){
     <div class="card end-q">
       <h4>שאלה לסיום השבוע</h4>
       <div class="q" style="line-height:1.75;margin-bottom:10px">${w.endQ}</div>
-      <div class="eve">כותבים בערב האחרון לפני המפגש הבא, ומביאים איתכם.</div>
+      <div class="eve">כותבים בערב האחרון לפני המפגש הבא. את הסיכום הזה אפשר לשלוח לי בוואטסאפ.</div>
       <textarea data-end="1" placeholder="התשובה שלי...">${esc(st.end)}</textarea>
+      <div class="btnrow no-print"><button class="btn small" id="waEnd">שליחת הסיכום בוואטסאפ</button></div>
     </div>
     <div class="saved-note no-print">הכול נשמר אוטומטית בטלפון או במחשב הזה. אם מנקים את נתוני הדפדפן או עוברים למכשיר אחר, התשובות לא עוברות איתכם.</div>`;
 
@@ -608,6 +610,14 @@ function renderWeek(id){
   v.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{ const d=v.querySelector('#day-'+b.dataset.day); d.open=true; setTimeout(()=>{ const top=$('#hdr').offsetHeight; window.scrollTo({top:d.getBoundingClientRect().top+window.scrollY-top-10, behavior:'smooth'}); },30); });
   v.querySelectorAll('[data-dp]').forEach(b=>b.onclick=()=>{ const k=b.dataset.dp, n=+b.dataset.pi; st.days[k]=Object.assign(st.days[k]||{}, {p:n}); save('נשמר');
     v.querySelectorAll(`[data-dp="${k}"]`).forEach(x=>x.classList.toggle('on', +x.dataset.pi===n)); });
+  v.querySelector('#waEnd').onclick=()=>{
+    if(!st.end || !st.end.trim()){ toast('קודם כותבים את הסיכום'); return; }
+    const done=Object.values(st.days).filter(d=>d.done).length;
+    let t=`סיכום שבוע של ${w.name}\n`;
+    if(st.practice!=null) t+=`התרגיל: ${w.practices[st.practice].t}\n`;
+    t+=`ימים שתרגלתי: ${done} מתוך 7\n\n${st.end.trim()}`;
+    window.open((WA_NUMBER?'https://wa.me/'+WA_NUMBER:'https://wa.me/')+'?text='+encodeURIComponent(t),'_blank');
+  };
   let tm;
   v.querySelectorAll('[data-ans]').forEach(t=>t.oninput=()=>{ const k=t.dataset.ans; st.days[k]=Object.assign(st.days[k]||{}, {a:t.value}); clearTimeout(tm); tm=setTimeout(()=>save('נשמר'),700); });
   v.querySelectorAll('[data-done]').forEach(c=>c.onchange=()=>{ const k=c.dataset.done; st.days[k]=Object.assign(st.days[k]||{}, {done:c.checked}); save(c.checked?'כל הכבוד':'נשמר'); const chip=v.querySelector(`.dchip[data-day="${k}"]`); if(chip) chip.classList.toggle('done',c.checked); });
