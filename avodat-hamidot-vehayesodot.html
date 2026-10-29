@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>המידות והיסודות | יובל שניר</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#2C5F5B; --forest-dark:#1E4744; --header:#3A6863;
+    --cream:#F7F1E6; --cream-soft:#FBF7EF; --sage:#AEBFAE; --ink:#28312E; --muted:#6a756f;
+    --fire:#A8442B; --fire-bg:#F3E3DD;
+    --water:#2F6690; --water-bg:#DFE8ED;
+    --air:#A9821F; --air-bg:#F1E9D2;
+    --earth:#5C6B3F; --earth-bg:#E4E7D9;
+    --sefirah:#7A5C8E; --sefirah-bg:#E9E2ED;
+    --practice:#8A6D3B; --practice-bg:#F2E8D5;
+    --radius:18px;
+    --shadow:0 2px 14px rgba(44,95,91,0.10);
+  }
+  *{box-sizing:border-box;}
+  html{font-size:19px;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--cream);color:var(--ink);font-family:'Assistant',sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:70px;}
+  h1,h2,h3,.display{font-family:'Frank Ruhl Libre',serif;}
+  button{font-family:inherit;}
+  :focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+
+  /* כותרת עליונה */
+  header{position:sticky;top:0;z-index:50;background:var(--header);color:var(--cream-soft);
+    padding:20px 16px 14px;box-shadow:0 2px 10px rgba(0,0,0,0.18);text-align:center;transition:padding .2s;}
+  header h1{font-size:1.65rem;margin:0 0 4px;font-weight:900;color:#FDFBF5;transition:font-size .2s;}
+  header .sub{font-size:0.95rem;color:var(--sage);font-weight:500;margin-bottom:12px;}
+  header.compact{padding:10px 16px 10px;}
+  header.compact h1{font-size:1.15rem;margin:0 0 6px;}
+  header.compact .sub{display:none;}
+  .tabnav{display:flex;gap:4px;max-width:560px;margin:0 auto;background:rgba(255,255,255,0.12);
+    border-radius:999px;padding:4px;overflow-x:auto;scrollbar-width:none;}
+  .tabnav::-webkit-scrollbar{display:none;}
+  .tabnav button{flex:1 1 auto;border:none;background:transparent;color:var(--cream-soft);padding:10px 14px;
+    border-radius:999px;font-weight:700;font-size:0.88rem;cursor:pointer;opacity:.8;white-space:nowrap;min-height:40px;}
+  .tabnav button.active{background:var(--cream-soft);color:var(--forest-dark);opacity:1;}
+
+  main{max-width:900px;margin:0 auto;padding:14px 16px 40px;min-height:120vh;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  p,.prose{line-height:1.75;}
+  .prose p{text-align:justify;margin:0 0 12px;}
+  .lead{font-size:1.05rem;line-height:1.8;text-align:justify;margin:6px 0 18px;}
+  h2.page{font-size:1.55rem;color:var(--forest-dark);margin:10px 0 6px;}
+  h3.sec{font-size:1.2rem;color:var(--forest-dark);margin:26px 0 10px;}
+  .muted{color:var(--muted);}
+
+  /* כרטיס בסיסי */
+  .card{background:var(--cream-soft);border-radius:var(--radius);box-shadow:var(--shadow);
+    border:1px solid rgba(44,95,91,0.08);padding:16px 18px;margin:0 0 12px;}
+
+  /* שערים בדף הבית */
+  .gates{display:grid;grid-template-columns:1fr;gap:12px;margin:8px 0 6px;}
+  @media(min-width:640px){.gates{grid-template-columns:1fr 1fr;}}
+  .gate{background:var(--cream-soft);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(44,95,91,0.08);
+    padding:18px 18px 16px;cursor:pointer;text-align:right;color:inherit;font:inherit;width:100%;}
+  .gate h3{margin:0 0 6px;font-size:1.3rem;color:var(--forest-dark);}
+  .gate p{margin:0 0 12px;font-size:0.95rem;color:#4b5752;text-align:right;}
+  .gate .strip{display:flex;gap:6px;flex-wrap:wrap;}
+  .gate:active{transform:scale(0.99);}
+
+  /* תגיות */
+  .tag{display:inline-flex;align-items:center;gap:5px;font-size:0.76rem;padding:4px 10px;border-radius:999px;font-weight:700;white-space:nowrap;}
+  .tag .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .t-fire{background:var(--fire-bg);color:var(--fire);} .t-fire .dot{background:var(--fire);}
+  .t-water{background:var(--water-bg);color:var(--water);} .t-water .dot{background:var(--water);}
+  .t-air{background:var(--air-bg);color:var(--air);} .t-air .dot{background:var(--air);}
+  .t-earth{background:var(--earth-bg);color:var(--earth);} .t-earth .dot{background:var(--earth);}
+  .t-sef{background:var(--sefirah-bg);color:var(--sefirah);}
+  .t-practice{background:var(--practice-bg);color:var(--practice);}
+  .t-body{background:#fff;color:var(--forest);border:1px solid var(--sage);}
+
+  /* השבוע שלי */
+  .mine{border:2px solid var(--forest);}
+  .mine .row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .mine h3{margin:0;font-size:1.15rem;color:var(--forest-dark);}
+  .mine .when{font-size:0.9rem;color:var(--muted);margin-top:4px;}
+
+  /* רשימת שבועות */
+  .weeks{display:grid;grid-template-columns:1fr;gap:10px;}
+  @media(min-width:640px){.weeks{grid-template-columns:1fr 1fr;}}
+  .week{display:flex;align-items:center;gap:14px;background:var(--cream-soft);border-radius:var(--radius);box-shadow:var(--shadow);
+    border:1px solid rgba(44,95,91,0.08);padding:14px 16px;cursor:pointer;text-align:right;font:inherit;color:inherit;width:100%;}
+  .week .num{flex-shrink:0;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:1.05rem;}
+  .week h4{margin:0;font-family:'Frank Ruhl Libre',serif;font-size:1.12rem;color:var(--forest-dark);}
+  .week .what{font-size:0.88rem;color:#4b5752;}
+  .week.soon{cursor:default;opacity:.62;box-shadow:none;}
+  .week .soon-tag{margin-inline-start:auto;font-size:0.76rem;color:var(--muted);font-weight:700;}
+  .week .cur-tag{margin-inline-start:auto;}
+
+  /* אקורדיון */
+  details.acc{background:var(--cream-soft);border-radius:var(--radius);box-shadow:var(--shadow);
+    border:1px solid rgba(44,95,91,0.08);margin:0 0 10px;}
+  details.acc > summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:10px;}
+  details.acc > summary::-webkit-details-marker{display:none;}
+  details.acc > summary h4{margin:0;font-family:'Frank Ruhl Libre',serif;font-size:1.1rem;color:var(--forest-dark);flex:1;}
+  details.acc > summary .s{font-size:0.86rem;color:var(--muted);font-weight:500;}
+  details.acc > summary .chev{width:18px;height:18px;color:var(--forest);transition:transform .2s;flex-shrink:0;}
+  details.acc[open] > summary .chev{transform:rotate(180deg);}
+  details.acc > .body{padding:0 18px 16px;}
+  details.acc details.acc{box-shadow:none;border:1px solid var(--sage);background:#fff;}
+  @keyframes accIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+  details[open] > :not(summary){animation:accIn .26s ease;}
+  @media (prefers-reduced-motion: reduce){details[open] > :not(summary){animation:none;} header,header h1{transition:none;}}
+
+  .split{display:grid;grid-template-columns:1fr;gap:6px;align-items:start;}
+  @media(min-width:640px){.split{grid-template-columns:1fr 260px;gap:22px;}}
+  .body-fig{margin:4px auto 10px;max-width:260px;}
+  .body-fig svg{width:100%;height:auto;display:block;direction:ltr;}
+  .body-fig .sil > *{fill:var(--sage);opacity:.35;}
+  .body-fig .tree line{stroke:var(--forest);stroke-width:1.4;opacity:.28;}
+  .body-fig text{font-family:'Assistant',sans-serif;font-size:14px;font-weight:700;fill:var(--forest-dark);}
+  .body-fig figcaption{font-size:0.8rem;color:var(--muted);line-height:1.5;text-align:center;margin-top:4px;}
+  .bang{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--forest);background:#fff;color:var(--forest);
+    font-weight:900;font-size:0.8rem;line-height:1;cursor:pointer;margin-inline-start:6px;vertical-align:middle;padding:0;}
+  .bang:hover{background:var(--forest);color:#fff;}
+  #pop{position:fixed;inset:0;background:rgba(30,71,68,0.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:80;}
+  #pop.show{display:flex;}
+  #pop .box{background:var(--cream-soft);border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,0,0,.25);max-width:460px;width:100%;padding:20px 20px 16px;}
+  #pop h4{margin:0 0 8px;font-family:'Frank Ruhl Libre',serif;font-size:1.2rem;color:var(--forest-dark);}
+  #pop p{line-height:1.75;margin:0 0 10px;text-align:justify;}
+  .dprac{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 2px;align-items:center;}
+  .dprac .lbl{font-size:0.86rem;color:var(--muted);font-weight:600;}
+  .dprac button{border:1.5px solid var(--sage);background:#fff;color:var(--ink);border-radius:999px;padding:5px 12px;font-size:0.84rem;font-weight:600;cursor:pointer;min-height:34px;}
+  .dprac button.on{border-color:var(--practice);background:var(--practice-bg);color:var(--practice);}
+  .quote{font-family:'Frank Ruhl Libre',serif;color:var(--forest-dark);font-weight:700;}
+  .src{color:var(--muted);font-size:0.88rem;}
+
+  table.map{width:100%;border-collapse:collapse;font-size:0.95rem;background:#fff;border-radius:12px;overflow:hidden;}
+  table.map th,table.map td{padding:10px 12px;text-align:right;border-bottom:1px solid #e6e2d6;}
+  table.map th{background:var(--cream);color:var(--forest-dark);font-weight:700;}
+  .tbl-wrap{overflow-x:auto;margin:6px 0 12px;}
+
+  /* עמוד שבוע */
+  .week-head{display:flex;align-items:flex-start;gap:14px;margin:6px 0 4px;}
+  .week-head .num{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:1.5rem;background:var(--sefirah-bg);color:var(--sefirah);}
+  .week-head h2{margin:0;font-size:1.7rem;color:var(--forest-dark);}
+  .week-head .plain{font-size:1rem;color:#4b5752;margin-top:2px;}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px;}
+
+  .start-box{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .start-box .t{font-weight:700;color:var(--forest-dark);}
+
+  /* כפתורים */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--forest);color:#fff;border:none;
+    border-radius:999px;padding:10px 20px;font-weight:700;font-size:0.95rem;cursor:pointer;min-height:44px;}
+  .btn.ghost{background:transparent;color:var(--forest);border:1.5px solid var(--forest);}
+  .btn.small{padding:7px 14px;min-height:38px;font-size:0.88rem;}
+  .link{background:none;border:none;color:var(--forest);text-decoration:underline;cursor:pointer;font-weight:600;padding:4px;font-size:0.9rem;}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+
+  /* בחירת תרגול */
+  .practice{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1.5px solid var(--sage);border-radius:14px;
+    padding:13px 14px;margin:0 0 9px;cursor:pointer;text-align:right;width:100%;font:inherit;color:inherit;}
+  .practice .radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--sage);flex-shrink:0;margin-top:3px;}
+  .practice.on{border-color:var(--forest);background:var(--cream-soft);}
+  .practice.on .radio{border-color:var(--forest);background:radial-gradient(circle,var(--forest) 0 5px,transparent 6px);}
+  .practice b{display:block;color:var(--forest-dark);margin-bottom:2px;}
+  .practice span{line-height:1.65;font-size:0.95rem;}
+
+  /* שבעת הימים */
+  .days-strip{display:flex;gap:6px;justify-content:space-between;margin:4px 0 14px;}
+  .dchip{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;cursor:pointer;padding:4px 0;color:var(--ink);}
+  .dchip .c{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    border:1.5px solid var(--sage);background:#fff;font-weight:700;font-size:0.9rem;color:var(--muted);}
+  .dchip.done .c{background:var(--practice);border-color:var(--practice);color:#fff;}
+  .dchip.today .c{border:2.5px solid var(--forest);color:var(--forest-dark);}
+  .dchip.done.today .c{color:#fff;}
+  .dchip .l{font-size:0.72rem;color:var(--muted);}
+  .day .lens{font-size:0.82rem;color:var(--sefirah);font-weight:700;}
+  .day .ex{font-size:0.93rem;line-height:1.7;color:#4b5752;margin:2px 0 10px;padding-inline-start:10px;border-inline-start:3px solid var(--sefirah-bg);}
+  .day .q{font-size:1.05rem;line-height:1.75;margin:4px 0 10px;}
+  .eve{font-size:0.86rem;color:var(--muted);margin:0 0 8px;}
+  textarea{width:100%;min-height:92px;border:1px solid var(--sage);border-radius:8px;background:#fff;padding:10px 12px;
+    font-family:inherit;font-size:1rem;line-height:1.6;color:var(--ink);resize:vertical;}
+  .check{display:flex;align-items:center;gap:10px;margin:10px 0 0;cursor:pointer;font-weight:600;color:var(--forest-dark);user-select:none;}
+  .check input{width:22px;height:22px;accent-color:var(--practice);}
+  .saved-note{font-size:0.8rem;color:var(--muted);margin-top:6px;}
+  .today-badge{font-size:0.72rem;background:var(--forest);color:#fff;border-radius:999px;padding:3px 9px;font-weight:700;}
+  .end-q{border:2px solid var(--practice);}
+  .end-q h4{margin:0 0 6px;font-family:'Frank Ruhl Libre',serif;color:var(--practice);font-size:1.1rem;}
+
+  /* כפתורים צפים והודעה */
+  .floaters{position:fixed;left:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:60;}
+  .floaters button{background:var(--cream-soft);border:1.5px solid var(--forest);color:var(--forest);border-radius:999px;
+    padding:8px 14px;font-weight:700;font-size:0.85rem;cursor:pointer;box-shadow:var(--shadow);display:none;min-height:40px;}
+  .floaters button.show{display:block;}
+  #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--forest-dark);color:#fff;
+    padding:9px 18px;border-radius:999px;font-weight:700;font-size:0.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:70;}
+  #toast.show{opacity:1;}
+
+  footer{max-width:900px;margin:30px auto 0;padding:0 16px;text-align:center;font-size:0.85rem;color:var(--muted);}
+  footer a{color:var(--earth);}
+
+  @media print{
+    body{background:#fff;padding:0;}
+    header,.floaters,.no-print,.tabnav,#toast{display:none !important;}
+    .view{display:none !important;} .view.active{display:block !important;}
+    details.acc{box-shadow:none;border:1px solid #ddd;break-inside:avoid;}
+    details.acc > .body{display:block !important;}
+    .card{box-shadow:none;break-inside:avoid;}
+    .print-head{display:block !important;border-bottom:2px solid var(--forest);margin-bottom:14px;padding-bottom:6px;}
+  }
+  .print-head{display:none;}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <h1>המידות והיסודות</h1>
+  <div class="sub">שבוע אחד, נושא אחד, בין מפגש למפגש</div>
+  <nav class="tabnav" role="tablist">
+    <button data-go="home" class="active">בית</button>
+    <button data-go="yesodot">היסודות</button>
+    <button data-go="middot">המידות</button>
+    <button data-go="journal">היומן שלי</button>
+  </nav>
+</header>
+
+<main>
+  <div class="print-head">המידות והיסודות · יובל שניר · yuvalsnir.co.il</div>
+
+  <!-- בית -->
+  <section class="view active" id="v-home">
+    <p class="lead">כאן נמצא מה שצריך לעבודה בין המפגשים. בסוף הטיפול נחליט יחד במה אתם מתחילים, ומשם עוברים שבוע אחרי שבוע.</p>
+
+    <div id="mineBox"></div>
+
+    <div class="gates">
+      <button class="gate" data-go="yesodot">
+        <h3>ארבעת היסודות</h3>
+        <p>אש, רוח, מים ועפר, החומרים שמהם אנחנו בנויים. יסוד אחד לכל שבוע.</p>
+        <div class="strip">
+          <span class="tag t-fire"><span class="dot"></span>אש</span>
+          <span class="tag t-air"><span class="dot"></span>רוח</span>
+          <span class="tag t-water"><span class="dot"></span>מים</span>
+          <span class="tag t-earth"><span class="dot"></span>עפר</span>
+        </div>
+      </button>
+      <button class="gate" data-go="middot">
+        <h3>שבע המידות</h3>
+        <p>הכוחות שבהם אנחנו פועלים בעולם, מחסד ועד מלכות. מידה אחת לכל שבוע.</p>
+        <div class="strip">
+          <span class="tag t-sef">חסד</span><span class="tag t-sef">גבורה</span><span class="tag t-sef">תפארת</span>
+          <span class="tag t-sef">נצח</span><span class="tag t-sef">הוד</span><span class="tag t-sef">יסוד</span><span class="tag t-sef">מלכות</span>
+        </div>
+      </button>
+    </div>
+
+    <h3 class="sec">איך העבודה מתבצעת</h3>
+    <div class="prose">
+      <p>העבודה הפנימית לא קורית רק במדיטציה או ברגעים של שקט. היא קורית בחיים עצמם: בבית, בעבודה, עם המשפחה ועם האנשים שסביבנו. שם הכוחות שלנו פוגשים את המציאות, ושם אפשר לראות אותם ולשנות אותם.</p>
+      <p>בכל שבוע בוחרים תרגיל אחד ועושים אותו כל יום. בערב, אחרי שהיום עבר, עונים על השאלה של אותו יום, אפילו במשפט אחד. יום שפוספס לא משלימים, פשוט ממשיכים.</p>
+      <p>את התשובות אפשר לכתוב כאן באתר, או במחברת שמיועדת רק לזה. מה שכותבים כאן נשמר בטלפון או במחשב הזה בלבד, ולא נשלח לשום מקום. למפגש מביאים את המחברת, או את הטלפון.</p>
+    </div>
+  </section>
+
+  <!-- יסודות -->
+  <section class="view" id="v-yesodot">
+    <h2 class="page">ארבעת היסודות</h2>
+    <p class="lead">אש, רוח, מים ועפר הם לא רק חומרים בטבע. הם ארבעה כוחות שאפשר לזהות בכל אחד ואחת מאיתנו, וכל אדם הוא שילוב ייחודי שלהם. כשיסוד אחד יוצא מאיזון, מרגישים את זה ברגש, בהתנהגות ולפעמים גם בגוף. בכל שבוע עובדים על יסוד אחד.</p>
+    <div class="weeks" id="elWeeks"></div>
+  </section>
+
+  <!-- מידות -->
+  <section class="view" id="v-middot">
+    <h2 class="page">שבע המידות</h2>
+    <p class="lead">לפני שמתחילים, כדאי להכיר את המפה. ההסברים כאן קצרים, ואפשר לחזור אליהם בכל שלב.</p>
+    <div id="sefIntro"></div>
+    <h3 class="sec">השבועות</h3>
+    <div class="weeks" id="sefWeeks"></div>
+  </section>
+
+  <!-- שבוע -->
+  <section class="view" id="v-week"></section>
+
+  <!-- יומן -->
+  <section class="view" id="v-journal">
+    <h2 class="page">היומן שלי</h2>
+    <p class="lead">כאן מרוכז כל מה שכתבתם, שבוע אחרי שבוע, כדי שיהיה קל לחזור אליו במפגש.</p>
+    <div id="journalBox"></div>
+  </section>
+</main>
+
+<footer>יובל שניר · <a href="https://yuvalsnir.co.il" target="_blank" rel="noopener">yuvalsnir.co.il</a></footer>
+
+<div class="floaters no-print">
+  <button id="fBack">חזרה</button>
+  <button id="fTop">למעלה</button>
+</div>
+<div id="toast" role="status"></div>
+<div id="pop" role="dialog" aria-modal="true" aria-labelledby="popT"><div class="box"><h4 id="popT"></h4><div id="popB"></div>
+  <div class="btnrow"><button class="btn small" id="popX">סגירה</button></div></div></div>
+
+<script>
+/* ===== תוכן ===== */
+const CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+
+const ELEMENTS = [
+  {id:'esh',  name:'אש',  what:'הרצון, החום והתנועה', cls:'fire'},
+  {id:'ruach',name:'רוח', what:'הרגש והדיבור', cls:'air'},
+  {id:'mayim',name:'מים', what:'המחשבה, הזרימה והרגש העמוק', cls:'water'},
+  {id:'afar', name:'עפר', what:'המעשה, היציבות והקרקע', cls:'earth'}
+];
+
+const SEFIROT = [
+  {id:'chesed',  name:'חסד',   what:'נתינה ואהבה'},
+  {id:'gevura',  name:'גבורה', what:'גבול ואיפוק'},
+  {id:'tiferet', name:'תפארת', what:'איזון ורחמים'},
+  {id:'netzach', name:'נצח',   what:'התמדה וביטחון'},
+  {id:'hod',     name:'הוד',   what:'הודיה והכרת האמת'},
+  {id:'yesod',   name:'יסוד',  what:'חיבור ומימוש'},
+  {id:'malchut', name:'מלכות', what:'נוכחות ומעשה'}
+];
+
+const LINES = {
+  right:{t:'הקו הימני, קו החסד', h:'<p>זה הקו של ה״כן״: אהבה, רצון לתת, פתיחות לעולם ואמונה בטוב. הוא קשור ליסוד המים, שיורדים מלמעלה למטה, מזינים ומחיים.</p><p>אנשים שהקו הזה חזק אצלם נוטים להיות נדיבים, חמים ואופטימיים. הם כמו השמש, שזורחת על כולם, ולא תמיד בודקים אם המקבל ראוי.</p>'},
+  left:{t:'הקו השמאלי, קו הדין', h:'<p>זה הקו של ה״לא״: בחירה, ריכוז והצבת גבולות נחוצים. הוא קשור ליסוד האש, שתמיד עולה למעלה.</p><p>אנשים שהקו הזה חזק אצלם נוטים להיות מדויקים, מסודרים ומעמיקים. הם כמו הירח, שמסנן את אור השמש ומכוון אותו, ומעדיפים איכות על פני כמות.</p>'},
+  mid:{t:'הקו האמצעי, קו הרחמים', h:'<p>זה הקו של ה״איך״: איך לוקחים את האהבה של הימין ואת הגבול של השמאל, ויוצרים מהם פעולה מאוזנת.</p><p>מים קרים ולחים, ואש חמה ויבשה, והם הפכים גמורים. הרוח לוקחת את הלחות מהמים ואת החום מהאש, ונעשית חמה ולחה. כך גם הקו האמצעי: הוא לא מבטל אף צד, אלא מחבר ביניהם.</p>'},
+  base:{t:'המלכות, הבסיס', h:'<p>המלכות מקבלת מכל הקווים ומביאה את כולם לידי מימוש, אל המעשה. היא קשורה ליסוד העפר, האדמה שמחזיקה הכול.</p>'}
+};
+
+const BODYFIG = (()=>{
+  const P={keter:[130,16,'כתר','air'],chochma:[150,46,'חכמה','water'],bina:[110,46,'בינה','fire'],daat:[130,84,'דעת','air'],
+    chesed:[192,120,'חסד','water'],gevura:[68,120,'גבורה','fire'],tiferet:[130,168,'תפארת','air'],
+    netzach:[160,236,'נצח','water'],hod:[100,236,'הוד','fire'],yesod:[130,266,'יסוד','air'],malchut:[130,452,'מלכות','earth']};
+  const E=[['keter','chochma'],['keter','bina'],['chochma','bina'],['chochma','chesed'],['bina','gevura'],['chesed','gevura'],['keter','daat'],['daat','tiferet'],
+    ['chesed','tiferet'],['gevura','tiferet'],['chesed','netzach'],['gevura','hod'],['tiferet','netzach'],['tiferet','hod'],['netzach','hod'],
+    ['netzach','yesod'],['hod','yesod'],['tiferet','yesod'],['yesod','malchut']];
+  const lines=E.map(([a,b])=>`<line x1="${P[a][0]}" y1="${P[a][1]}" x2="${P[b][0]}" y2="${P[b][1]}"/>`).join('');
+  const dots=Object.values(P).map(([x,y,n,c])=>{
+    const side = x>140 ? 'R' : (x<120 ? 'L' : 'M');
+    const tx = side==='R' ? x+13 : x-13, anc = side==='R' ? 'start' : 'end';
+    return `<circle cx="${x}" cy="${y}" r="9" fill="var(--${c})" stroke="#fff" stroke-width="2"/><text x="${tx}" y="${y+4}" text-anchor="${anc}">${n}</text>`;
+  }).join('');
+  return `<figure class="body-fig"><svg viewBox="-20 0 300 470" role="img" aria-label="הספירות בגוף האדם">
+    <g class="sil"><circle cx="130" cy="54" r="28"/><rect x="118" y="78" width="24" height="24" rx="8"/>
+      <path d="M80,108 Q130,96 180,108 L174,252 Q130,272 86,252 Z"/>
+      <rect x="182" y="106" width="24" height="150" rx="12" transform="rotate(-9 194 106)"/>
+      <rect x="54" y="106" width="24" height="150" rx="12" transform="rotate(9 66 106)"/>
+      <rect x="90" y="246" width="36" height="196" rx="18"/><rect x="134" y="246" width="36" height="196" rx="18"/></g>
+    <g class="tree">${lines}</g><g class="sef">${dots}</g></svg>
+    <figcaption>הגוף מוצג מאחור, ולכן הצד הימני של הציור הוא הצד הימני של הגוף. הצבע של כל ספירה הוא צבע היסוד של הקו שלה.</figcaption></figure>`;
+})();
+
+
+const SEF_INTRO = [
+  {t:'מה זו ספירה', s:'עשרה כוחות, מפה של העולם הפנימי', html:`
+    <p>בחכמת הקבלה אומרים שהאדם הוא עולם קטן, והעולם הוא אדם גדול. כל הכוחות שפועלים בעולם פועלים גם בתוכנו, והמקובלים תיארו עשרה כוחות כאלה, שנקראים ספירות. כל רצון, מחשבה ורגש שיש לנו נובעים מאחד הכוחות האלה, או מהמפגש ביניהם.</p>
+    <p>על פי הקבלה, הבורא מוריד את האור שלו מלמעלה למטה, דרך שכבות שכל אחת מהן מסננת אותו ומצמצמת אותו. בכל שלב האור נעשה דחוס יותר, עד שהוא מגיע לעולם הזה, העולם החומרי שבו אנחנו חיים. הספירות הן הדרך שבה האור הזה עובר, ואותם עשרה כוחות פועלים גם בכל אחד ואחת מאיתנו.</p>
+    <p>למילה ספירה יש כמה משמעויות, וכל אחת מגלה משהו. היא קשורה לאבן הספיר, שקולטת אור אחד ומפזרת אותו לגוונים רבים, כמו פריזמה. היא קשורה לספר, במובן של גבול, המקום שבו האינסוף פוגש משהו מוגדר שאפשר להכיל. היא קשורה למספר, כי יש בה סדר וחוקיות ולא משהו אקראי. והיא קשורה לסיפור, כי כל מעשה שלנו מספר על אחת הספירות. כל מעשה טוב מספר על החסד, וכל רגע של איזון מספר על התפארת.</p>
+    <p>המטרה היא לא ללמוד את המפה הזאת כמו תיאוריה, אלא להכיר איך הכוחות האלה פועלים בנפש שלנו, וללמוד לעבוד איתם.</p>`},
+  {t:'מה זו מידה', s:'ושתי דרכים לאזן', html:`
+    <p>שבע הספירות מחסד ועד מלכות נקראות גם מידות. אלה הכוחות שבהם אנחנו פועלים בעולם: הדרך שבה אנחנו אוהבים, שמים גבולות, מאזנים, מתמידים, מודים, מממשים ונוכחים.</p>
+    <p>המילה מידה באה מלשון מידה וגבול. אין מידה טובה או רעה בפני עצמה. גם הכעס, הגאווה והתאווה הם כוחות חיים שעוד לא מצאו את הכיוון שלהם. העבודה היא לא לבטל אף כוח, אלא למצוא לכל אחד את המקום והשיעור הנכונים לו.</p>
+    <p>מידות בריאות כלולות זו בזו. הבעיה מתחילה כשמידה אחת פועלת לבד: אהבה בלי גבול, או גבול בלי אהבה.</p>
+    <p>לכל מידה יש גם מקום בגוף. חסד בכתף, בזרוע וביד הימניות, וגבורה באותם מקומות בצד שמאל. תפארת במרכז הגוף, נצח בכליה וברגל הימניות, והוד בכליה וברגל השמאליות. ספירת היסוד באזור האגן, ומלכות בפה ובכפות הרגליים.</p>
+    <p>אפשר לאזן מידה שיצאה מאיזון בשתי דרכים. הדרך הראשונה היא להבחין שכוח מסוים עבר את הגבול שלו, ולהחזיר אותו למקומו. למשל, מי שנותן עד שלא נשאר לו כוח, לומד לתת רק את מה שהוא באמת יכול. הדרך השנייה היא להוסיף. במקום להילחם בתכונה שמפריעה, מכניסים לצידה את המידה שמולה: לאהבה מוסיפים גבול, ולגבול מוסיפים אהבה. רוב התרגילים כאן הולכים בדרך הזאת.</p>`},
+  {t:'שלוש שלשות ועוד אחת', s:'שכל, רגש, מעשה, ומלכות', html:`<div class="split"><div class="split-txt">
+    <p>הספירות פועלות בשלשות, ובכל שלשה יש צד שמתרחב, צד שמצמצם, ואמצע שמחבר ביניהם.</p>
+    <p>חכמה, בינה ודעת הן הכוחות השכליים. כאן נולד רעיון, מתפתח והופך להבנה שהיא שלנו. אלה הכוחות שמייחדים את האדם.</p>
+    <p>חסד, גבורה ותפארת הם הכוחות הרגשיים. כאן ההבנה פוגשת את הלב: מה אני אוהב, ממה אני חושש, ואיך מחזיקים את שניהם יחד. את הכוחות האלה אנחנו חולקים גם עם בעלי החיים.</p>
+    <p>נצח, הוד ויסוד הם הכוחות המעשיים. כאן הרגש הופך להחלטה, להתמדה ולתשוקה לצאת אל העולם. אלה כוחות שפועלים בנו כמעט מעצמם, כמו מה שקורה בבטן כשאנחנו לחוצים, ולכן העבודה עליהם היא בעיקר דרך הרגלים.</p>
+    <p>ובסוף באה מלכות, הרגע שבו כל מה שהתרחש בפנים נוגע במציאות, במעשה ובדיבור.</p></div>${BODYFIG}</div>`},
+  {t:'שלושה קווים', s:'ימין, שמאל ואמצע', html:`
+    <p>הספירות מסודרות גם בשלושה קווים, וכל קו קשור לאחד היסודות. לחיצה על סימן הקריאה ליד כל קו פותחת הסבר קצר.</p>
+    <div class="tbl-wrap"><table class="map">
+      <tr><th>קו</th><th>ספירות</th><th>יסוד</th></tr>
+      <tr><td>ימין (נתינה, השפעה) <button class="bang" data-line="right" aria-label="עוד על הקו הימני">!</button></td><td>חכמה, חסד, נצח</td><td><span class="tag t-water"><span class="dot"></span>מים</span></td></tr>
+      <tr><td>שמאל (צמצום, גבול) <button class="bang" data-line="left" aria-label="עוד על הקו השמאלי">!</button></td><td>בינה, גבורה, הוד</td><td><span class="tag t-fire"><span class="dot"></span>אש</span></td></tr>
+      <tr><td>אמצע (חיבור, הרמוניה) <button class="bang" data-line="mid" aria-label="עוד על הקו האמצעי">!</button></td><td>דעת, תפארת, יסוד</td><td><span class="tag t-air"><span class="dot"></span>רוח</span></td></tr>
+      <tr><td>הבסיס (שליטה, מנהיגות) <button class="bang" data-line="base" aria-label="עוד על המלכות">!</button></td><td>מלכות</td><td><span class="tag t-earth"><span class="dot"></span>עפר</span></td></tr>
+    </table></div>`},
+  {t:'דוגמה: ללמוד לנגן יצירה', s:'כל הספירות בתהליך אחד', html:`
+    <p>אדם חוזר הביתה אחרי יום קשה, ופתאום עולה בו יצירה שהכיר לפני שנים. הוא מרגיש שהוא חייב ללמוד לנגן אותה, בלי לדעת להסביר למה.</p>
+    <p><b>חכמה.</b> הוא מקשיב ליצירה ותופס אותה בבת אחת, עוד לפני שהוא מבין איך היא בנויה. זה ברק של הבנה שמגיע כמו מתנה, בלי מאמץ.</p>
+    <p><b>בינה.</b> עכשיו הוא מתחיל לחקור. הוא בודק אילו קטעים קלים ואילו קשים, מה הטכניקה דורשת, כמה זמן זה ייקח ואיפה הוא צפוי להיתקע. הבינה לוקחת את הניצוץ ובונה ממנו תוכנית.</p>
+    <p><b>דעת.</b> כאן הוא מגיע למסקנה פנימית: זו היצירה שתהפוך אותו למוזיקאי שהוא רוצה להיות. זו כבר לא מחשבה על לימוד, אלא הוא עצמו, אדם שלומד את היצירה הזאת. הדעת מחברת בין הראש ללב.</p>
+    <p><b>חסד.</b> ההחלטה יורדת אל הרגש, והדבר הראשון שמתעורר הוא אהבה. הוא נהנה מעצם המגע בקלידים ומתרגש מכל צליל שמצליח. הוא רוצה ללמוד הכול ולנגן בכל רגע פנוי.</p>
+    <p><b>גבורה.</b> ובאותו רגע מתעורר גם הפחד. אולי זה קשה מדי, אולי אני לא מוכשר מספיק, אולי כדאי להתחיל במשהו פשוט. הגבורה מרחיקה, אבל היא גם שומרת. היא זו שאומרת לו להתמקד בקטע אחד ולא בכל היצירה בבת אחת.</p>
+    <p><b>תפארת.</b> כאן נמצא האיזון. הוא יתרגל בקטעים, ייתן לכל קטע את הזמן שלו, ויכבד גם את האהבה וגם את הפחד. התפארת יוצרת דרך שהיא גם נעימה וגם אפשרית, ופתאום גם הדרך עצמה הופכת ליפה, לא רק התוצאה.</p>
+    <p><b>נצח.</b> עכשיו צריך להתמיד. הוא קובע שעות קבועות לתרגול, ומתיישב ליד הפסנתר גם בימים שאין לו כוח. זו כבר לא התלהבות, אלא החלטה יציבה.</p>
+    <p><b>הוד.</b> יש שבועות שבהם נדמה שהוא לא מתקדם, ואפילו נסוג. הנצח היה אומר לו לדחוף חזק יותר. ההוד יודע לקבל שהתהליך איטי, להודות גם על הקושי ולחכות בסבלנות לפריצה.</p>
+    <p><b>יסוד.</b> כל מה שהצטבר מתרכז לתשוקה. הוא חושב על היצירה בכל מקום ומנגן אותה בראש. התרגול הופך ממשהו שהוא עושה למשהו שהוא זקוק לו. ויש כאן גם צורך להתחבר: למורים, למוזיקאים אחרים, ולחלוק את מה שלמד.</p>
+    <p><b>מלכות.</b> והוא מנגן. לפני קהל, או לבד בבית, אבל ברמה שממלאת אותו באמת. הנגינה מבטאת את היצירה וגם אותו, ואת כל הדרך שעבר.</p>
+    <p>וזה לא נגמר. מהמקום הזה נולד רצון חדש, ליצירה מורכבת יותר או ללמד אחרים, והמסע מתחיל מחדש בעומק גדול יותר.</p>`},
+  {t:'שבע כפול שבע', s:'ספירת העומר והיום החמישים', html:`
+    <p>אף מידה לא עומדת לבד. בכל מידה כלולות כל שבע המידות. בתוך החסד יש גבורה, כלומר נתינה שיודעת לעצור, ויש תפארת, נתינה מאוזנת, וכן הלאה. כך נוצרים ארבעים ותשעה גוונים, שבע כפול שבע.</p>
+    <p>זה בדיוק מה שעושים בספירת העומר, בין פסח לשבועות. במשך ארבעים ותשעה ימים עובדים כל יום על גוון אחר: ביום הראשון חסד שבחסד, ביום השני גבורה שבחסד, וכך עד מלכות שבמלכות. כאן עובדים באותו מבנה, שבוע לכל מידה, ובכל יום מסתכלים עליה מזווית אחרת.</p>
+    <p>ביום החמישים, בחג השבועות, קורה משהו מיוחד. אחרי שעברנו את כל המידות, עד מלכות שבמלכות, המקום הכי ארצי שבנו, לא ממשיכים עוד שלב באותה דרך. עולים מהמלכות, הספירה הכי תחתונה, אל הבינה, אחת הספירות העליונות. זו קפיצה מהעבודה על הכלים, כלומר על המידות שלנו, אל היכולת לקבל ולהכיל הבנה עמוקה ויציבה. רק מי שעבר את כל הדרך, כולל המקומות הכי נמוכים, יכול להכיל את האור הכי גבוה.</p>
+    <p>ואת המבנה הזה אפשר להפעיל בכל זמן בשנה, לא רק בין פסח לשבועות.</p>`}
+];
+
+/* שבוע מלא. כל שבוע חדש נבנה באותה תבנית */
+const WEEKS = {
+  chesed:{
+    kind:'sefira', num:1, name:'חסד', plain:'נתינה ואהבה',
+    tags:[['t-water','מים',true],['t-body','יד ימין']],
+    sections:[
+      {t:'מהו חסד', html:`
+        <p>חסד הוא הכוח הראשון של הלב, הרגע שבו מה שהבנו הופך לאהבה שרוצה לצאת החוצה. הוא הרצון לתת, לקרב, להזין ולפרגן, בלי חשבון.</p>
+        <p>לחסד יש תכונה מיוחדת: הוא לא נגמר כשנותנים ממנו. כסף שמחלקים מתמעט, אבל אהבה שנותנים גדלה. במסורת אומרים <span class="quote">״עוֹלָם חֶסֶד יִבָּנֶה״</span> <span class="src">(תהלים פט, ג)</span>. העולם לא רק נברא בחסד, הוא ממשיך להיבנות מכל מעשה טוב שאנחנו עושים, כל יום מחדש.</p>
+        <p>הדמות שמגלמת את החסד היא אברהם, שהאוהל שלו היה פתוח לארבעת הכיוונים, ושגם כשהיה חולה ישב בפתח האוהל וחיכה לאורחים. החסד יושב ביד ימין, היד שמושיטים לעזרה.</p>`},
+      {t:'החסד והמים', html:`
+        <p>החסד קשור ליסוד המים. בפנים של החסד יש אהבה, ולאהוב מישהו פירושו לרצות להתערבב איתו ולהיות איתו אחד. זה בדיוק מה שהמים עושים: הם מערבבים ומחברים.</p>
+        <p>כמו מים, החסד זורם, מחיה את כל מה שהוא נוגע בו, ויורד דווקא למקומות שצריכים אותו יותר מכול. וכמו מים, החסד האמיתי עובד בשקט, בלי רעש ובלי צורך שיראו אותו.</p>`},
+      {t:'כשהחסד מאוזן', html:`
+        <p>אדם עם חסד מאוזן יודע לתת וגם לעצור. הוא יודע מתי לחבק ומתי לתת מרחב, ומבין שלפעמים האהבה הגדולה ביותר היא דווקא לומר לא. הוא מקשיב באמת, נותן לאחר להיות מי שהוא, ורואה את הטוב גם במי שקשה לאהוב.</p>`},
+      {t:'כשיש יותר מדי חסד', html:`
+        <p>כמו מים שעולים על גדותיהם, גם חסד בלי גבול מציף. נותנים עד שמתרוקנים, ולא מצליחים לסרב, אפילו לילדים. מי שקשה לו מאוד לסרב לילדים שלו, כנראה החסד הוא הכוח שמוביל אצלו.</p>
+        <p>לפעמים הנתינה כבר לא באה מאהבה, אלא מפחד שלא יאהבו אותנו, או מהצורך להרגיש טובים ולקבל הכרה. ולפעמים, בלי לשים לב, היא נעשית דרך לשלוט. חסד כזה יוצר תלות במקום צמיחה: הורה שמפנק עד שהילד לא לומד להתמודד, או חבר שעוזר בדרך שמחזקת את הבעיה. ובסוף, מי שנתן את כל מה שיש לו כבר לא יכול לעזור לאף אחד, כי הוא עצמו זקוק לעזרה.</p>`},
+      {t:'כשחסר חסד', html:`
+        <p>כשחסר חסד, קשה לתת, לפרגן ולהחמיא. כל בקשה מרגישה כמו נטל, ונתינה נחווית כאיום. יש קרירות ומרחק, ולעיתים קרובות מתחת לזה יושבת תחושה שאיש לא אוהב אותי ושאני לבד.</p>`},
+      {t:'כשהמים מתפזרים: תאווה', html:`
+        <p>כשהמים מתוקנים, הם נותנים עונג ומתיקות, את טעם החיים. כשהם נופלים, העונג הופך לתאווה. האהבה שהייתה אמורה לצאת החוצה כחיבור ונתינה הופכת לרצון לקחת, ומתפזרת לכל כיוון.</p>
+        <p>מחפשים עוד ועוד תענוג, באוכל, בקניות, במסכים או בכל דבר שנותן סיפוק מהיר, ותמיד נשאר רעב לעוד. זה קורה כי זה ניסיון למלא חלל פנימי בדברים מבחוץ. התיקון הוא לא להילחם בתאווה, אלא להחזיר למים את הכיוון שלהם, החוצה, אל הנתינה.</p>`},
+      {t:'בגוף', html:`
+        <p>החסד שייך לצד הימני של הגוף, ובמיוחד לכתף, לזרוע וליד הימניות, היד שמושיטים כדי לתת. כשהחסד יוצא מאיזון, לפעמים אפשר לפגוש את זה גם שם, בגוף.</p>`}
+    ],
+    practices:[
+      {t:'מעשה טוב בשקט', d:'בכל יום עשו דבר טוב אחד בלי לצפות לשום דבר בחזרה, ואם אפשר, בלי שאף אחד ידע.'},
+      {t:'מחמאה אמיתית', d:'בכל יום אמרו מחמאה אמיתית אחת לאדם קרוב, כזאת שאתם באמת מתכוונים אליה.'},
+      {t:'בידיים', d:'הכינו השבוע משהו בידיים בשביל מישהו אחר, ארוחה, עוגה או מתנה קטנה. ובערב עסו בעדינות את כף היד הימנית.'}
+    ],
+    days:[
+      {l:'נתינה שלמה', lens:'חסד שבחסד', ex:'החסד בצורה הטהורה שלו. נתינה שלמה, שלא מחשבת ולא מחכה לתמורה, כמו מים שזורמים לכל מקום שצריך אותם.', q:'האם שמתי לב היום למה שמישהו קרוב צריך, עוד לפני שביקש? ונתתי לו בלי לצפות לדבר בחזרה?'},
+      {l:'נתינה עם גבול', lens:'גבורה שבחסד', ex:'הגבול שבתוך הנתינה. אהבה בריאה יודעת גם לעצור, כמו אם שנותנת לילד ושמה לו גם גבולות, כי נתינה בלי גבול מפנקת ומחלישה.', q:'האם הייתה היום נתינה שהיה נכון לעצור בה, כמו הורה ששם גבול לילד דווקא כי הוא אוהב אותו? ואם אמרתי לא, האם זה נאמר מתוך אהבה?'},
+      {l:'נתינה מאוזנת', lens:'תפארת שבחסד', ex:'היופי והאיזון שבנתינה. נתינה שבאה מהקשבה למה שהאחר באמת צריך, ולא ממה שנוח לי לתת.', q:'האם הקשבתי לפני שנתתי? נתתי את מה שהאחר באמת צריך, או את מה שאני רציתי לתת?'},
+      {l:'נתינה שממשיכה', lens:'נצח שבחסד', ex:'ההתמדה שבנתינה. נתינה שלא נעצרת כשההתלהבות נגמרת, ושיודעת, כמו מנצח על תזמורת, מתי להתקרב ומתי לתת מרחב.', q:'האם יש נתינה שאני ממשיך או ממשיכה בה גם כשאין כוח? והאם ידעתי היום מתי להתקרב ומתי לתת מרחב?'},
+      {l:'נתינה בהודיה', lens:'הוד שבחסד', ex:'הענווה וההודיה שבנתינה. לתת בלב שלם, בלי צורך בהכרה, ולשים לב גם לטוב שאחרים נותנים לנו.', q:'האם נתתי היום בלב שלם ולא מתוך חובה, ובלי צורך שיראו אותי? והאם שמתי לב לטוב שאחרים עשו בשבילי, ואמרתי תודה?'},
+      {l:'נתינה שמחברת', lens:'יסוד שבחסד', ex:'החיבור שבנתינה. כמו ברית בין שני אנשים, נתינה שלא תלויה בחשק של הרגע, ושלא שואלת מה ייצא לי ממנה.', q:'האם האהבה שבי יצאה היום החוצה, במילה, במגע או בקשר, גם ברגע שלא היה לי חשק? ואיפה תפסתי את עצמי מחשב או מחשבת מה ייצא לי מהנתינה?'},
+      {l:'נתינה במעשה', lens:'מלכות שבחסד', ex:'הנתינה כשהיא יוצאת לעולם. האהבה הופכת למעשה ממשי. ומלכות היא גם הכלי שמקבל, ולכן יש כאן גם את היכולת לקבל.', q:'מה עשיתי היום, בפועל, שהאהבה שלי הייתה בו? והאם הרשיתי לעצמי גם לקבל?'}
+    ],
+    endQ:'את מי אני אוהב או אוהבת, ואיך זה נראה במעשים?'
+  }
+};
+
+/* ===== שמירה במכשיר ===== */
+const KEY = 'middot-yesodot-v1';
+let S = {current:null, weeks:{}};
+try{ const raw = localStorage.getItem(KEY); if(raw) S = Object.assign(S, JSON.parse(raw)); }catch(e){}
+function save(msg){ try{ localStorage.setItem(KEY, JSON.stringify(S)); if(msg) toast(msg); }catch(e){ toast('לא הצלחנו לשמור במכשיר הזה'); } }
+function W(id){ if(!S.weeks[id]) S.weeks[id] = {start:null, practice:null, days:{}, end:''}; return S.weeks[id]; }
+
+/* ===== כלים ===== */
+const $ = s => document.querySelector(s);
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('show'),2000); }
+const esc = s => (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function dayIndex(start){
+  if(!start) return 0;
+  const a=new Date(start+'T00:00:00'), b=new Date(todayStr()+'T00:00:00');
+  return Math.max(0, Math.min(6, Math.round((b-a)/86400000)));
+}
+function weekMeta(id){ return SEFIROT.find(s=>s.id===id) || ELEMENTS.find(e=>e.id===id); }
+const DAYNAMES = ['יום ראשון','יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','יום שביעי'];
+
+/* ===== ניווט ===== */
+let navDepth = 0, curRoute = 'home';
+window._restoring = false;
+function snapshot(){
+  return { open:[...document.querySelectorAll('.view.active details[open]')].map(d=>d.dataset.k).filter(Boolean), y:window.scrollY };
+}
+function go(route, push=true, restore=null){
+  if(push){ history.replaceState(Object.assign({route:curRoute}, snapshot()), '', '#'+curRoute); }
+  const [v, arg] = route.split(':');
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  const tabFor = v==='week' ? (WEEKS[arg] && WEEKS[arg].kind==='element' ? 'yesodot' : 'middot') : v;
+  document.querySelectorAll('.tabnav button').forEach(b=>b.classList.toggle('active', b.dataset.go===tabFor));
+  let view;
+  if(v==='week' && WEEKS[arg]){ renderWeek(arg); view=$('#v-week'); }
+  else if(v==='journal'){ renderJournal(); view=$('#v-journal'); }
+  else if(v==='yesodot'||v==='middot'){ renderLists(); view=$('#v-'+v); }
+  else { renderHome(); view=$('#v-home'); }
+  view.classList.add('active');
+  curRoute = route;
+  if(restore){
+    /* חזרה: משחזרים את הכרטיסים שהיו פתוחים ואת מקום הגלילה */
+    window._restoring = true;
+    view.querySelectorAll('details').forEach(d=>{ d.open = restore.open.includes(d.dataset.k); });
+    setTimeout(()=>{ window._restoring=false; window.scrollTo({top:restore.y||0}); }, 30);
+  } else {
+    /* מעבר חדש: כל הכרטיסים מקופלים, חוץ מהיום הנוכחי בשבוע */
+    if(v!=='week'){ window._restoring=true; view.querySelectorAll('details[open]').forEach(d=>d.open=false); setTimeout(()=>window._restoring=false,0); }
+    window.scrollTo({top:0});
+  }
+  if(push){ history.pushState({route}, '', '#'+route); navDepth++; }
+  updateFloaters();
+}
+window.addEventListener('popstate', e=>{
+  navDepth=Math.max(0,navDepth-1);
+  const st=e.state||{}; go(st.route||location.hash.slice(1)||'home', false, st.open?st:null);
+});
+document.addEventListener('click', e=>{ const b=e.target.closest('[data-go]'); if(b){ go(b.dataset.go); } });
+
+/* ===== דף הבית ===== */
+function renderHome(){
+  const box=$('#mineBox');
+  const cur=S.current && WEEKS[S.current] ? S.current : null;
+  if(!cur){ box.innerHTML=''; return; }
+  const w=WEEKS[cur], st=W(cur), i=dayIndex(st.start);
+  box.innerHTML = `<div class="card mine"><div class="row">
+      <div><h3>השבוע שלי: ${w.name}</h3>
+      <div class="when">${DAYNAMES[i]} בשבוע. השאלה של הערב: ${esc(w.days[i].l)}</div></div>
+      <button class="btn small" data-go="week:${cur}">להמשך השבוע</button></div></div>`;
+}
+
+/* ===== רשימות ===== */
+function weekCard(m, kind, idx){
+  const ready = !!WEEKS[m.id];
+  const isCur = S.current===m.id;
+  const color = kind==='element' ? `background:var(--${m.cls}-bg);color:var(--${m.cls});` : `background:var(--sefirah-bg);color:var(--sefirah);`;
+  const right = isCur ? '<span class="tag t-practice cur-tag">השבוע שלי</span>' : (ready ? '' : '<span class="soon-tag">בקרוב</span>');
+  return `<button class="week ${ready?'':'soon'}" ${ready?`data-go="week:${m.id}"`:'disabled aria-disabled="true"'}>
+    <span class="num" style="${color}">${idx+1}</span>
+    <span><h4>${m.name}</h4><span class="what">${m.what}</span></span>${right}</button>`;
+}
+function renderLists(){
+  $('#elWeeks').innerHTML = ELEMENTS.map((m,i)=>weekCard(m,'element',i)).join('');
+  $('#sefWeeks').innerHTML = SEFIROT.map((m,i)=>weekCard(m,'sefira',i)).join('');
+  if(!$('#sefIntro').innerHTML){
+    $('#sefIntro').innerHTML = SEF_INTRO.map((x,n)=>`<details class="acc" data-k="in${n}"><summary><h4>${x.t}</h4><span class="s">${x.s}</span>${CHEV}</summary><div class="body prose">${x.html}</div></details>`).join('');
+  }
+}
+
+/* ===== שבוע ===== */
+function renderWeek(id){
+  const w=WEEKS[id], st=W(id);
+  const started=!!st.start, i=dayIndex(st.start);
+  const tagHtml = w.tags.map(t=>`<span class="tag ${t[0]}">${t[2]?'<span class="dot"></span>':''}${t[1]}</span>`).join('');
+
+  const startBox = started
+    ? `<div class="card start-box no-print"><div><div class="t">התחלתם את השבוע הזה</div><div class="muted" style="font-size:.9rem">היום ${DAYNAMES[i]}. השאלה של היום פתוחה למטה.</div></div>
+        <button class="link" id="restart">להתחיל מחדש מהיום</button></div>`
+    : `<div class="card start-box no-print"><div><div class="t">מתחילים את השבוע?</div><div class="muted" style="font-size:.9rem">מהיום ייספרו שבעה ימים, והשבוע יופיע בדף הבית.</div></div>
+        <button class="btn" id="startWeek">להתחיל היום</button></div>`;
+
+  const secs = w.sections.map((s,n)=>`<details class="acc" data-k="se${n}"><summary><h4>${s.t}</h4>${CHEV}</summary><div class="body prose">${s.html}</div></details>`).join('');
+
+  const prac = w.practices.map((p,k)=>`<button class="practice ${st.practice===k?'on':''}" data-prac="${k}" aria-pressed="${st.practice===k}">
+      <span class="radio"></span><span><b>${p.t}</b>${p.d}</span></button>`).join('');
+
+  const strip = w.days.map((d,k)=>{
+    const done = st.days[k] && st.days[k].done;
+    return `<button class="dchip ${done?'done':''} ${started&&k===i?'today':''}" data-day="${k}" aria-label="${DAYNAMES[k]}"><span class="c">${'אבגדהוז'[k]}׳</span></button>`;
+  }).join('');
+
+  const days = w.days.map((d,k)=>{
+    const dd = st.days[k] || {};
+    const isToday = started && k===i;
+    return `<details class="acc day" id="day-${k}" data-k="d${k}" ${isToday||(!started&&k===0)?'open':''}>
+      <summary><h4>${DAYNAMES[k]}, ${d.l}</h4>${isToday?'<span class="today-badge">היום</span>':''}${CHEV}</summary>
+      <div class="body">
+        <div class="lens">${d.lens}</div>
+        <div class="ex">${d.ex||''}</div>
+        <div class="q">${d.q}</div>
+        <div class="eve">עונים בערב, אחרי שהיום עבר.</div>
+        <textarea data-ans="${k}" placeholder="מה עלה היום...">${esc(dd.a)}</textarea>
+        <div class="dprac"><span class="lbl">התרגיל של היום:</span>${w.practices.map((p,n)=>`<button data-dp="${k}" data-pi="${n}" class="${(dd.p!=null?dd.p:st.practice)===n?'on':''}">${p.t}</button>`).join('')}</div>
+        <label class="check"><input type="checkbox" data-done="${k}" ${dd.done?'checked':''}> עשיתי היום את התרגיל</label>
+      </div></details>`;
+  }).join('');
+
+  $('#v-week').innerHTML = `
+    <div class="week-head"><span class="num">${w.num}</span><div><h2>שבוע של ${w.name}</h2><div class="plain">${w.plain}</div></div></div>
+    <div class="tags">${tagHtml}</div>
+    ${startBox}
+    <h3 class="sec">ההסבר</h3>
+    ${secs}
+    <h3 class="sec">התרגול לשבוע</h3>
+    <p class="muted" style="margin-top:-4px">בחרו תרגיל אחד ועשו אותו כל יום. אפשר להחליף תרגיל ביום מסוים, בכרטיס של אותו יום, אבל החזרה על אותו תרגיל היא מה שיוצר את השינוי.</p>
+    ${prac}
+    <h3 class="sec">שאלה לכל ערב</h3>
+    <p class="muted" style="margin-top:-4px">התרגיל נשאר אותו תרגיל כל השבוע. השאלה מתחלפת כל ערב. בכל מידה כלולות כל שבע המידות, ולכן בכל יום מסתכלים על ה${w.name} דרך מידה אחרת.</p>
+    <div class="days-strip no-print">${strip}</div>
+    ${days}
+    <div class="card end-q">
+      <h4>שאלה לסיום השבוע</h4>
+      <div class="q" style="line-height:1.75;margin-bottom:10px">${w.endQ}</div>
+      <div class="eve">כותבים בערב של היום השביעי, ומביאים למפגש הבא.</div>
+      <textarea data-end="1" placeholder="התשובה שלי...">${esc(st.end)}</textarea>
+    </div>
+    <div class="saved-note no-print">הכול נשמר אוטומטית בטלפון או במחשב הזה. אם מנקים את נתוני הדפדפן או עוברים למכשיר אחר, התשובות לא עוברות איתכם.</div>`;
+
+  const v=$('#v-week');
+  const sb=v.querySelector('#startWeek'); if(sb) sb.onclick=()=>{ st.start=todayStr(); S.current=id; save('השבוע התחיל'); renderWeek(id); };
+  const rs=v.querySelector('#restart'); if(rs) rs.onclick=()=>{ if(confirm('להתחיל את השבוע מחדש מהיום? התשובות שכתבתם יישארו.')){ st.start=todayStr(); S.current=id; save('השבוע התחיל מחדש'); renderWeek(id);} };
+  v.querySelectorAll('[data-prac]').forEach(b=>b.onclick=()=>{ st.practice=+b.dataset.prac; save('נשמר'); v.querySelectorAll('[data-prac]').forEach(x=>{const on=+x.dataset.prac===st.practice; x.classList.toggle('on',on); x.setAttribute('aria-pressed',on);});
+    v.querySelectorAll('[data-dp]').forEach(x=>{ const dd=st.days[x.dataset.dp]||{}; if(dd.p==null) x.classList.toggle('on', +x.dataset.pi===st.practice); }); });
+  v.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{ const d=v.querySelector('#day-'+b.dataset.day); d.open=true; setTimeout(()=>{ const top=$('#hdr').offsetHeight; window.scrollTo({top:d.getBoundingClientRect().top+window.scrollY-top-10, behavior:'smooth'}); },30); });
+  v.querySelectorAll('[data-dp]').forEach(b=>b.onclick=()=>{ const k=b.dataset.dp, n=+b.dataset.pi; st.days[k]=Object.assign(st.days[k]||{}, {p:n}); save('נשמר');
+    v.querySelectorAll(`[data-dp="${k}"]`).forEach(x=>x.classList.toggle('on', +x.dataset.pi===n)); });
+  let tm;
+  v.querySelectorAll('[data-ans]').forEach(t=>t.oninput=()=>{ const k=t.dataset.ans; st.days[k]=Object.assign(st.days[k]||{}, {a:t.value}); clearTimeout(tm); tm=setTimeout(()=>save('נשמר'),700); });
+  v.querySelectorAll('[data-done]').forEach(c=>c.onchange=()=>{ const k=c.dataset.done; st.days[k]=Object.assign(st.days[k]||{}, {done:c.checked}); save(c.checked?'כל הכבוד':'נשמר'); const chip=v.querySelector(`.dchip[data-day="${k}"]`); if(chip) chip.classList.toggle('done',c.checked); });
+  v.querySelector('[data-end]').oninput=e=>{ st.end=e.target.value; clearTimeout(tm); tm=setTimeout(()=>save('נשמר'),700); };
+}
+
+/* ===== יומן ===== */
+function renderJournal(){
+  const ids = Object.keys(S.weeks).filter(id=>WEEKS[id] && (S.weeks[id].start || S.weeks[id].end || Object.keys(S.weeks[id].days).length));
+  if(!ids.length){
+    $('#journalBox').innerHTML = `<div class="card"><p style="margin:0">עוד לא כתבתם כאן. כשתתחילו שבוע ותענו על השאלה הראשונה בערב, היא תופיע כאן.</p>
+      <div class="btnrow"><button class="btn small" data-go="yesodot">ליסודות</button><button class="btn small ghost" data-go="middot">למידות</button></div></div>`;
+    return;
+  }
+  $('#journalBox').innerHTML = ids.map(id=>{
+    const w=WEEKS[id], st=S.weeks[id];
+    const done = Object.values(st.days).filter(d=>d.done).length;
+    const ans = w.days.map((d,k)=>{ const a=st.days[k]&&st.days[k].a; return a?`<p><b>${DAYNAMES[k]}, ${d.l}.</b> ${esc(a)}</p>`:''; }).join('');
+    return `<details class="acc" data-k="j${id}"><summary><h4>שבוע של ${w.name}</h4><span class="s">תורגל ${done} מתוך 7 ימים</span>${CHEV}</summary>
+      <div class="body prose">${ans || '<p class="muted">עוד אין תשובות.</p>'}${st.end?`<p><b>סיום השבוע.</b> ${esc(st.end)}</p>`:''}
+      <div class="btnrow no-print"><button class="btn small ghost" data-go="week:${id}">לשבוע</button></div></div></details>`;
+  }).join('');
+}
+
+/* ===== חלון הסבר לקווים ===== */
+let popFrom=null;
+function openPop(key, from){ const L=LINES[key]; if(!L) return; $('#popT').textContent=L.t; $('#popB').innerHTML=L.h; $('#pop').classList.add('show'); popFrom=from; $('#popX').focus(); }
+function closePop(){ $('#pop').classList.remove('show'); if(popFrom) popFrom.focus(); }
+document.addEventListener('click', e=>{ const b=e.target.closest('.bang'); if(b){ e.preventDefault(); openPop(b.dataset.line, b); } });
+$('#popX').onclick=closePop;
+$('#pop').addEventListener('click', e=>{ if(e.target.id==='pop') closePop(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && $('#pop').classList.contains('show')) closePop(); });
+
+/* ===== כותרת מתכווצת וכפתורים צפים ===== */
+let compact=false;
+function onScroll(){
+  const y=window.scrollY;
+  if(!compact && y>120){ compact=true; $('#hdr').classList.add('compact'); }
+  else if(compact && y<8){ compact=false; $('#hdr').classList.remove('compact'); }
+  updateFloaters();
+}
+function updateFloaters(){
+  $('#fTop').classList.toggle('show', window.scrollY>600);
+  $('#fBack').classList.toggle('show', curRoute!=='home');
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+$('#fTop').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+$('#fBack').onclick=()=>{
+  if(navDepth>0){ history.back(); return; }
+  const [v,arg]=curRoute.split(':');
+  go(v==='week' ? (WEEKS[arg].kind==='element'?'yesodot':'middot') : 'home');
+};
+
+/* ===== אקורדיון אחיד: פתיחת כרטיס סוגרת את הכרטיס הפתוח שלידו ===== */
+(function(){
+  const DUR=260;
+  const reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* כרטיס שנפתח עולה לראש המסך, מתחת לכותרת */
+  function keepInView(el){ setTimeout(()=>{ const r=el.getBoundingClientRect(); const top=$('#hdr').offsetHeight||0;
+    window.scrollBy({top:r.top-top-10, behavior:reduce?'auto':'smooth'}); }, DUR+20); }
+  document.addEventListener('toggle', e=>{
+    const d=e.target; if(!(d instanceof HTMLDetailsElement) || !d.open || d.dataset.accBusy || window._restoring) return;
+    const par=d.parentElement; if(!par) return; let any=false;
+    [...par.children].forEach(sib=>{
+      if(sib!==d && sib instanceof HTMLDetailsElement && sib.open){
+        any=true; sib.dataset.accBusy='1';
+        const kids=[...sib.children].filter(k=>k.tagName!=='SUMMARY');
+        if(reduce){ sib.open=false; delete sib.dataset.accBusy; return; }
+        kids.forEach(k=>{ k.style.height=k.scrollHeight+'px'; k.style.overflow='hidden'; k.style.transition=`height ${DUR}ms ease, opacity ${DUR}ms ease`; });
+        requestAnimationFrame(()=>requestAnimationFrame(()=>kids.forEach(k=>{ k.style.height='0px'; k.style.opacity='0'; })));
+        setTimeout(()=>{ sib.open=false; kids.forEach(k=>['height','overflow','transition','opacity'].forEach(p=>k.style.removeProperty(p))); delete sib.dataset.accBusy; }, DUR);
+      }
+    });
+    keepInView(d);
+  }, true);
+})();
+
+/* ===== התחלה: קישור ישיר, למשל #week:chesed או #yesodot ===== */
+(function init(){
+  const h=location.hash.slice(1);
+  const route = h && (['home','yesodot','middot','journal'].includes(h) || (h.startsWith('week:') && WEEKS[h.split(':')[1]])) ? h : 'home';
+  history.replaceState({route}, '', '#'+route);
+  go(route, false);
+})();
+</script>
+</body>
+</html>
