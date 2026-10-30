@@ -111,6 +111,8 @@
   details.acc[open] > summary .chev{transform:rotate(180deg);}
   details.acc > .body{padding:0 18px 16px;}
   details.acc details.acc{box-shadow:none;border:1px solid var(--sage);background:#fff;}
+  details.intro-wrap{border:1.5px solid var(--sefirah-bg);}
+  details.intro-wrap > summary h4{color:var(--sefirah);}
   @keyframes accIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
   details[open] > :not(summary){animation:accIn .26s ease;}
   @media (prefers-reduced-motion: reduce){details[open] > :not(summary){animation:none;} header,header h1{transition:none;}}
@@ -279,7 +281,7 @@
   <!-- מידות -->
   <section class="view" id="v-middot">
     <h2 class="page">שבע המידות</h2>
-    <p class="lead">לפני שמתחילים, כדאי להכיר את המפה. ההסברים כאן קצרים, ואפשר לחזור אליהם בכל שלב.</p>
+    <p class="lead">לפני שמתחילים, כדאי להכיר את המפה. ההסבר קצר, ואפשר לחזור אליו בכל שלב.</p>
     <div id="sefIntro"></div>
     <h3 class="sec">השבועות</h3>
     <div class="weeks" id="sefWeeks"></div>
@@ -527,6 +529,8 @@ function snapshot(){
 function go(route, push=true, restore=null){
   if(push){ history.replaceState(Object.assign({route:curRoute}, snapshot()), '', '#'+curRoute); }
   const [v, arg] = route.split(':');
+  /* בזמן מעבר לא גוללים לכרטיסייה שנפתחת מעצמה (למשל היום הנוכחי בשבוע) */
+  window._restoring = true; clearTimeout(go._t);
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   const tabFor = v==='week' ? (WEEKS[arg] && WEEKS[arg].kind==='element' ? 'yesodot' : 'middot') : v;
   document.querySelectorAll('.tabnav button').forEach(b=>b.classList.toggle('active', b.dataset.go===tabFor));
@@ -541,11 +545,12 @@ function go(route, push=true, restore=null){
     /* חזרה: משחזרים את הכרטיסים שהיו פתוחים ואת מקום הגלילה */
     window._restoring = true;
     view.querySelectorAll('details').forEach(d=>{ d.open = restore.open.includes(d.dataset.k); });
-    setTimeout(()=>{ window._restoring=false; window.scrollTo({top:restore.y||0}); }, 30);
+    go._t = setTimeout(()=>{ window._restoring=false; window.scrollTo({top:restore.y||0}); }, 300);
   } else {
     /* מעבר חדש: כל הכרטיסים מקופלים, חוץ מהיום הנוכחי בשבוע */
-    if(v!=='week'){ window._restoring=true; view.querySelectorAll('details[open]').forEach(d=>d.open=false); setTimeout(()=>window._restoring=false,0); }
+    if(v!=='week'){ view.querySelectorAll('details[open]').forEach(d=>d.open=false); }
     window.scrollTo({top:0});
+    go._t = setTimeout(()=>{ window._restoring=false; window.scrollTo({top:0}); }, 300);
   }
   if(push){ history.pushState({route}, '', '#'+route); navDepth++; }
   updateFloaters();
@@ -582,7 +587,8 @@ function renderLists(){
   $('#elWeeks').innerHTML = ELEMENTS.map((m,i)=>weekCard(m,'element',i)).join('');
   $('#sefWeeks').innerHTML = SEFIROT.map((m,i)=>weekCard(m,'sefira',i)).join('');
   if(!$('#sefIntro').innerHTML){
-    $('#sefIntro').innerHTML = SEF_INTRO.map((x,n)=>`<details class="acc" data-k="in${n}"><summary><h4>${x.t}</h4><span class="s">${x.s}</span>${CHEV}</summary><div class="body prose">${x.html}</div></details>`).join('');
+    $('#sefIntro').innerHTML = `<details class="acc intro-wrap" data-k="inwrap"><summary><h4>הסבר על הספירות והמידות</h4><span class="s">כדאי לקרוא לפני השבוע הראשון</span>${CHEV}</summary>
+      <div class="body">${SEF_INTRO.map((x,n)=>`<details class="acc" data-k="in${n}"><summary><h4>${x.t}</h4><span class="s">${x.s}</span>${CHEV}</summary><div class="body prose">${x.html}</div></details>`).join('')}</div></details>`;
   }
 }
 
