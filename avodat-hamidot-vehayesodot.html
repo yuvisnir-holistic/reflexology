@@ -169,6 +169,7 @@
   .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
 
   /* בחירת תרגול */
+  .pgroup{font-family:'Frank Ruhl Libre',serif;font-size:1rem;color:var(--forest-dark);margin:14px 0 8px;}
   .practice{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1.5px solid var(--sage);border-radius:14px;
     padding:13px 14px;margin:0 0 9px;cursor:pointer;text-align:right;width:100%;font:inherit;color:inherit;}
   .practice .radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--sage);flex-shrink:0;margin-top:3px;}
@@ -241,7 +242,6 @@
 
   <!-- בית -->
   <section class="view active" id="v-home">
-    <p class="lead">כאן נמצא מה שצריך לעבודה בין המפגשים. בסוף הטיפול נחליט יחד במה אתם מתחילים, ומשם עוברים שבוע אחרי שבוע.</p>
 
     <div id="mineBox"></div>
 
@@ -277,7 +277,9 @@
   <!-- יסודות -->
   <section class="view" id="v-yesodot">
     <h2 class="page">ארבעת היסודות</h2>
-    <p class="lead">אש, רוח, מים ועפר הם לא רק חומרים בטבע. הם ארבעה כוחות שאפשר לזהות בכל אחד ואחת מאיתנו, וכל אדם הוא שילוב ייחודי שלהם. כשיסוד אחד יוצא מאיזון, מרגישים את זה ברגש, בהתנהגות ולפעמים גם בגוף. בכל שבוע עובדים על יסוד אחד.</p>
+    <p class="lead">אש, רוח, מים ועפר הם לא רק חומרים בטבע. הם ארבעה כוחות שאפשר לזהות בכל אחד ואחת מאיתנו. בכל שבוע עובדים על יסוד אחד, עד שעוברים את כולם.</p>
+    <div id="elIntro"></div>
+    <h3 class="sec">השבועות</h3>
     <div class="weeks" id="elWeeks"></div>
   </section>
 
@@ -316,10 +318,24 @@
 const CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
 
 const ELEMENTS = [
-  {id:'esh',  name:'אש',  what:'הרצון, החום והתנועה', cls:'fire'},
+  {id:'esh',  name:'אש',  what:'רצון והתלהבות', cls:'fire'},
   {id:'ruach',name:'רוח', what:'הרגש והדיבור', cls:'air'},
   {id:'mayim',name:'מים', what:'המחשבה, הזרימה והרגש העמוק', cls:'water'},
   {id:'afar', name:'עפר', what:'המעשה, היציבות והקרקע', cls:'earth'}
+];
+
+const EL_INTRO = [
+  {t:'מהם ארבעת היסודות', s:'אש, רוח, מים ועפר', html:`
+    <p>כל מה שיש בעולם בנוי מארבעה יסודות, אש, רוח, מים ועפר. זו חכמה עתיקה מאוד, שמופיעה במקורות היהודיים וגם אצל רופאים ופילוסופים לאורך הדורות. אפשר לראות את היסודות בטבע. העפר הוא המוצק, מה שנותן יציבות. המים הם הנוזל, מה שזורם ומתערבב. הרוח היא האוויר, מה שזז ומתפשט. והאש היא האנרגיה, החום, מה שמשנה מן השורש.</p>
+    <p>אותם ארבעה יסודות פועלים גם בגוף ובנפש שלנו. העפר הוא העצמות והיציבות, היכולת להתמיד ולשים גבולות. המים הם הנוזלים והזרימה, היכולת להתחבר, לאהוב וליהנות. הרוח היא הנשימה והתנועה, הרגש והדיבור. והאש היא הדם והחום, הרצון וההתלהבות.</p>`},
+  {t:'יסוד מוביל ואיזון', s:'מה זו בריאות', html:`
+    <p>בכל אדם יש את כל ארבעת היסודות, אבל לכל אחד ואחת יש יסוד מוביל, שנולדנו איתו ושמוביל את השאר. יש אנשים שהאש מובילה אצלם את ההתלהבות, ויש שהעפר מוביל אצלם, ולכן הם מחפשים תמיד יציבות. את היסוד המוביל אי אפשר להחליף, אבל אפשר לאזן.</p>
+    <p>בריאות, לפי החכמה הזאת, היא מצב שבו לכל יסוד יש מקום, ואף אחד לא משתלט על האחרים. כשיסוד אחד גדל מדי או נעלם, זה מתבטא גם בנפש וגם בגוף. וזה גם הצד הטוב, כי אם יודעים איזה יסוד יצא מאיזון, יודעים על מה לעבוד.</p>`},
+  {t:'ארבעה בתוך כל אחד', s:'אש שבאש, רוח שבאש', html:`
+    <p>כל יסוד כלול בעצמו מכל ארבעת היסודות. ביסוד האש יש אש שבאש, רוח שבאש, מים שבאש ועפר שבאש, וכך גם בשאר היסודות. זה בדיוק כמו במידות, שבהן בתוך החסד יש גבורה, תפארת וכל השאר.</p>
+    <p>וכל יסוד פועל בעיקר בכוח אחד של הנפש. האש פועלת ברצון, הרוח ברגש ובדיבור, המים במחשבה, והעפר במעשה. לכן, כשמסתכלים על האש דרך ארבעת היסודות, שואלים בעצם איך הרצון שלי פועל ברצון עצמו, ברגש ובדיבור, במחשבה ובמעשה. על זה בנויות השאלות לערב בשבועות האלה.</p>`},
+  {t:'שני צירים', s:'אש מול מים, רוח מול עפר', html:`
+    <p>היסודות בנויים בזוגות הפוכים. האש מול המים, והרוח מול העפר. כשיש בעיה ביסוד אחד, כמעט תמיד גם היסוד שמולו נפגע. ומי שיש לו עודף במקום אחד, חסר לו במקום אחר. לכן לפעמים נכון לעבוד דווקא על היסוד שמולו, ולכן בכל שבוע יש גם יום שמוקדש לו.</p>`}
 ];
 
 const SEFIROT = [
@@ -737,6 +753,47 @@ const WEEKS = {
       {l:'אני כאן', lens:'מלכות שבמלכות', ex:'המלכות בצורה הנקייה שלה. התחושה הפשוטה שאני כאן, קיים או קיימת בעולם, ויש לי מקום.', q:'מתי הרגשתי היום שאני באמת כאן, ושיש לי מקום בעולם?'}
     ],
     endQ:'כשאני מסתכל.ת על השבוע שעבר, מה גיליתי על הנוכחות שלי בעולם? איפה הרגשתי שמשהו זז, ואיפה עדיין קשה לי?'
+  },
+  esh:{
+    kind:'element', num:1, name:'אש', plain:'רצון והתלהבות', cls:'fire',
+    tags:[['t-fire','אש',true],['t-body','הרצון']],
+    sections:[
+      {t:'משמעות היסוד', html:`
+        <p>האש היא החום והאנרגיה. בטבע היא מאירה, מחממת ומשנה כל דבר מן השורש. והיא היחידה מכל היסודות שהתנועה שלה היא תמיד כלפי מעלה. גם כשהופכים נר, הלהבה ממשיכה לעלות.</p>
+        <p>בגוף האש היא החום והדם. בנפש היא הרצון, ההתלהבות, היוזמה והיצירה. היא הכוח שגורם לנו לקום בבוקר, לרצות משהו ולצאת אליו.</p>
+        <p>השבוע לומדים להשתמש באש כדי להאיר, ולא כדי לשרוף.</p>`},
+      {t:'כשהאש מאוזנת', html:`
+        <p>כשהאש מאוזנת, יש חיות ותשוקה לחיים. הרצון יודע לאן הוא הולך, וההתלהבות מחממת גם את מי שנמצא לידנו. יש כוח להתחיל דברים, ליזום וליצור, בלי לשרוף את עצמנו או את הסביבה בדרך.</p>`},
+      {t:'כשיש יותר מדי אש', html:`
+        <p>כשיש יותר מדי אש, היא שורפת. מופיעים כעס ורתיחה מהירה, חוסר סבלנות, ביקורת על עצמנו ועל אחרים, ותחושה שמגיע לי יותר. לפעמים האש הופכת לגאווה, ולפעמים להרסנות, לרצון לשבור את מה שעומד בדרך.</p>`},
+      {t:'כשהאש כבה', html:`
+        <p>כשהאש חלשה או כבה, אין רצון לכלום, והכול לא מעניין. קשה להתחיל, קשה להתלהב, ויש תחושה של קור, בגוף ובנפש.</p>`},
+      {t:'המידה המתקנת', html:`
+        <p>המידה שמתקנת את האש היא ענווה והכרת הטוב. העצה של הרמב״ם לכעס ולגאווה היא להכיר בטוב. מי שרואה את הטוב שהוא מקבל, פחות מרגיש שמגיע לו, ולכן פחות כועס כשמשהו לא מגיע. וכשהכעס יורד, האש חוזרת להאיר.</p>`},
+      {t:'היסוד שמולו', html:`
+        <p>מול האש עומדים המים. האש חמה ויבשה, והמים קרים ולחים. כשיש עודף אש, לרוב חסרים מים. חסרות רכות, גמישות, מנוחה, והיכולת לקבל אהבה וליהנות.</p>
+        <p>לכן לפעמים הדרך לאזן את האש היא לא לכבות אותה, אלא להוסיף לצידה מים. ויום אחד בשבוע מוקדש לזה.</p>`},
+      {t:'בגוף', html:`
+        <p>בגוף האש היא החום והדם. כשהאש יוצאת מאיזון, לפעמים זה מתבטא גם בגוף. עודף אש יכול להופיע כדלקות, צרבת, פריחות אדומות או לחץ דם, וכשהאש חלשה, יש קור וחיוורון.</p>`}
+    ],
+    practices:[
+      {g:'body', t:'מתיחות והרפיה', d:'כל יום עשר דקות של מתיחות איטיות, יוגה או הרפיה. המטרה היא לשחרר את החום שנאסף בשרירים, לא להתאמץ.'},
+      {g:'body', t:'נשימה ברגע של כעס', d:'כשהכעס עולה, לפני שאומרים משהו, נושמים נשימה ארוכה פנימה, עוצרים לרגע, ונושפים נשיפה ארוכה עוד יותר. שלוש פעמים.'},
+      {g:'body', t:'לאזן את החום', d:'למי שיש עודף אש, בסוף המקלחת כמה שניות של מים קרירים על הידיים והרגליים. ולמי שהאש שלו חלשה, דווקא תנועה שמחממת, הליכה מהירה או ריקוד.'},
+      {g:'inner', t:'הכעס כמראה', d:'כשמשהו בחוץ מכעיס אתכם, שאלו מה זה מראה לכם על עצמכם, ומה בפנים עוד לא פתור. המבט פנימה במקום החוצה הוא כבר חצי מהדרך.'},
+      {g:'inner', t:'שני רצונות', d:'כשמתעורר רצון שאתם יודעים שלא כדאי לכם, עצרו. זהו את הרצון הקרוב והבוער, ואת הרחוק והשקט. אמרו בקול על הראשון, זה לא שווה לי. ועל השני, זה שווה לי.'},
+      {g:'inner', t:'להצית מחדש', d:'למי שהאש שלו חלשה, בחרו כל יום רצון אחד קטן, משהו שבאמת בא לכם, וממשו אותו. כדי להצית את האש מחדש, בעדינות.'}
+    ],
+    days:[
+      {l:'הרצון עצמו', lens:'אש שבאש', ex:'האש בתוך הרצון. מה מדליק אותי, ומה מניע אותי לקום בבוקר.', q:'מה רציתי היום באמת? איפה הרגשתי שהרצון שלי חי?'},
+      {l:'האש במילים', lens:'רוח שבאש', ex:'האש בתוך הרגש והדיבור. הדרך שבה הלהט שלי יוצא החוצה, במילים ובטון.', q:'איך האש שלי יצאה היום במילים? האם דיברתי בלהט שמאיר, או בכעס ששורף?'},
+      {l:'האש במחשבה', lens:'מים שבאש', ex:'האש בתוך המחשבה. לאן זורמות המחשבות שלי, והאם הן מזינות את הרצון או מלבות את הכעס.', q:'על מה חשבתי היום שוב ושוב? האם המחשבות האלה הזינו אותי, או הדליקו בי כעס?'},
+      {l:'האש במעשה', lens:'עפר שבאש', ex:'האש בתוך המעשה. הרגע שבו הרצון הופך לצעד ממשי, ולא נשאר רק התלהבות.', q:'מה עשיתי היום בפועל עם האש שלי? האם רצון אחד הפך למעשה?'},
+      {l:'פוגשים את המים', lens:'היסוד שמולו', ex:'המים מקררים ומרככים את האש. גמישות, הקשבה ומנוחה מאפשרות לאש לבעור בלי לשרוף.', q:'האם היה היום רגע שבו רכות או גמישות קיררו את האש שלי? מה עזר לי להגיע אליו?'},
+      {l:'ענווה והכרת הטוב', lens:'המידה המתקנת', ex:'ההודיה מרגיעה את האש. מי שמכיר בטוב שהוא מקבל, פחות מרגיש שמגיע לו, ולכן פחות כועס.', q:'על מה הודיתי היום? והאם ההודיה הרגיעה משהו בפנים?'},
+      {l:'האש כולה', lens:'כל היסוד', ex:'מסתכלים על האש כולה, על כל מה שפגשתי השבוע.', q:'איפה האש שלי האירה היום, ואיפה היא שרפה?'}
+    ],
+    endQ:'כשאני מסתכל.ת על השבוע שעבר, מה גיליתי על האש שלי? איפה הרגשתי שמשהו זז, ואיפה עדיין קשה לי?'
   }
 };
 
@@ -827,8 +884,12 @@ function weekCard(m, kind, idx){
 function renderLists(){
   $('#elWeeks').innerHTML = ELEMENTS.map((m,i)=>weekCard(m,'element',i)).join('');
   $('#sefWeeks').innerHTML = SEFIROT.map((m,i)=>weekCard(m,'sefira',i)).join('');
+  if(!$('#elIntro').innerHTML){
+    $('#elIntro').innerHTML = `<details class="acc intro-wrap" data-k="elwrap"><summary><h4>הסבר על ארבעת היסודות</h4>${CHEV}</summary>
+      <div class="body">${EL_INTRO.map((x,n)=>`<details class="acc" data-k="ei${n}"><summary><h4>${x.t}</h4><span class="s">${x.s}</span>${CHEV}</summary><div class="body prose">${x.html}</div></details>`).join('')}</div></details>`;
+  }
   if(!$('#sefIntro').innerHTML){
-    $('#sefIntro').innerHTML = `<details class="acc intro-wrap" data-k="inwrap"><summary><h4>הסבר על הספירות והמידות</h4><span class="s">כדאי לקרוא לפני השבוע הראשון</span>${CHEV}</summary>
+    $('#sefIntro').innerHTML = `<details class="acc intro-wrap" data-k="inwrap"><summary><h4>הסבר על הספירות והמידות</h4>${CHEV}</summary>
       <div class="body">${SEF_INTRO.map((x,n)=>`<details class="acc" data-k="in${n}"><summary><h4>${x.t}</h4><span class="s">${x.s}</span>${CHEV}</summary><div class="body prose">${x.html}</div></details>`).join('')}</div></details>`;
   }
 }
@@ -848,12 +909,17 @@ function renderWeek(id){
   const restartBox = started ? `<div class="no-print" style="margin-top:14px"><button class="link" id="restart">להתחיל את השבוע מחדש מהיום</button></div>` : '';
 
   const secHtml = s => (s.t==='בגוף' && w.kind==='sefira') ? `<div class="split split-sm"><div class="split-txt">${s.html}</div>${makeBodyFig(id)}</div>` : s.html;
-  const secs = `<details class="acc intro-wrap" data-k="sewrap"><summary><h4>הסבר על ספירת ה${w.name}</h4>${CHEV}</summary><div class="body">`
+  const isEl = w.kind==='element';
+  const secs = `<details class="acc intro-wrap" data-k="sewrap"><summary><h4>${isEl?'הסבר על יסוד ה':'הסבר על ספירת ה'}${w.name}</h4>${CHEV}</summary><div class="body">`
     + w.sections.map((s,n)=>`<details class="acc" data-k="se${n}"><summary><h4>${s.t}</h4>${CHEV}</summary><div class="body prose">${secHtml(s)}</div></details>`).join('')
     + `</div></details>`;
 
-  const prac = w.practices.map((p,k)=>`<button class="practice ${st.practice===k?'on':''}" data-prac="${k}" aria-pressed="${st.practice===k}">
-      <span class="radio"></span><span><b>${p.t}</b>${p.d}</span></button>`).join('');
+  const pBtn = (p,k,key) => `<button class="practice ${st[key]===k?'on':''}" data-prac="${k}" data-key="${key}" aria-pressed="${st[key]===k}">
+      <span class="radio"></span><span><b>${p.t}</b>${p.d}</span></button>`;
+  const prac = isEl
+    ? `<h4 class="pgroup">תרגיל לגוף</h4>` + w.practices.map((p,k)=>p.g==='body'?pBtn(p,k,'practice'):'').join('')
+      + `<h4 class="pgroup">תרגיל לנפש</h4>` + w.practices.map((p,k)=>p.g==='inner'?pBtn(p,k,'practice2'):'').join('')
+    : w.practices.map((p,k)=>pBtn(p,k,'practice')).join('');
 
   const strip = w.days.map((d,k)=>{
     const done = st.days[k] && st.days[k].done;
@@ -871,22 +937,22 @@ function renderWeek(id){
         <div class="q"><b>שאלה לערב</b><br>${d.q}</div>
         <div class="eve">עונים בערב, אחרי שהיום עבר.</div>
         <textarea data-ans="${k}" placeholder="מה עלה היום...">${esc(dd.a)}</textarea>
-        <div class="dprac"><span class="lbl">התרגיל שעשיתי היום</span>${w.practices.map((p,n)=>`<button data-dp="${k}" data-pi="${n}" class="${(dd.p!=null?dd.p:st.practice)===n?'on':''}">${p.t}</button>`).join('')}</div>
-        <label class="check"><input type="checkbox" data-done="${k}" ${dd.done?'checked':''}> עשיתי היום את התרגיל</label>
+        ${isEl ? '' : `<div class="dprac"><span class="lbl">התרגיל שעשיתי היום</span>${w.practices.map((p,n)=>`<button data-dp="${k}" data-pi="${n}" class="${(dd.p!=null?dd.p:st.practice)===n?'on':''}">${p.t}</button>`).join('')}</div>`}
+        <label class="check"><input type="checkbox" data-done="${k}" ${dd.done?'checked':''}> ${isEl?'עשיתי היום את התרגילים':'עשיתי היום את התרגיל'}</label>
       </div></details>`;
   }).join('');
 
   $('#v-week').innerHTML = `
-    <div class="week-head"><span class="num">${w.num}</span><div><h2>שבוע של ${w.name}</h2><div class="plain">${w.plain}</div></div></div>
+    <div class="week-head"><span class="num" ${isEl?`style="background:var(--${w.cls}-bg);color:var(--${w.cls})"`:''}>${w.num}</span><div><h2>שבוע של ${w.name}</h2><div class="plain">${w.plain}</div></div></div>
     <div class="tags">${tagHtml}</div>
     ${topStatus}
     <div style="margin-top:14px">${secs}</div>
-    <h3 class="sec">במהלך היום, התרגיל</h3>
-    <p class="muted" style="margin-top:-4px">בחרו תרגיל אחד ועשו אותו כל יום. אפשר להחליף תרגיל ביום מסוים, בכרטיס של אותו יום, אבל החזרה על אותו תרגיל היא שיוצרת את השינוי.</p>
+    <h3 class="sec">במהלך היום, ${isEl?'התרגילים':'התרגיל'}</h3>
+    <p class="muted" style="margin-top:-4px">${isEl ? 'היסודות הם החומר שממנו בנויים גם הגוף וגם הנפש, ולכן השבוע עובדים בשניהם. בחרו תרגיל אחד לגוף ותרגיל אחד לנפש, ועשו את שניהם כל יום.' : 'בחרו תרגיל אחד ועשו אותו כל יום. אפשר להחליף תרגיל ביום מסוים, בכרטיס של אותו יום, אבל החזרה על אותו תרגיל היא שיוצרת את השינוי.'}</p>
     ${prac}
     ${startBox}
     <h3 class="sec">בערב, השאלה של היום</h3>
-    <p class="muted" style="margin-top:-4px">התרגיל הוא מה שעושים במהלך היום. השאלה היא מה שבודקים בערב, על כל מה שקרה ביום, לא רק על התרגיל. התרגיל נשאר אותו תרגיל, והשאלה מתחלפת כל ערב. בכל מידה כלולות כל שבע המידות, ולכן בכל יום מסתכלים על ה${w.name} דרך מידה אחרת.</p>
+    <p class="muted" style="margin-top:-4px">${isEl ? `התרגילים הם מה שעושים במהלך היום. השאלה היא מה שבודקים בערב, על כל מה שקרה ביום. בכל יסוד כלולים כל ארבעת היסודות, ולכן בארבעת הימים הראשונים מסתכלים על ה${w.name} דרך כל אחד מהם. בימים שאחריהם פוגשים את היסוד שמולו, את המידה שמתקנת, ובסוף את היסוד כולו.` : `התרגיל הוא מה שעושים במהלך היום. השאלה היא מה שבודקים בערב, על כל מה שקרה ביום, לא רק על התרגיל. התרגיל נשאר אותו תרגיל, והשאלה מתחלפת כל ערב. בכל מידה כלולות כל שבע המידות, ולכן בכל יום מסתכלים על ה${w.name} דרך מידה אחרת.`}</p>
     <div class="days-strip no-print">${strip}</div>
     ${days}
     <div class="card end-q">
@@ -903,7 +969,7 @@ function renderWeek(id){
   const sb=v.querySelector('#startWeek'); if(sb) sb.onclick=()=>{ st.start=todayStr(); S.current=id; save('השבוע התחיל'); renderWeek(id); };
   const tt=v.querySelector('#toToday'); if(tt) tt.onclick=()=>{ const d=v.querySelector('#day-'+i); d.open=true; setTimeout(()=>{ const top=$('#hdr').offsetHeight; window.scrollTo({top:d.getBoundingClientRect().top+window.scrollY-top-10, behavior:'smooth'}); },60); };
   const rs=v.querySelector('#restart'); if(rs) rs.onclick=()=>{ if(confirm('להתחיל את השבוע מחדש מהיום? התשובות שכתבתם יישארו.')){ st.start=todayStr(); S.current=id; save('השבוע התחיל מחדש'); renderWeek(id);} };
-  v.querySelectorAll('[data-prac]').forEach(b=>b.onclick=()=>{ st.practice=+b.dataset.prac; save('נשמר'); v.querySelectorAll('[data-prac]').forEach(x=>{const on=+x.dataset.prac===st.practice; x.classList.toggle('on',on); x.setAttribute('aria-pressed',on);});
+  v.querySelectorAll('[data-prac]').forEach(b=>b.onclick=()=>{ const key=b.dataset.key; st[key]=+b.dataset.prac; save('נשמר'); v.querySelectorAll(`[data-key="${key}"]`).forEach(x=>{const on=+x.dataset.prac===st[key]; x.classList.toggle('on',on); x.setAttribute('aria-pressed',on);});
     v.querySelectorAll('[data-dp]').forEach(x=>{ const dd=st.days[x.dataset.dp]||{}; if(dd.p==null) x.classList.toggle('on', +x.dataset.pi===st.practice); }); });
   v.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{ const d=v.querySelector('#day-'+b.dataset.day); d.open=true; setTimeout(()=>{ const top=$('#hdr').offsetHeight; window.scrollTo({top:d.getBoundingClientRect().top+window.scrollY-top-10, behavior:'smooth'}); },30); });
   v.querySelectorAll('[data-dp]').forEach(b=>b.onclick=()=>{ const k=b.dataset.dp, n=+b.dataset.pi; st.days[k]=Object.assign(st.days[k]||{}, {p:n}); save('נשמר');
@@ -912,7 +978,8 @@ function renderWeek(id){
     if(!st.end || !st.end.trim()){ toast('קודם כותבים את הסיכום'); return; }
     const done=Object.values(st.days).filter(d=>d.done).length;
     let t=`סיכום שבוע של ${w.name}\n`;
-    if(st.practice!=null) t+=`התרגיל שבחרתי, ${w.practices[st.practice].t}\n`;
+    if(st.practice!=null) t+=`${isEl?'התרגיל לגוף':'התרגיל שבחרתי'}, ${w.practices[st.practice].t}\n`;
+    if(isEl && st.practice2!=null) t+=`התרגיל לנפש, ${w.practices[st.practice2].t}\n`;
     t+=`תרגלתי ${done} מתוך 7 ימים\n\n${st.end.trim()}`;
     window.open((WA_NUMBER?'https://wa.me/'+WA_NUMBER:'https://wa.me/')+'?text='+encodeURIComponent(t),'_blank');
   };
