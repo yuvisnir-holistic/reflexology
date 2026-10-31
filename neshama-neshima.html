@@ -226,6 +226,35 @@
 
   footer.credit{text-align:center;color:#a19a85;font-size:.78rem;padding:30px 20px 10px;}
 </style>
+<style>
+/* ===== מעטפת לפי מדריך העיצוב ===== */
+:root{--cream:#F7F1E6;--cream-soft:#FBF7EF;--line:#E2D9C8}
+header{background:#3A6863}
+/* קופסה מבחוץ, קווים מבפנים */
+.card .card-body .card{background:none;box-shadow:none;border:0;border-radius:0;border-top:1px solid var(--line);margin:0}
+.card .card-body .card:last-child{border-bottom:1px solid var(--line)}
+.card .card-body .card .card-head{padding:12px 2px}
+.card .card-body .card.open > .card-body{padding:0 2px 16px}
+.card-body .box{background:none!important;border-radius:0;border-right:3px solid currentColor;padding:2px 12px 2px 0;margin:16px 0}
+.card-body .box.quote{border-right-color:var(--gold)}
+.card-body .box.practice{border-right-color:var(--vav)}
+.card-body .box.reflect{border-right-color:var(--hey1)}
+.card-body .box.note{border-right-color:#5c6b3f}
+.card-body .box.quote p,.card-body .box.practice p,.card-body .box.reflect p,.card-body .box.note p{color:var(--ink)}
+.step-row{border-top:1px solid var(--line)}
+@keyframes accIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.card.open > .card-body.acc-in{animation:accIn .26s ease}
+@media (prefers-reduced-motion:reduce){.card.open > .card-body.acc-in{animation:none}}
+.card-body .tool-card{box-shadow:none;background:none;border-radius:0;border-right:3px solid var(--gold);padding:4px 12px 4px 0}
+
+/* כותרת מתכווצת: מתכווצת בגלילה למטה, וחוזרת לגודל מלא רק בראש העמוד */
+html,body{overflow-anchor:none}
+header{transition:padding .2s ease}
+header.hide{transform:none}
+header.compact{padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px}
+header.compact h1,header.compact .sub,header.compact .search-wrap{display:none}
+header.compact .tabnav{margin-top:0}
+</style>
 </head>
 <body>
 <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="צפייה בגדול">
@@ -1670,6 +1699,53 @@ updateFabs();
   window.addEventListener('hashchange', route);
   if(document.readyState==='complete') route(); else window.addEventListener('load', route);
 })();
+</script>
+<script>
+/* אקורדיון אחיד: פתיחה סוגרת את הפתוח שלידו, והכותרת של מה שנפתח עולה לראש המסך */
+window.__progScroll = false;
+function toggleCard(head){
+  const card = head.parentElement;
+  const opening = !card.classList.contains('open');
+  let closed = false;
+  if(opening && card.parentElement){
+    [...card.parentElement.children].forEach(c=>{
+      if(c!==card && c.classList.contains('card') && c.classList.contains('open')){
+        const b = c.querySelector(':scope > .card-body');
+        if(b){ b.style.transition='none'; }
+        c.classList.remove('open'); closed = true;
+        if(b){ void b.offsetHeight; setTimeout(()=>b.style.removeProperty('transition'), 50); }
+      }
+    });
+  }
+  const ob = card.querySelector(':scope > .card-body');
+  if(opening && ob){ ob.style.transition='none'; }
+  card.classList.toggle('open');
+  if(!opening) return;
+  if(ob){ void ob.offsetHeight; ob.classList.remove('acc-in'); void ob.offsetWidth; ob.classList.add('acc-in'); setTimeout(()=>ob.style.removeProperty('transition'), 50); }
+  requestAnimationFrame(()=>{
+    const top = card.getBoundingClientRect().top;
+    const hdr = document.querySelector('header');
+    const hh = (hdr && !hdr.classList.contains('hide')) ? hdr.getBoundingClientRect().bottom : 0;
+    if(closed || top < hh + 8 || top > innerHeight - 80){
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.__progScroll = true;
+      if(hdr) hdr.classList.add('compact');
+      const hh2 = hdr ? hdr.offsetHeight : 0;
+      window.scrollTo({top: top + window.scrollY - hh2 - 8, behavior: reduce ? 'auto' : 'smooth'});
+      setTimeout(()=>{ window.__progScroll = false; }, 900);
+    }
+  });
+}
+function hideHeader(){ const h=document.querySelector('header'); if(h && window.scrollY > 120) h.classList.add('compact'); }
+function showHeader(){
+  const h=document.querySelector('header'); if(!h) return;
+  const typing = document.activeElement && document.activeElement.id === 'search';
+  if(window.scrollY < 8 || typing) h.classList.remove('compact');
+}
+window.addEventListener('scroll', ()=>{
+  requestAnimationFrame(()=>{ const h=document.querySelector('header'); if(!h) return;
+    if(window.scrollY > 120) h.classList.add('compact'); else if(window.scrollY < 8) h.classList.remove('compact'); });
+}, {passive:true});
 </script>
 </body>
 </html>
