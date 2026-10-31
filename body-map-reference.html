@@ -3998,5 +3998,18 @@ document.getElementById('tabnav').addEventListener('click', e=>{ if(e.target.clo
   if(typeof renderToolsView==='function' && document.getElementById('toolsList') && document.getElementById('toolsList').innerHTML) renderToolsView();
 })();
 </script>
+<script>
+/* פתיחה ישירה של לשונית הכלים מקישור חיצוני: body-map-reference.html#tools */
+(function(){
+  function go(){
+    if(location.hash==='#tools'){
+      const b=document.querySelector('#tabnav button[data-tab="tools"]');
+      if(b) b.click();
+    }
+  }
+  if(document.readyState==='complete') go(); else window.addEventListener('load', go);
+  window.addEventListener('hashchange', go);
+})();
+</script>
 </body>
 </html>
