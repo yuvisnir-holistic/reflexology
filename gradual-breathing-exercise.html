@@ -45,6 +45,21 @@
     details.card summary::after{display:none;}
   }
 </style>
+<style>
+/* ===== מעטפת לפי מדריך העיצוב ===== */
+:root{--paper:#FBF7EF;--line:#E2D9C8}
+header{background:#3A6863}
+main{max-width:900px}
+details.card{background:var(--paper);border:1px solid rgba(44,95,91,0.08);box-shadow:0 2px 14px rgba(44,95,91,0.10);border-radius:18px}
+details.card details.card{background:none;border:0;border-radius:0;box-shadow:none;border-top:1px solid var(--line);margin:0}
+details.card details.card:last-of-type{border-bottom:1px solid var(--line)}
+details.card details.card summary{padding:12px 2px}
+details.card details.card .body{padding:0 2px 8px}
+details.card .note{background:none;border-radius:0;border-right:3px solid var(--gold);padding:2px 12px 2px 0;color:#6b5420}
+@keyframes accIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+details[open] > .body{animation:accIn .26s ease}
+@media (prefers-reduced-motion:reduce){details[open] > .body{animation:none}}
+</style>
 </head>
 <body>
 
@@ -141,5 +156,32 @@
   });
 </script>
 
+<script>
+/* אקורדיון אחיד: פתיחה סוגרת את הפתוח שלידו, והכותרת של מה שנפתח עולה לראש המסך */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function barH(){
+    const b = document.querySelector('nav.tabs, .tabbar');
+    return (b && getComputedStyle(b).position === 'sticky') ? b.getBoundingClientRect().height : 0;
+  }
+  document.addEventListener('toggle', e => {
+    const el = e.target;
+    if(!(el instanceof HTMLDetailsElement) || !el.open) return;
+    const root = el.parentElement && el.parentElement.closest('.acc') ? el.parentElement.closest('.acc').parentElement : el.parentElement;
+    if(!root) return;
+    let closed = false;
+    root.querySelectorAll('details[open]').forEach(o => {
+      if(o === el || o.contains(el) || el.contains(o)) return;
+      if(o.parentElement.closest('details') !== el.parentElement.closest('details')) return;
+      o.open = false; closed = true;
+    });
+    const s = el.querySelector('summary'); if(!s) return;
+    const top = s.getBoundingClientRect().top, h = barH();
+    if(closed || top < h || top > innerHeight - 80){
+      scrollTo({top: scrollY + top - h - 8, behavior: reduce ? 'auto' : 'smooth'});
+    }
+  }, true);
+})();
+</script>
 </body>
 </html>
