@@ -2785,7 +2785,7 @@ iqReadPrint = function(patientOnly){
 
 
 /* ===== שליחת השאלון המלא למטופל, עם מה שכבר מולא בקליניקה ===== */
-const INTAKE_URL = 'https://yuvisnir-holistic.github.io/reflexology/intake.html';
+const INTAKE_URL = new URL('intake.html', location.href).href;
 function iqPrefillLink(p){
   const a = Object.assign({}, p.intake||{});
   a.f_name = p.name; if(!a.f_age && p.age) a.f_age = p.age; if(!a.f_job && p.job) a.f_job = p.job;

@@ -759,7 +759,7 @@ EX_SYN['השקטה'] += '|עצור, הבחן|שעת אמת';
    יעד בקישור: organ:שם איבר, path:שם פתולוגיה, elem:earth/water/fire/air,
    signs:קטגוריה, maps:age. השמות הם בדיוק כמו באתר הרפלקסולוגיה.
    =================================================================== */
-const FOOT_SITE = 'index.html';
+const FOOT_SITE = 'reflexology.html';
 function footHref(t){ return FOOT_SITE + '#' + t; }
 /* כרטיסי האיברים במפת הגוף, לפי השם במפה */
 const FOOT_ORGAN = {
