@@ -78,7 +78,19 @@ footer.credit a{color:var(--muted);text-decoration:none;border-bottom:1px solid 
   border:0;border-radius:999px;padding:11px 26px}
 @media (min-width:700px){html{font-size:19px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style></head><body>
+</style><style>
+/* ===== מעטפת לפי מדריך העיצוב: דף קריאה ותרגול ===== */
+:root{--green:#2C5F5B;--green-deep:#1E4744;--sage:#AEBFAE;--cream:#F7F1E6;--paper:#FBF7EF;--ink:#28312E;--muted:#6a756f}
+header.top{background:#3A6863}
+nav.tabs{background:rgba(247,241,230,.96)}
+nav.tabs .row{max-width:900px}
+main{max-width:900px}
+.fab-back{left:max(16px,calc(50% - 450px + 16px))}
+@keyframes accIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+details[open] > .inner{animation:accIn .26s ease}
+@media (prefers-reduced-motion:reduce){details[open] > .inner{animation:none}}
+</style>
+</head><body>
 <header class="top"><p class="eyebrow">על פי כללי ההשקטה של הבעל שם טוב</p><h1><span class="l">יומן השקטה</span><span class="l">ועבודת ההתבוננות</span></h1><p class="sub">כתיבה בבוקר ובערב, ועבודת התבוננות בכוחות הנפש לאורך היום.</p></header>
 <nav class="tabs" aria-label="חלקי המדריך"><div class="row" role="tablist"><button type="button" role="tab" data-t="intro">הקדמה</button><button type="button" role="tab" data-t="journal">היומן</button><button type="button" role="tab" data-t="contemplation">ההתבוננות</button><button type="button" role="tab" data-t="verses">פסוקים</button></div></nav>
 <main><section class="panel" id="intro" role="tabpanel"><h2>למה יומן השקטה</h2>
@@ -147,4 +159,72 @@ footer.credit a{color:var(--muted);text-decoration:none;border-bottom:1px solid 
   });
   show((location.hash||'').replace('#',''),false);
 })();
-</script></body></html>
+</script><script>
+/* אקורדיון אחיד: פתיחה סוגרת את הפתוח שלידו, והכותרת של מה שנפתח עולה לראש המסך */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function barH(){
+    const b = document.querySelector('nav.tabs, .tabbar');
+    return (b && getComputedStyle(b).position === 'sticky') ? b.getBoundingClientRect().height : 0;
+  }
+  document.addEventListener('toggle', e => {
+    const el = e.target;
+    if(!(el instanceof HTMLDetailsElement) || !el.open) return;
+    const root = el.parentElement && el.parentElement.closest('.acc') ? el.parentElement.closest('.acc').parentElement : el.parentElement;
+    if(!root) return;
+    let closed = false;
+    root.querySelectorAll('details[open]').forEach(o => {
+      if(o === el || o.contains(el) || el.contains(o)) return;
+      if(o.parentElement.closest('details') !== el.parentElement.closest('details')) return;
+      o.open = false; closed = true;
+    });
+    const s = el.querySelector('summary'); if(!s) return;
+    const top = s.getBoundingClientRect().top, h = barH();
+    if(closed || top < h || top > innerHeight - 80){
+      scrollTo({top: scrollY + top - h - 8, behavior: reduce ? 'auto' : 'smooth'});
+    }
+  }, true);
+})();
+</script>
+<script>
+/* לשוניות: מעבר ללשונית מתחיל תמיד מראש העמוד, ולחיצה על הלשונית הפעילה מחזירה אותה למצב שבו נפתחה ועולה לראש העמוד */
+(function(){
+  const SEL = '#tabnav button, nav.tabs button, .tabnav button, .tab-btn';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isActive = b => b.classList.contains('active') || b.getAttribute('aria-selected') === 'true';
+  const skip = el => el.closest('header, .overlay, .modal, .viewer, [role="dialog"], #nsPick, #pickModal, .sheet');
+  const isAcc = el => { const h = el.firstElementChild;
+    return el.matches('.card, .step-card, .acc-card') || !!(h && /toggle\(\s*['"]open['"]\s*\)|toggleCard|toggleStep/.test(h.getAttribute('onclick') || '')); };
+  let defaults = new Set(), seen = new Set();
+  function visibleAcc(){
+    const out = [];
+    document.querySelectorAll('details').forEach(d => { if(d.offsetParent !== null && !skip(d)) out.push(d); });
+    const cand = new Set(document.querySelectorAll('.card, .step-card, .acc-card, .open'));
+    document.querySelectorAll('[onclick]').forEach(h => { if(h.parentElement && h === h.parentElement.firstElementChild) cand.add(h.parentElement); });
+    cand.forEach(el => { if(el.offsetParent !== null && !skip(el) && isAcc(el)) out.push(el); });
+    return out;
+  }
+  function snapshot(){ const v = visibleAcc(); v.forEach(el => seen.add(el)); defaults = new Set(v.filter(el => el.tagName === 'DETAILS' ? el.open : el.classList.contains('open'))); }
+  function restore(){
+    visibleAcc().forEach(el => {
+      if(!seen.has(el)) return;
+      const want = defaults.has(el);
+      if(el.tagName === 'DETAILS'){ if(el.open !== want){ el.open = want; el.classList.remove('closing'); } }
+      else if(el.classList.contains('open') !== want){
+        el.classList.toggle('open', want);
+        const h = el.firstElementChild; if(h && h.hasAttribute('aria-expanded')) h.setAttribute('aria-expanded', want ? 'true' : 'false');
+      }
+    });
+  }
+  window.addEventListener('load', () => setTimeout(snapshot, 50));
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest(SEL); if(!b) return;
+    const was = isActive(b);
+    setTimeout(() => {
+      if(was){ restore(); window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); }
+      else { window.scrollTo({top:0}); setTimeout(snapshot, 200); }
+    }, 0);
+  }, true);
+})();
+</script>
+</body></html>

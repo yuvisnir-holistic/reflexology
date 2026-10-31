@@ -255,6 +255,16 @@ header.compact{padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px}
 header.compact h1,header.compact .sub,header.compact .search-wrap{display:none}
 header.compact .tabnav{margin-top:0}
 </style>
+<style>
+/* כותרת שמתכווצת ונפתחת באנימציה רכה, ולא קופצת */
+header{transition:padding .32s ease}
+header h1,header .sub,header .leaf-divider,header .search-wrap{overflow:hidden;max-height:240px;transition:max-height .32s ease,opacity .24s ease,margin .32s ease}
+header.compact h1,header.compact .sub,header.compact .search-wrap{display:block!important;max-height:0!important;opacity:0;margin-top:0!important;margin-bottom:0!important;pointer-events:none}
+header.compact .leaf-divider{display:flex!important;max-height:0!important;opacity:0;margin-top:0!important;margin-bottom:0!important}
+header .tabnav{transition:margin .32s ease}
+html,body{overflow-anchor:none}
+@media (prefers-reduced-motion:reduce){header,header h1,header .sub,header .leaf-divider,header .search-wrap,header .tabnav{transition:none}}
+</style>
 </head>
 <body>
 <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="צפייה בגדול">
@@ -1746,6 +1756,47 @@ window.addEventListener('scroll', ()=>{
   requestAnimationFrame(()=>{ const h=document.querySelector('header'); if(!h) return;
     if(window.scrollY > 120) h.classList.add('compact'); else if(window.scrollY < 8) h.classList.remove('compact'); });
 }, {passive:true});
+</script>
+<script>
+/* לשוניות: מעבר ללשונית מתחיל תמיד מראש העמוד, ולחיצה על הלשונית הפעילה מחזירה אותה למצב שבו נפתחה ועולה לראש העמוד */
+(function(){
+  const SEL = '#tabnav button, nav.tabs button, .tabnav button, .tab-btn';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isActive = b => b.classList.contains('active') || b.getAttribute('aria-selected') === 'true';
+  const skip = el => el.closest('header, .overlay, .modal, .viewer, [role="dialog"], #nsPick, #pickModal, .sheet');
+  const isAcc = el => { const h = el.firstElementChild;
+    return el.matches('.card, .step-card, .acc-card') || !!(h && /toggle\(\s*['"]open['"]\s*\)|toggleCard|toggleStep/.test(h.getAttribute('onclick') || '')); };
+  let defaults = new Set(), seen = new Set();
+  function visibleAcc(){
+    const out = [];
+    document.querySelectorAll('details').forEach(d => { if(d.offsetParent !== null && !skip(d)) out.push(d); });
+    const cand = new Set(document.querySelectorAll('.card, .step-card, .acc-card, .open'));
+    document.querySelectorAll('[onclick]').forEach(h => { if(h.parentElement && h === h.parentElement.firstElementChild) cand.add(h.parentElement); });
+    cand.forEach(el => { if(el.offsetParent !== null && !skip(el) && isAcc(el)) out.push(el); });
+    return out;
+  }
+  function snapshot(){ const v = visibleAcc(); v.forEach(el => seen.add(el)); defaults = new Set(v.filter(el => el.tagName === 'DETAILS' ? el.open : el.classList.contains('open'))); }
+  function restore(){
+    visibleAcc().forEach(el => {
+      if(!seen.has(el)) return;
+      const want = defaults.has(el);
+      if(el.tagName === 'DETAILS'){ if(el.open !== want){ el.open = want; el.classList.remove('closing'); } }
+      else if(el.classList.contains('open') !== want){
+        el.classList.toggle('open', want);
+        const h = el.firstElementChild; if(h && h.hasAttribute('aria-expanded')) h.setAttribute('aria-expanded', want ? 'true' : 'false');
+      }
+    });
+  }
+  window.addEventListener('load', () => setTimeout(snapshot, 50));
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest(SEL); if(!b) return;
+    const was = isActive(b);
+    setTimeout(() => {
+      if(was){ restore(); window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); }
+      else { window.scrollTo({top:0}); setTimeout(snapshot, 200); }
+    }, 0);
+  }, true);
+})();
 </script>
 </body>
 </html>

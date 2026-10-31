@@ -197,6 +197,16 @@ p.lead,.intro-text{font-size:.95rem;color:#586961;line-height:1.75;margin:4px 0 
 .acc-body .acc-card > .acc-head{padding:12px 2px}
 @media (min-width:1000px){ main{max-width:900px} }
 </style>
+<style>
+/* כותרת שמתכווצת ונפתחת באנימציה רכה, ולא קופצת */
+header{transition:padding .32s ease}
+header h1,header .sub,header .leaf-divider,header .search-wrap{overflow:hidden;max-height:240px;transition:max-height .32s ease,opacity .24s ease,margin .32s ease}
+header.compact h1,header.compact .sub,header.compact .search-wrap{display:block!important;max-height:0!important;opacity:0;margin-top:0!important;margin-bottom:0!important;pointer-events:none}
+header.compact .leaf-divider{display:flex!important;max-height:0!important;opacity:0;margin-top:0!important;margin-bottom:0!important}
+header .tabnav{transition:margin .32s ease}
+html,body{overflow-anchor:none}
+@media (prefers-reduced-motion:reduce){header,header h1,header .sub,header .leaf-divider,header .search-wrap,header .tabnav{transition:none}}
+</style>
 </head>
 <body>
 <header id="hdr"><h1>כְּלָלֵי הַהַשְׁקָטָה</h1><div class="leaf-divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div><div class="sub">לְמוֹרֵנוּ הַבַּעַל שֵׁם טוֹב זִיע"א</div><nav class="tabnav" id="tabnav" aria-label="חלקי האפליקציה"><button data-tab="home" class="active" onclick="goTab('home')">בית</button><button data-tab="kelim" onclick="goTab('kelim')">כלי העבודה</button><button data-tab="mood" onclick="goTab('mood')">לפי מצב</button><button data-tab="hit" onclick="goTab('hit')">התבוננויות</button><button data-tab="psukim" onclick="goTab('psukim')">פסוקים</button><button data-tab="shem" onclick="goTab('shem')">שם יהו״ה</button><button data-tab="guide" onclick="goTab('guide')">למטפל</button></nav></header>
@@ -532,6 +542,47 @@ window.addEventListener('scroll', ()=>{ const h=document.getElementById('hdr'); 
   setTimeout(()=>{ if(tabs.includes(h)) showTab(h); else if(document.getElementById('c-view-'+h)) { nav('view-'+h); stack.length=0; updateFabs(); } },80);
 })();
 
+</script>
+<script>
+/* לשוניות: מעבר ללשונית מתחיל תמיד מראש העמוד, ולחיצה על הלשונית הפעילה מחזירה אותה למצב שבו נפתחה ועולה לראש העמוד */
+(function(){
+  const SEL = '#tabnav button, nav.tabs button, .tabnav button, .tab-btn';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isActive = b => b.classList.contains('active') || b.getAttribute('aria-selected') === 'true';
+  const skip = el => el.closest('header, .overlay, .modal, .viewer, [role="dialog"], #nsPick, #pickModal, .sheet');
+  const isAcc = el => { const h = el.firstElementChild;
+    return el.matches('.card, .step-card, .acc-card') || !!(h && /toggle\(\s*['"]open['"]\s*\)|toggleCard|toggleStep/.test(h.getAttribute('onclick') || '')); };
+  let defaults = new Set(), seen = new Set();
+  function visibleAcc(){
+    const out = [];
+    document.querySelectorAll('details').forEach(d => { if(d.offsetParent !== null && !skip(d)) out.push(d); });
+    const cand = new Set(document.querySelectorAll('.card, .step-card, .acc-card, .open'));
+    document.querySelectorAll('[onclick]').forEach(h => { if(h.parentElement && h === h.parentElement.firstElementChild) cand.add(h.parentElement); });
+    cand.forEach(el => { if(el.offsetParent !== null && !skip(el) && isAcc(el)) out.push(el); });
+    return out;
+  }
+  function snapshot(){ const v = visibleAcc(); v.forEach(el => seen.add(el)); defaults = new Set(v.filter(el => el.tagName === 'DETAILS' ? el.open : el.classList.contains('open'))); }
+  function restore(){
+    visibleAcc().forEach(el => {
+      if(!seen.has(el)) return;
+      const want = defaults.has(el);
+      if(el.tagName === 'DETAILS'){ if(el.open !== want){ el.open = want; el.classList.remove('closing'); } }
+      else if(el.classList.contains('open') !== want){
+        el.classList.toggle('open', want);
+        const h = el.firstElementChild; if(h && h.hasAttribute('aria-expanded')) h.setAttribute('aria-expanded', want ? 'true' : 'false');
+      }
+    });
+  }
+  window.addEventListener('load', () => setTimeout(snapshot, 50));
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest(SEL); if(!b) return;
+    const was = isActive(b);
+    setTimeout(() => {
+      if(was){ restore(); window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); }
+      else { window.scrollTo({top:0}); setTimeout(snapshot, 200); }
+    }, 0);
+  }, true);
+})();
 </script>
 </body>
 </html>

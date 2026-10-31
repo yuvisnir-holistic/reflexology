@@ -498,6 +498,16 @@
   .organ-body p, .organ-section p, .sub-body p, .system-desc, .ex-txt, .ex-why, .ex-fit, #backgroundView p, .tool-lead, .dg-note{text-align:justify;}
   #backgroundView .bg-links{text-align:start;}
 </style>
+<style>
+/* כותרת שמתכווצת ונפתחת באנימציה רכה, ולא קופצת */
+header{transition:padding .32s ease}
+header h1,header .sub,header .leaf-divider,header .search-wrap{overflow:hidden;max-height:240px;transition:max-height .32s ease,opacity .24s ease,margin .32s ease}
+header.compact h1,header.compact .sub,header.compact .search-wrap{display:block!important;max-height:0!important;opacity:0;margin-top:0!important;margin-bottom:0!important;pointer-events:none}
+header.compact .leaf-divider{display:flex!important;max-height:0!important;opacity:0;margin-top:0!important;margin-bottom:0!important}
+header .tabnav{transition:margin .32s ease}
+html,body{overflow-anchor:none}
+@media (prefers-reduced-motion:reduce){header,header h1,header .sub,header .leaf-divider,header .search-wrap,header .tabnav{transition:none}}
+</style>
 </head>
 <body>
 
@@ -4009,6 +4019,88 @@ document.getElementById('tabnav').addEventListener('click', e=>{ if(e.target.clo
   }
   if(document.readyState==='complete') go(); else window.addEventListener('load', go);
   window.addEventListener('hashchange', go);
+})();
+</script>
+<script>
+/* קישורים לאתרים: עבודת המידות והיסודות במערכות בנפש, וכלי הבעל שם טוב בלשונית הכלים */
+(function(){
+  const link = (href, label) => `<a class="site-link" href="${href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${label} ←</a>`;
+  /* מערכות בנפש */
+  const nf = document.getElementById('nefeshView');
+  if(nf && !nf.querySelector('.site-link')){
+    const desc = nf.querySelector('.system-desc');
+    const html = `<div class="nf-site">${link('avodat-hamidot-vehayesodot.html','לאתר עבודת המידות והיסודות')}</div>`;
+    if(desc) desc.insertAdjacentHTML('afterend', html); else nf.insertAdjacentHTML('afterbegin', html);
+  }
+  [['elementsView','avodat-hamidot-vehayesodot.html#yesodot','לעבודת היסודות באתר'],['sefirotView','avodat-hamidot-vehayesodot.html#middot','לעבודת המידות באתר']].forEach(([v,href,label])=>{
+    const el = document.getElementById(v); if(!el || el.querySelector(':scope > .nf-site')) return;
+    const back = el.querySelector(':scope > .nf-back');
+    const html = `<div class="nf-site">${link(href,label)}</div>`;
+    if(back) back.insertAdjacentHTML('afterend', html); else el.insertAdjacentHTML('afterbegin', html);
+  });
+  /* לשונית הכלים */
+  const MORE = {'tool-hashkata':['klalei-hashkata.html','לאתר כללי ההשקטה']};
+  if(typeof toolCardFull === 'function'){
+    const _t = toolCardFull;
+    toolCardFull = function(id){
+      const h = _t.apply(this, arguments), s = MORE[id]; if(!s || !h || h.indexOf('class="site-link"')>-1) return h;
+      const m = h.match(/<div class="organ-body[^"]*">/); if(!m) return h;
+      const at = h.indexOf(m[0]) + m[0].length;
+      return h.slice(0,at) + link(s[0], s[1]) + h.slice(at);
+    };
+  }
+  function piusLink(){
+    const b = document.querySelector('#tool-card-pius-group .pius-body');
+    if(b && !b.querySelector(':scope > .site-link')) b.insertAdjacentHTML('afterbegin', link('shvil-hapiyus.html','לאתר שביל הפיוס'));
+  }
+  if(typeof renderToolsView === 'function'){
+    const _r = renderToolsView;
+    renderToolsView = function(){ const x = _r.apply(this, arguments); piusLink(); return x; };
+    if(document.getElementById('toolsList') && document.getElementById('toolsList').innerHTML) renderToolsView();
+  }
+  piusLink();
+})();
+</script>
+<style>.nf-site{margin:4px 0 12px}</style>
+<script>
+/* לשוניות: מעבר ללשונית מתחיל תמיד מראש העמוד, ולחיצה על הלשונית הפעילה מחזירה אותה למצב שבו נפתחה ועולה לראש העמוד */
+(function(){
+  const SEL = '#tabnav button, nav.tabs button, .tabnav button, .tab-btn';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isActive = b => b.classList.contains('active') || b.getAttribute('aria-selected') === 'true';
+  const skip = el => el.closest('header, .overlay, .modal, .viewer, [role="dialog"], #nsPick, #pickModal, .sheet');
+  const isAcc = el => { const h = el.firstElementChild;
+    return el.matches('.card, .step-card, .acc-card') || !!(h && /toggle\(\s*['"]open['"]\s*\)|toggleCard|toggleStep/.test(h.getAttribute('onclick') || '')); };
+  let defaults = new Set(), seen = new Set();
+  function visibleAcc(){
+    const out = [];
+    document.querySelectorAll('details').forEach(d => { if(d.offsetParent !== null && !skip(d)) out.push(d); });
+    const cand = new Set(document.querySelectorAll('.card, .step-card, .acc-card, .open'));
+    document.querySelectorAll('[onclick]').forEach(h => { if(h.parentElement && h === h.parentElement.firstElementChild) cand.add(h.parentElement); });
+    cand.forEach(el => { if(el.offsetParent !== null && !skip(el) && isAcc(el)) out.push(el); });
+    return out;
+  }
+  function snapshot(){ const v = visibleAcc(); v.forEach(el => seen.add(el)); defaults = new Set(v.filter(el => el.tagName === 'DETAILS' ? el.open : el.classList.contains('open'))); }
+  function restore(){
+    visibleAcc().forEach(el => {
+      if(!seen.has(el)) return;
+      const want = defaults.has(el);
+      if(el.tagName === 'DETAILS'){ if(el.open !== want){ el.open = want; el.classList.remove('closing'); } }
+      else if(el.classList.contains('open') !== want){
+        el.classList.toggle('open', want);
+        const h = el.firstElementChild; if(h && h.hasAttribute('aria-expanded')) h.setAttribute('aria-expanded', want ? 'true' : 'false');
+      }
+    });
+  }
+  window.addEventListener('load', () => setTimeout(snapshot, 50));
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest(SEL); if(!b) return;
+    const was = isActive(b);
+    setTimeout(() => {
+      if(was){ restore(); window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); }
+      else { window.scrollTo({top:0}); setTimeout(snapshot, 200); }
+    }, 0);
+  }, true);
 })();
 </script>
 </body>

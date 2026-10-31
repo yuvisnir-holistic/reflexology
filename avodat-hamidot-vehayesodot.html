@@ -228,6 +228,25 @@
   }
   .print-head{display:none;}
 </style>
+<style>
+/* ===== קופסה מבחוץ, קווים מבפנים ===== */
+:root{--line:#E2D9C8}
+details.acc details.acc{background:none;border:0;border-radius:0;box-shadow:none;border-top:1px solid var(--line);margin:0}
+details.acc details.acc:last-of-type{border-bottom:1px solid var(--line)}
+details.acc details.acc > summary{padding:13px 2px}
+details.acc details.acc > .body{padding:0 2px 14px}
+details.acc details.acc > summary .chev{width:26px;height:26px;padding:4px;border:1.5px solid var(--sage);border-radius:50%}
+.acc .practice,.card .practice{background:none;border:0;border-radius:0;border-top:1px solid var(--line);margin:0;padding:13px 2px}
+.acc .practice:last-of-type,.card .practice:last-of-type{border-bottom:1px solid var(--line)}
+.acc .practice.on,.card .practice.on{background:none}
+.acc .practice.on b,.card .practice.on b{color:var(--forest)}
+/* כותרת שמתכווצת ונפתחת באנימציה רכה */
+html,body{overflow-anchor:none}
+header .sub{overflow:hidden;max-height:60px;transition:max-height .32s ease,opacity .24s ease,margin .32s ease}
+header.compact .sub{display:block!important;max-height:0;opacity:0;margin-bottom:0}
+header h1{transition:font-size .32s ease,margin .32s ease}
+@media (prefers-reduced-motion:reduce){header .sub,header h1{transition:none}}
+</style>
 </head>
 <body>
 

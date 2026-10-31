@@ -416,5 +416,46 @@ function toggleStep(headerEl){
   }
 }
 </script>
+<script>
+/* לשוניות: מעבר ללשונית מתחיל תמיד מראש העמוד, ולחיצה על הלשונית הפעילה מחזירה אותה למצב שבו נפתחה ועולה לראש העמוד */
+(function(){
+  const SEL = '#tabnav button, nav.tabs button, .tabnav button, .tab-btn';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isActive = b => b.classList.contains('active') || b.getAttribute('aria-selected') === 'true';
+  const skip = el => el.closest('header, .overlay, .modal, .viewer, [role="dialog"], #nsPick, #pickModal, .sheet');
+  const isAcc = el => { const h = el.firstElementChild;
+    return el.matches('.card, .step-card, .acc-card') || !!(h && /toggle\(\s*['"]open['"]\s*\)|toggleCard|toggleStep/.test(h.getAttribute('onclick') || '')); };
+  let defaults = new Set(), seen = new Set();
+  function visibleAcc(){
+    const out = [];
+    document.querySelectorAll('details').forEach(d => { if(d.offsetParent !== null && !skip(d)) out.push(d); });
+    const cand = new Set(document.querySelectorAll('.card, .step-card, .acc-card, .open'));
+    document.querySelectorAll('[onclick]').forEach(h => { if(h.parentElement && h === h.parentElement.firstElementChild) cand.add(h.parentElement); });
+    cand.forEach(el => { if(el.offsetParent !== null && !skip(el) && isAcc(el)) out.push(el); });
+    return out;
+  }
+  function snapshot(){ const v = visibleAcc(); v.forEach(el => seen.add(el)); defaults = new Set(v.filter(el => el.tagName === 'DETAILS' ? el.open : el.classList.contains('open'))); }
+  function restore(){
+    visibleAcc().forEach(el => {
+      if(!seen.has(el)) return;
+      const want = defaults.has(el);
+      if(el.tagName === 'DETAILS'){ if(el.open !== want){ el.open = want; el.classList.remove('closing'); } }
+      else if(el.classList.contains('open') !== want){
+        el.classList.toggle('open', want);
+        const h = el.firstElementChild; if(h && h.hasAttribute('aria-expanded')) h.setAttribute('aria-expanded', want ? 'true' : 'false');
+      }
+    });
+  }
+  window.addEventListener('load', () => setTimeout(snapshot, 50));
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest(SEL); if(!b) return;
+    const was = isActive(b);
+    setTimeout(() => {
+      if(was){ restore(); window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); }
+      else { window.scrollTo({top:0}); setTimeout(snapshot, 200); }
+    }, 0);
+  }, true);
+})();
+</script>
 </body>
 </html>
