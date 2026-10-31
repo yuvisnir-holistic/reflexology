@@ -121,6 +121,84 @@ body { background:var(--bg); color:var(--text); font-family:'Assistant',sans-ser
 .tab-btn.sefirah.active { color:var(--sefirah); }
 .tab-btn.home.active { color:var(--forest); }
 </style>
+<style>
+/* ===== מעטפת לפי מדריך העיצוב ===== */
+:root{--line:#E2D9C8;--surface:#FBF7EF;--radius:18px;--shadow:0 2px 14px rgba(44,95,91,0.10)}
+.app{max-width:900px;padding-bottom:30px}
+.header{position:static;background:#3A6863;box-shadow:none;border-bottom:0;padding:calc(34px + env(safe-area-inset-top,0px)) 16px 22px}
+.header-sub{color:rgba(247,241,230,.8)}
+.tabbar-wrap{position:sticky;top:0;bottom:auto;left:auto;right:auto;z-index:60;background:rgba(247,241,230,.95);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:none;border-top:0;border-bottom:1px solid var(--line);padding-bottom:0}
+.tabbar{max-width:900px;padding:0 8px}
+.tab-btn{flex-direction:row;justify-content:center;gap:6px;padding:13px 4px 11px;border-bottom:2.5px solid transparent;color:#6a756f}
+.tab-icon,.tab-icon svg{width:18px;height:18px}
+.tab-label{font-size:17px;font-weight:600}
+.tab-btn.active{font-weight:700}
+.tab-btn.home.active{color:var(--forest-dark);border-bottom-color:var(--forest)}
+.tab-btn.fire.active{border-bottom-color:var(--fire)}
+.tab-btn.water.active{border-bottom-color:var(--water)}
+.tab-btn.sefirah.active{border-bottom-color:var(--sefirah)}
+.page-content{padding:0 20px 40px}
+.view{animation:none}
+
+/* בית: בלי קופסאות צבעוניות, קווים בין החלקים */
+.hero-card{background:none;border:0;border-radius:0;padding:26px 4px 22px;margin-bottom:0;border-bottom:1px solid var(--line)}
+.hero-icon{color:var(--forest);font-size:28px}
+.info-card{background:none;border:0;border-radius:0;padding:20px 4px;margin:0;border-top:1px solid var(--line)}
+.intro-text + .info-card{border-top:1px solid var(--line)}
+.info-card-title{text-align:right}
+.sep-label{letter-spacing:0;text-transform:none;font-size:15px;color:var(--forest);padding:24px 0 10px}
+
+/* שלושת המסלולים: קופסה אחת, שורות עם קווים */
+.squares-wrap{gap:0;padding:0;background:var(--surface);border:1px solid rgba(44,95,91,0.08);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:6px}
+.square-btn{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;column-gap:14px;row-gap:0;align-items:center;
+  text-align:right;border:0;border-radius:0;padding:16px 18px;background:none!important;position:relative}
+.square-btn + .square-btn{border-top:1px solid rgba(174,191,174,0.5)}
+.square-icon{grid-row:1 / 3;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px}
+.square-btn.fire .square-icon{background:var(--fire-bg)}
+.square-btn.water .square-icon{background:var(--water-bg)}
+.square-btn.sefirah .square-icon{background:var(--sefirah-bg)}
+.square-title{font-size:24px;grid-column:2;line-height:1.25}
+.square-sub{grid-column:2;font-size:17px;color:#6a756f!important;opacity:1}
+.square-btn::after{content:"‹";grid-column:3;grid-row:1 / 3;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--sage);
+  display:flex;align-items:center;justify-content:center;color:var(--forest);font-size:18px;font-weight:700}
+.square-btn:hover{background:#fff!important}
+.square-btn:focus-visible,.tab-btn:focus-visible,.step-header:focus-visible,.back-btn:focus-visible,.scroll-top-btn:focus-visible{outline:3px solid var(--air);outline-offset:-3px}
+
+/* מסלול: כותרת בלי גרדיאנט, שלבים בשורות עם קווים */
+.section-head{border-bottom:0;margin-bottom:0;padding:18px 0 4px}
+.back-btn{border:1.5px solid var(--forest);color:var(--forest);border-radius:999px;font-size:16px;font-weight:700;padding:6px 16px;background:none}
+.detail-hero{background:none!important;border:0!important;border-radius:0;padding:14px 4px 22px;margin-bottom:0}
+.detail-hero-desc{text-align:justify}
+.step-card{background:none!important;border:0!important;border-radius:0;margin:0;border-bottom:1px solid var(--line)!important;overflow:visible}
+.detail-hero + .step-card{border-top:1px solid var(--line)!important}
+.step-header{flex-direction:column;align-items:flex-start;text-align:right;gap:2px;padding:16px 4px 16px 50px}
+.step-num{font-size:15px;letter-spacing:0;text-transform:none}
+.step-title{font-size:24px}
+.step-chevron{left:4px;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--sage);display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--forest);line-height:1;padding-bottom:3px}
+.step-card.fire.open .step-title{color:var(--fire)}
+.step-card.water.open .step-title{color:var(--water)}
+.step-card.sefirah.open .step-title{color:var(--sefirah)}
+.step-body{padding:0 4px 20px}
+@keyframes accIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.step-card.open .step-body{animation:accIn .26s ease}
+
+/* כפתור צף */
+.scroll-top-btn{bottom:calc(20px + env(safe-area-inset-bottom,0px));height:44px;padding:0 18px;background:var(--surface);color:var(--forest);
+  border:1.5px solid var(--forest);box-shadow:none;font-size:17px;font-weight:700}
+.footer-space{height:40px}
+@media (prefers-reduced-motion:reduce){.step-card.open .step-body{animation:none}*{transition:none!important}}
+
+/* בלי אייקונים בלשוניות ובראש המסלולים */
+.tab-icon{display:none}
+.detail-hero-icon{display:none}
+.detail-hero{padding-top:18px}
+/* מסלול הקרובים בכתום */
+:root{--fire:#C06A24;--fire-bg:#F7E7D6}
+.square-btn.fire .square-sub,.square-btn.fire .square-title{color:var(--fire)}
+.square-btn.fire .square-sub{color:#6a756f!important}
+</style>
 </head>
 <body>
 <div class="app">
@@ -128,6 +206,27 @@ body { background:var(--bg); color:var(--text); font-family:'Assistant',sans-ser
   <div class="header-title">שְׁבִיל הַפִּיּוּס</div>
   <div class="header-sub">שֶׁל הַבַּעַל שֵׁם טוֹב הַקָּדוֹשׁ</div>
 </div>
+<div class="tabbar-wrap">
+  <div class="tabbar">
+    <button class="tab-btn home active" data-tab="view-home" onclick="nav('view-home')">
+      <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span>
+      <span class="tab-label">בַּיִת</span>
+    </button>
+    <button class="tab-btn fire" data-tab="view-karov" onclick="nav('view-karov')">
+      <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
+      <span class="tab-label">קְרוֹבִים</span>
+    </button>
+    <button class="tab-btn water" data-tab="view-hashem" onclick="nav('view-hashem')">
+      <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M12 2.7l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span>
+      <span class="tab-label">ה'</span>
+    </button>
+    <button class="tab-btn sefirah" data-tab="view-atzmi" onclick="nav('view-atzmi')">
+      <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/></svg></span>
+      <span class="tab-label">עַצְמִי</span>
+    </button>
+  </div>
+</div>
+
 
 <!-- HOME -->
 <div id="view-home" class="view active"><div class="page-content">
@@ -262,27 +361,6 @@ body { background:var(--bg); color:var(--text); font-family:'Assistant',sans-ser
   <span id="floatBtnIcon">↑</span><span id="floatBtnLabel">למעלה</span>
 </button>
 
-<div class="tabbar-wrap">
-  <div class="tabbar">
-    <button class="tab-btn home active" data-tab="view-home" onclick="nav('view-home')">
-      <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span>
-      <span class="tab-label">בַּיִת</span>
-    </button>
-    <button class="tab-btn fire" data-tab="view-karov" onclick="nav('view-karov')">
-      <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
-      <span class="tab-label">קְרוֹבִים</span>
-    </button>
-    <button class="tab-btn water" data-tab="view-hashem" onclick="nav('view-hashem')">
-      <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M12 2.7l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span>
-      <span class="tab-label">ה'</span>
-    </button>
-    <button class="tab-btn sefirah" data-tab="view-atzmi" onclick="nav('view-atzmi')">
-      <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/></svg></span>
-      <span class="tab-label">עַצְמִי</span>
-    </button>
-  </div>
-</div>
-
 <script>
 let currentView = 'view-home';
 function nav(id){
@@ -318,6 +396,25 @@ function updateScrollBtn(){
   }
 }
 window.addEventListener('scroll', updateScrollBtn);
+</script>
+<script>
+/* אקורדיון אחיד: שלב אחד פתוח בכל מסלול, והכותרת של מה שנפתח עולה לראש המסך */
+function toggleStep(headerEl){
+  const card = headerEl.closest('.step-card');
+  const opening = !card.classList.contains('open');
+  let closed = false;
+  if(opening){
+    card.parentElement.querySelectorAll(':scope > .step-card.open').forEach(o => { o.classList.remove('open'); closed = true; });
+  }
+  card.classList.toggle('open', opening);
+  if(!opening) return;
+  const bar = document.querySelector('.tabbar-wrap'), h = bar ? bar.getBoundingClientRect().height : 0;
+  const top = headerEl.getBoundingClientRect().top;
+  if(closed || top < h || top > innerHeight - 80){
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scrollTo({top: scrollY + top - h - 8, behavior: reduce ? 'auto' : 'smooth'});
+  }
+}
 </script>
 </body>
 </html>

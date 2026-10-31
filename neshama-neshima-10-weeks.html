@@ -240,6 +240,11 @@ textarea{background:#fff}
 @media (max-width:540px){
   .week{padding:1.4rem 1.1rem}
 }
+
+/* אקורדיון: פריט אחד פתוח בכל רמה */
+@keyframes accIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+details.tool[open] .tool-body{animation:accIn .26s ease}
+@media (prefers-reduced-motion:reduce){details.tool[open] .tool-body{animation:none}}
 </style>
 </head>
 <body>
@@ -685,6 +690,23 @@ document.getElementById('ctaStart').addEventListener('click', () => { openWeek =
 renderPath();
 renderWeek();
 renderCta();
+</script>
+<script>
+/* אקורדיון אחיד: פתיחת פריט סוגרת את הפתוח שלידו, והכותרת שלו עולה לראש המסך */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function barH(){ const b=document.querySelector('.tabbar'); return b ? b.getBoundingClientRect().height : 0; }
+  document.addEventListener('toggle', e => {
+    const el = e.target;
+    if(!(el instanceof HTMLDetailsElement) || !el.classList.contains('tool') || !el.open) return;
+    let closed = false;
+    el.parentElement.querySelectorAll(':scope > details.tool[open]').forEach(o => { if(o!==el){ o.open=false; closed=true; } });
+    const s = el.querySelector('summary'), top = s.getBoundingClientRect().top, h = barH();
+    if(closed || top < h || top > innerHeight - 80){
+      scrollTo({top: scrollY + top - h - 8, behavior: reduce ? 'auto' : 'smooth'});
+    }
+  }, true);
+})();
 </script>
 </body>
 </html>
