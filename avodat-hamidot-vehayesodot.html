@@ -72,6 +72,8 @@
   .gate p{margin:0 0 12px;font-size:0.95rem;color:#4b5752;text-align:right;}
   .gate .strip{display:flex;gap:6px;flex-wrap:wrap;}
   .gate:active{transform:scale(0.99);}
+  .gate .strip .tag{border:none;cursor:pointer;font-family:inherit;padding:6px 12px;min-height:30px;transition:transform .15s, box-shadow .15s;}
+  .gate .strip .tag:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.12);}
 
   /* תגיות */
   .tag{display:inline-flex;align-items:center;gap:5px;font-size:0.76rem;padding:4px 10px;border-radius:999px;font-weight:700;white-space:nowrap;}
@@ -249,24 +251,24 @@
     <div id="mineBox"></div>
 
     <div class="gates">
-      <button class="gate" data-go="yesodot">
+      <div class="gate" data-go="yesodot" role="button" tabindex="0">
         <h3>ארבעת היסודות</h3>
         <p>אש, מים, רוח ועפר, החומרים שמהם אנחנו בנויים. יסוד אחד לכל שבוע.</p>
         <div class="strip">
-          <span class="tag t-fire"><span class="dot"></span>אש</span>
-          <span class="tag t-water"><span class="dot"></span>מים</span>
-          <span class="tag t-air"><span class="dot"></span>רוח</span>
-          <span class="tag t-earth"><span class="dot"></span>עפר</span>
+          <button class="tag t-fire" data-go="week:esh"><span class="dot"></span>אש</button>
+          <button class="tag t-water" data-go="week:mayim"><span class="dot"></span>מים</button>
+          <button class="tag t-air" data-go="week:ruach"><span class="dot"></span>רוח</button>
+          <button class="tag t-earth" data-go="week:afar"><span class="dot"></span>עפר</button>
         </div>
-      </button>
-      <button class="gate" data-go="middot">
+      </div>
+      <div class="gate" data-go="middot" role="button" tabindex="0">
         <h3>שבע המידות</h3>
         <p>הכוחות שבהם אנחנו פועלים בעולם, מחסד ועד מלכות. מידה אחת לכל שבוע.</p>
         <div class="strip">
-          <span class="tag t-sef">חסד</span><span class="tag t-sef">גבורה</span><span class="tag t-sef">תפארת</span>
-          <span class="tag t-sef">נצח</span><span class="tag t-sef">הוד</span><span class="tag t-sef">יסוד</span><span class="tag t-sef">מלכות</span>
+          <button class="tag t-sef" data-go="week:chesed">חסד</button><button class="tag t-sef" data-go="week:gevura">גבורה</button><button class="tag t-sef" data-go="week:tiferet">תפארת</button>
+          <button class="tag t-sef" data-go="week:netzach">נצח</button><button class="tag t-sef" data-go="week:hod">הוד</button><button class="tag t-sef" data-go="week:yesod">יסוד</button><button class="tag t-sef" data-go="week:malchut">מלכות</button>
         </div>
-      </button>
+      </div>
     </div>
 
     <h3 class="sec">מה זו עבודה פנימית</h3>
@@ -276,7 +278,7 @@
       <p>בטיפול עצמו אני עובד מלמטה למעלה. מתחילים מהגוף, דרך המגע והנשימה, וכשהגוף נרגע ומשתחרר, משהו משתחרר גם ברובד של המחשבה והרגש. בין המפגשים העבודה הולכת בכיוון ההפוך, מלמעלה למטה. מתחילים מכוחות הנפש, ממה שאני רוצה, ממה שאני חושב ומה שאני מרגיש, ומשם השינוי יורד אל הדיבור, אל המעשים ואל הגוף. מי שלומד לשים לב לכעס ולבחור מחשבה אחרת, משנה גם את המילים ואת התגובות שלו, וזה בהכרח משפיע גם על הגוף.</p>
       <p>חסימה או חוסר איזון יושבים לרוב בין הקומות, במקום שבו הקשר ביניהן נחלש. הטיפול משחרר את מה שנתקע בגוף, והעבודה בין המפגשים מחזקת את הקשר בין הקומות. כך השינוי לא נשאר רק ברמה של הסימפטום, אלא מגיע עד השורש של החסימה, ויכול להחזיק לאורך זמן.</p>
       <h4 class="pgroup">איך זה נראה בפועל</h4>
-      <p>מתחילים כבר ביום הטיפול. בוחרים תרגיל אחד ועושים אותו כל יום. בערב, אחרי שהיום עבר, עונים על השאלה של אותו יום, אפילו במשפט אחד. יום שפוספס לא משלימים, פשוט ממשיכים.</p>
+      <p>מתחילים כבר ביום הטיפול. בוחרים את התרגיל של השבוע ועושים אותו כל יום. בשבועות של היסודות יש שניים, אחד לגוף ואחד לנפש. בערב, אחרי שהיום עבר, עונים על השאלה של אותו יום, אפילו במשפט אחד. יום שפוספס לא משלימים, פשוט ממשיכים.</p>
       <p>את התשובות אפשר לכתוב כאן באתר, או במחברת שמיועדת רק לזה. מה שכותבים כאן נשמר בטלפון או במחשב הזה בלבד. לקראת המפגש עונים על השאלה לסיום השבוע, ואותה בלבד שולחים לי בוואטסאפ או מביאים במחברת. אם עלו שאלות במהלך השבוע, נדבר עליהן במפגש.</p>
     </div>
   </section>
@@ -338,12 +340,12 @@ const EL_INTRO = [
     <p>אותם ארבעה יסודות פועלים גם בגוף ובנפש שלנו. האש היא החום והדם, וגם הרצון וההתלהבות. המים הם הנוזלים והזרימה, וגם המחשבה, היכולת להתחבר, לאהוב וליהנות. הרוח היא הנשימה והתנועה, וגם הרגש והדיבור. והעפר הוא העצמות והמבנה, וגם המעשה, היכולת להתמיד ולשים גבולות.</p>`},
   {t:'יסוד האור', s:'היסוד החמישי, הנסתר', html:`
     <p>המקורות מדברים גם על יסוד חמישי, נסתר, יסוד האור. הוא לא עוד חומר לצד האחרים, אלא המקור שממנו כולם יצאו. כמו אור השמש הלבן, שמכיל בתוכו את כל הצבעים אבל הוא עצמו מעבר לכל צבע, כך יסוד האור מכיל את כל היסודות, והוא נמצא בתוך כל אחד מהם.</p>
-    <p>בשפה של הספירות, יסוד האור מקביל לכתר, הנקודה הכי עליונה ונסתרת. אפשר לחשוב עליו כמו על גרעין קטן שמכיל בתוכו את כל העץ העתידי. את האור הזה לא מתרגלים ולא מאזנים. הוא מה שנשאר שלם תמיד, גם כשהיסודות יוצאים מאיזון, והוא מה שמאפשר להם לחזור אליו.</p>`},
+    <p>בשפה של הספירות, יסוד האור מקביל לכתר, הנקודה הכי עליונה ונסתרת. אפשר לחשוב עליו כמו על גרעין קטן שמכיל בתוכו את כל העץ העתידי. את האור הזה לא מתרגלים ולא מאזנים. הוא מה שנשאר שלם תמיד, גם כשהיסודות יוצאים מאיזון, והוא מה שמאפשר להם לחזור לאיזון.</p>`},
   {t:'למה להכיר את הכוחות שבנו', s:'בשביל מה העבודה הזאת', html:`
     <p>כל עוד אנחנו לא מכירים את הכוחות שפועלים בנו, הם מפעילים אותנו. הכעס מתלקח לפני שהספקנו לשים לב, התשוקה גוררת אותנו, הדאגה מסתובבת בראש, והעייפות מושכת אותנו למטה. כשמכירים את הכוחות, אפשר לראות אותם בזמן שהם פועלים, ולבחור מה לעשות איתם.</p>
     <p>המטרה היא לא לשנות את מי שאנחנו. כל אחד נולד עם הרכב יסודות משלו, וזו המתנה שלו. המטרה היא שלכל יסוד יהיה מקום, ושאף אחד לא ישתלט על האחרים. ויש לזה גם צד בגוף. הגוף יודע לרפא את עצמו, וכשמשהו בו יוצא מאיזון, הוא מנסה לספר לנו משהו. מי שמכיר את היסודות שלו, מבין טוב יותר מה הגוף מנסה לספר.</p>`},
   {t:'יסוד מוביל ואיזון', s:'מה זו בריאות', html:`
-    <p>בכל אדם יש את כל ארבעת היסודות, אבל לכל אחד ואחת יש יסוד מוביל, שנולדנו איתו ושמוביל את השאר. יש אנשים שהאש מובילה אצלם את ההתלהבות, ויש שהעפר מוביל אצלם, ולכן הם מחפשים תמיד יציבות. את היסוד המוביל אי אפשר להחליף, אבל אפשר לאזן.</p>
+    <p>בכל אדם יש את כל ארבעת היסודות, אבל לכל אחד ואחת יש יסוד מוביל, שנולדנו איתו ושמוביל את השאר. יש אנשים שהאש מובילה אצלם, ולכן יש בהם הרבה התלהבות, ויש שהעפר מוביל אצלם, ולכן הם מחפשים תמיד יציבות. את היסוד המוביל אי אפשר להחליף, אבל אפשר לאזן.</p>
     <p>בריאות, לפי החכמה הזאת, היא מצב שבו לכל יסוד יש מקום, ואף אחד לא משתלט על האחרים. כשיסוד אחד גדל מדי או נעלם, זה מתבטא גם בנפש וגם בגוף. וזה גם הצד הטוב, כי אם יודעים איזה יסוד יצא מאיזון, יודעים על מה לעבוד.</p>`},
   {t:'ארבעה בתוך כל אחד', s:'אש שבאש, מים שבאש', html:`
     <p>כל יסוד כלול בעצמו מכל ארבעת היסודות. אפשר לראות את זה באדמה טובה. אדמה פורייה היא לא רק עפר. יש בה לחות של מים, חום של שמש, ואוויר, כי היא מאווררת. כשחסרים בה מים, היא מתייבשת ונסדקת. כשהיא דחוסה ואין בה אוויר, השורשים נחנקים. כשהיא קרה מדי, שום דבר לא נובט. רק כשכל הכוחות נמצאים בה במידה הנכונה, משהו צומח.</p>
@@ -784,7 +786,8 @@ const WEEKS = {
       {t:'כשהאש כבה', html:`
         <p>כשהאש חלשה או כבה, אין רצון לכלום, והכול לא מעניין. קשה להתחיל, קשה להתלהב, ויש תחושה של קור, בגוף ובנפש.</p>`},
       {t:'המידה המתקנת', html:`
-        <p>המידה שמתקנת את האש היא ענווה והכרת הטוב. העצה של הרמב״ם לכעס ולגאווה היא להכיר בטוב. מי שרואה את הטוב שהוא מקבל, פחות מרגיש שמגיע לו, ולכן פחות כועס כשמשהו לא מגיע. וכשהכעס יורד, האש חוזרת להאיר.</p>`},
+        <p>המידה שמתקנת את האש היא ענווה והכרת הטוב. ברוב המידות הרמב״ם ממליץ ללכת בדרך האמצע, אבל בכעס ובגאווה הוא מלמד אחרת. בהן צריך להתרחק עד הקצה השני, להיות שפל רוח כמו משה, ולהתרחק מהכעס לגמרי. <span class="quote">״דֶּרֶךְ הַצַּדִּיקִים, הֵן עֲלוּבִין וְאֵינָן עוֹלְבִין״</span> <span class="src">(משנה תורה, הלכות דעות ב, ג)</span>.</p>
+        <p>והדרך המעשית להגיע לשם עוברת דרך הכרת הטוב. מי שרואה את הטוב שהוא מקבל, פחות מרגיש שמגיע לו, ולכן פחות כועס כשמשהו לא מגיע. וכשהכעס יורד, האש חוזרת להאיר.</p>`},
       {t:'היסוד שמולו', html:`
         <p>מול האש עומדים המים. האש חמה ויבשה, והמים קרים ולחים. כשיש עודף אש, לרוב חסרים מים. חסרות רכות, גמישות, מנוחה, והיכולת לקבל אהבה וליהנות.</p>
         <p>לכן לפעמים הדרך לאזן את האש היא לא לכבות אותה, אלא להוסיף לצידה מים. ויום אחד בשבוע מוקדש לזה.</p>`},
@@ -841,7 +844,7 @@ const WEEKS = {
       {g:'body', t:'אכילה במודעות', d:'אכלו לאט ותנו מקום לטעם. שימו לב לאוכל שנכנס לגוף ומזין אותו, וזכרו שהוא נותן לגוף כוח להמשיך להתקיים בבריאות, כדי שתוכלו לעשות טוב בעולם. ואם עולה תשוקה חזקה למתוק, עצרו רגע ושאלו איזו מתיקות חסרה לכם עכשיו.'},
       {g:'inner', t:'לקבל', d:'בכל יום שימו לב לרגע אחד שבו מישהו נתן לכם משהו, מילה טובה, עזרה או תשומת לב. אל תמהרו להחזיר או להקטין. עצרו, נשמו, ותנו לזה להיכנס.'},
       {g:'inner', t:'המעגל של המחשבה', d:'שבו בעיניים עצומות ונזכרו ברגע שבו הרגשתם רגש חזק. שימו לב איזו מחשבה עלתה ממנו, ואיך היא הגבירה את הרגש. ואז בחרו מחשבה אחת אחרת, מיטיבה, והכניסו אותה למעגל. הסתכלו מה קורה לרגש.'},
-      {g:'inner', t:'מה באמת מענג אותי', d:'כל יום שבו חמש דקות, ותנו לעצמכם ליהנות רק מהנשימה, מהשקט ומהחום של הגוף. הנאה שלא תלויה בשום דבר.'}
+      {g:'inner', t:'מה באמת מענג אותי', d:'בכל יום שבו חמש דקות, ותנו לעצמכם ליהנות רק מהנשימה, מהשקט ומהחום של הגוף. הנאה שלא תלויה בשום דבר.'}
     ],
     days:[
       {l:'מה אני רוצה ליהנות ממנו', lens:'אש שבמים', ex:'הרצון בתוך המים. מה באמת מושך אותי, ממה אני רוצה ליהנות.', q:'ממה באמת רציתי ליהנות היום? והאם נתתי לעצמי את זה?'},
@@ -935,7 +938,7 @@ const WEEKS = {
       {l:'שייכות', lens:'רוח שבעפר', ex:'הרגש בתוך העפר. התחושה שיש לי מקום, ואנשים שאני שייך או שייכת אליהם.', q:'איפה הרגשתי היום שאני שייך או שייכת, ושיש לי על מי להישען?'},
       {l:'צעד אחר צעד', lens:'עפר שבעפר', ex:'העפר בצורה הנקייה שלו, המעשה והיציבות. לעשות את מה שצריך, צעד אחר צעד.', q:'מה עשיתי היום בפועל, גם בלי חשק, שבנה משהו יציב?'},
       {l:'פוגשים את הרוח', lens:'היסוד שמולו', ex:'הרוח מביאה לעפר תנועה וקלילות. לזוז קצת, להשתנות, ולנשום.', q:'האם הרשיתי לעצמי היום לשנות משהו קטן, או לשחרר מקום שבו החזקתי חזק מדי?'},
-      {l:'שמחה בחלקו', lens:'המידה המתקנת', ex:'העצבות של העפר באה מהתמקדות במה שחסר. התיקון שלה הוא שמחה במה שיש.', q:'במה שיש לי שמחתי היום?'},
+      {l:'שמחה בחלקו', lens:'המידה המתקנת', ex:'העצבות של העפר באה מהתמקדות במה שחסר. התיקון שלה הוא שמחה במה שיש.', q:'על מה שמחתי היום, מתוך מה שכבר יש לי?'},
       {l:'העפר כולו', lens:'כל היסוד', ex:'מסתכלים על העפר כולו, על כל מה שפגשתי השבוע.', q:'על מה נשענתי היום, ואיפה החזקתי חזק מדי?'}
     ],
     endQ:'כשאני מסתכל.ת על השבוע שעבר, מה גיליתי על הקרקע שלי? איפה הרגשתי שמשהו זז, ואיפה עדיין קשה לי?'
@@ -1002,7 +1005,8 @@ window.addEventListener('popstate', e=>{
   navDepth=Math.max(0,navDepth-1);
   const st=e.state||{}; go(st.route||location.hash.slice(1)||'home', false, st.open?st:null);
 });
-document.addEventListener('click', e=>{ const b=e.target.closest('[data-go]'); if(b){ go(b.dataset.go); } });
+document.addEventListener('click', e=>{ const b=e.target.closest('[data-go]'); if(b){ e.stopPropagation(); go(b.dataset.go); } });
+document.addEventListener('keydown', e=>{ const g=e.target.closest && e.target.closest('.gate'); if(g && e.target===g && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); go(g.dataset.go); } });
 
 /* ===== דף הבית ===== */
 function renderHome(){
@@ -1051,7 +1055,10 @@ function renderWeek(id){
   const startBox = started ? '' :
     `<div class="card start-box no-print"><div><div class="t">מתחילים את השבוע?</div><div class="muted" style="font-size:.9rem">הכי טוב להתחיל כבר ביום הטיפול. השאלה הראשונה מחכה בערב, ומשם נספרים שבעה ימים עד המפגש הבא.</div></div>
         <button class="btn" id="startWeek">להתחיל היום</button></div>`;
-  const restartBox = started ? `<div class="no-print" style="margin-top:14px"><button class="link" id="restart">להתחיל את השבוע מחדש מהיום</button></div>` : '';
+  const hasData = started || st.practice!=null || st.practice2!=null || st.end || Object.keys(st.days).length;
+  const restartBox = hasData ? `<div class="no-print" style="margin-top:14px;display:flex;gap:14px;flex-wrap:wrap">
+      ${started?'<button class="link" id="restart">להתחיל מחדש מהיום</button>':''}
+      <button class="link" id="resetWeek">לאפס את השבוע</button></div>` : '';
 
   const secHtml = s => (s.t==='בגוף' && w.kind==='sefira') ? `<div class="split split-sm"><div class="split-txt">${s.html}</div>${makeBodyFig(id)}</div>` : s.html;
   const isEl = w.kind==='element';
@@ -1113,12 +1120,15 @@ function renderWeek(id){
   const v=$('#v-week');
   const sb=v.querySelector('#startWeek'); if(sb) sb.onclick=()=>{ st.start=todayStr(); S.current=id; save('השבוע התחיל'); renderWeek(id); };
   const tt=v.querySelector('#toToday'); if(tt) tt.onclick=()=>{ const d=v.querySelector('#day-'+i); d.open=true; setTimeout(()=>{ const top=$('#hdr').offsetHeight; window.scrollTo({top:d.getBoundingClientRect().top+window.scrollY-top-10, behavior:'smooth'}); },60); };
+  const rw=v.querySelector('#resetWeek'); if(rw) rw.onclick=()=>{ if(confirm('לאפס את השבוע? כל התשובות, התרגילים והסימונים של השבוע הזה יימחקו.')){ delete S.weeks[id]; if(S.current===id) S.current=null; save('השבוע אופס'); renderWeek(id); window.scrollTo({top:0}); } };
   const rs=v.querySelector('#restart'); if(rs) rs.onclick=()=>{ if(confirm('להתחיל את השבוע מחדש מהיום? התשובות שכתבתם יישארו.')){ st.start=todayStr(); S.current=id; save('השבוע התחיל מחדש'); renderWeek(id);} };
-  v.querySelectorAll('[data-prac]').forEach(b=>b.onclick=()=>{ const key=b.dataset.key; st[key]=+b.dataset.prac; save('נשמר'); v.querySelectorAll(`[data-key="${key}"]`).forEach(x=>{const on=+x.dataset.prac===st[key]; x.classList.toggle('on',on); x.setAttribute('aria-pressed',on);});
+  v.querySelectorAll('[data-prac]').forEach(b=>b.onclick=()=>{ const key=b.dataset.key; st[key] = (st[key]===+b.dataset.prac) ? null : +b.dataset.prac; save('נשמר'); v.querySelectorAll(`[data-key="${key}"]`).forEach(x=>{const on=+x.dataset.prac===st[key]; x.classList.toggle('on',on); x.setAttribute('aria-pressed',on);});
     v.querySelectorAll('[data-dp]').forEach(x=>{ const dd=st.days[x.dataset.dp]||{}; if(dd.p==null) x.classList.toggle('on', +x.dataset.pi===st.practice); }); });
   v.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{ const d=v.querySelector('#day-'+b.dataset.day); d.open=true; setTimeout(()=>{ const top=$('#hdr').offsetHeight; window.scrollTo({top:d.getBoundingClientRect().top+window.scrollY-top-10, behavior:'smooth'}); },30); });
-  v.querySelectorAll('[data-dp]').forEach(b=>b.onclick=()=>{ const k=b.dataset.dp, n=+b.dataset.pi; st.days[k]=Object.assign(st.days[k]||{}, {p:n}); save('נשמר');
-    v.querySelectorAll(`[data-dp="${k}"]`).forEach(x=>x.classList.toggle('on', +x.dataset.pi===n)); });
+  v.querySelectorAll('[data-dp]').forEach(b=>b.onclick=()=>{ const k=b.dataset.dp, n=+b.dataset.pi; const dd=st.days[k]||{};
+    const cur = dd.p!=null ? dd.p : st.practice; const nv = cur===n ? -1 : n;
+    st.days[k]=Object.assign(dd, {p:nv}); save('נשמר');
+    v.querySelectorAll(`[data-dp="${k}"]`).forEach(x=>x.classList.toggle('on', +x.dataset.pi===nv)); });
   v.querySelector('#waEnd').onclick=()=>{
     if(!st.end || !st.end.trim()){ toast('קודם כותבים את הסיכום'); return; }
     const done=Object.values(st.days).filter(d=>d.done).length;
