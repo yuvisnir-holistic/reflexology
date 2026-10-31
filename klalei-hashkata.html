@@ -183,6 +183,20 @@ p.lead,.intro-text{font-size:.95rem;color:#586961;line-height:1.75;margin:4px 0 
 @keyframes flash{0%,100%{box-shadow:var(--shadow)}30%{box-shadow:0 0 0 3px var(--air)}}
 @media print{header,.fabs,.toast,.no-print{display:none!important}body{background:#fff}.acc-card{break-inside:avoid}}
 </style>
+<style>
+/* ===== קופסה מבחוץ, קווים מבפנים ===== */
+:root{--line:#E2D9C8}
+.acc-body .kli-hero{background:none;border-radius:0;padding:2px 2px 12px;margin:0}
+.acc-body .step-card,.acc-body .quick-pasuk,.acc-body .pasuk-card{background:none;border:0;border-radius:0;border-top:1px solid var(--line);padding:12px 2px;margin:0}
+.acc-body .step-card:last-child,.acc-body .pasuk-card:last-child,.acc-body .quick-pasuk:last-child{border-bottom:1px solid var(--line)}
+.acc-body .info-card{background:none;border-radius:0;border-right:3px solid var(--practice);padding:4px 12px 4px 0;margin:12px 0}
+.acc-body .share-card{background:none;box-shadow:none;border:0;border-radius:0;border-top:1px solid var(--line);padding:12px 2px;margin:0}
+.acc-body .ext-card{background:none;border-radius:0;border-right:3px solid var(--earth);padding:4px 12px 4px 0;margin:14px 0 4px}
+.acc-body .acc-card{box-shadow:none;border:0;border-radius:0;border-top:1px solid var(--line);background:none}
+.acc-body .acc-card:last-child{border-bottom:1px solid var(--line)}
+.acc-body .acc-card > .acc-head{padding:12px 2px}
+@media (min-width:1000px){ main{max-width:900px} }
+</style>
 </head>
 <body>
 <header id="hdr"><h1>כְּלָלֵי הַהַשְׁקָטָה</h1><div class="leaf-divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div><div class="sub">לְמוֹרֵנוּ הַבַּעַל שֵׁם טוֹב זִיע"א</div><nav class="tabnav" id="tabnav" aria-label="חלקי האפליקציה"><button data-tab="home" class="active" onclick="goTab('home')">בית</button><button data-tab="kelim" onclick="goTab('kelim')">כלי העבודה</button><button data-tab="mood" onclick="goTab('mood')">לפי מצב</button><button data-tab="hit" onclick="goTab('hit')">התבוננויות</button><button data-tab="psukim" onclick="goTab('psukim')">פסוקים</button><button data-tab="shem" onclick="goTab('shem')">שם יהו״ה</button><button data-tab="guide" onclick="goTab('guide')">למטפל</button></nav></header>
@@ -487,7 +501,7 @@ window.addEventListener('scroll', ()=>{ const h=document.getElementById('hdr'); 
   function animOpen(el){ if(REDUCE) return; bodiesOf(el).forEach(k=>{ k.classList.remove('acc-in'); void k.offsetWidth; k.classList.add('acc-in'); }); }
   function keepInView(el){
     setTimeout(()=>{ const r=el.getBoundingClientRect(); const top=hdrH();
-      if(r.top < top+8) window.scrollBy({top:r.top-top-12, behavior:REDUCE?'auto':'smooth'}); }, DUR+20);
+      window.scrollBy({top:r.top-top-12, behavior:REDUCE?'auto':'smooth'}); }, DUR+20);
   }
   function closeSiblings(box){
     const par=box.parentElement; if(!par) return false; let any=false;
@@ -500,7 +514,7 @@ window.addEventListener('scroll', ()=>{ const h=document.getElementById('hdr'); 
     snapBefore(box);
     setTimeout(()=>{ head.setAttribute('aria-expanded', box.classList.contains('open')?'true':'false');
       if(!box.classList.contains('open')){ updateFabs(); return; }
-      animOpen(box); if(closeSiblings(box)) keepInView(box); updateFabs(); }, 0);
+      animOpen(box); if(closeSiblings(box)){ keepInView(box); } else { const r=box.getBoundingClientRect(); if(r.top < hdrH()+8 || r.top > innerHeight-80) keepInView(box); } updateFabs(); }, 0);
   }, true);
   function snapBefore(box){ /* שומר את המצב לפני הפתיחה */ const s=state(); s.open=s.open; if(!busy && !same(s,stack[stack.length-1])){ stack.push(s); try{ history.pushState({k:stack.length},''); }catch(e){} } }
   document.addEventListener('keydown', e=>{
