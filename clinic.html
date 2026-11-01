@@ -863,7 +863,15 @@ html,body{overflow-anchor:none}
   #leadsView .ld-filter{margin:22px 0 0;gap:8px;}
   #leadsView .pt-count{margin:18px 4px 12px;}
   #leadsView .ld-stats{margin-top:34px;}
-  #ldBkBox > div{margin-top:36px !important;padding-top:18px !important;}
+  #ldBkBox > div, #bkBox > div{margin-top:36px !important;padding-top:18px !important;}
+  #homeView .home-top{margin:26px 0 0;gap:14px;}
+  #homeView .pt-count{margin:18px 4px 12px;}
+  /* מעט צבע: כפתורי פתיחה של פריט חדש בגוון הדבש החם, וגיבוי בכחול המים */
+  .new-pt .bm-btn, .ld-newcall .bm-btn{background:var(--practice);}
+  .new-pt .bm-btn:hover, .ld-newcall .bm-btn:hover{background:#755C30;}
+  .new-pt input{border-color:var(--practice);}
+  .new-pt input:focus{border-color:var(--practice);}
+  .bk-main{background:var(--water-bg) !important;color:var(--water) !important;border-color:var(--water) !important;}
   .ld-ext{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
   .ld-cal{font-size:0.86rem;}
   .ld-foot-act{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
@@ -1617,7 +1625,7 @@ function bkBar(){
   const bkHTML = `<div class="no-print" style="margin-top:26px;border-top:1px solid var(--sage);padding-top:12px">
     <p class="iq-hint" style="margin:0 0 8px">${status} הגיבוי שומר את כל המטופלים והלידים, הפרטים, השאלונים, האבחונים, יומני הטיפולים, התרגול והתרגילים שכתבת בעצמך, בקובץ אחד.</p>
     <div class="sheet-actions">
-      <button class="bm-btn ghost" onclick="bkExport()" ${n?'':'disabled'}>גיבוי לקובץ</button>
+      <button class="bm-btn ghost bk-main" onclick="bkExport()" ${n?'':'disabled'}>גיבוי לקובץ</button>
       <button class="bm-btn ghost" onclick="$('bkFile').click()">שחזור מקובץ</button>
       <input type="file" id="bkFile" accept=".json,application/json" hidden onchange="bkImport(this)">
     </div></div>`;
