@@ -862,8 +862,6 @@ html,body{overflow-anchor:none}
   #leadsView .home-top{margin:26px 0 0;gap:14px;}
   #leadsView .ld-filter{margin:22px 0 0;gap:8px;}
   #leadsView .pt-count{margin:18px 4px 12px;}
-  #leadsView .pr-row{margin-bottom:12px;}
-  #leadsView .pr{padding:14px 18px;gap:6px 14px;}
   #leadsView .ld-stats{margin-top:34px;}
   #ldBkBox > div{margin-top:36px !important;padding-top:18px !important;}
   .ld-ext{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
@@ -1042,7 +1040,6 @@ function showView(v){
   const ld = v==='leads' || v==='lead';
   $('navPt').classList.toggle('active', !ld); $('navPt').setAttribute('aria-selected', String(!ld));
   $('navLd').classList.toggle('active', ld);  $('navLd').setAttribute('aria-selected', String(ld));
-  try{ history.replaceState(null, '', ld ? '#leads' : location.pathname + location.search); }catch(e){}
 }
 function renderHome(){ renderList(); bkBar(); }
 function renderList(){
@@ -3669,26 +3666,54 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
 </style>
 <button class="ys-back" id="ysBack" type="button" aria-label="חזרה">חזרה ›</button>
 <script>
-/* כפתור חזרה אחיד: חוזר ללשונית הקודמת באתר, ואם אין, לעמוד הקודם באתרי הקליניקה */
+/* חזרה לפעולה הקודמת: כל מעבר בין מסכים בקליניקה נשמר בהיסטוריה של הדפדפן,
+   עם מקום הגלילה. כפתור "חזרה" וכפתור החזרה של הדפדפן מחזירים למסך שהיה פתוח רגע לפני:
+   מכרטיס לרשימה, מלשונית בכרטיס ללשונית הקודמת, ממטופל שנפתח מליד חזרה לליד */
 (function(){
   const btn = document.getElementById('ysBack');
-  const SEL = '#tabnav button, nav.tabs button, .tabnav button, .tab-btn, nav.mainnav button';
-  const tabs = () => [...document.querySelectorAll(SEL)];
-  const isActive = b => b.classList.contains('active') || b.getAttribute('aria-selected') === 'true';
-  const stack = []; let current = tabs().find(isActive) || null; let fromBack = false;
-  let sameOrigin = false; try { sameOrigin = !!document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1; } catch(e){}
-  function update(){ btn.classList.toggle('show', stack.length > 0 || sameOrigin); }
-  function check(){
-    const now = tabs().find(isActive) || null;
-    if(now && now !== current){ if(!fromBack && current) stack.push(current); current = now; update(); }
+  const NAV = {cur:null, depth:0, restoring:false};
+  let sameOrigin = false; try { sameOrigin = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch(e){}
+  function state(){
+    const on = id => $(id).classList.contains('on');
+    if(on('cardView') && curP()) return {v:'card', id:PT.activeId, tab:curP().tab};
+    if(on('leadView') && ldCur()) return {v:'lead', id:ldActive};
+    if(on('leadsView')) return {v:'leads'};
+    return {v:'home'};
   }
-  const mo = new MutationObserver(check);
-  function watch(){ tabs().forEach(b => mo.observe(b, {attributes:true, attributeFilter:['class','aria-selected']})); }
-  watch();
-  btn.addEventListener('click', () => {
-    if(stack.length){ const prev = stack.pop(); fromBack = true; prev.click(); setTimeout(() => { check(); fromBack = false; update(); }, 60); }
-    else if(sameOrigin){ history.back(); }
+  const key = x => x ? [x.v, x.id||'', x.tab||''].join('|') : '';
+  const url = x => (x.v==='leads' || x.v==='lead') ? location.pathname + location.search + '#leads' : location.pathname + location.search;
+  function update(){ btn.classList.toggle('show', NAV.depth > 0 || sameOrigin); }
+  function record(){
+    if(NAV.restoring) return;
+    const x = state();
+    if(key(x) === key(NAV.cur)) return;
+    try{ history.replaceState({nav:NAV.cur, depth:NAV.depth, y:window.scrollY}, ''); }catch(e){}
+    NAV.depth++; NAV.cur = x;
+    try{ history.pushState({nav:x, depth:NAV.depth, y:0}, '', url(x)); }catch(e){}
+    update();
+  }
+  function apply(x){
+    if(x.v==='card' && getP(x.id)) openP(x.id, x.tab);
+    else if(x.v==='lead' && ldGet(x.id)) ldOpen(x.id);
+    else if(x.v==='leads' || x.v==='lead') ldHome();
+    else goHome();
+  }
+  window.addEventListener('popstate', e=>{
+    const st = e.state;
+    if(!st || !st.nav){ if(location.hash==='#leads') ldHome(); return; }
+    NAV.restoring = true;
+    try{ apply(st.nav); } finally { NAV.restoring = false; }
+    NAV.cur = state(); NAV.depth = st.depth || 0;
+    const y = st.y || 0; requestAnimationFrame(()=>window.scrollTo(0, y));
+    update();
   });
+  ['renderCard','ldRender','ldHome','renderHome'].forEach(n=>{
+    const f = window[n]; if(typeof f!=='function') return;
+    window[n] = function(){ const r = f.apply(this, arguments); record(); return r; };
+  });
+  NAV.cur = state();
+  try{ history.replaceState({nav:NAV.cur, depth:0, y:0}, '', url(NAV.cur)); }catch(e){}
+  btn.addEventListener('click', ()=>{ if(NAV.depth > 0 || sameOrigin) history.back(); });
   update();
 })();
 </script>
