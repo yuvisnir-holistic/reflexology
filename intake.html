@@ -197,8 +197,21 @@
   header{background:#3A6863 !important;}
   .iq-acc-next{display:none !important;}
 </style>
+<style>
+/* ===== מעטפת לפי מדריך העיצוב ===== */
+:root{--paper:#FBF7EF}
+header.top{background:#3A6863;color:#F7F1E6;text-align:center;padding:calc(26px + env(safe-area-inset-top,0px)) 16px 22px}
+header.top h1{font-family:'Frank Ruhl Libre',Georgia,serif;font-weight:900;font-size:1.75rem;margin:0;line-height:1.2}
+header.top .sub{color:rgba(247,241,230,.8);font-size:.95rem;margin-top:4px}
+main{max-width:900px;padding:22px 16px 48px}
+.paper{border-radius:18px;border:1px solid rgba(44,95,91,0.08)}
+@media screen{ .iq-paper > .paper-h{display:none} }
+@media print{ header.top{display:none} }
+@media screen and (max-width:560px){ .iq-details{grid-template-columns:1fr 1fr !important} .paper{padding:22px 18px} }
+</style>
 </head>
 <body>
+<header class="top"><h1>שאלון היכרות</h1><div class="sub">לפני המפגש הראשון</div></header>
 <main id="app"></main>
 <div id="toast" role="status" aria-live="polite"></div>
 <script>

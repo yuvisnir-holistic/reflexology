@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="אבחון רפלקסולוגי">
 <meta name="theme-color" content="#2e4436">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Assistant:wght@400;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --cream:#f7f4ec;
@@ -368,6 +368,66 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
 }
 #lightbox.open{display:flex;}
 #lightbox img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+</style>
+<style>
+/* ===== מעטפת לפי מדריך העיצוב ===== */
+:root{
+  --cream:#F7F1E6;--cream-2:#EFE7D8;--paper:#FBF7EF;--ink:#28312E;--ink-soft:#6a756f;
+  --forest:#2C5F5B;--forest-2:#1E4744;--line:#E2D9C8;--gold:#A9821F;--sage-dark:#2C5F5B;
+  --earth:#5C6B3F;--earth-soft:#E4E7D9;--water:#2F6690;--water-soft:#DFE8ED;
+  --fire:#A8442B;--fire-soft:#F3E3DD;--air:#A9821F;--air-soft:#F1E9D2;
+  --shadow:0 2px 14px rgba(44,95,91,0.10);--hdr-h:120px;
+}
+html{overflow-anchor:none}
+body,svg text,.sign-accordion .body h5,.elem-tab span,.search-box input{font-family:'Assistant',sans-serif}
+.wrap{max-width:900px;padding:0 16px}
+.view{padding:30px 0 70px}
+
+/* כותרת ירוקה עם לשוניות בגלולה, שמתכווצת בגלילה */
+.topbar{background:#3A6863;border-bottom:0;-webkit-backdrop-filter:none;backdrop-filter:none;padding-top:env(safe-area-inset-top,0px);transition:padding .32s ease}
+.topbar-inner{flex-direction:column;align-items:stretch;gap:10px;padding:16px 16px 12px!important;max-width:900px}
+.brand{justify-content:center;text-align:center;overflow:hidden;max-height:90px;transition:max-height .32s ease,opacity .24s ease,margin .32s ease}
+.brand-text{align-items:center}
+.brand-text b{font-size:1.65rem;font-weight:900;color:#F7F1E6}
+.brand-text span{display:block!important;font-size:.9rem;color:rgba(247,241,230,.8);letter-spacing:0}
+.topbar.compact .brand{max-height:0;opacity:0;margin:0;pointer-events:none}
+.topbar.compact .topbar-inner{padding:8px 12px!important;gap:0}
+nav.mainnav{max-width:100%!important;background:rgba(255,255,255,0.12);border-radius:999px;padding:4px;gap:4px}
+nav.mainnav button{color:#fff;font-family:'Assistant',sans-serif;font-weight:700;font-size:15.5px;padding:8px 16px;min-height:44px}
+nav.mainnav button:hover{background:rgba(255,255,255,0.10);color:#fff}
+nav.mainnav button.active{background:var(--cream-2);background:#FBF7EF;color:var(--forest-2)}
+nav.mainnav button:focus-visible{outline:3px solid var(--air);outline-offset:2px}
+.subnav,.elem-tabs{top:var(--hdr-h)}
+@media (prefers-reduced-motion:reduce){.topbar,.brand{transition:none}}
+
+/* בלי גרדיאנטים ובלי צללים כבדים */
+.hero{background:var(--forest);border-radius:var(--radius);padding:40px 28px}
+.hero::before{display:none}
+.toolcard.a{background:var(--forest)}
+.toolcard.b{background:var(--air)}
+.elem-hero.earth{background:var(--earth)} .elem-hero.water{background:var(--water)}
+.elem-hero.fire{background:var(--fire)} .elem-hero.air{background:var(--air)}
+.chcard:hover,.invasion-card:hover,.gallery-item:hover{box-shadow:var(--shadow)}
+.grid4{grid-template-columns:repeat(2,1fr)}
+@media(max-width:600px){.grid4{grid-template-columns:1fr}}
+.card,.map-card{padding:24px 22px}
+.btn-primary{background:#FBF7EF;color:var(--forest-2)}
+.btn-primary:hover{background:#fff}
+.scroll-top{left:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:#FBF7EF;color:var(--forest);border:1.5px solid var(--forest);box-shadow:none}
+@keyframes accIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+details[open] > .body{animation:accIn .26s ease}
+@media (prefers-reduced-motion:reduce){details[open] > .body{animation:none}}
+
+/* קופסה מבחוץ, קווים מבפנים */
+.card .sign-accordion{border:0;border-radius:0;margin:0;background:none;border-top:1px solid var(--line)}
+.card .sign-accordion:last-child{border-bottom:1px solid var(--line)}
+.card h2 + .sign-accordion{border-top:0}
+.card .sign-accordion > summary{background:none;padding:14px 2px}
+.card .sign-accordion .body{padding:0 2px 16px}
+.card .invasion-card{background:none;border:0;border-radius:0;border-top:1px solid var(--line);padding:14px 2px}
+.card .balance-box{border:0;border-right:3px solid currentColor;border-radius:0;background:none!important}
+.card .balance-box.excess{color:var(--fire)} .card .balance-box.deficit{color:var(--water)}
+.card .balance-box p,.card .balance-box li{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -1448,6 +1508,49 @@ navigateTo('cat-colors');
   window.addEventListener('hashchange', route);
   if(document.readyState==='complete') route(); else window.addEventListener('load', route);
 })();
+</script>
+<script>
+/* כותרת מתכווצת עם מרווח, וגובה הכותרת לשורות הדביקות שמתחתיה */
+(function(){
+  const t = document.querySelector('.topbar');
+  function setH(){ document.documentElement.style.setProperty('--hdr-h', t.offsetHeight + 'px'); }
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if(!t.classList.contains('compact') && y > 120) t.classList.add('compact');
+    else if(t.classList.contains('compact') && y < 8) t.classList.remove('compact');
+  }, {passive:true});
+  t.addEventListener('transitionend', setH); window.addEventListener('resize', setH); setH();
+  new ResizeObserver(setH).observe(t);
+})();
+/* אקורדיון אחיד: פתיחה סוגרת את הפתוח שלידו, והכותרת של מה שנפתח עולה לראש המסך */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function off(){
+    let h = document.querySelector('.topbar').offsetHeight;
+    document.querySelectorAll('.subnav, .elem-tabs').forEach(s => { if(s.offsetParent && getComputedStyle(s).position === 'sticky') h = Math.max(h, s.getBoundingClientRect().bottom); });
+    return h;
+  }
+  document.addEventListener('toggle', e => {
+    const el = e.target;
+    if(!(el instanceof HTMLDetailsElement) || !el.open) return;
+    let closed = false;
+    [...el.parentElement.children].forEach(o => { if(o !== el && o.tagName === 'DETAILS' && o.open){ o.open = false; closed = true; } });
+    const s = el.querySelector('summary'); if(!s) return;
+    requestAnimationFrame(() => {
+      const top = s.getBoundingClientRect().top, h = off();
+      if(closed || top < h || top > innerHeight - 80) window.scrollTo({top: scrollY + top - h - 8, behavior: reduce ? 'auto' : 'smooth'});
+    });
+  }, true);
+})();
+/* לשוניות: לחיצה על הלשונית הפעילה סוגרת את מה שנפתח בה ועולה לראש העמוד */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('nav.mainnav button'); if(!b) return;
+  const was = b.classList.contains('active');
+  setTimeout(() => {
+    if(was){ const v = document.getElementById(b.dataset.nav); if(v) v.querySelectorAll('details[open]').forEach(d => d.open = false); }
+    window.scrollTo({top:0, behavior: was ? 'smooth' : 'auto'});
+  }, 0);
+}, true);
 </script>
 </body>
 </html>
