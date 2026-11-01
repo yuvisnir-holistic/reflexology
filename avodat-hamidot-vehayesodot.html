@@ -42,10 +42,10 @@
   header h1{font-size:1.7rem;margin:0 0 4px;font-weight:900;color:#F7F1E6;}
   header .sub{font-size:0.98rem;color:rgba(247,241,230,0.85);}
   .tabbar{position:sticky;top:0;z-index:50;background:var(--header);padding:10px 16px 22px;}
-  .tabnav{display:flex;gap:4px;width:fit-content;max-width:100%;margin:0 auto;background:rgba(255,255,255,0.12);
+  .tabnav{display:flex;gap:4px;width:100%;max-width:560px;margin:0 auto;background:rgba(255,255,255,0.12);
     border-radius:999px;padding:4px;overflow-x:auto;scrollbar-width:none;}
   .tabnav::-webkit-scrollbar{display:none;}
-  .tabnav button{flex:1 1 auto;border:none;background:transparent;color:#fff;padding:8px 16px;border-radius:999px;
+  .tabnav button{flex:1 1 0;text-align:center;border:none;background:transparent;color:#fff;padding:8px 16px;border-radius:999px;
     font-family:var(--sans);font-size:16.5px;font-weight:400;cursor:pointer;white-space:nowrap;}
   .tabnav button.active{background:var(--cream-soft);color:var(--forest-dark);}
 
@@ -54,7 +54,6 @@
   .view.active{display:block;}
 
   p,.prose{line-height:1.8;}
-  .prose p,.lead{max-width:720px;}
   .prose p{text-align:justify;margin:0 0 12px;}
   .lead{font-size:1.05rem;line-height:1.8;text-align:justify;margin:8px 0 18px;}
   h2.page{font-size:1.6rem;color:var(--forest-dark);margin:12px 0 6px;font-weight:900;}
@@ -175,7 +174,7 @@
   .btn.small{padding:7px 14px;min-height:38px;font-size:0.88rem;}
   .link{background:none;border:none;color:var(--forest);text-decoration:underline;cursor:pointer;padding:4px;font-size:0.95rem;font-family:var(--serif);}
   .link.del{color:var(--fire);}
-  .jend{margin:12px 0 4px;padding:12px 14px;border-inline-start:3px solid var(--practice);background:var(--practice-bg);border-radius:10px;max-width:720px;}
+  .jend{margin:12px 0 4px;padding:12px 14px;border-inline-start:3px solid var(--practice);background:var(--practice-bg);border-radius:10px;}
   .week-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:12px;border-top:1px solid var(--line);}
   .mini{font-family:var(--sans);font-size:0.8rem;font-weight:600;color:var(--muted);background:#fff;border:1px solid var(--sage);border-radius:999px;padding:5px 12px;cursor:pointer;min-height:32px;}
   .mini:hover{color:var(--forest);border-color:var(--forest);}
@@ -192,14 +191,14 @@
   .dchip.done.today .c{color:#fff;}
   .dlens{font-family:var(--sans);font-size:0.74rem;font-weight:700;color:var(--sefirah);background:var(--sefirah-bg);border-radius:999px;padding:2px 9px;margin-inline-start:6px;vertical-align:middle;white-space:nowrap;}
   .day .lens{font-size:0.86rem;color:var(--sefirah);font-weight:700;}
-  .day .ex{font-size:0.98rem;line-height:1.8;color:#4b5752;margin:2px 0 10px;padding-inline-start:10px;border-inline-start:3px solid var(--sefirah-bg);max-width:720px;text-align:justify;}
-  .day .look{font-size:1rem;line-height:1.8;margin:0 0 10px;padding:10px 12px;background:var(--sefirah-bg);border-radius:10px;color:var(--ink);max-width:720px;}
+  .day .ex{font-size:0.98rem;line-height:1.8;color:#4b5752;margin:2px 0 10px;padding-inline-start:10px;border-inline-start:3px solid var(--sefirah-bg);text-align:justify;}
+  .day .look{font-size:1rem;line-height:1.8;margin:0 0 10px;padding:10px 12px;background:var(--sefirah-bg);border-radius:10px;color:var(--ink);}
   .day .look b{color:var(--forest-dark);}
   .dsub{font-size:0.86rem;font-weight:700;color:var(--sefirah);margin:10px 0 2px;opacity:.9;}
   .dpart{font-size:0.96rem;font-weight:700;color:var(--sefirah);margin:14px 0 4px;}
-  .day .q{font-size:1.06rem;line-height:1.8;margin:4px 0 10px;max-width:720px;text-align:justify;}
+  .day .q{font-size:1.06rem;line-height:1.8;margin:4px 0 10px;text-align:justify;}
   .eve{font-size:0.9rem;color:var(--muted);margin:0 0 8px;}
-  textarea{width:100%;max-width:720px;min-height:92px;border:1px solid var(--sage);border-radius:8px;background:#fff;padding:10px 12px;
+  textarea{width:100%;min-height:92px;border:1px solid var(--sage);border-radius:8px;background:#fff;padding:10px 12px;
     font-size:1rem;line-height:1.6;color:var(--ink);resize:vertical;display:block;}
   .check{display:flex;align-items:center;gap:10px;margin:10px 0 0;cursor:pointer;color:var(--forest-dark);user-select:none;}
   .check input{width:22px;height:22px;accent-color:var(--practice);}
