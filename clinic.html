@@ -855,6 +855,7 @@ html,body{overflow-anchor:none}
   .ld-call-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;}
   .ld-call-h .inp{max-width:180px;min-height:36px;padding:5px 10px;font-size:0.9rem;}
   .ld-call textarea.inp{min-height:52px;}
+  .ld-cal{align-self:flex-start;margin-top:4px;font-size:0.86rem;}
   .ld-foot-act{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
   .ld-stats{margin-top:26px;}
   .ld-stats h3{margin:0 0 8px;font-size:1.1rem;color:var(--forest-dark);}
@@ -3466,8 +3467,9 @@ function ldRender(){
         <div class="f"><label class="f-l" for="l_date">תאריך פנייה</label><input class="inp" id="l_date" type="date" value="${escH(l.date)}" onchange="ldSet('date',this.value||isoToday())"></div>
         <div class="f wide"><span class="f-l">סטטוס</span>${stBlock}</div>
         ${LD_ACTIVE.includes(l.status)?`<div class="f wide"><label class="f-l" for="l_next">לחזור אליו או אליה ב</label><div class="f-row ld-next"><input class="inp" id="l_next" type="date" value="${escH(l.nextDate)}" onchange="ldNext(this.value)">
-          <div class="fchips"><button class="fchip" onclick="ldNext(addDays(1))">מחר</button><button class="fchip" onclick="ldNext(addDays(3))">בעוד 3 ימים</button><button class="fchip" onclick="ldNext(addDays(7))">בעוד שבוע</button>${l.nextDate?`<button class="fchip" onclick="ldNext('')">ניקוי</button>`:''}</div></div></div>`:''}
-        <div class="f wide"><label class="f-l" for="l_reason">מה הביא לפנות</label><textarea class="inp" id="l_reason" rows="2" oninput="ldSet('reason',this.value)">${escH(l.reason)}</textarea></div>
+          <div class="fchips"><button class="fchip" onclick="ldNext(addDays(1))">מחר</button><button class="fchip" onclick="ldNext(addDays(3))">בעוד 3 ימים</button><button class="fchip" onclick="ldNext(addDays(7))">בעוד שבוע</button>${l.nextDate?`<button class="fchip" onclick="ldNext('')">ניקוי</button>`:''}</div></div>
+          ${l.nextDate?`<a class="call ld-cal" href="${ldCalUrl(l)}" target="_blank" rel="noopener" onclick="ldCalMark()">${l.calDate===l.nextDate?'✓ נוסף ליומן גוגל, אפשר להוסיף שוב':'הוספה ליומן גוגל'}</a>`:''}</div>`:''}
+        <div class="f wide"><label class="f-l" for="l_reason">סיבת הפנייה</label><textarea class="inp" id="l_reason" rows="2" oninput="ldSet('reason',this.value)">${escH(l.reason)}</textarea></div>
         <div class="f wide"><label class="f-l" for="l_notes">הערות</label><textarea class="inp" id="l_notes" rows="4" oninput="ldSet('notes',this.value)">${escH(l.notes)}</textarea></div>
       </div>
 
@@ -3487,8 +3489,9 @@ function ldRender(){
       <div class="det-foot no-print">
         <span>הליד נפתח ב־${new Date(l.created).toLocaleDateString('he-IL')}</span>
         <span class="ld-foot-act">
-          ${l.status!=='converted' ? `<button class="bm-btn" onclick="ldConvert()">הפיכה למטופל</button>` : ''}
           <button class="bm-link danger" onclick="ldDeleteId('${l.id}')">מחיקת הליד</button>
+          ${l.status!=='converted' ? `<button class="bm-btn ghost" onclick="ldConvert()">הפיכה למטופל</button>` : ''}
+          <button class="bm-btn" onclick="ldSaveClose()">שמירה</button>
         </span>
       </div>
     </div>`;
@@ -3508,11 +3511,28 @@ function ldCallAdd(){
 function ldCallSet(id,k,v){ const c=ldCur().calls.find(x=>x.id===id); if(!c) return; c[k]=v; clearTimeout(_ldT); _ldT=setTimeout(ldSave,300); }
 function ldCallDel(id){ const l=ldCur(); if(!confirm('למחוק את השיחה הזו?')) return; l.calls=l.calls.filter(x=>x.id!==id); ldSave(); ldRender(); }
 
+/* ---- יומן גוגל: פותח אירוע מוכן לשמירה ---- */
+function ldCalUrl(l){
+  const d = l.nextDate.replace(/-/g,''); const n = new Date(l.nextDate+'T12:00:00'); n.setDate(n.getDate()+1);
+  const e = n.getFullYear()+String(n.getMonth()+1).padStart(2,'0')+String(n.getDate()).padStart(2,'0');
+  const det = [l.phone?`טלפון: ${l.phone}`:'', l.campaign?`מקור: ${l.campaign}`:'', l.reason?`סיבת הפנייה: ${l.reason}`:'', 'כרטיס הליד: https://tools.yuvalsnir.co.il/clinic.html#leads'].filter(Boolean).join('\n');
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(`לחזור ל${l.name}`) + '&dates=' + d + '/' + e + '&details=' + encodeURIComponent(det);
+}
+function ldCalMark(){ const l=ldCur(); l.calDate=l.nextDate; ldSave(); setTimeout(ldRender, 300); }
+
+/* ---- שמירה: שומר, מוסיף שיחה שנכתבה ולא נוספה, וחוזר לרשימה ---- */
+function ldSaveClose(){
+  const l = ldCur(); if(!l) return;
+  const t = ($('lc_text')||{}).value; 
+  if(t && t.trim()){ l.calls.push({id:newId('c'), date:$('lc_date').value||isoToday(), text:t.trim(), created:Date.now()}); if(l.status==='fresh') l.status='talk'; }
+  clearTimeout(_ldT); ldSave(); bmToast(`${l.name} נשמר`); ldHome();
+}
+
 /* ---- הפיכה למטופל ---- */
 function ldReferral(l){
   const parts = [];
   parts.push(`פנייה${l.campaign?` מ${l.campaign.trim()}`:''} ב־${fmtD(l.date)}.`);
-  if(l.reason.trim()) parts.push(`מה הביא לפנות: ${l.reason.trim()}`);
+  if(l.reason.trim()) parts.push(`סיבת הפנייה: ${l.reason.trim()}`);
   if(l.notes.trim()) parts.push(`הערות מהליד: ${l.notes.trim()}`);
   [...l.calls].sort((a,b)=>(a.date||'').localeCompare(b.date||'')).forEach(c=>{ if(c.text.trim()) parts.push(`שיחה ב־${fmtD(c.date)}: ${c.text.trim()}`); });
   return parts.join('\n');
