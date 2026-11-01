@@ -855,7 +855,10 @@ html,body{overflow-anchor:none}
   .ld-call-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;}
   .ld-call-h .inp{max-width:180px;min-height:36px;padding:5px 10px;font-size:0.9rem;}
   .ld-call textarea.inp{min-height:52px;}
-  .ld-cal{align-self:flex-start;margin-top:4px;font-size:0.86rem;}
+  .ld-time{max-width:160px;}
+  #leadView .backbar{margin:28px 0 14px;padding:6px 0;font-size:1rem;}
+  .ld-ext{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+  .ld-cal{font-size:0.86rem;}
   .ld-foot-act{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
   .ld-stats{margin-top:26px;}
   .ld-stats h3{margin:0 0 8px;font-size:1.1rem;color:var(--forest-dark);}
@@ -3327,7 +3330,7 @@ let ldQ = '', ldFilt = 'active', ldActive = null;
 function ldNorm(l){
   l.id = l.id || newId('l');
   l.name = (l.name||'').trim() || 'ליד ללא שם';
-  ['phone','campaign','reason','notes','nextDate','patientId','convertedDate'].forEach(k=>{ if(l[k]==null) l[k]=''; });
+  ['phone','campaign','reason','notes','nextDate','nextTime','patientId','convertedDate'].forEach(k=>{ if(l[k]==null) l[k]=''; });
   if(!l.date) l.date = isoToday();
   if(!LD_ST[l.status]) l.status = 'fresh';
   if(!Array.isArray(l.calls)) l.calls = [];
@@ -3346,7 +3349,7 @@ function ldFromBackup(d){
     if(!b || !b.id) return;
     const l = ldGet(b.id);
     if(!l){ LD.leads.push(ldNorm(b)); return; }
-    ['phone','campaign','reason','notes','nextDate','patientId','convertedDate'].forEach(k=>{ if(!l[k] && b[k]) l[k]=b[k]; });
+    ['phone','campaign','reason','notes','nextDate','nextTime','patientId','convertedDate'].forEach(k=>{ if(!l[k] && b[k]) l[k]=b[k]; });
     const ids = new Set(l.calls.map(c=>c.id));
     (b.calls||[]).forEach(c=>{ if(c && c.id && !ids.has(c.id)) l.calls.push(c); });
   });
@@ -3368,10 +3371,10 @@ function ldDupes(l){
 const addDays = n => { const d = new Date(); d.setDate(d.getDate()+n); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
 function ldDue(l){
   if(!l.nextDate || !LD_ACTIVE.includes(l.status)) return '';
-  const t = isoToday();
+  const t = isoToday(), hr = l.nextTime ? ` ב־${l.nextTime}` : '';
   if(l.nextDate < t) return `<span class="ld-due due-late">לחזור, מ־${fmtD(l.nextDate)}</span>`;
-  if(l.nextDate === t) return `<span class="ld-due due-today">לחזור היום</span>`;
-  return `<span class="ld-due due-later">לחזור ב־${fmtD(l.nextDate)}</span>`;
+  if(l.nextDate === t) return `<span class="ld-due due-today">לחזור היום${hr}</span>`;
+  return `<span class="ld-due due-later">לחזור ב־${fmtD(l.nextDate)}${l.nextTime?`, ${l.nextTime}`:''}</span>`;
 }
 const ldStTag = l => `<span class="src st-${l.status}">${LD_ST[l.status]}</span>`;
 const ldCampTag = l => l.campaign ? `<span class="src ld-camp">${escH(l.campaign)}</span>` : '';
@@ -3388,7 +3391,7 @@ function ldHome(){
 }
 function ldSortKey(l){
   const t = isoToday();
-  if(LD_ACTIVE.includes(l.status) && l.nextDate) return (l.nextDate<=t ? '0' : '1') + l.nextDate;
+  if(LD_ACTIVE.includes(l.status) && l.nextDate) return (l.nextDate<=t ? '0' : '1') + l.nextDate + (l.nextTime||'99:99');
   return '2' + String(9e15 - (new Date(l.date).getTime()||l.created));
 }
 function ldRenderList(){
@@ -3466,9 +3469,9 @@ function ldRender(){
         <div class="f"><label class="f-l" for="l_camp">מקור</label><input class="inp" id="l_camp" list="ldCamps" value="${escH(l.campaign)}" placeholder="קמפיין, סרטון, המלצה" autocomplete="off" oninput="ldSet('campaign',this.value)"><datalist id="ldCamps">${camps.map(c=>`<option value="${escH(c)}">`).join('')}</datalist></div>
         <div class="f"><label class="f-l" for="l_date">תאריך פנייה</label><input class="inp" id="l_date" type="date" value="${escH(l.date)}" onchange="ldSet('date',this.value||isoToday())"></div>
         <div class="f wide"><span class="f-l">סטטוס</span>${stBlock}</div>
-        ${LD_ACTIVE.includes(l.status)?`<div class="f wide"><label class="f-l" for="l_next">לחזור אליו או אליה ב</label><div class="f-row ld-next"><input class="inp" id="l_next" type="date" value="${escH(l.nextDate)}" onchange="ldNext(this.value)">
+        ${LD_ACTIVE.includes(l.status)?`<div class="f wide"><label class="f-l" for="l_next">לחזור אליו או אליה ב</label><div class="f-row ld-next"><input class="inp" id="l_next" type="date" value="${escH(l.nextDate)}" onchange="ldNext(this.value)"><input class="inp ld-time" id="l_time" type="time" step="900" value="${escH(l.nextTime)}" onchange="ldTime(this.value)" aria-label="שעה, לא חובה" title="שעה, לא חובה">
           <div class="fchips"><button class="fchip" onclick="ldNext(addDays(1))">מחר</button><button class="fchip" onclick="ldNext(addDays(3))">בעוד 3 ימים</button><button class="fchip" onclick="ldNext(addDays(7))">בעוד שבוע</button>${l.nextDate?`<button class="fchip" onclick="ldNext('')">ניקוי</button>`:''}</div></div>
-          ${l.nextDate?`<a class="call ld-cal" href="${ldCalUrl(l)}" target="_blank" rel="noopener" onclick="ldCalMark()">${l.calDate===l.nextDate?'✓ נוסף ליומן גוגל, אפשר להוסיף שוב':'הוספה ליומן גוגל'}</a>`:''}</div>`:''}
+          ${l.nextDate?`<div class="ld-ext"><a class="call ld-cal" href="${ldCalUrl(l)}" target="_blank" rel="noopener" onclick="ldCalMark()">${l.calDate===l.nextDate+l.nextTime?'✓ נוסף ליומן גוגל':'הוספה ליומן גוגל'}</a><a class="call ld-cal" href="${ldTdUrl(l)}" target="_blank" rel="noopener" onclick="ldTdMark()">${l.tdDate===l.nextDate+l.nextTime?'✓ נוסף ל־Todoist':'הוספה ל־Todoist'}</a></div>`:''}</div>`:''}
         <div class="f wide"><label class="f-l" for="l_reason">סיבת הפנייה</label><textarea class="inp" id="l_reason" rows="2" oninput="ldSet('reason',this.value)">${escH(l.reason)}</textarea></div>
         <div class="f wide"><label class="f-l" for="l_notes">הערות</label><textarea class="inp" id="l_notes" rows="4" oninput="ldSet('notes',this.value)">${escH(l.notes)}</textarea></div>
       </div>
@@ -3500,7 +3503,8 @@ let _ldT;
 function ldSet(k,v){ const l=ldCur(); if(!l) return; l[k]=v; clearTimeout(_ldT); _ldT=setTimeout(ldSave,300); }
 function ldName(v){ const l=ldCur(); if(!v.trim()) return; l.name=v.trim(); ldSave(); $('ldName').textContent=l.name; }
 function ldSt(k){ const l=ldCur(); l.status=k; if(k!=='converted'){ l.patientId=''; l.convertedDate=''; } if(k==='drop') l.nextDate=''; ldSave(); ldRender(); }
-function ldNext(v){ const l=ldCur(); l.nextDate=v||''; ldSave(); ldRender(); if(v) bmToast(`תזכורת לחזור ב־${fmtD(v)}`); }
+function ldNext(v){ const l=ldCur(); l.nextDate=v||''; if(!v) l.nextTime=''; ldSave(); ldRender(); if(v) bmToast(`תזכורת לחזור ב־${fmtD(v)}${l.nextTime?`, ${l.nextTime}`:''}`); }
+function ldTime(v){ const l=ldCur(); l.nextTime=v||''; if(v && !l.nextDate) l.nextDate=isoToday(); ldSave(); ldRender(); }
 function ldCallAdd(){
   const l=ldCur(), t=$('lc_text').value.trim(), d=$('lc_date').value||isoToday();
   if(!t){ $('lc_text').focus(); return; }
@@ -3513,12 +3517,26 @@ function ldCallDel(id){ const l=ldCur(); if(!confirm('למחוק את השיחה
 
 /* ---- יומן גוגל: פותח אירוע מוכן לשמירה ---- */
 function ldCalUrl(l){
-  const d = l.nextDate.replace(/-/g,''); const n = new Date(l.nextDate+'T12:00:00'); n.setDate(n.getDate()+1);
-  const e = n.getFullYear()+String(n.getMonth()+1).padStart(2,'0')+String(n.getDate()).padStart(2,'0');
+  const pad = x => String(x).padStart(2,'0');
+  let d, e, tz = '';
+  if(l.nextTime){
+    const [hh,mm] = l.nextTime.split(':').map(Number); const st = new Date(`${l.nextDate}T${pad(hh)}:${pad(mm)}:00`); const en = new Date(st.getTime()+30*60000);
+    const f = x => x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate())+'T'+pad(x.getHours())+pad(x.getMinutes())+'00';
+    d = f(st); e = f(en); tz = '&ctz=Asia/Jerusalem';
+  } else {
+    d = l.nextDate.replace(/-/g,''); const n = new Date(l.nextDate+'T12:00:00'); n.setDate(n.getDate()+1);
+    e = n.getFullYear()+pad(n.getMonth()+1)+pad(n.getDate());
+  }
   const det = [l.phone?`טלפון: ${l.phone}`:'', l.campaign?`מקור: ${l.campaign}`:'', l.reason?`סיבת הפנייה: ${l.reason}`:'', 'כרטיס הליד: https://tools.yuvalsnir.co.il/clinic.html#leads'].filter(Boolean).join('\n');
-  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(`לחזור ל${l.name}`) + '&dates=' + d + '/' + e + '&details=' + encodeURIComponent(det);
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(`לחזור ל${l.name}`) + '&dates=' + d + '/' + e + '&details=' + encodeURIComponent(det) + tz;
 }
-function ldCalMark(){ const l=ldCur(); l.calDate=l.nextDate; ldSave(); setTimeout(ldRender, 300); }
+/* Todoist: קישור הוספת משימה עם תאריך. הקישור לא מקבל תיאור, ולכן הטלפון נכנס לשם המשימה */
+function ldTdUrl(l){
+  const t = `לחזור ל${l.name}${l.phone?` ${l.phone}`:''}`;
+  return 'https://todoist.com/add?content=' + encodeURIComponent(t) + '&date=' + encodeURIComponent(l.nextDate + (l.nextTime?' '+l.nextTime:''));
+}
+function ldTdMark(){ const l=ldCur(); l.tdDate=l.nextDate+l.nextTime; ldSave(); setTimeout(ldRender, 300); }
+function ldCalMark(){ const l=ldCur(); l.calDate=l.nextDate+l.nextTime; ldSave(); setTimeout(ldRender, 300); }
 
 /* ---- שמירה: שומר, מוסיף שיחה שנכתבה ולא נוספה, וחוזר לרשימה ---- */
 function ldSaveClose(){
