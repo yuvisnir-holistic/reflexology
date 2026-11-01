@@ -194,6 +194,7 @@
   .dchip .l{font-size:0.72rem;color:var(--muted);}
   .day .lens{font-size:0.82rem;color:var(--sefirah);font-weight:700;}
   .day .ex{font-size:0.93rem;line-height:1.7;color:#4b5752;margin:2px 0 10px;padding-inline-start:10px;border-inline-start:3px solid var(--sefirah-bg);}
+  .dpart{font-family:'Frank Ruhl Libre',serif;font-size:0.92rem;color:var(--sefirah);margin:14px 0 4px;}
   .day .q{font-size:1.05rem;line-height:1.75;margin:4px 0 10px;}
   .eve{font-size:0.86rem;color:var(--muted);margin:0 0 8px;}
   textarea{width:100%;min-height:92px;border:1px solid var(--sage);border-radius:8px;background:#fff;padding:10px 12px;
@@ -227,25 +228,6 @@
     .print-head{display:block !important;border-bottom:2px solid var(--forest);margin-bottom:14px;padding-bottom:6px;}
   }
   .print-head{display:none;}
-</style>
-<style>
-/* ===== קופסה מבחוץ, קווים מבפנים ===== */
-:root{--line:#E2D9C8}
-details.acc details.acc{background:none;border:0;border-radius:0;box-shadow:none;border-top:1px solid var(--line);margin:0}
-details.acc details.acc:last-of-type{border-bottom:1px solid var(--line)}
-details.acc details.acc > summary{padding:13px 2px}
-details.acc details.acc > .body{padding:0 2px 14px}
-details.acc details.acc > summary .chev{width:26px;height:26px;padding:4px;border:1.5px solid var(--sage);border-radius:50%}
-.acc .practice,.card .practice{background:none;border:0;border-radius:0;border-top:1px solid var(--line);margin:0;padding:13px 2px}
-.acc .practice:last-of-type,.card .practice:last-of-type{border-bottom:1px solid var(--line)}
-.acc .practice.on,.card .practice.on{background:none}
-.acc .practice.on b,.card .practice.on b{color:var(--forest)}
-/* כותרת שמתכווצת ונפתחת באנימציה רכה */
-html,body{overflow-anchor:none}
-header .sub{overflow:hidden;max-height:60px;transition:max-height .32s ease,opacity .24s ease,margin .32s ease}
-header.compact .sub{display:block!important;max-height:0;opacity:0;margin-bottom:0}
-header h1{transition:font-size .32s ease,margin .32s ease}
-@media (prefers-reduced-motion:reduce){header .sub,header h1{transition:none}}
 </style>
 </head>
 <body>
@@ -475,6 +457,7 @@ const SEF_INTRO = [
 const WEEKS = {
   chesed:{
     kind:'sefira', num:1, name:'חסד', plain:'נתינה ואהבה',
+    daily:'השבוע עושים בכל יום מעשה נתינה אחד. זו הפעולה שחוזרת, והיא שיוצרת את השינוי. אבל כל יום היא מקבלת גוון אחר, לפי הצד של החסד שפוגשים באותו יום.',
     tags:[['t-water','מים',true],['t-body','יד ימין']],
     sections:[
       {t:'משמעות הספירה', html:`
@@ -503,13 +486,13 @@ const WEEKS = {
       {t:'הקשבה מלאה', d:'בכל יום הקדישו כמה דקות להקשבה מלאה לאדם קרוב. בלי לייעץ, בלי לתקן ובלי לחשוב על התשובה, רק להיות שם בשבילו.'}
     ],
     days:[
-      {l:'נתינה שלמה', lens:'חסד שבחסד', ex:'החסד בצורה הטהורה שלו. נתינה שלמה, שלא מחשבת ולא מחכה לתמורה, כמו מים שזורמים לכל מקום שהם יכולים להגיע אליו.', q:'האם שמתי לב היום למה שמישהו קרוב צריך, עוד לפני שביקש? ונתתי לו בלי לצפות לדבר בחזרה?'},
-      {l:'נתינה עם גבול', lens:'גבורה שבחסד', ex:'הגבול שבתוך הנתינה. אהבה בריאה יודעת גם לעצור, כמו אם שנותנת לילד ושמה לו גם גבולות, כי נתינה בלי גבול מפנקת ומחלישה.', q:'האם הייתה היום נתינה שהיה נכון לעצור בה, כמו הורה ששם גבול לילד דווקא כי הוא אוהב אותו? ואם אמרתי לא, האם זה נאמר מתוך אהבה?'},
-      {l:'נתינה מאוזנת', lens:'תפארת שבחסד', ex:'היופי והאיזון שבנתינה. נתינה שבאה מהקשבה למה שהאחר באמת צריך, ולא ממה שנוח לי לתת.', q:'האם הקשבתי לפני שנתתי? נתתי את מה שהאחר באמת צריך, או את מה שאני רציתי לתת?'},
-      {l:'נתינה שממשיכה', lens:'נצח שבחסד', ex:'ההתמדה שבנתינה. נתינה שלא נעצרת כשההתלהבות נגמרת, ושיודעת, כמו מנצח על תזמורת, מתי להתקרב ומתי לתת מרחב.', q:'האם יש נתינה שאני ממשיך או ממשיכה בה גם כשאין כוח? והאם ידעתי היום מתי להתקרב ומתי לתת מרחב?'},
-      {l:'נתינה בהודיה', lens:'הוד שבחסד', ex:'הענווה וההודיה שבנתינה. לתת בלב שלם, בלי צורך בהכרה, ולשים לב גם לטוב שאחרים נותנים לנו.', q:'האם נתתי היום בלב שלם ולא מתוך חובה, ובלי צורך שיראו אותי? והאם שמתי לב לטוב שאחרים עשו בשבילי, ואמרתי תודה?'},
-      {l:'נתינה שמחברת', lens:'יסוד שבחסד', ex:'החיבור שבנתינה. כמו ברית בין שני אנשים, נתינה שלא תלויה בחשק של הרגע, ושלא שואלת מה ייצא לי ממנה.', q:'האם האהבה שבי יצאה היום החוצה, במילה, במגע או בקשר, גם ברגע שלא היה לי חשק? ואיפה תפסתי את עצמי מחשב או מחשבת מה ייצא לי מהנתינה?'},
-      {l:'נתינה במעשה', lens:'מלכות שבחסד', ex:'הנתינה כשהיא יוצאת לעולם. האהבה הופכת למעשה ממשי. ומלכות היא גם הכלי שמקבל, ולכן יש כאן גם את היכולת לקבל.', q:'מה עשיתי היום, בפועל, שהאהבה שלי הייתה בו? והאם הרשיתי לעצמי גם לקבל?'}
+      {l:'נתינה שלמה', lens:'חסד שבחסד', ex:'החסד בצורה הטהורה שלו. נתינה שלמה, שלא מחשבת ולא מחכה לתמורה, כמו מים שזורמים לכל מקום שהם יכולים להגיע אליו.', do:'עשו היום מעשה נתינה אחד קטן, בלי לצפות לשום דבר בחזרה, ואם אפשר, בלי שאף אחד ידע.', look:'איך מרגישה נתינה שלא מחכה לשום דבר בחזרה?', q:''},
+      {l:'נתינה עם גבול', lens:'גבורה שבחסד', ex:'הגבול שבתוך הנתינה. אהבה בריאה יודעת גם לעצור, כמו אם שנותנת לילד ושמה לו גם גבולות, כי נתינה בלי גבול מפנקת ומחלישה.', do:'גם היום עשו מעשה נתינה אחד. והפעם, לפני שאתם נותנים, בדקו אם זה הזמן והמקום הנכונים, ואם יש מקום שבו נכון דווקא לעצור.', look:'איפה הנתינה שלי צריכה גבול?', q:''},
+      {l:'נתינה מאוזנת', lens:'תפארת שבחסד', ex:'היופי והאיזון שבנתינה. נתינה שבאה מהקשבה למה שהאחר באמת צריך, ולא ממה שנוח לי לתת.', do:'לפני מעשה הנתינה של היום, הקשיבו כמה דקות לאדם שמולכם, או שאלו אותו מה באמת יעזור לו.', look:'מה האחר באמת צריך ממני, ומה אני רוצה לתת?', q:''},
+      {l:'נתינה שממשיכה', lens:'נצח שבחסד', ex:'ההתמדה שבנתינה. נתינה שלא נעצרת כשההתלהבות נגמרת, ושיודעת, כמו מנצח על תזמורת, מתי להתקרב ומתי לתת מרחב.', do:'חזרו היום על מעשה נתינה שכבר עשיתם השבוע, גם אם אין חשק. ההתמדה היא חלק מהנתינה.', look:'האם אני ממשיך או ממשיכה לתת גם כשאין התלהבות?', q:''},
+      {l:'נתינה בהודיה', lens:'הוד שבחסד', ex:'הענווה וההודיה שבנתינה. לתת בלב שלם, בלי צורך בהכרה, ולשים לב גם לטוב שאחרים נותנים לנו.', do:'עשו היום מעשה נתינה אחד, ובנוסף אמרו תודה מפורשת למישהו שנתן לכם משהו.', look:'האם אני יודע או יודעת גם לקבל?', q:''},
+      {l:'נתינה שמחברת', lens:'יסוד שבחסד', ex:'החיבור שבנתינה. כמו ברית בין שני אנשים, נתינה שלא תלויה בחשק של הרגע, ושלא שואלת מה ייצא לי ממנה.', do:'היום הנתינה היא במילה. התקשרו למישהו שחשוב לכם, או אמרו לו פנים אל פנים משהו טוב שאתם מרגישים כלפיו.', look:'האם האהבה שבי יוצאת החוצה, או נשארת בפנים?', q:''},
+      {l:'נתינה במעשה', lens:'מלכות שבחסד', ex:'הנתינה כשהיא יוצאת לעולם. האהבה הופכת למעשה ממשי. ומלכות היא גם הכלי שמקבל, ולכן יש כאן גם את היכולת לקבל.', do:'עשו היום מעשה נתינה אחד ממשי ומוחשי, משהו שאפשר לראות, להחזיק או לטעום.', look:'איך האהבה שלי נראית במעשים?', q:''}
     ],
     endQ:'כשאני מסתכל.ת על השבוע שעבר, מה גיליתי על הנתינה שלי? איפה הרגשתי שמשהו זז, ואיפה עדיין קשה לי?'
   },
@@ -985,6 +968,7 @@ function dayIndex(start){
   return Math.max(0, Math.min(6, Math.round((b-a)/86400000)));
 }
 function weekMeta(id){ return SEFIROT.find(s=>s.id===id) || ELEMENTS.find(e=>e.id===id); }
+const EVE_Q = 'מה הבנתי היום? מה היה קל, ומה היה קשה?';
 const DAYNAMES = ['היום הראשון','היום השני','היום השלישי','היום הרביעי','היום החמישי','היום השישי','היום השביעי'];
 
 /* ===== ניווט ===== */
@@ -1071,7 +1055,7 @@ function renderWeek(id){
   const tagHtml = w.tags.map(t=>`<span class="tag ${t[0]}">${t[2]?'<span class="dot"></span>':''}${t[1]}</span>`).join('');
 
   const topStatus = started
-    ? `<div class="status no-print"><span>יום ${i+1} מתוך 7</span><button class="link" id="toToday">לשאלה של היום</button></div>`
+    ? `<div class="status no-print"><span>יום ${i+1} מתוך 7</span><button class="link" id="toToday">${w.daily?'ליום של היום':'לשאלה של היום'}</button></div>`
     : '';
   const startBox = started ? '' :
     `<div class="card start-box no-print"><div><div class="t">מתחילים את השבוע?</div><div class="muted" style="font-size:.9rem">הכי טוב להתחיל כבר ביום הטיפול. השאלה הראשונה מחכה בערב, ומשם נספרים שבעה ימים עד המפגש הבא.</div></div>
@@ -1083,6 +1067,7 @@ function renderWeek(id){
 
   const secHtml = s => (s.t==='בגוף' && w.kind==='sefira') ? `<div class="split split-sm"><div class="split-txt">${s.html}</div>${makeBodyFig(id)}</div>` : s.html;
   const isEl = w.kind==='element';
+  const daily = !!w.daily;
   const secs = `<details class="acc intro-wrap" data-k="sewrap"><summary><h4>${isEl?'הסבר על יסוד ה':'הסבר על ספירת ה'}${w.name}</h4>${CHEV}</summary><div class="body">`
     + w.sections.map((s,n)=>`<details class="acc" data-k="se${n}"><summary><h4>${s.t}</h4>${CHEV}</summary><div class="body prose">${secHtml(s)}</div></details>`).join('')
     + `</div></details>`;
@@ -1106,11 +1091,20 @@ function renderWeek(id){
       <summary><h4>${DAYNAMES[k]}, ${d.l}</h4>${isToday?'<span class="today-badge">היום</span>':''}${CHEV}</summary>
       <div class="body">
         <div class="lens">${d.lens}</div>
+        ${daily ? `
+        <h5 class="dpart">בבוקר</h5>
+        <div class="ex">${d.ex||''}</div>
+        <div class="q"><b>התרגיל של היום</b><br>${d.do}</div>
+        <h5 class="dpart">במהלך היום</h5>
+        <div class="q">${d.look}</div>
+        <h5 class="dpart">בערב</h5>
+        <div class="q">${EVE_Q}</div>
+        <textarea data-ans="${k}" placeholder="כמה מילים על היום...">${esc(dd.a)}</textarea>` : `
         <div class="ex">${d.ex||''}</div>
         <div class="q"><b>שאלה לערב</b><br>${d.q}</div>
         <div class="eve">עונים בערב, אחרי שהיום עבר.</div>
-        <textarea data-ans="${k}" placeholder="מה עלה היום...">${esc(dd.a)}</textarea>
-        ${isEl ? '' : `<div class="dprac"><span class="lbl">התרגיל שעשיתי היום</span>${w.practices.map((p,n)=>`<button data-dp="${k}" data-pi="${n}" class="${(dd.p!=null?dd.p:st.practice)===n?'on':''}">${p.t}</button>`).join('')}</div>`}
+        <textarea data-ans="${k}" placeholder="מה עלה היום...">${esc(dd.a)}</textarea>`}
+        ${(isEl||daily) ? '' : `<div class="dprac"><span class="lbl">התרגיל שעשיתי היום</span>${w.practices.map((p,n)=>`<button data-dp="${k}" data-pi="${n}" class="${(dd.p!=null?dd.p:st.practice)===n?'on':''}">${p.t}</button>`).join('')}</div>`}
         <label class="check"><input type="checkbox" data-done="${k}" ${dd.done?'checked':''}> ${isEl?'עשיתי היום את התרגילים':'עשיתי היום את התרגיל'}</label>
       </div></details>`;
   }).join('');
@@ -1120,13 +1114,17 @@ function renderWeek(id){
     <div class="tags">${tagHtml}</div>
     ${topStatus}
     <div style="margin-top:14px">${secs}</div>
+    ${daily ? `<h3 class="sec">איך עובדים השבוע</h3>
+    <div class="prose"><p>${w.daily}</p><p>כל יום בנוי משלושה חלקים. בבוקר קוראים את ההסבר ואת התרגיל של היום. במהלך היום לוקחים איתכם שאלה אחת ומתבוננים בה. ובערב עונים בקצרה על אותן שאלות פשוטות בכל יום.</p></div>
+    ${startBox}
+    <div class="days-strip no-print">${strip}</div>` : `
     <h3 class="sec">במהלך היום, ${isEl?'התרגילים':'התרגיל'}</h3>
     <p class="muted" style="margin-top:-4px">${isEl ? 'היסודות הם החומר שממנו בנויים גם הגוף וגם הנפש, ולכן השבוע עובדים בשניהם. בחרו תרגיל אחד לגוף ותרגיל אחד לנפש, ועשו את שניהם כל יום.' : 'בחרו תרגיל אחד ועשו אותו כל יום. אפשר להחליף תרגיל ביום מסוים, בכרטיס של אותו יום, אבל החזרה על אותו תרגיל היא שיוצרת את השינוי.'}</p>
     ${prac}
     ${startBox}
     <h3 class="sec">בערב, השאלה של היום</h3>
     <p class="muted" style="margin-top:-4px">${isEl ? `התרגילים הם מה שעושים במהלך היום. השאלה היא מה שבודקים בערב, על כל מה שקרה ביום. בכל יסוד כלולים כל ארבעת היסודות, ולכן בארבעת הימים הראשונים מסתכלים על ה${w.name} דרך כל אחד מהם. בימים שאחריהם פוגשים את היסוד שמולו, את המידה שמתקנת, ובסוף את היסוד כולו.` : `התרגיל הוא מה שעושים במהלך היום. השאלה היא מה שבודקים בערב, על כל מה שקרה ביום, לא רק על התרגיל. התרגיל נשאר אותו תרגיל, והשאלה מתחלפת כל ערב. בכל מידה כלולות כל שבע המידות, ולכן בכל יום מסתכלים על ה${w.name} דרך מידה אחרת.`}</p>
-    <div class="days-strip no-print">${strip}</div>
+    <div class="days-strip no-print">${strip}</div>`}
     ${days}
     <div class="card end-q">
       <h4>שאלה לסיום השבוע</h4>
@@ -1154,7 +1152,7 @@ function renderWeek(id){
     if(!st.end || !st.end.trim()){ toast('קודם כותבים את הסיכום'); return; }
     const done=Object.values(st.days).filter(d=>d.done).length;
     let t=`סיכום שבוע של ${w.name}\n`;
-    if(st.practice!=null) t+=`${isEl?'התרגיל לגוף':'התרגיל שבחרתי'}, ${w.practices[st.practice].t}\n`;
+    if(!w.daily && st.practice!=null) t+=`${isEl?'התרגיל לגוף':'התרגיל שבחרתי'}, ${w.practices[st.practice].t}\n`;
     if(isEl && st.practice2!=null) t+=`התרגיל לנפש, ${w.practices[st.practice2].t}\n`;
     t+=`תרגלתי ${done} מתוך 7 ימים\n\n${st.end.trim()}`;
     window.open((WA_NUMBER?'https://wa.me/'+WA_NUMBER:'https://wa.me/')+'?text='+encodeURIComponent(t),'_blank');
