@@ -196,6 +196,7 @@
   .day .ex{font-size:0.93rem;line-height:1.7;color:#4b5752;margin:2px 0 10px;padding-inline-start:10px;border-inline-start:3px solid var(--sefirah-bg);}
   .day .look{font-size:0.98rem;line-height:1.75;margin:0 0 10px;padding:10px 12px;background:var(--sefirah-bg);border-radius:10px;color:var(--ink);}
   .day .look b{color:var(--forest-dark);}
+  .dsub{font-family:'Frank Ruhl Libre',serif;font-size:0.82rem;font-weight:700;color:var(--sefirah);margin:10px 0 2px;opacity:.9;}
   .dpart{font-family:'Frank Ruhl Libre',serif;font-size:0.92rem;color:var(--sefirah);margin:14px 0 4px;}
   .day .q{font-size:1.05rem;line-height:1.75;margin:4px 0 10px;}
   .eve{font-size:0.86rem;color:var(--muted);margin:0 0 8px;}
@@ -1096,7 +1097,8 @@ function renderWeek(id){
         ${daily ? `
         <h5 class="dpart">בבוקר</h5>
         <div class="ex">${d.ex||''}</div>
-        <div class="q"><b>התרגיל של היום</b><br>${d.do}</div>
+        <h6 class="dsub">התרגיל של היום</h6>
+        <div class="q">${d.do}</div>
         <div class="look">ולאורך היום, קחו איתכם את השאלה <b>${d.look}</b></div>
         <h5 class="dpart">בערב</h5>
         <div class="q">${EVE_Q}</div>
