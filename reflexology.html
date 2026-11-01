@@ -429,6 +429,13 @@ details[open] > .body{animation:accIn .26s ease}
 .card .balance-box.excess{color:var(--fire)} .card .balance-box.deficit{color:var(--water)}
 .card .balance-box p,.card .balance-box li{color:var(--ink)}
 </style>
+<style>
+nav.mainnav button{font-weight:400!important;font-size:16.5px}
+</style>
+<style>
+@media screen{.view p,.view li{font-size:18.5px}.card p{font-size:18.5px}.lead,.hero p{font-size:19.5px}}
+</style>
+<style>body:has(.ys-back.show) .scroll-top{bottom:calc(74px + env(safe-area-inset-bottom,0px))}</style>
 </head>
 <body>
 
@@ -1551,6 +1558,39 @@ document.addEventListener('click', e => {
     window.scrollTo({top:0, behavior: was ? 'smooth' : 'auto'});
   }, 0);
 }, true);
+</script>
+<style>
+.ys-back{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:950;display:none;align-items:center;gap:6px;
+  height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#2C5F5B;border:1.5px solid #2C5F5B;
+  font:700 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(44,95,91,.12)}
+.ys-back.show{display:inline-flex}
+.ys-back:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
+@media print{.ys-back{display:none!important}}
+</style>
+<button class="ys-back" id="ysBack" type="button" aria-label="חזרה">חזרה ›</button>
+<script>
+/* כפתור חזרה אחיד: חוזר ללשונית הקודמת באתר, ואם אין, לעמוד הקודם באתרי הקליניקה */
+(function(){
+  const btn = document.getElementById('ysBack');
+  const SEL = '#tabnav button, nav.tabs button, .tabnav button, .tab-btn, nav.mainnav button';
+  const tabs = () => [...document.querySelectorAll(SEL)];
+  const isActive = b => b.classList.contains('active') || b.getAttribute('aria-selected') === 'true';
+  const stack = []; let current = tabs().find(isActive) || null; let fromBack = false;
+  let sameOrigin = false; try { sameOrigin = !!document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1; } catch(e){}
+  function update(){ btn.classList.toggle('show', stack.length > 0 || sameOrigin); }
+  function check(){
+    const now = tabs().find(isActive) || null;
+    if(now && now !== current){ if(!fromBack && current) stack.push(current); current = now; update(); }
+  }
+  const mo = new MutationObserver(check);
+  function watch(){ tabs().forEach(b => mo.observe(b, {attributes:true, attributeFilter:['class','aria-selected']})); }
+  watch();
+  btn.addEventListener('click', () => {
+    if(stack.length){ const prev = stack.pop(); fromBack = true; prev.click(); setTimeout(() => { check(); fromBack = false; update(); }, 60); }
+    else if(sameOrigin){ history.back(); }
+  });
+  update();
+})();
 </script>
 </body>
 </html>

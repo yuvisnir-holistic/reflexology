@@ -38,9 +38,9 @@
   :focus-visible{outline:3px solid var(--air);outline-offset:2px;}
 
   /* כותרת: ממורכזת, לא נדבקת */
-  header{background:var(--header);color:#F7F1E6;padding:26px 16px 22px;text-align:center;}
-  header h1{font-size:1.7rem;margin:0 0 4px;font-weight:900;color:#F7F1E6;}
-  header .sub{font-size:0.98rem;color:rgba(247,241,230,0.82);}
+  header{background:var(--header);color:#FCFAF6;padding:26px 16px 22px;text-align:center;}
+  header h1{font-size:1.7rem;margin:0 0 4px;font-weight:900;color:#FCFAF6;}
+  header .sub{font-size:0.98rem;color:rgba(252,250,246,0.82);}
 
   /* שורת לשוניות דביקה */
   .tabbar{position:sticky;top:0;z-index:50;background:rgba(252,250,246,0.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
@@ -229,6 +229,40 @@
   .print-head{display:none;}
 </style>
 
+<style>
+/* ===== קופסה מבחוץ, קווים מבפנים ===== */
+:root{--line:#E2D9C8}
+details.acc details.acc{background:none;border:0;border-radius:0;box-shadow:none;border-top:1px solid var(--line);margin:0}
+details.acc details.acc:last-of-type{border-bottom:1px solid var(--line)}
+details.acc details.acc > summary{padding:13px 2px}
+details.acc details.acc > .body{padding:0 2px 14px}
+details.acc details.acc > summary .chev{width:26px;height:26px;padding:4px;border:1.5px solid var(--sage);border-radius:50%}
+.acc .practice,.card .practice{background:none;border:0;border-radius:0;border-top:1px solid var(--line);margin:0;padding:13px 2px}
+.acc .practice:last-of-type,.card .practice:last-of-type{border-bottom:1px solid var(--line)}
+.acc .practice.on,.card .practice.on{background:none}
+.acc .practice.on b,.card .practice.on b{color:var(--forest)}
+/* כותרת שמתכווצת ונפתחת באנימציה רכה */
+html,body{overflow-anchor:none}
+header .sub{overflow:hidden;max-height:60px;transition:max-height .32s ease,opacity .24s ease,margin .32s ease}
+header.compact .sub{display:block!important;max-height:0;opacity:0;margin-bottom:0}
+header h1{transition:font-size .32s ease,margin .32s ease}
+@media (prefers-reduced-motion:reduce){header .sub,header h1{transition:none}}
+</style>
+<style>
+#tabnav button,.tabnav button,nav.tabs button{font-weight:400!important}
+</style>
+<style>
+html{font-size:20.5px}
+</style>
+<style>
+/* תפריט גלולות בירוק, כמו בכל האתרים */
+#hdr{padding-bottom:16px}
+.tabbar{background:#4A6B57!important;border-bottom:0!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:env(safe-area-inset-top,0px) 12px 12px!important;box-shadow:none!important}
+.tabnav{background:rgba(255,255,255,0.12);border-radius:999px;padding:4px!important;gap:4px}
+.tabnav button{flex:1 1 auto!important;color:#fff!important;border:0!important;border-radius:999px;padding:8px 14px!important;font-weight:400!important;font-size:17px!important;min-height:44px}
+.tabnav button.active{background:#fff!important;color:#1E4744!important}
+.tabnav button:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
+</style>
 </head>
 <body>
 
