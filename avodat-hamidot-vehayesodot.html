@@ -194,6 +194,8 @@
   .dchip .l{font-size:0.72rem;color:var(--muted);}
   .day .lens{font-size:0.82rem;color:var(--sefirah);font-weight:700;}
   .day .ex{font-size:0.93rem;line-height:1.7;color:#4b5752;margin:2px 0 10px;padding-inline-start:10px;border-inline-start:3px solid var(--sefirah-bg);}
+  .day .look{font-size:0.98rem;line-height:1.75;margin:0 0 10px;padding:10px 12px;background:var(--sefirah-bg);border-radius:10px;color:var(--ink);}
+  .day .look b{color:var(--forest-dark);}
   .dpart{font-family:'Frank Ruhl Libre',serif;font-size:0.92rem;color:var(--sefirah);margin:14px 0 4px;}
   .day .q{font-size:1.05rem;line-height:1.75;margin:4px 0 10px;}
   .eve{font-size:0.86rem;color:var(--muted);margin:0 0 8px;}
@@ -1095,8 +1097,7 @@ function renderWeek(id){
         <h5 class="dpart">בבוקר</h5>
         <div class="ex">${d.ex||''}</div>
         <div class="q"><b>התרגיל של היום</b><br>${d.do}</div>
-        <h5 class="dpart">במהלך היום</h5>
-        <div class="q">${d.look}</div>
+        <div class="look">ולאורך היום, קחו איתכם את השאלה <b>${d.look}</b></div>
         <h5 class="dpart">בערב</h5>
         <div class="q">${EVE_Q}</div>
         <textarea data-ans="${k}" placeholder="כמה מילים על היום...">${esc(dd.a)}</textarea>` : `
@@ -1115,7 +1116,7 @@ function renderWeek(id){
     ${topStatus}
     <div style="margin-top:14px">${secs}</div>
     ${daily ? `<h3 class="sec">איך עובדים השבוע</h3>
-    <div class="prose"><p>${w.daily}</p><p>כל יום בנוי משלושה חלקים. בבוקר קוראים את ההסבר ואת התרגיל של היום. במהלך היום לוקחים איתכם שאלה אחת ומתבוננים בה. ובערב עונים בקצרה על אותן שאלות פשוטות בכל יום.</p></div>
+    <div class="prose"><p>${w.daily}</p><p>כל יום בנוי משני חלקים. בבוקר קוראים את ההסבר ואת התרגיל של היום, יחד עם שאלה אחת שלוקחים איתכם לאורך היום. ובערב עונים בקצרה על אותן שאלות פשוטות בכל יום.</p></div>
     ${startBox}
     <div class="days-strip no-print">${strip}</div>` : `
     <h3 class="sec">במהלך היום, ${isEl?'התרגילים':'התרגיל'}</h3>
