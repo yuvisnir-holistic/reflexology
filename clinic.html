@@ -824,12 +824,57 @@ html,body{overflow-anchor:none}
 #tabnav button,nav.tabs button,.tabnav button,.tab-btn,nav.mainnav button,.tabs .tab{color:#fff!important;padding:8px 16px!important}
 #tabnav button.active,nav.tabs button[aria-selected="true"],.tabnav button.active,.tab-btn.home.active,nav.mainnav button.active,.tabs .tab[aria-selected="true"]{color:#1E4744!important;background:#fff!important}
 </style>
+<style>
+  /* ===================== לידים ===================== */
+  .mainnav{max-width:340px;margin:12px auto 0;}
+  .mainnav button{font-size:0.95rem;padding:8px 4px;}
+  .mainnav button:focus-visible{outline:3px solid var(--air);outline-offset:2px;}
+  .ld-filter{margin:8px 0 0;}
+  .ld-filter button small{font-weight:600;opacity:0.75;}
+  .st-fresh{background:var(--air-bg);color:#7d6115;}
+  .st-talk{background:var(--water-bg);color:var(--water);}
+  .st-booked{background:var(--earth-bg);color:var(--earth);}
+  .st-converted{background:#E7EFEC;color:var(--forest-dark);}
+  .st-drop{background:#EEEEEC;color:#77807c;}
+  .ld-camp{background:var(--sefirah-bg);color:var(--sefirah);font-weight:600;}
+  .ld-due{font-size:0.76rem;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap;text-align:center;}
+  .due-late{background:var(--fire);color:#fff;}
+  .due-today{background:var(--fire-bg);color:var(--fire);}
+  .due-later{border:1px dashed #b9c3bd;color:#5e6b66;}
+  .ld-warn{font-size:0.86rem;color:var(--fire);line-height:1.5;}
+  .ld-warn .bm-link{color:var(--fire);padding:0;font-size:inherit;}
+  .ld-next{flex-wrap:wrap;}
+  .ld-conv{margin:0;font-size:0.95rem;}
+  .ld-conv .bm-link{color:var(--forest);font-weight:700;font-size:inherit;padding:0;}
+  .ld-calls{margin-top:26px;border-top:1px solid var(--sage);padding-top:14px;}
+  .ld-calls h3{margin:0 0 10px;font-size:1.15rem;color:var(--forest-dark);}
+  .ld-calls h3 small{font-family:'Assistant',sans-serif;font-size:0.8rem;color:#6a756f;}
+  .ld-newcall{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start;margin-bottom:14px;}
+  .ld-newcall textarea.inp{min-height:42px;}
+  .ld-call{border-inline-start:3px solid var(--water-bg);padding-inline-start:12px;margin-bottom:12px;}
+  .ld-call-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;}
+  .ld-call-h .inp{max-width:180px;min-height:36px;padding:5px 10px;font-size:0.9rem;}
+  .ld-call textarea.inp{min-height:52px;}
+  .ld-foot-act{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .ld-stats{margin-top:26px;}
+  .ld-stats h3{margin:0 0 8px;font-size:1.1rem;color:var(--forest-dark);}
+  .ld-tw{overflow-x:auto;}
+  .ld-stats table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;font-size:0.92rem;}
+  .ld-stats th{background:#E7EFEC;color:var(--forest-dark);font-weight:700;text-align:start;padding:8px 12px;white-space:nowrap;}
+  .ld-stats td{padding:8px 12px;border-top:1px solid rgba(44,95,91,0.1);}
+  .ld-stats td small{color:#6a756f;}
+  @media (max-width:560px){ .ld-newcall{grid-template-columns:1fr;} .ld-newcall input[type=date].inp{max-width:none;} }
+</style>
 </head>
 <body>
 <header>
   <a class="hdr-link" href="body-map-reference.html">מפת הגוף</a>
   <h1>הקליניקה</h1>
-  <div class="sub">יובל שניר, ניהול מטופלים</div>
+  <div class="sub">יובל שניר, ניהול מטופלים ולידים</div>
+  <nav class="tabnav mainnav" aria-label="מעבר בין מטופלים ללידים">
+    <button type="button" id="navPt" class="active" aria-selected="true" onclick="goHome()">מטופלים</button>
+    <button type="button" id="navLd" aria-selected="false" onclick="ldHome()">לידים</button>
+  </nav>
 </header>
 
 <main>
@@ -852,6 +897,28 @@ html,body{overflow-anchor:none}
   <section id="cardView" class="view">
     <div id="cardHead" class="no-print"></div>
     <div id="cardBody"></div>
+  </section>
+
+  <section id="leadsView" class="view">
+    <div class="home-top no-print">
+      <div class="home-search">
+        <input id="ldQ" type="search" placeholder="חיפוש לפי שם או טלפון" autocomplete="off" oninput="ldQ=this.value;ldRenderList()" aria-label="חיפוש ליד לפי שם או טלפון">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div class="new-pt">
+        <input id="ldNewName" placeholder="שם ליד חדש" autocomplete="off" onkeydown="if(event.key==='Enter')ldCreate()" aria-label="שם ליד חדש">
+        <button class="bm-btn" onclick="ldCreate()">ליד חדש</button>
+      </div>
+    </div>
+    <div class="seg ld-filter" id="ldFilter" role="group" aria-label="סינון לידים"></div>
+    <p class="pt-count" id="ldCount"></p>
+    <div id="ldList"></div>
+    <div id="ldStats"></div>
+    <div id="ldBkBox"></div>
+  </section>
+
+  <section id="leadView" class="view">
+    <div id="leadBody"></div>
   </section>
 </main>
 
@@ -958,8 +1025,11 @@ function hasReading(p){ return !!(p.reading && p.reading.text); }
 
 /* ===================== מסך הבית ===================== */
 function showView(v){
-  $('homeView').classList.toggle('on', v==='home');
-  $('cardView').classList.toggle('on', v==='card');
+  ['home','card','leads','lead'].forEach(k=>$(k+'View').classList.toggle('on', v===k));
+  const ld = v==='leads' || v==='lead';
+  $('navPt').classList.toggle('active', !ld); $('navPt').setAttribute('aria-selected', String(!ld));
+  $('navLd').classList.toggle('active', ld);  $('navLd').setAttribute('aria-selected', String(ld));
+  try{ history.replaceState(null, '', ld ? '#leads' : location.pathname + location.search); }catch(e){}
 }
 function renderHome(){ renderList(); bkBar(); }
 function renderList(){
@@ -1056,7 +1126,7 @@ function renderDetails(){
       <div class="f wide"><label class="f-l" for="d_ref">איך הגיע אליי</label><textarea class="inp" id="d_ref" rows="2" oninput="dSet('referral',this.value)">${escH(p.referral)}</textarea></div>
     </div>
     <div class="det-foot no-print">
-      <span>הכרטיס נפתח ב־${new Date(p.created).toLocaleDateString('he-IL')}</span>
+      <span>הכרטיס נפתח ב־${new Date(p.created).toLocaleDateString('he-IL')}${p.leadId && typeof ldGet==='function' && ldGet(p.leadId) ? ` <button class="bm-link" onclick="ldOpen('${p.leadId}')">מכרטיס ליד</button>` : ''}</span>
       <button class="bm-link danger" onclick="ptDelete()">מחיקת המטופל</button>
     </div>
   </div>`;
@@ -1532,20 +1602,23 @@ function exToggle(id, btn){
 function bkLast(){ try{ return localStorage.getItem(BK_KEY)||''; }catch(e){ return ''; } }
 function bkDays(){ const l=bkLast(); if(!l) return null; return Math.floor((Date.now()-new Date(l).getTime())/86400000); }
 function bkBar(){
-  const n = PT.patients.length, d = bkDays();
-  const status = !n ? 'אין עדיין מטופלים במכשיר הזה.' : (d===null ? '<b style="color:#A8442B">עוד לא נעשה גיבוי.</b>' : (d===0 ? 'גיבוי אחרון: היום.' : (d>=7 ? `<b style="color:#A8442B">גיבוי אחרון לפני ${d} ימים. כדאי לגבות.</b>` : `גיבוי אחרון לפני ${d===1?'יום':d+' ימים'}.`)));
-  $('bkBox').innerHTML = `<div class="no-print" style="margin-top:26px;border-top:1px solid var(--sage);padding-top:12px">
-    <p class="iq-hint" style="margin:0 0 8px">${status} הגיבוי שומר את כל המטופלים, הפרטים, השאלונים, האבחונים, יומני הטיפולים, התרגול והתרגילים שכתבת בעצמך, בקובץ אחד.</p>
+  const n = PT.patients.length + (typeof LD!=='undefined' ? LD.leads.length : 0), d = bkDays();
+  const status = !n ? 'אין עדיין מטופלים או לידים במכשיר הזה.' : (d===null ? '<b style="color:#A8442B">עוד לא נעשה גיבוי.</b>' : (d===0 ? 'גיבוי אחרון: היום.' : (d>=7 ? `<b style="color:#A8442B">גיבוי אחרון לפני ${d} ימים. כדאי לגבות.</b>` : `גיבוי אחרון לפני ${d===1?'יום':d+' ימים'}.`)));
+  const bkHTML = `<div class="no-print" style="margin-top:26px;border-top:1px solid var(--sage);padding-top:12px">
+    <p class="iq-hint" style="margin:0 0 8px">${status} הגיבוי שומר את כל המטופלים והלידים, הפרטים, השאלונים, האבחונים, יומני הטיפולים, התרגול והתרגילים שכתבת בעצמך, בקובץ אחד.</p>
     <div class="sheet-actions">
       <button class="bm-btn ghost" onclick="bkExport()" ${n?'':'disabled'}>גיבוי לקובץ</button>
       <button class="bm-btn ghost" onclick="$('bkFile').click()">שחזור מקובץ</button>
       <input type="file" id="bkFile" accept=".json,application/json" hidden onchange="bkImport(this)">
     </div></div>`;
+  const onLeads = $('leadsView').classList.contains('on');
+  $('bkBox').innerHTML = onLeads ? '' : bkHTML;
+  $('ldBkBox').innerHTML = onLeads ? bkHTML : '';
 }
 async function bkExport(){
   const now = new Date(), ds = now.toISOString().slice(0,10);
   let photos = []; try{ photos = window.indexedDB ? await phAll() : []; }catch(e){}
-  const data = {app:'clinic', v:1, saved:now.toISOString(), patients:PT, photos};
+  const data = {app:'clinic', v:1, saved:now.toISOString(), patients:PT, photos, leads:(typeof LD!=='undefined'?LD.leads:[])};
   const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `clinic-backup-${ds}.json`;
   document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
@@ -1589,15 +1662,15 @@ function bkImport(inp){
     if(!cur){
       if(!confirm(`לשחזר ${from} מתאריך ${when} עם ${n} מטופלים?`)){ inp.value=''; return; }
       PT = {patients:bk, custom:bkCustom, activeId:null};
-      regAllCustom(); savePT(); inp.value=''; renderHome(); bmToast(`שוחזרו ${n} מטופלים`); return;
+      regAllCustom(); savePT(); ldFromBackup(d); inp.value=''; ldRefresh(); bmToast(`שוחזרו ${n} מטופלים`); return;
     }
     if(confirm(`למזג את ה${from} מתאריך ${when} (${n} מטופלים) עם ${cur} המטופלים שכבר כאן?\n\nבמיזוג שום דבר לא נמחק: מטופלים חדשים נוספים, ואצל מטופלים שקיימים בשני המקומות נוספים טיפולים, שבועות ופרטים שחסרים כאן.\n\nלחצו "אישור" למיזוג, או "ביטול" לאפשרויות נוספות.`)){
       const r = bkMerge(bk, bkCustom);
-      savePT(); inp.value=''; renderHome(); bmToast(`מוזג: ${r.added} מטופלים חדשים, ${r.merged} עודכנו`); return;
+      savePT(); ldFromBackup(d); inp.value=''; ldRefresh(); bmToast(`מוזג: ${r.added} מטופלים חדשים, ${r.merged} עודכנו`); return;
     }
     if(confirm(`להחליף את כל ${cur} המטופלים שכאן בגיבוי?\nמה שלא נמצא בגיבוי יימחק מהמכשיר הזה.`)){
       PT = {patients:bk, custom:bkCustom, activeId:null};
-      regAllCustom(); savePT(); inp.value=''; renderHome(); bmToast(`שוחזרו ${n} מטופלים`); return;
+      regAllCustom(); savePT(); ldFromBackup(d); inp.value=''; ldRefresh(); bmToast(`שוחזרו ${n} מטופלים`); return;
     }
     inp.value='';
   };
@@ -3242,6 +3315,230 @@ iqStore = function(){ iqFillFromDetails(true); _iqStoreDet(); };
 const _iqTextDet = iqText;
 iqText = function(){ iqFillFromDetails(true); return _iqTextDet(); };
 
+/* ===================== לידים ===================== */
+const LD_STORE = 'clinic-leads';
+const LD_ST = {fresh:'חדש', talk:'בשיחה', booked:'נקבע טיפול', converted:'הפך למטופל', drop:'לא רלוונטי'};
+const LD_ACTIVE = ['fresh','talk','booked'];
+const LD_FILTERS = [['active','פעילים'],['converted','הפכו למטופלים'],['drop','לא רלוונטיים'],['all','הכל']];
+let LD = {leads:[]};
+let ldQ = '', ldFilt = 'active', ldActive = null;
+
+function ldNorm(l){
+  l.id = l.id || newId('l');
+  l.name = (l.name||'').trim() || 'ליד ללא שם';
+  ['phone','campaign','reason','notes','nextDate','patientId','convertedDate'].forEach(k=>{ if(l[k]==null) l[k]=''; });
+  if(!l.date) l.date = isoToday();
+  if(!LD_ST[l.status]) l.status = 'fresh';
+  if(!Array.isArray(l.calls)) l.calls = [];
+  if(!l.created) l.created = Date.now();
+  return l;
+}
+function ldLoad(){ try{ const v = localStorage.getItem(LD_STORE); if(v){ const d = JSON.parse(v); if(d && Array.isArray(d.leads)) LD.leads = d.leads; } }catch(e){} LD.leads.forEach(ldNorm); }
+function ldSave(){ try{ localStorage.setItem(LD_STORE, JSON.stringify(LD)); }catch(e){ bmToast('השמירה במכשיר נכשלה'); } }
+function ldGet(id){ return LD.leads.find(l=>l.id===id); }
+function ldCur(){ return ldGet(ldActive); }
+
+/* מיזוג לידים מקובץ גיבוי: לא מוחק דבר */
+function ldFromBackup(d){
+  if(!d || !Array.isArray(d.leads)) return;
+  d.leads.forEach(b=>{
+    if(!b || !b.id) return;
+    const l = ldGet(b.id);
+    if(!l){ LD.leads.push(ldNorm(b)); return; }
+    ['phone','campaign','reason','notes','nextDate','patientId','convertedDate'].forEach(k=>{ if(!l[k] && b[k]) l[k]=b[k]; });
+    const ids = new Set(l.calls.map(c=>c.id));
+    (b.calls||[]).forEach(c=>{ if(c && c.id && !ids.has(c.id)) l.calls.push(c); });
+  });
+  ldSave();
+}
+function ldRefresh(){ if($('leadsView').classList.contains('on') || $('leadView').classList.contains('on')) ldHome(); else renderHome(); }
+
+/* טלפון: השוואה לפי תשע הספרות האחרונות, כך ש־054 ו־972+ נחשבים אותו מספר */
+const phKey = s => { const d = String(s||'').replace(/\D/g,''); return d.length>=9 ? d.slice(-9) : ''; };
+const waNum = s => { const k = phKey(s); return k ? '972'+k : ''; };
+function ldDupes(l){
+  const k = phKey(l.phone); if(!k) return [];
+  const out = [];
+  PT.patients.forEach(p=>{ if(phKey(p.phone)===k && p.id!==l.patientId) out.push(`<button class="bm-link" onclick="openP('${p.id}')">${escH(p.name)}</button> (מטופל)`); });
+  LD.leads.forEach(o=>{ if(o.id!==l.id && phKey(o.phone)===k) out.push(`<button class="bm-link" onclick="ldOpen('${o.id}')">${escH(o.name)}</button> (ליד מ־${fmtD(o.date)})`); });
+  return out;
+}
+
+const addDays = n => { const d = new Date(); d.setDate(d.getDate()+n); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+function ldDue(l){
+  if(!l.nextDate || !LD_ACTIVE.includes(l.status)) return '';
+  const t = isoToday();
+  if(l.nextDate < t) return `<span class="ld-due due-late">לחזור, מ־${fmtD(l.nextDate)}</span>`;
+  if(l.nextDate === t) return `<span class="ld-due due-today">לחזור היום</span>`;
+  return `<span class="ld-due due-later">לחזור ב־${fmtD(l.nextDate)}</span>`;
+}
+const ldStTag = l => `<span class="src st-${l.status}">${LD_ST[l.status]}</span>`;
+const ldCampTag = l => l.campaign ? `<span class="src ld-camp">${escH(l.campaign)}</span>` : '';
+function ldLastCall(l){ const c = l.calls.filter(x=>x.date).map(x=>x.date).sort(); return c.length ? c[c.length-1] : ''; }
+
+/* ---- רשימת הלידים ---- */
+function ldHome(){
+  ldActive = null; showView('leads');
+  $('ldFilter').innerHTML = LD_FILTERS.map(([k,l])=>{
+    const n = k==='all' ? LD.leads.length : k==='active' ? LD.leads.filter(x=>LD_ACTIVE.includes(x.status)).length : LD.leads.filter(x=>x.status===k).length;
+    return `<button class="${ldFilt===k?'on':''}" aria-pressed="${ldFilt===k}" onclick="ldFilt='${k}';ldHome()">${l}${n?` <small>${n}</small>`:''}</button>`;
+  }).join('');
+  ldRenderList(); ldRenderStats(); bkBar(); window.scrollTo(0,0);
+}
+function ldSortKey(l){
+  const t = isoToday();
+  if(LD_ACTIVE.includes(l.status) && l.nextDate) return (l.nextDate<=t ? '0' : '1') + l.nextDate;
+  return '2' + String(9e15 - (new Date(l.date).getTime()||l.created));
+}
+function ldRenderList(){
+  const q = ldQ.trim().toLowerCase(), qd = q.replace(/\D/g,'');
+  const pool = LD.leads.filter(l => ldFilt==='all' ? true : ldFilt==='active' ? LD_ACTIVE.includes(l.status) : l.status===ldFilt);
+  const list = pool.filter(l => !q || l.name.toLowerCase().includes(q) || (qd.length>=3 && String(l.phone).replace(/\D/g,'').includes(qd)))
+                   .sort((a,b)=> ldSortKey(a).localeCompare(ldSortKey(b)));
+  const due = LD.leads.filter(l=>LD_ACTIVE.includes(l.status) && l.nextDate && l.nextDate<=isoToday()).length;
+  $('ldCount').textContent = !LD.leads.length ? '' :
+    (q ? `נמצאו ${list.length} לידים` : `${pool.length===1?'ליד אחד':pool.length+' לידים'} ברשימה הזו${due && ldFilt!=='converted' && ldFilt!=='drop' ? `, ${due===1?'אחד מחכה':due+' מחכים'} לחזרה ממך` : ''}`);
+  if(!LD.leads.length){
+    $('ldList').innerHTML = `<div class="sheet-empty"><p>עוד אין לידים. כשמישהו פונה, כתבו את השם למעלה ולחצו "ליד חדש".</p></div>`; return;
+  }
+  if(!list.length){ $('ldList').innerHTML = `<p class="ex-none">${q ? 'אין ליד שמתאים לחיפוש. אפשר לפתוח ליד חדש למעלה, או לבדוק בלשונית "הכל".' : 'אין לידים ברשימה הזו.'}</p>`; return; }
+  $('ldList').innerHTML = list.map(l=>{
+    const last = ldLastCall(l);
+    return `<div class="pr-row"><button class="pr" onclick="ldOpen('${l.id}')">
+      <span class="pr-l1"><span class="pr-name">${escH(l.name)}</span>${ldStTag(l)}${ldCampTag(l)}</span>
+      <span class="pr-l2">${l.phone?`<span dir="ltr">${escH(l.phone)}</span>`:''}<span>פנייה ב־${fmtD(l.date)}</span>${last?`<span>שיחה אחרונה ב־${fmtD(last)}</span>`:''}</span>
+      <span class="pr-flags">${ldDue(l)}</span>
+    </button><button class="pr-del" onclick="ldDeleteId('${l.id}')" aria-label="מחיקת ${escH(l.name)}" title="מחיקת הליד"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg></button></div>`;
+  }).join('');
+}
+function ldRenderStats(){
+  const by = {};
+  LD.leads.forEach(l=>{ const k = (l.campaign||'').trim() || 'ללא מקור'; by[k] = by[k] || {n:0, c:0, d:0}; by[k].n++; if(l.status==='converted') by[k].c++; if(l.status==='drop') by[k].d++; });
+  const keys = Object.keys(by);
+  if(!LD.leads.length || (keys.length===1 && keys[0]==='ללא מקור')){ $('ldStats').innerHTML=''; return; }
+  keys.sort((a,b)=> by[b].n-by[a].n);
+  $('ldStats').innerHTML = `<div class="ld-stats no-print"><h3>לפי מקור</h3><div class="ld-tw"><table>
+    <thead><tr><th>מקור</th><th>פניות</th><th>הפכו למטופלים</th><th>לא רלוונטיים</th></tr></thead>
+    <tbody>${keys.map(k=>`<tr><td>${escH(k)}</td><td>${by[k].n}</td><td>${by[k].c}${by[k].n?` <small>(${Math.round(by[k].c*100/by[k].n)}%)</small>`:''}</td><td>${by[k].d}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function ldCreate(){
+  const i = $('ldNewName'); const v = i.value.trim();
+  if(!v){ i.focus(); return; }
+  const l = ldNorm({name:v});
+  LD.leads.push(l); ldSave(); i.value='';
+  ldOpen(l.id); bmToast(`נפתח ליד ל${l.name}`);
+  setTimeout(()=>{ const ph=$('l_phone'); if(ph) ph.focus(); }, 50);
+}
+function ldDeleteId(id){
+  const l = ldGet(id); if(!l) return;
+  if(!confirm(`למחוק את הליד ${l.name}?${l.calls.length?`\nכולל ${l.calls.length===1?'שיחה אחת':l.calls.length+' שיחות'} שנרשמו.`:''}${l.status==='converted'?'\nכרטיס המטופל עצמו לא יימחק.':''}`)) return;
+  LD.leads = LD.leads.filter(x=>x.id!==id); ldSave();
+  if(ldActive===id) ldActive=null;
+  ldHome(); bmToast('הליד נמחק');
+}
+
+/* ---- כרטיס ליד ---- */
+function ldOpen(id){ ldActive = id; if(!ldCur()) return ldHome(); showView('lead'); ldRender(); window.scrollTo(0,0); }
+function ldRender(){
+  const l = ldCur(); if(!l) return ldHome();
+  const tel = (l.phone||'').replace(/[^\d+]/g,''), wa = waNum(l.phone);
+  const camps = [...new Set(LD.leads.map(x=>(x.campaign||'').trim()).filter(Boolean))];
+  const pt = l.patientId ? getP(l.patientId) : null;
+  const calls = [...l.calls].sort((a,b)=> (b.date||'').localeCompare(a.date||'') || (b.created||0)-(a.created||0));
+  const stBlock = l.status==='converted'
+    ? `<p class="ld-conv">${pt ? `הפך למטופל${l.convertedDate?` ב־${fmtD(l.convertedDate)}`:''}. <button class="bm-link" onclick="openP('${pt.id}','details')">לכרטיס של ${escH(pt.name)}</button>` : `הפך למטופל, אבל כרטיס המטופל כבר לא קיים. <button class="bm-link" onclick="ldSt('talk')">החזרה לרשימת הפעילים</button>`}</p>`
+    : `<div class="seg" role="group" aria-label="סטטוס">${['fresh','talk','booked','drop'].map(k=>`<button class="${l.status===k?'on':''}" aria-pressed="${l.status===k}" onclick="ldSt('${k}')">${LD_ST[k]}</button>`).join('')}</div>`;
+  const dup = ldDupes(l);
+  $('leadBody').innerHTML = `
+    <div class="no-print">
+      <div class="backbar" role="button" tabindex="0" onclick="ldHome()" onkeydown="if(event.key==='Enter')ldHome()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+        חזרה לרשימת הלידים
+      </div>
+      <div class="card-title"><h2 id="ldName">${escH(l.name)}</h2>${ldStTag(l)}${ldDue(l)}</div>
+    </div>
+    <div class="paper">
+      <div class="f-grid">
+        <div class="f"><label class="f-l" for="l_name">שם</label><input class="inp" id="l_name" value="${escH(l.name)}" autocomplete="off" oninput="ldName(this.value)" onblur="if(!this.value.trim())this.value=ldCur().name"></div>
+        <div class="f"><label class="f-l" for="l_phone">טלפון</label><div class="f-row"><input class="inp" id="l_phone" type="tel" inputmode="tel" dir="ltr" style="text-align:right" value="${escH(l.phone)}" autocomplete="off" oninput="ldSet('phone',this.value)" onchange="ldRender()">${tel?`<a class="call" href="tel:${tel}">חיוג</a>`:''}${wa?`<a class="call" href="https://wa.me/${wa}" target="_blank" rel="noopener">וואטסאפ</a>`:''}</div>
+          ${dup.length?`<span class="ld-warn">המספר הזה כבר קיים אצלך: ${dup.join(', ')}</span>`:''}</div>
+        <div class="f"><label class="f-l" for="l_camp">מקור</label><input class="inp" id="l_camp" list="ldCamps" value="${escH(l.campaign)}" placeholder="קמפיין, סרטון, המלצה" autocomplete="off" oninput="ldSet('campaign',this.value)"><datalist id="ldCamps">${camps.map(c=>`<option value="${escH(c)}">`).join('')}</datalist></div>
+        <div class="f"><label class="f-l" for="l_date">תאריך פנייה</label><input class="inp" id="l_date" type="date" value="${escH(l.date)}" onchange="ldSet('date',this.value||isoToday())"></div>
+        <div class="f wide"><span class="f-l">סטטוס</span>${stBlock}</div>
+        ${LD_ACTIVE.includes(l.status)?`<div class="f wide"><label class="f-l" for="l_next">לחזור אליו או אליה ב</label><div class="f-row ld-next"><input class="inp" id="l_next" type="date" value="${escH(l.nextDate)}" onchange="ldNext(this.value)">
+          <div class="fchips"><button class="fchip" onclick="ldNext(addDays(1))">מחר</button><button class="fchip" onclick="ldNext(addDays(3))">בעוד 3 ימים</button><button class="fchip" onclick="ldNext(addDays(7))">בעוד שבוע</button>${l.nextDate?`<button class="fchip" onclick="ldNext('')">ניקוי</button>`:''}</div></div></div>`:''}
+        <div class="f wide"><label class="f-l" for="l_reason">מה הביא לפנות</label><textarea class="inp" id="l_reason" rows="2" oninput="ldSet('reason',this.value)">${escH(l.reason)}</textarea></div>
+        <div class="f wide"><label class="f-l" for="l_notes">הערות</label><textarea class="inp" id="l_notes" rows="4" oninput="ldSet('notes',this.value)">${escH(l.notes)}</textarea></div>
+      </div>
+
+      <div class="ld-calls">
+        <h3>שיחות${l.calls.length?` <small>${l.calls.length}</small>`:''}</h3>
+        <div class="ld-newcall">
+          <input class="inp" id="lc_date" type="date" value="${isoToday()}" aria-label="תאריך השיחה">
+          <textarea class="inp" id="lc_text" rows="2" placeholder="מה עלה בשיחה"></textarea>
+          <button class="bm-btn" onclick="ldCallAdd()">הוספת שיחה</button>
+        </div>
+        ${calls.map(c=>`<div class="ld-call">
+          <div class="ld-call-h"><input class="inp" type="date" value="${escH(c.date)}" onchange="ldCallSet('${c.id}','date',this.value)" aria-label="תאריך השיחה"><button class="bm-link danger" onclick="ldCallDel('${c.id}')">מחיקה</button></div>
+          <textarea class="inp" rows="2" oninput="ldCallSet('${c.id}','text',this.value)" aria-label="תוכן השיחה">${escH(c.text)}</textarea>
+        </div>`).join('')}
+      </div>
+
+      <div class="det-foot no-print">
+        <span>הליד נפתח ב־${new Date(l.created).toLocaleDateString('he-IL')}</span>
+        <span class="ld-foot-act">
+          ${l.status!=='converted' ? `<button class="bm-btn" onclick="ldConvert()">הפיכה למטופל</button>` : ''}
+          <button class="bm-link danger" onclick="ldDeleteId('${l.id}')">מחיקת הליד</button>
+        </span>
+      </div>
+    </div>`;
+}
+let _ldT;
+function ldSet(k,v){ const l=ldCur(); if(!l) return; l[k]=v; clearTimeout(_ldT); _ldT=setTimeout(ldSave,300); }
+function ldName(v){ const l=ldCur(); if(!v.trim()) return; l.name=v.trim(); ldSave(); $('ldName').textContent=l.name; }
+function ldSt(k){ const l=ldCur(); l.status=k; if(k!=='converted'){ l.patientId=''; l.convertedDate=''; } if(k==='drop') l.nextDate=''; ldSave(); ldRender(); }
+function ldNext(v){ const l=ldCur(); l.nextDate=v||''; ldSave(); ldRender(); if(v) bmToast(`תזכורת לחזור ב־${fmtD(v)}`); }
+function ldCallAdd(){
+  const l=ldCur(), t=$('lc_text').value.trim(), d=$('lc_date').value||isoToday();
+  if(!t){ $('lc_text').focus(); return; }
+  l.calls.push({id:newId('c'), date:d, text:t, created:Date.now()});
+  if(l.status==='fresh') l.status='talk';
+  ldSave(); ldRender(); bmToast('השיחה נשמרה');
+}
+function ldCallSet(id,k,v){ const c=ldCur().calls.find(x=>x.id===id); if(!c) return; c[k]=v; clearTimeout(_ldT); _ldT=setTimeout(ldSave,300); }
+function ldCallDel(id){ const l=ldCur(); if(!confirm('למחוק את השיחה הזו?')) return; l.calls=l.calls.filter(x=>x.id!==id); ldSave(); ldRender(); }
+
+/* ---- הפיכה למטופל ---- */
+function ldReferral(l){
+  const parts = [];
+  parts.push(`פנייה${l.campaign?` מ${l.campaign.trim()}`:''} ב־${fmtD(l.date)}.`);
+  if(l.reason.trim()) parts.push(`מה הביא לפנות: ${l.reason.trim()}`);
+  if(l.notes.trim()) parts.push(`הערות מהליד: ${l.notes.trim()}`);
+  [...l.calls].sort((a,b)=>(a.date||'').localeCompare(b.date||'')).forEach(c=>{ if(c.text.trim()) parts.push(`שיחה ב־${fmtD(c.date)}: ${c.text.trim()}`); });
+  return parts.join('\n');
+}
+function ldConvert(){
+  const l = ldCur(); if(!l) return;
+  clearTimeout(_ldT); ldSave();
+  const k = phKey(l.phone);
+  const same = k ? PT.patients.find(p=>phKey(p.phone)===k) : null;
+  let p;
+  if(same && confirm(`כבר יש מטופל עם המספר הזה: ${same.name}.\nלחבר את הליד לכרטיס הקיים במקום לפתוח כרטיס חדש?\n\nאישור: חיבור לכרטיס הקיים. ביטול: אפשרות לפתוח כרטיס חדש.`)){
+    p = same;
+    const add = ldReferral(l);
+    p.referral = p.referral ? p.referral + '\n' + add : add;
+  } else {
+    if(!confirm(`לפתוח כרטיס מטופל ל${l.name}?\nהשם, הטלפון, המקור, ההערות והשיחות יעברו לכרטיס, לשדה "איך הגיע אליי".`)) return;
+    p = normP({name:l.name, phone:l.phone, source:'private', referral:ldReferral(l), firstDate:''});
+    PT.patients.push(p);
+  }
+  p.leadId = l.id;
+  l.status = 'converted'; l.patientId = p.id; l.convertedDate = isoToday(); l.nextDate = '';
+  savePT(); ldSave();
+  openP(p.id, 'details');
+  bmToast(same && p===same ? `הליד חובר לכרטיס של ${p.name}` : `נפתח כרטיס מטופל ל${p.name}`);
+}
+
 /* כשמפת הגוף מוסיפה תרגיל למטופל, הקליניקה מתעדכנת */
 window.addEventListener('storage', e=>{
   if(e.key!==STORE || !e.newValue) return;
@@ -3251,7 +3548,10 @@ window.addEventListener('storage', e=>{
 /* ===== הפעלה ===== */
 const _migrated = loadPT();
 if(window.EX_MISSING) document.querySelector('main').insertAdjacentHTML('afterbegin','<p class="ex-missing no-print" role="alert">קובץ התרגילים, exercises.js, לא נטען, ולכן התרגילים לא יופיעו. בתצוגה המקדימה בצ׳אט זה צפוי. באתר עצמו, צריך לוודא שהקובץ נמצא במאגר, באותה תיקייה.</p>');
+ldLoad();
 renderHome();
+if(location.hash==='#leads') ldHome();
+window.addEventListener('hashchange', ()=>{ if(location.hash==='#leads' && !$('leadsView').classList.contains('on') && !$('leadView').classList.contains('on')) ldHome(); });
 if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגוף`);
 </script>
 <style>
