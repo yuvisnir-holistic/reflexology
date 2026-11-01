@@ -523,6 +523,16 @@ html,body{overflow-anchor:none}
 #tabnav button,nav.tabs button,.tabnav button,.tab-btn,nav.mainnav button,.tabs .tab{color:#fff!important;padding:8px 16px!important}
 #tabnav button.active,nav.tabs button[aria-selected="true"],.tabnav button.active,.tab-btn.home.active,nav.mainnav button.active,.tabs .tab[aria-selected="true"]{color:#1E4744!important;background:#fff!important}
 </style>
+<style>
+/* ===== לפי מדריך העיצוב: מרווחים בכותרת ומתחתיה ===== */
+header:not(.compact){padding-top:22px!important;padding-bottom:22px!important}
+header:not(.compact) #tabnav{margin-top:16px!important}
+main{padding-top:16px!important} /* יחד עם 10 הפיקסלים של הרשת: 26 מתחת לכותרת */
+/* גיבוי לקובץ בכחול המים */
+button[onclick="bkExport()"]{background:var(--water-bg)!important;color:var(--water)!important;border-color:var(--water)!important}
+/* כפתור חזרה אחיד */
+.nav-back{left:16px!important;bottom:calc(18px + env(safe-area-inset-bottom,0px))!important;height:44px;padding:0 18px!important;background:#FFFFFF!important;color:#2C5F5B!important;border:1.5px solid #2C5F5B!important;font:700 16px 'Assistant',sans-serif!important;box-shadow:0 2px 10px rgba(44,95,91,.12)!important;z-index:950!important}
+</style>
 </head>
 <body>
 
@@ -4116,6 +4126,16 @@ document.getElementById('tabnav').addEventListener('click', e=>{ if(e.target.clo
       else { window.scrollTo({top:0}); setTimeout(snapshot, 200); }
     }, 0);
   }, true);
+})();
+</script>
+<script>
+/* חזרה: כשאין לאן לחזור בתוך מפת הגוף, הכפתור מחזיר לעמוד הקודם באתרי הקליניקה, למשל ל־keter */
+(function(){
+  const b = document.getElementById('navBack'); if(!b) return;
+  let same = false; try { same = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch(e){}
+  if(!same) return;
+  const keep = () => { if(b.hidden) b.hidden = false; };
+  new MutationObserver(keep).observe(b, {attributes:true, attributeFilter:['hidden']}); keep();
 })();
 </script>
 </body>
