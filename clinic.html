@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="קליניקה">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#4A6B57">
+<meta name="theme-color" content="#16332D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -884,6 +884,96 @@ html,body{overflow-anchor:none}
   .ld-stats td small{color:#6a756f;}
   @media (max-width:560px){ .ld-newcall{grid-template-columns:1fr;} .ld-newcall input[type=date].inp{max-width:none;} }
 </style>
+<style id="ys-design">
+/* ===== שכבת עיצוב: ירוק עמוק וזהב, כמו במפת הגוף (מסך בלבד, לא משפיע על הדפסה) ===== */
+@media screen{
+  :root{
+    --forest:#2F6358;--forest-dark:#1F443D;--forest-deep:#16332D;
+    --cream:#F8F8F5;--cream-soft:#FFFFFF;--sage:#AEC6B8;--ink:#293C35;
+    --gold:#B89A5E;--gold-soft:#D9C394;--gold-deep:#8C7240;
+    --radius:8px;
+    --shadow:0 3px 12px -8px rgba(22,51,45,.25);
+    --line-gold:rgba(184,154,94,0.22);
+  }
+  @media(min-width:900px){html{font-size:18px}}
+  body{background:#F8F8F5;color:#293C35}
+  /* כותרת */
+  header{position:sticky!important;top:0!important;z-index:50!important;background:#16332D!important;
+    box-shadow:0 10px 30px -18px rgba(0,0,0,.5);border-bottom:none;padding:26px 28px 22px!important}
+  header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:#B89A5E;opacity:.7;pointer-events:none}
+  header h1{font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:2.5rem;letter-spacing:0;color:#F7F4EA}
+  header .sub{color:#C9D6CC;font-weight:400;letter-spacing:0;font-size:.95rem}
+  header.compact{padding:8px 12px!important}
+  .hdr-link{border-radius:6px;border-color:rgba(217,195,148,.45);color:#F7F4EA;transition:background .15s ease}
+  .hdr-link:hover{background:rgba(255,255,255,.12)}
+  /* לשוניות */
+  .tabnav{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);border-radius:8px;padding:4px;backdrop-filter:none}
+  .tabnav button{border-radius:6px;transition:background .25s,color .25s}
+  .tabnav button:hover{background:rgba(255,255,255,.08)}
+  .tabnav button.active{background:#FFFFFF!important;color:#16332D!important;box-shadow:0 4px 12px -6px rgba(0,0,0,.4)}
+  /* רשימות */
+  .home-search input{border-radius:8px;border:1px solid rgba(47,99,88,.22);min-height:46px}
+  .home-search input:focus{border-color:#2F6358;box-shadow:0 0 0 3px rgba(184,154,94,.35)}
+  .new-pt input{border-radius:8px;border:1.5px solid #8A6D3B!important;min-height:46px;background:#fff}
+  .new-pt input:focus{box-shadow:0 0 0 3px rgba(138,109,59,.18)}
+  .pr{background:#fff;border:1px solid var(--line-gold);border-radius:8px;box-shadow:var(--shadow);margin-bottom:8px;transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+  .pr:hover{border-color:rgba(184,154,94,.55);box-shadow:0 2px 4px rgba(22,51,45,.06),0 18px 40px -16px rgba(22,51,45,.30)}
+  .pr-name,.card-title h2{font-family:'Frank Ruhl Libre',serif;color:#16332D}
+  .card-title h2{font-weight:700}
+  .pt-count{color:#60736A}
+  /* כרטיסים ומשטחים */
+  .paper,.ld-stats table{border-radius:8px;border:1px solid var(--line-gold);box-shadow:var(--shadow)}
+  .card-tabs{background:#fff;border:1px solid var(--line-gold);border-radius:8px}
+  .ct{border-radius:6px;font-weight:400}
+  .ct.on{background:#16332D;color:#fff}
+  .inp{border-radius:8px;border-color:rgba(47,99,88,.22)}
+  .inp:focus{border-color:#2F6358;box-shadow:0 0 0 3px rgba(184,154,94,.35)}
+  .f-l{color:#2F6358}
+  .det-foot,.ld-calls{border-top-color:rgba(184,154,94,.35)}
+  .ld-stats th{background:#F6F1E7;color:#16332D}
+  .wk-tab,.pt-tab{border-radius:8px}
+  /* כפתורים */
+  .bm-btn{background:#2F6358;border-radius:8px;min-height:44px;transition:background .2s ease,transform .2s ease}
+  .bm-btn:hover{background:#1F443D}
+  .new-pt .bm-btn,.ld-newcall .bm-btn{background:#8A6D3B!important;color:#fff}
+  .new-pt .bm-btn:hover,.ld-newcall .bm-btn:hover{background:#755C30!important}
+  .bk-main{background:#DFE8ED!important;color:#2F6690!important;border:1.5px solid #2F6690!important}
+  .seg button{border-radius:8px;border-color:rgba(47,99,88,.22)}
+  .seg button.on{background:#2F6358;border-color:#2F6358}
+  .call{border-radius:8px}
+  /* תגיות */
+  .tag,.src,.flag,.ld-due{border-radius:999px}
+  .flag.on{border-color:#2F6358;background:#E7EFEC;color:#16332D}
+  /* טקסט רציף */
+  p,textarea.inp,.iq-read p,.ld-warn{font-size:18px;line-height:1.75}
+  @media(min-width:900px){p,textarea.inp,.iq-read p,.ld-warn{font-size:17px}}
+  .pt-count{font-size:.86rem}
+  /* כפתור חזרה צף */
+  button.ys-back#ysBack{background:linear-gradient(180deg,#2F6358,#1F443D);color:#F4EEDF;border:1px solid rgba(217,195,148,.45);
+    border-radius:999px;font-weight:400;box-shadow:0 10px 24px -10px rgba(15,36,32,.6)}
+  footer{color:#60736A}
+  main{padding-top:0}
+  @media(max-width:640px){
+    header{padding:18px 12px 18px!important}
+    header h1{font-size:1.85rem}
+    .hdr-link{position:static;display:flex;width:fit-content;margin:0 0 14px;margin-inline-start:auto;min-height:44px}
+    main{padding-inline:10px}
+  }
+  /* כותרת אחידה בכל האתרים */
+  header:not(.compact) h1{font-size:44px!important;line-height:1.2!important}
+  @media(max-width:640px){header:not(.compact) h1{font-size:32px!important}}
+}
+</style>
+<script>
+/* כותרת מתכווצת: מעל 120 פיקסלים מצטמצמת לשורת הלשוניות, מתחת ל-8 חוזרת */
+(function(){
+  function onScroll(){var h=document.querySelector('header');if(!h)return;var y=window.scrollY;
+    if(y>120)h.classList.add('compact');else if(y<8)h.classList.remove('compact');}
+  window.addEventListener('scroll',onScroll,{passive:true});
+  document.addEventListener('DOMContentLoaded',onScroll);
+})();
+</script>
+
 </head>
 <body>
 <header>
