@@ -974,6 +974,80 @@ html,body{overflow-anchor:none}
 })();
 </script>
 
+<style id="ys-crm">
+/* ===== שכבת CRM: מסך "היום", משפך לידים, שורת פעולה בטלפון (מסך בלבד, לא משפיע על הדפסה) ===== */
+@media screen{
+  #todayView, #pipeView{ max-width:1100px; margin:0 auto; }
+  /* כותרת המסך */
+  .ysc-h{font-family:'Frank Ruhl Libre',serif;color:#16332D;font-size:28px;margin:6px 0 2px;font-weight:700}
+  .ysc-date{color:#60736A;margin-bottom:18px;font-size:16px}
+  /* ארבעת המספרים */
+  .ysc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+  .ysc-stat{background:#FFFFFF;border:1px solid rgba(184,154,94,.28);border-top:2px solid #B89A5E;border-radius:8px;padding:14px 16px;box-shadow:0 3px 12px -8px rgba(22,51,45,.25)}
+  .ysc-stat b{display:block;font-family:'Frank Ruhl Libre',serif;font-size:32px;color:#16332D;line-height:1.15}
+  .ysc-stat span{color:#60736A;font-size:15px}
+  .ysc-stat.warn b{color:#8C7240}
+  /* שתי הרשימות */
+  .ysc-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .ysc-box{background:#FFFFFF;border:1px solid rgba(184,154,94,.28);border-radius:8px;box-shadow:0 3px 12px -8px rgba(22,51,45,.25);overflow:hidden}
+  .ysc-box h3{margin:0;padding:14px 16px;font-size:18px;color:#16332D;border-bottom:1px solid rgba(184,154,94,.35);display:flex;justify-content:space-between;align-items:center;font-family:'Frank Ruhl Libre',serif;font-weight:700}
+  .ysc-box h3 small{color:#60736A;font-weight:400;font-family:'Assistant',sans-serif}
+  .ysc-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(47,99,88,.15);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:start;font:inherit;color:inherit}
+  .ysc-row:last-child{border-bottom:0}
+  .ysc-row:hover{background:#F6F1E7}
+  .ysc-av{width:38px;height:38px;border-radius:50%;background:#AEC6B8;color:#16332D;display:grid;place-items:center;font-weight:700;flex:none;font-family:'Assistant',sans-serif}
+  .ysc-grow{flex:1;min-width:0}
+  .ysc-nm{font-weight:600;color:#16332D;font-family:'Frank Ruhl Libre',serif}
+  .ysc-sub{color:#60736A;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ysc-tag{font-size:13px;padding:2px 10px;border-radius:999px;background:rgba(184,154,94,.14);color:#8C7240;white-space:nowrap}
+  .ysc-tag.late{background:#8C7240;color:#FFFFFF}
+  .ysc-tag.g{background:rgba(47,99,88,.1);color:#2F6358}
+  .ysc-none{padding:16px;color:#60736A;margin:0}
+  /* משפך לידים */
+  .ysc-pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+  .ysc-stage{background:#F6F1E7;border-radius:8px;padding:10px}
+  .ysc-stage h4{margin:0 0 10px;font-size:16px;color:#16332D;display:flex;justify-content:space-between;align-items:center;font-family:'Assistant',sans-serif;font-weight:700}
+  .ysc-stage h4 span{background:#FFFFFF;border-radius:999px;padding:0 9px;font-weight:400;color:#60736A}
+  .ysc-stage.s1{border-top:3px solid #B89A5E}
+  .ysc-stage.s2{border-top:3px solid #2F6358}
+  .ysc-stage.s3{border-top:3px solid #16332D}
+  .ysc-stage.s4{border-top:3px solid #AEC6B8}
+  .ysc-card{background:#FFFFFF;border:1px solid rgba(184,154,94,.28);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+  .ysc-card:hover{border-color:rgba(184,154,94,.55);box-shadow:0 10px 24px -14px rgba(22,51,45,.4)}
+  .ysc-card .ysc-sub{margin-top:2px}
+  .ysc-card .ysc-tag{display:inline-block;margin-top:6px}
+  /* שורת פעולה קבועה בתחתית הטלפון */
+  #yscBar{display:none}
+  @media(max-width:760px){
+    #yscBar{display:none;position:fixed;inset:auto 0 0 0;background:#FFFFFF;border-top:1px solid rgba(184,154,94,.28);
+      padding:10px 10px calc(10px + env(safe-area-inset-bottom));gap:8px;z-index:60}
+    #yscBar.show{display:flex}
+    #yscBar a, #yscBar button{flex:1;text-align:center;min-height:46px;display:grid;place-items:center;border-radius:8px;
+      text-decoration:none;font-weight:600;border:1px solid #2F6358;color:#2F6358;background:#FFFFFF;font-family:'Assistant',sans-serif;font-size:16px;cursor:pointer}
+    #yscBar a.p, #yscBar button.p{background:#8A6D3B;border-color:#8A6D3B;color:#FFFFFF}
+    body.ysc-bar-on main{padding-bottom:96px}
+    body.ysc-bar-on .ys-back{bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+  }
+  /* התאמות לטלפון */
+  @media(max-width:899px){
+    .ysc-stats{grid-template-columns:1fr 1fr}
+    .ysc-cols{grid-template-columns:1fr}
+    .ysc-pipe{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc(100% - 28px);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+    .ysc-stage{scroll-snap-align:start}
+    .ysc-h{font-size:24px}
+  }
+  /* ארבע לשוניות בכותרת */
+  .mainnav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+  .mainnav button{white-space:nowrap}
+  @media(max-width:640px){
+    .mainnav{max-width:none;gap:3px}
+    .mainnav button{font-size:.86rem;padding-left:6px;padding-right:6px;flex:1}
+  }
+}
+@media print{
+  #todayView, #pipeView, #yscBar{display:none!important}
+}
+</style>
 </head>
 <body>
 <header>
@@ -981,8 +1055,10 @@ html,body{overflow-anchor:none}
   <h1>הקליניקה</h1>
   <div class="sub">יובל שניר, ניהול מטופלים ולידים</div>
   <nav class="tabnav mainnav" aria-label="מעבר בין מטופלים ללידים">
+    <button type="button" id="navToday" aria-selected="false" onclick="ysToday()">היום</button>
     <button type="button" id="navPt" class="active" aria-selected="true" onclick="goHome()">מטופלים</button>
     <button type="button" id="navLd" aria-selected="false" onclick="ldHome()">לידים</button>
+    <button type="button" id="navPipe" aria-selected="false" onclick="ysPipe()">משפך</button>
   </nav>
 </header>
 
@@ -1029,6 +1105,22 @@ html,body{overflow-anchor:none}
   <section id="leadView" class="view">
     <div id="leadBody"></div>
   </section>
+
+  <section id="todayView" class="view">
+    <h2 class="ysc-h" id="yscGreet">בוקר טוב, יובל</h2>
+    <p class="ysc-date" id="yscDate"></p>
+    <div class="ysc-stats" id="yscStats"></div>
+    <div class="ysc-cols">
+      <div class="ysc-box"><h3>לחזור היום <small id="yscDueN"></small></h3><div id="yscDue"></div></div>
+      <div class="ysc-box"><h3>לא הגיעו מזמן <small id="yscGoneN"></small></h3><div id="yscGone"></div></div>
+    </div>
+  </section>
+
+  <section id="pipeView" class="view">
+    <h2 class="ysc-h">משפך לידים</h2>
+    <div class="ysc-pipe" id="yscPipe"></div>
+  </section>
+
 </main>
 
 <div id="exModal" onclick="if(event.target===this)exClose()">
@@ -1045,6 +1137,8 @@ html,body{overflow-anchor:none}
 </div>
 
 <div id="bmToast" role="status" aria-live="polite"></div>
+
+<div id="yscBar" class="no-print"></div>
 <footer>הנתונים נשמרים רק במכשיר הזה, ולכן חשוב לגבות לקובץ מדי פעם</footer>
 
 <script src="exercises.js"></script>
@@ -3695,6 +3789,155 @@ renderHome();
 if(location.hash==='#leads') ldHome();
 window.addEventListener('hashchange', ()=>{ if(location.hash==='#leads' && !$('leadsView').classList.contains('on') && !$('leadView').classList.contains('on')) ldHome(); });
 if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגוף`);
+</script>
+<script id="ys-crm">
+/* ===== שכבת CRM: מסך "היום", משפך לידים, שורת פעולה בטלפון =====
+   קוד חדש בלבד. לא משנה טקסטים, שדות, זהותים או את שמורות הנתונים. */
+(function(){
+  const $ = id => document.getElementById(id);
+  const yscIso = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const yscAdd = n => { const d = new Date(); d.setDate(d.getDate()+n); return yscIso(d); };
+  const yscDays = (from, to) => Math.round((new Date((to||yscIso(new Date()))+'T12:00:00') - new Date(from+'T12:00:00'))/86400000);
+  const yscAgo = n => {
+    if(n<7)  return n<2 ? 'יום' : n+' ימים';
+    if(n<30){ const w = Math.round(n/7); return w<2 ? 'שבוע' : w+' שבועות'; }
+    const m = Math.round(n/30); return m<2 ? 'חודש' : m+' חודשים';
+  };
+  const yscGreet = () => { const h = new Date().getHours();
+    return h<5 ? 'לילה טוב' : h<12 ? 'בוקר טוב' : h<17 ? 'צהריים טובים' : h<21 ? 'ערב טוב' : 'לילה טוב'; };
+  const yscAv = n => (String(n||'').trim()[0] || '•');
+
+  /* ---- מסך "היום" ---- */
+  function yscData(){
+    const t = isoToday();
+    const active = LD.leads.filter(l=>LD_ACTIVE.includes(l.status));
+    const due = active.filter(l=>l.nextDate && l.nextDate<=t).sort((a,b)=>(a.nextDate||'').localeCompare(b.nextDate||''));
+    const wait3 = active.filter(l=> l.nextDate ? yscDays(l.nextDate,t)>=3 : (!l.nextDate && yscDays(l.date||yscIso(new Date(l.created||Date.now())),t)>=3));
+    const gone = PT.patients
+      .map(p=>({ p, last: lastT(p) || p.firstDate || yscIso(new Date(p.created||Date.now())) }))
+      .filter(x=>yscDays(x.last,t)>=30)
+      .sort((a,b)=>a.last.localeCompare(b.last));
+    return { t, active, due, wait3, gone };
+  }
+  function yscRenderToday(){
+    const d = yscData();
+    if($('yscGreet')) $('yscGreet').textContent = yscGreet()+', יובל';
+    if($('yscDate')) $('yscDate').textContent = new Date().toLocaleDateString('he-IL',{weekday:'long', day:'numeric', month:'long'});
+    const stats = [
+      [d.due.length, 'לחזור היום', ''],
+      [d.wait3.length, 'ממתינים מעל 3 ימים', 'warn'],
+      [d.gone.length, 'לא הגיעו מעל חודש', ''],
+      [PT.patients.length, 'מטופלים פעילים', '']
+    ];
+    if($('yscStats')) $('yscStats').innerHTML = stats.map(([n,l,k])=>
+      `<div class="ysc-stat ${k}"><b>${n}</b><span>${l}</span></div>`).join('');
+    if($('yscDue')){
+      $('yscDue').innerHTML = !d.due.length
+        ? `<p class="ysc-none">אין היום לידים שצריכים חזרה. אפשר ללחוץ על "לידים" כדי להוסיף פנייה חדשה.</p>`
+        : d.due.map(l=>`<button class="ysc-row" onclick="ldOpen('${l.id}')">
+            <span class="ysc-av">${escH(yscAv(l.name))}</span>
+            <span class="ysc-grow"><span class="ysc-nm">${escH(l.name)}</span>
+            <span class="ysc-sub">${[l.reason, l.campaign].filter(Boolean).map(escH).join(' · ') || (l.phone?`<span dir="ltr">${escH(l.phone)}</span>`:'')}</span></span>
+            ${ldDue(l)}</button>`).join('');
+    }
+    if($('yscGone')){
+      $('yscGone').innerHTML = !d.gone.length
+        ? `<p class="ysc-none">כל המטופלים ביקרו לאחרונה. אין מישהו שכדאי להזכיר.</p>`
+        : d.gone.slice(0,8).map(({p,last})=>{ const n = yscDays(last,d.t);
+            return `<button class="ysc-row" onclick="openP('${p.id}')">
+            <span class="ysc-av">${escH(yscAv(p.name))}</span>
+            <span class="ysc-grow"><span class="ysc-nm">${escH(p.name)}</span>
+            <span class="ysc-sub">טיפול אחרון: ${escH(fmtD(last))}</span></span>
+            <span class="ysc-tag ${n>=60?'late':''}">${yscAgo(n)}</span></button>`; }).join('');
+    }
+    if($('yscDueN')) $('yscDueN').textContent = d.due.length;
+    if($('yscGoneN')) $('yscGoneN').textContent = d.gone.length;
+  }
+
+  /* ---- משפך לידים ---- */
+  function yscRenderPipe(){
+    if(!$('yscPipe')) return;
+    const stages = ['fresh','talk','booked','drop'];
+    $('yscPipe').innerHTML = stages.map((k,i)=>{
+      const items = LD.leads.filter(l=>l.status===k).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+      return `<div class="ysc-stage s${i+1}"><h4>${LD_ST[k]}<span>${items.length}</span></h4>
+        ${items.length ? items.map(l=>`<div class="ysc-card" onclick="ldOpen('${l.id}')">
+          <div class="ysc-nm">${escH(l.name)}</div>
+          <div class="ysc-sub">${[l.reason, l.campaign].filter(Boolean).map(escH).join(' · ') || (l.phone?`<span dir="ltr">${escH(l.phone)}</span>`:'')}</div>
+          ${ldDue(l)}</div>`).join('')
+        : `<p class="ysc-none">אין כאן עדיין פניות</p>`}
+      </div>`;
+    }).join('');
+  }
+
+  /* ---- שורת הפעולה בטלפון ---- */
+  function yscBar(){
+    const bar = $('yscBar'); if(!bar) return;
+    const on = id => $(id) && $(id).classList.contains('on');
+    let phone = '', isLead = false;
+    if(on('leadView') && typeof ldCur==='function' && ldCur()){ phone = ldCur().phone; isLead = true; }
+    else if(on('cardView') && typeof curP==='function' && curP()){ phone = curP().phone; }
+    const tel = (phone||'').replace(/[^\d+]/g,''), wa = (typeof waNum==='function' ? waNum(phone) : '');
+    if(!tel && !wa){ bar.classList.remove('show'); document.body.classList.remove('ysc-bar-on'); return; }
+    bar.innerHTML = (tel ? `<a href="tel:${tel}">חיוג</a>` : '')
+      + (wa ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener">וואטסאפ</a>` : '')
+      + (isLead ? `<button class="p" onclick="yscFocusCall()">הוספת שיחה</button>` : '');
+    bar.classList.add('show'); document.body.classList.add('ysc-bar-on');
+  }
+  window.yscFocusCall = function(){ const t = $('lc_text'); if(t){ t.scrollIntoView({block:'center'}); t.focus(); } };
+
+  /* ---- מעבר בין מסכים ---- */
+  function yscSync(){
+    const on = id => $(id) && $(id).classList.contains('on');
+    let cur = 'home';
+    if(on('todayView')) cur = 'today';
+    else if(on('pipeView')) cur = 'pipe';
+    else if(on('cardView')) cur = 'card';
+    else if(on('leadView')) cur = 'lead';
+    else if(on('leadsView')) cur = 'leads';
+    if(cur!=='today' && cur!=='pipe'){
+      if($('todayView')) $('todayView').classList.remove('on');
+      if($('pipeView')) $('pipeView').classList.remove('on');
+    }
+    const navToday = $('navToday'), navPipe = $('navPipe');
+    if(navToday){ navToday.classList.toggle('active', cur==='today'); navToday.setAttribute('aria-selected', String(cur==='today')); }
+    if(navPipe){ navPipe.classList.toggle('active', cur==='pipe'); navPipe.setAttribute('aria-selected', String(cur==='pipe')); }
+    if(cur==='today' || cur==='pipe'){
+      if($('navPt')){ $('navPt').classList.remove('active'); $('navPt').setAttribute('aria-selected','false'); }
+      if($('navLd')){ $('navLd').classList.remove('active'); $('navLd').setAttribute('aria-selected','false'); }
+    }
+    if(cur==='today') yscRenderToday();
+    if(cur==='pipe') yscRenderPipe();
+    yscBar();
+  }
+  function yscShow(name){
+    ['home','card','leads','lead','today','pipe'].forEach(k=>{
+      const el = $(k+'View'); if(el) el.classList.toggle('on', k===name);
+    });
+    yscSync();
+  }
+  window.ysToday = function(){ yscShow('today'); window.scrollTo(0,0); };
+  window.ysPipe   = function(){ yscShow('pipe');   window.scrollTo(0,0); };
+
+  /* כל מעבר במסכים המקוריים חייב לכסות את המסכים החדשים */
+  const _ysShowView = window.showView;
+  if(typeof _ysShowView === 'function'){
+    window.showView = function(){
+      if($('todayView')) $('todayView').classList.remove('on');
+      if($('pipeView')) $('pipeView').classList.remove('on');
+      return _ysShowView.apply(this, arguments);
+    };
+  }
+  ['renderCard','ldRender','renderHome','ldHome'].forEach(n=>{
+    const f = window[n]; if(typeof f!=='function') return;
+    window[n] = function(){ const r = f.apply(this, arguments); try{ yscSync(); }catch(e){} return r; };
+  });
+
+  /* פתיחה: מסך "היום" כברירת מחדל, אלא אם מבקשים לידים */
+  yscRenderToday(); yscRenderPipe();
+  if(location.hash !== '#leads' && !($('leadsView') && $('leadsView').classList.contains('on'))) yscShow('today');
+  else yscSync();
+})();
 </script>
 <style>
   .ns-link{display:inline-block;margin-top:6px;font-size:0.82rem;color:var(--forest);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
