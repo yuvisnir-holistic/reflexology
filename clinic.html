@@ -994,10 +994,22 @@ html,body{overflow-anchor:none}
   #ptList .pr-del:hover{background:#F6F1E7!important}
   #ptList .sheet-empty,#ptList .ex-none{margin:0;padding:16px}
   #ptList .ysc-next{color:#8C7240;font-weight:600}
+  #ldList{background:#FFFFFF;border:1px solid rgba(184,154,94,.28);border-radius:8px;box-shadow:0 3px 12px -8px rgba(22,51,45,.25);overflow:hidden}
+  #ldList .pr-row{display:flex;align-items:stretch;gap:0;margin:0!important;border-bottom:1px solid rgba(47,99,88,.15)}
+  #ldList .pr-row:last-child{border-bottom:0}
+  #ldList .pr{flex:1;min-width:0;display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;column-gap:12px;align-items:center;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:12px 16px!important;margin:0!important}
+  #ldList .pr:hover{background:#F6F1E7!important}
+  #ldList .ysc-av{grid-row:1/3;grid-column:1}
+  #ldList .pr-l1,#ldList .pr-l2{grid-column:2}
+  #ldList .pr-flags{grid-row:1/3;grid-column:3}
+  #ldList .pr-del{border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;width:48px;margin:0!important}
+  #ldList .pr-del:hover{background:#F6F1E7!important}
+  #ldList .sheet-empty,#ldList .ex-none{margin:0;padding:16px}
+  .ysc-tasks{margin-bottom:20px}
 
   .ysc-date{color:#60736A;margin-bottom:18px;font-size:16px}
   /* ארבעת המספרים */
-  .ysc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+  .ysc-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
   .ysc-stat{background:#FFFFFF;border:1px solid rgba(184,154,94,.28);border-top:2px solid #B89A5E;border-radius:8px;padding:14px 16px;box-shadow:0 3px 12px -8px rgba(22,51,45,.25)}
   .ysc-stat b{display:block;font-family:'Frank Ruhl Libre',serif;font-size:32px;color:#16332D;line-height:1.15}
   .ysc-stat span{color:#60736A;font-size:15px}
@@ -1018,6 +1030,14 @@ html,body{overflow-anchor:none}
   .ysc-tag.late{background:#8C7240;color:#FFFFFF}
   .ysc-tag.g{background:rgba(47,99,88,.1);color:#2F6358}
   .ysc-none{padding:16px;color:#60736A;margin:0}
+  .ysc-more,.ysc-hol{margin-top:20px}
+  .ysc-hol-in{padding:14px 16px;border-bottom:1px solid rgba(47,99,88,.15)}
+  .ysc-hol-in p{margin:0 0 8px;color:#60736A;font-size:15px}
+  .ysc-hol-in textarea{width:100%;min-height:96px;font-size:17px}
+  .ysc-hol-sel{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  a.ysc-row{text-decoration:none}
+  .ysc-wa{font-size:14px;padding:4px 12px;border-radius:999px;background:#8A6D3B;color:#FFFFFF;white-space:nowrap}
+  .ysc-wa.done{background:rgba(47,99,88,.1);color:#2F6358}
   /* משפך לידים */
   .ysc-pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
   .ysc-stage{background:#F6F1E7;border-radius:8px;padding:10px}
@@ -1047,7 +1067,7 @@ html,body{overflow-anchor:none}
   }
   /* התאמות לטלפון */
   @media(max-width:899px){
-    .ysc-stats{grid-template-columns:1fr 1fr}
+    .ysc-stats{grid-template-columns:1fr 1fr} .ysc-stat:last-child:nth-child(odd){grid-column:1/-1}
     .ysc-cols{grid-template-columns:1fr}
     .ysc-pipe{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc(100% - 28px);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
     .ysc-stage{scroll-snap-align:start}
@@ -1127,10 +1147,13 @@ html,body{overflow-anchor:none}
     <h2 class="ysc-h" id="yscGreet">בוקר טוב, יובל</h2>
     <p class="ysc-date" id="yscDate"></p>
     <div class="ysc-stats" id="yscStats"></div>
+    <div class="ysc-box ysc-tasks"><h3>משימות להיום <small id="yscTaskN"></small></h3><div id="yscTask"></div></div>
     <div class="ysc-cols">
       <div class="ysc-box"><h3>לחזור היום <small id="yscDueN"></small></h3><div id="yscDue"></div></div>
       <div class="ysc-box"><h3>לא הגיעו מזמן <small id="yscGoneN"></small></h3><div id="yscGone"></div></div>
     </div>
+    <div class="ysc-box ysc-more"><h3>עוד דברים לטפל בהם <small id="yscMoreN"></small></h3><div id="yscMore"></div></div>
+    <div class="ysc-box ysc-hol" id="yscHolBox"><h3>ברכה לחג בוואטסאפ <small id="yscHolN"></small></h3><div id="yscHol"></div></div>
   </section>
 
   <section id="pipeView" class="view">
@@ -1194,7 +1217,7 @@ const newId = pre => (pre||'p')+Date.now().toString(36)+Math.random().toString(3
 function normP(p){
   p.id = p.id || newId();
   p.name = (p.name||'').trim() || 'מטופל ללא שם';
-  ['phone','age','job','source','referral','firstDate','gift','nextStep'].forEach(k=>{ if(p[k]==null) p[k]=''; });
+  ['phone','age','job','source','referral','firstDate','gift','nextStep','nextDate'].forEach(k=>{ if(p[k]==null) p[k]=''; });
   if(!Array.isArray(p.treatments)) p.treatments = [];
   if(!Array.isArray(p.weeks) || !p.weeks.length) p.weeks = [{date:today(), items:[], note:''}];
   p.weeks.forEach(w=>{ if(!w.id) w.id = newId('w'); });
@@ -1268,7 +1291,7 @@ function renderList(){
     const n = p.treatments.length, last = lastT(p);
     return `<div class="pr-row"><button class="pr" onclick="openP('${p.id}')">
       <span class="pr-l1"><span class="pr-name">${escH(p.name)}</span>${srcTag(p)}</span>
-      <span class="pr-l2">${p.nextStep?`<span class="ysc-next">${escH(p.nextStep)}</span>`:''}${n ? `<span>${n===1?'טיפול אחד':n+' טיפולים'}</span>${last?`<span>אחרון ב־${fmtD(last)}</span>`:''}` : '<span>עוד אין טיפולים ביומן</span>'}</span>
+      <span class="pr-l2">${p.nextStep||p.nextDate?`<span class="ysc-next">${escH(p.nextStep||'')}${p.nextDate?`${p.nextStep?' · ':''}${fmtD(p.nextDate)}`:''}</span>`:''}${n ? `<span>${n===1?'טיפול אחד':n+' טיפולים'}</span>${last?`<span>אחרון ב־${fmtD(last)}</span>`:''}` : '<span>עוד אין טיפולים ביומן</span>'}</span>
       <span class="pr-flags"><span class="flag ${iqHas(p)?'on':''}">שאלון</span><span class="flag ${hasReading(p)?'on':''}">אבחון</span></span>
     </button><button class="pr-del" onclick="ptDeleteId('${p.id}')" aria-label="מחיקת ${escH(p.name)}" title="מחיקת המטופל"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg></button></div>`;
   }).join('');
@@ -1339,7 +1362,7 @@ function renderDetails(){
       <div class="f"><label class="f-l" for="d_job">עיסוק</label><input class="inp" id="d_job" value="${escH(p.job)}" autocomplete="off" oninput="dSet('job',this.value)"></div>
       <div class="f"><span class="f-l">מקור המטופל</span><div class="seg" role="group" aria-label="מקור המטופל">${Object.entries(SOURCES).map(([k,l])=>`<button class="${p.source===k?'on':''}" aria-pressed="${p.source===k}" onclick="dSource('${k}')">${l}</button>`).join('')}</div></div>
       <div class="f"><label class="f-l" for="d_first">תאריך טיפול ראשון</label><input class="inp" id="d_first" type="date" value="${escH(p.firstDate)}" onchange="dSet('firstDate',this.value)"></div>
-      <div class="f wide"><label class="f-l" for="d_next">הצעד הבא</label><input class="inp" id="d_next" value="${escH(p.nextStep||'')}" placeholder="למשל: טיפול ב־6 בנובמבר · להתקשר לשאול מה שלומו · לא נקבע" autocomplete="off" oninput="dSet('nextStep',this.value)"><span class="iq-hint" style="margin:0">שורה קצרה. היא מופיעה גם ליד השם ברשימת המטופלים.</span></div>
+      <div class="f wide"><label class="f-l" for="d_next">הצעד הבא</label><input class="inp" id="d_next" value="${escH(p.nextStep||'')}" placeholder="למשל: טיפול ב־6 בנובמבר · להתקשר לשאול מה שלומו · לא נקבע" autocomplete="off" oninput="dSet('nextStep',this.value)"><input class="inp" type="date" id="d_nextDate" value="${escH(p.nextDate||'')}" aria-label="תאריך לצעד הבא" style="margin-top:8px;max-width:220px" onchange="dSet('nextDate',this.value)"><span class="iq-hint" style="margin:0">שורה קצרה ותאריך. מופיעה ליד השם ברשימה, וביום שנקבע גם במסך ״היום״.</span></div>
       <div class="f wide"><span class="f-l">שפה לאבחון</span><label class="kb-opt"><input type="checkbox" id="d_kb" ${p.kabbalah?'checked':''} onchange="dKb(this.checked)"> פתוח או פתוחה לשפה של קבלה</label><span class="iq-hint" style="margin:0">רק אצלך. המטופל לא רואה את זה. הסימון נכנס לטקסט של "העתקה לניתוח", והאבחון ייכתב בהתאם.</span></div>
       <div class="f wide"><span class="f-l">סגנון תרגול</span><div class="fchips">${(typeof EX_STYLES!=='undefined'?EX_STYLES:[]).map(([k,l])=>{ const v=exPrefsOf(p)[k]||0; return `<button class="fchip pref ${v>0?'yes':v<0?'no':''}" onclick="dStyle('${k}')" aria-label="${l}: ${v>0?'מתחבר':v<0?'פחות מתחבר':'לא סומן'}">${v>0?'✓ ':v<0?'✕ ':''}${l}</button>`; }).join('')}</div><span class="iq-hint" style="margin:0">לחיצה אחת: מתחבר. שתיים: פחות מתחבר. שלוש: ביטול. ההצעות לתרגול ובחירת התרגילים מתחשבות בזה. כשהמטופל ענה בשאלון, הסימון שלו מופיע כאן עד שתשנה.${(p.intake||{}).pr_any && !p.exStyles ? ' בשאלון סימן או סימנה: כל סוג מתאים.' : ''}</span></div>
       <div class="f wide"><label class="f-l" for="d_gift">קריסטל שקיבל או קיבלה במתנה</label><input class="inp" id="d_gift" value="${escH(p.gift||'')}" placeholder="איזו אבן, ומתי" autocomplete="off" oninput="dSet('gift',this.value)"></div>
@@ -3835,13 +3858,75 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
       .map(p=>({ p, last: lastT(p) || p.firstDate || yscIso(new Date(p.created||Date.now())) }))
       .filter(x=>yscDays(x.last,t)>=30)
       .sort((a,b)=>a.last.localeCompare(b.last));
-    return { t, active, due, wait3, gone };
+    const tasks = PT.patients.filter(p=>p.nextDate && p.nextDate<=t).sort((a,b)=>a.nextDate.localeCompare(b.nextDate));
+    return { t, active, due, wait3, gone, tasks };
+  }
+
+  /* ---- עוד דברים לטפל בהם ---- */
+  function yscMore(){
+    const t = isoToday(), out = [];
+    try{ const b = localStorage.getItem(BK_KEY); const n = b ? yscDays(yscIso(new Date(isNaN(+b)?b:+b)), t) : null;
+      if(PT.patients.length && (n===null || n>=7)) out.push(`<button class="ysc-row" onclick="bkExport()"><span class="ysc-av">⤓</span><span class="ysc-grow"><span class="ysc-nm">גיבוי לקובץ</span><span class="ysc-sub">${n===null?'עוד לא נעשה גיבוי':'הגיבוי האחרון לפני '+yscAgo(n)}</span></span><span class="ysc-tag late">לגבות</span></button>`); }catch(e){}
+    PT.patients.forEach(p=>{
+      const ts = (p.treatments||[]).filter(x=>x.date);
+      if(ts.length===1){ const n = yscDays(ts[0].date, t);
+        if(n>=2 && n<=4) out.push(`<button class="ysc-row" onclick="openP('${p.id}')"><span class="ysc-av">${escH(yscAv(p.name))}</span><span class="ysc-grow"><span class="ysc-nm">${escH(p.name)}</span><span class="ysc-sub">טיפול ראשון לפני ${n} ימים. להתקשר לשאול מה שלומו</span></span><span class="ysc-tag g">מעקב</span></button>`); }
+      const recent = ts.length>0 ? yscDays(ts.map(x=>x.date).sort().pop(), t)<=60 : yscDays(p.firstDate || yscIso(new Date(p.created||Date.now())), t)<=60;
+      const miss = [!iqHas(p)?'שאלון':'', !hasReading(p)?'אבחון':''].filter(Boolean);
+      if(recent && miss.length) out.push(`<button class="ysc-row" onclick="openP('${p.id}','${!iqHas(p)?'intake':'reading'}')"><span class="ysc-av">${escH(yscAv(p.name))}</span><span class="ysc-grow"><span class="ysc-nm">${escH(p.name)}</span><span class="ysc-sub">חסר: ${miss.join(' ו')}</span></span><span class="ysc-tag">להשלים</span></button>`);
+    });
+    LD.leads.filter(l=>l.status==='booked' && !l.patientId).forEach(l=>{
+      out.push(`<button class="ysc-row" onclick="ldOpen('${l.id}')"><span class="ysc-av">${escH(yscAv(l.name))}</span><span class="ysc-grow"><span class="ysc-nm">${escH(l.name)}</span><span class="ysc-sub">נקבע טיפול, ועוד אין כרטיס מטופל</span></span><span class="ysc-tag">לפתוח כרטיס</span></button>`);
+    });
+    if($('yscMore')) $('yscMore').innerHTML = out.length ? out.join('') : `<p class="ysc-none">אין כרגע דברים פתוחים.</p>`;
+    if($('yscMoreN')) $('yscMoreN').textContent = out.length;
+  }
+
+  /* ---- ברכה לחג: מופיעה שבוע לפני החג, ההודעה ניתנת לעריכה ונשמרת ---- */
+  const HOL = [['Tishri',1,'ראש השנה','שנה טובה'],['Tishri',15,'סוכות','חג שמח'],['Kislev',25,'חנוכה','חנוכה שמח'],
+               ['Adar',14,'פורים','פורים שמח'],['Adar II',14,'פורים','פורים שמח'],['Nisan',15,'פסח','חג שמח'],['Sivan',6,'שבועות','חג שמח']];
+  const HOL_KEY = 'clinic-holiday-msg', HOL_SENT = 'clinic-holiday-sent';
+  function yscHoliday(){
+    const fm = new Intl.DateTimeFormat('en-u-ca-hebrew',{month:'long',day:'numeric'});
+    for(let i=0;i<=7;i++){ const d = new Date(); d.setDate(d.getDate()+i);
+      const parts = fm.formatToParts(d), m = (parts.find(x=>x.type==='month')||{}).value, day = +((parts.find(x=>x.type==='day')||{}).value);
+      const h = HOL.find(x=>x[0]===m && x[1]===day); if(h) return {name:h[2], wish:h[3], date:yscIso(d), inDays:i};
+    } return null;
+  }
+  const holMsgs = () => { try{ return JSON.parse(localStorage.getItem(HOL_KEY)||'{}'); }catch(e){ return {}; } };
+  const holSent = () => { try{ return JSON.parse(localStorage.getItem(HOL_SENT)||'{}'); }catch(e){ return {}; } };
+  window.yscHolEdit = function(v){ const h = yscHoliday(); if(!h) return; const m = holMsgs(); m[h.name] = v; localStorage.setItem(HOL_KEY, JSON.stringify(m)); yscHolList(); };
+  window.yscHolMark = function(id){ const h = yscHoliday(); if(!h) return; const s = holSent(); const k = h.date; s[k] = s[k]||[]; if(!s[k].includes(id)) s[k].push(id); localStorage.setItem(HOL_SENT, JSON.stringify(s)); setTimeout(yscHolList, 300); };
+  window.yscHolReset = function(){ const h = yscHoliday(); if(!h) return; const m = holMsgs(); delete m[h.name]; localStorage.setItem(HOL_KEY, JSON.stringify(m)); yscRenderHoliday(); };
+  function holText(h){ return holMsgs()[h.name] || `היי {שם}, ${h.wish}! מאחל לך ולמשפחה ${h.name==='ראש השנה'?'שנה של בריאות, שקט ושמחה':'חג של בריאות, שקט ושמחה'}.\nיובל`; }
+  function yscHolList(){
+    const h = yscHoliday(); if(!h || !$('yscHolList')) return;
+    const sent = holSent()[h.date] || [], txt = holText(h);
+    const ps = PT.patients.filter(p=>iqWaPhone(p.phone));
+    $('yscHolList').innerHTML = !ps.length ? `<p class="ysc-none">אין מטופלים עם מספר טלפון.</p>` : ps.map(p=>{
+      const first = String(p.name||'').trim().split(/\s+/)[0] || '';
+      const msg = txt.replace(/\{שם\}/g, first), done = sent.includes(p.id);
+      return `<a class="ysc-row" href="https://wa.me/${iqWaPhone(p.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener" onclick="yscHolMark('${p.id}')">
+        <span class="ysc-av">${escH(yscAv(p.name))}</span><span class="ysc-grow"><span class="ysc-nm">${escH(p.name)}</span></span>
+        <span class="ysc-wa ${done?'done':''}">${done?'✓ נשלח':'שליחה'}</span></a>`; }).join('');
+    if($('yscHolN')) $('yscHolN').textContent = `${sent.length} מתוך ${ps.length}`;
+  }
+  function yscRenderHoliday(){
+    const box = $('yscHolBox'); if(!box) return;
+    const h = yscHoliday(); box.style.display = h ? '' : 'none'; if(!h) return;
+    box.querySelector('h3').firstChild.textContent = `ברכה ל${h.name} בוואטסאפ `;
+    $('yscHol').innerHTML = `<div class="ysc-hol-in"><p>${h.inDays===0?'החג היום':h.inDays===1?'החג מחר':'החג בעוד '+h.inDays+' ימים'}. אפשר לערוך את ההודעה. {שם} מוחלף בשם הפרטי של כל מטופל.</p>
+      <textarea class="inp" id="yscHolTxt" oninput="yscHolEdit(this.value)">${escH(holText(h))}</textarea>
+      <div class="sheet-actions" style="margin-top:8px"><button class="bm-btn ghost" onclick="yscHolReset()">חזרה לנוסח המקורי</button></div></div>
+      <div id="yscHolList"></div>`;
+    yscHolList();
   }
   function yscRenderToday(){
     const d = yscData();
     if($('yscGreet')) $('yscGreet').textContent = yscGreet()+', יובל';
     if($('yscDate')) $('yscDate').textContent = new Date().toLocaleDateString('he-IL',{weekday:'long', day:'numeric', month:'long'});
     const stats = [
+      [d.tasks.length, 'משימות להיום', ''],
       [d.due.length, 'לחזור היום', ''],
       [d.wait3.length, 'ממתינים מעל 3 ימים', 'warn'],
       [d.gone.length, 'לא הגיעו מעל חודש', ''],
@@ -3868,8 +3953,20 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
             <span class="ysc-sub">טיפול אחרון: ${escH(fmtD(last))}</span></span>
             <span class="ysc-tag ${n>=60?'late':''}">${yscAgo(n)}</span></button>`; }).join('');
     }
+    if($('yscTask')){
+      $('yscTask').innerHTML = !d.tasks.length
+        ? `<p class="ysc-none">אין משימות להיום. כשרושמים בכרטיס מטופל "הצעד הבא" עם תאריך, הוא יופיע כאן ביום הזה.</p>`
+        : d.tasks.map(p=>{ const late = p.nextDate<d.t;
+            return `<button class="ysc-row" onclick="openP('${p.id}','details')">
+            <span class="ysc-av">${escH(yscAv(p.name))}</span>
+            <span class="ysc-grow"><span class="ysc-nm">${escH(p.name)}</span>
+            <span class="ysc-sub">${escH(p.nextStep||'הצעד הבא')}</span></span>
+            <span class="ysc-tag ${late?'late':''}">${late?'באיחור, מ־'+escH(fmtD(p.nextDate)):'היום'}</span></button>`; }).join('');
+    }
+    if($('yscTaskN')) $('yscTaskN').textContent = d.tasks.length;
     if($('yscDueN')) $('yscDueN').textContent = d.due.length;
     if($('yscGoneN')) $('yscGoneN').textContent = d.gone.length;
+    yscMore(); yscRenderHoliday();
   }
 
   /* ---- משפך לידים ---- */
@@ -3983,6 +4080,25 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
     start();
   })();
 
+  /* רשימת לידים: אותו מראה כמו המטופלים */
+  const _ysLL = window.ldRenderList;
+  if(typeof _ysLL==='function'){
+    window.ldRenderList = function(){
+      const r = _ysLL.apply(this, arguments);
+      document.querySelectorAll('#ldList .pr').forEach(b=>{
+        const nm = b.querySelector('.pr-name'); if(!nm || b.querySelector('.ysc-av')) return;
+        const av = document.createElement('span'); av.className='ysc-av'; av.textContent = yscAv(nm.textContent); b.prepend(av);
+        b.querySelectorAll('.pr-l2 span').forEach(sp=>{
+          sp.textContent = sp.textContent.replace(/(\d{1,2})\.(\d{1,2})\.(\d{4})/, (m,d,mo,y)=>{
+            const dt = new Date(+y, +mo-1, +d), now = new Date();
+            return dt.toLocaleDateString('he-IL', y==now.getFullYear() ? {day:'numeric',month:'long'} : {day:'numeric',month:'long',year:'numeric'});
+          });
+        });
+      });
+      return r;
+    };
+    try{ window.ldRenderList(); }catch(e){}
+  }
   /* פתיחה: מסך "היום" כברירת מחדל, אלא אם מבקשים לידים */
   yscRenderToday(); yscRenderPipe();
   if(location.hash !== '#leads' && !($('leadsView') && $('leadsView').classList.contains('on'))) yscShow('today');
