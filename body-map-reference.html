@@ -529,7 +529,7 @@ html,body{overflow-anchor:none}
 <header>
   <a class="hdr-link" href="https://tools.yuvalsnir.co.il/clinic.html" target="_top">הקליניקה</a>
   <h1>מפת הגוף</h1>
-    <div class="sub">מסע פנימי אל תוך הגוף, היסודות והספירות · יובל שניר</div>
+    <div class="sub">מסע פנימי אל הגוף והנפש</div>
   <div class="search-wrap">
     <input id="search" type="text" placeholder="חיפוש איבר, מערכת, יסוד או ספירה...">
     <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -4499,10 +4499,10 @@ header{padding-inline:28px;}
 .hdr-link{top:24px;left:28px;border-radius:6px;}
 @media(min-width:641px){header h1{margin-inline:140px;}}
 @media(max-width:640px){
-  header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:18px;row-gap:24px;padding:18px 10px 18px!important;}
-  header h1{grid-column:1;grid-row:1;text-align:start;min-width:0;margin:0!important;font-size:1.85rem!important;line-height:1.25;}
-  .hdr-link{grid-column:2;grid-row:1;position:static;min-height:44px;padding:8px 12px;white-space:nowrap;}
-  header .sub{grid-column:1/-1;min-width:0;margin:0!important;line-height:1.45;font-size:.85rem!important;text-align:start;}
+  header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:18px;row-gap:14px;padding:18px 10px 18px!important;}
+  header h1{grid-column:1/-1;grid-row:2;text-align:center;min-width:0;margin:0!important;font-size:1.85rem!important;line-height:1.25;}
+  .hdr-link{grid-column:2;grid-row:1;justify-self:end;position:static;min-height:44px;padding:8px 12px;white-space:nowrap;}
+  header .sub{grid-column:1/-1;min-width:0;margin:0!important;line-height:1.45;font-size:.85rem!important;text-align:center;}
   .search-wrap{grid-column:1/-1;min-width:0;max-width:none;width:100%;}
   #search{min-height:48px;font-size:.9rem;}
   header .tabnav{grid-column:1/-1;display:flex;flex-wrap:wrap;width:100%;max-width:none;margin:0!important;padding:4px;gap:4px;border-radius:8px;}
@@ -4534,6 +4534,19 @@ header{padding-inline:28px;}
   .nav-back{left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));}
   .fab-tools{left:64px;bottom:calc(12px + env(safe-area-inset-bottom,0px));flex-direction:row;gap:8px;}
   .fab-t{display:none;}
+}
+
+/* Reading alignment: right-aligned on mobile/tablet, justified on desktop. */
+.organ-body p,.organ-section p,.sub-body p,.system-desc,.ex-txt,.ex-why,.ex-fit,#backgroundView p,#toolsView p,.tool-lead,.dg-note{
+  text-align:start;
+  text-align-last:start;
+  word-spacing:normal;
+}
+@media(min-width:900px){
+  .organ-body p,.organ-section p,.sub-body p,.system-desc,.ex-txt,.ex-why,.ex-fit,#backgroundView p,#toolsView p,.tool-lead,.dg-note{
+    text-align:justify;
+  }
+  #backgroundView .bg-links{text-align:start;}
 }
 
 
