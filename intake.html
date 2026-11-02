@@ -213,10 +213,185 @@ main{max-width:900px;padding:22px 16px 48px}
 <style>
 @media screen{html{font-size:19.5px}}
 </style>
+<!-- כל העיצוב בתוך ה־head, כדי שהדף לא יופיע לרגע בעיצוב הישן -->
+<style>
+.ys-back{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:950;display:none;align-items:center;gap:6px;
+  height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#2C5F5B;border:1.5px solid #2C5F5B;
+  font:700 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(44,95,91,.12)}
+.ys-back.show{display:inline-flex}
+.ys-back:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
+@media print{.ys-back{display:none!important}}
+</style>
+<style id="ys-design">
+/* ===== שכבת עיצוב אחידה (ירוק עמוק וזהב) — מסך בלבד ===== */
+@media screen{
+:root{--forest:#2F6358;--forest-dark:#1F443D;--cream:#F8F8F5;--sage:#AEC6B8;--ink:#293C35;--muted:#60736A;--on:#EEF3F0;--air:#B89A5E}
+header.top{position:sticky;top:0;z-index:50;background:#16332D!important;color:#F7F4EA;padding:calc(24px + env(safe-area-inset-top,0px)) 16px 20px;box-shadow:0 1px 0 rgba(184,154,94,.7)}
+header.top h1{font-size:44px;line-height:1.2;font-weight:700;color:#F7F4EA}
+header.top .sub{color:#AEC6B8;font-size:17px;margin-top:6px}
+main{max-width:900px;padding:26px 16px 56px}
+.paper{border-radius:8px;border:1px solid rgba(184,154,94,.28);box-shadow:0 3px 12px -8px rgba(22,51,45,.25)}
+.iq-intro{font-size:17px;line-height:1.75}
+.iq-q{margin-top:32px}
+.iq-q > h3{color:#16332D;font-weight:700;border-bottom:1px solid rgba(184,154,94,.45);padding-bottom:8px}
+.iq-sub{color:#8C7240}
+.iq-group{color:#8C7240;letter-spacing:.2px}
+.iq-paper input[type=text],.iq-paper textarea,.iq-paper input[type=date]{border-color:rgba(47,99,88,.25);border-radius:8px;min-height:44px}
+.iq-paper input[type=text]:focus,.iq-paper textarea:focus{border-color:#2F6358;box-shadow:0 0 0 3px rgba(184,154,94,.22);outline:none}
+.iq-opts:not(.col):not(.iq-grid2) .iq-opt{border-radius:8px;border-color:rgba(47,99,88,.18);transition:background .2s,border-color .2s}
+.iq-opts:not(.col):not(.iq-grid2) .iq-opt:hover{border-color:rgba(184,154,94,.6)}
+.iq-opts:not(.col):not(.iq-grid2) .iq-opt.on{border-color:#2F6358;background:#EEF3F0}
+.iq-opt input{accent-color:#2F6358}
+.iq-sc{border-color:rgba(47,99,88,.25);transition:background .2s,border-color .2s}
+.iq-sc:hover{border-color:#B89A5E}
+.iq-sc.on{background:#2F6358;border-color:#2F6358}
+.iq-stmt{border-bottom:1px solid rgba(47,99,88,.12)}
+.iq-tri button{border-radius:6px}
+.iq-tri button.on{background:#2F6358;border-color:#2F6358}
+.bm-btn{background:#8A6D3B;border-radius:8px;font-weight:700;min-height:44px;transition:background .2s}
+.bm-btn:hover{background:#755C30}
+.bm-btn.ghost{background:transparent;color:#1F443D;border:1.5px solid #1F443D}
+.bm-btn.ghost:hover{background:#EEF3F0}
+.send{border-top:1px solid rgba(184,154,94,.45);padding-top:22px;margin-top:36px}
+.send h3{color:#16332D}
+#toast{background:#16332D;border:1px solid rgba(217,195,148,.5)}
+.ys-back{background:linear-gradient(180deg,#2F6358,#1F443D)!important;color:#F4EEDF!important;border:1px solid rgba(217,195,148,.45)!important;box-shadow:0 10px 24px -10px rgba(15,36,32,.6)!important}
+}
+@media screen and (max-width:640px){
+  header.top{padding:calc(16px + env(safe-area-inset-top,0px)) 12px 14px}
+  header.top h1{font-size:32px}
+  header.top .sub{font-size:15px}
+  main{padding:20px 8px 90px}
+  .paper{padding:20px 14px}
+  .iq-intro,.iq-stmt .t,.iq-opt{font-size:18px}
+}
+</style>
+<style id="ys-intake">
+/* ===== שכבת עיצוב: כותרת מתקפלת, מד התקדמות, חוויית מילוי ===== */
+@media screen{
+body{background:linear-gradient(180deg,#F8F8F5 0%,#F6F1E7 100%);background-attachment:fixed}
+header.top{position:sticky;top:0;z-index:50;overflow:hidden;transition:padding .28s cubic-bezier(.4,0,.2,1)}
+header.top::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(130% 130% at 50% -25%, rgba(217,195,148,.20), rgba(22,51,45,0) 62%)}
+header.top .ys-mark{position:absolute;top:-34%;left:18px;width:180px;height:180px;opacity:.13;pointer-events:none;z-index:1}
+header.top h1,header.top .sub,header.top .ys-prog{position:relative;z-index:2}
+header.top h1{transition:font-size .28s cubic-bezier(.4,0,.2,1)}
+header.top.compact{padding:calc(8px + env(safe-area-inset-top,0px)) 16px 9px}
+header.top.compact h1{font-size:24px}
+header.top.compact .sub{display:none}
+header.top.compact .ys-prog{margin-top:8px}
+
+.ys-prog{margin:14px auto 0;max-width:560px}
+.ys-prog-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  font-family:'Assistant',sans-serif;font-size:14px;line-height:1.4;color:#AEC6B8}
+.ys-prog-lab{white-space:nowrap;font-weight:700;letter-spacing:.2px}
+.ys-prog-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#D9C394;opacity:.85}
+.ys-prog-track{margin-top:7px;height:5px;border-radius:999px;background:rgba(217,195,148,.18);overflow:hidden}
+.ys-prog-fill{display:block;height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg,#8C7240,#B89A5E 45%,#D9C394);
+  transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+.iq-paper{animation:ys-up .5s cubic-bezier(.4,0,.2,1) both}
+@keyframes ys-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.iq-acc{scroll-margin-top:120px}
+.iq-acc > .iq-acc-h{transition:background .22s,border-color .22s;border-radius:8px}
+.iq-acc > .iq-acc-h:hover{background:rgba(184,154,94,.07)}
+.iq-acc > .iq-acc-h .ys-n{flex-shrink:0;font-family:'Assistant',sans-serif;font-size:13px;font-weight:700;
+  color:#8C7240;background:rgba(184,154,94,.13);border:1px solid rgba(184,154,94,.34);
+  border-radius:999px;padding:1px 9px;min-width:32px;text-align:center;letter-spacing:.4px}
+.iq-acc > .iq-acc-h .ys-tick{display:none;flex-shrink:0;color:#2F6358;font-size:15px;font-weight:800;line-height:1}
+.iq-acc.ys-done > .iq-acc-h .ys-tick{display:inline}
+.iq-acc.open > .iq-acc-h{background:linear-gradient(180deg,rgba(184,154,94,.13),rgba(184,154,94,.02));
+  border-bottom-color:rgba(184,154,94,.5)}
+.iq-acc.open > .iq-acc-h .ys-n{background:#8C7240;color:#F7F4EA;border-color:#8C7240}
+.iq-acc.open > .iq-acc-b{animation:ys-in .3s cubic-bezier(.4,0,.2,1) both}
+@keyframes ys-in{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
+
+.iq-opts:not(.col):not(.iq-grid2) .iq-opt{transition:transform .15s,border-color .2s,background .2s,box-shadow .2s}
+.iq-opts:not(.col):not(.iq-grid2) .iq-opt:hover{transform:translateY(-1px)}
+.iq-opts:not(.col):not(.iq-grid2) .iq-opt.on{box-shadow:0 0 0 3px rgba(184,154,94,.18)}
+.iq-sc{transition:transform .15s,border-color .2s,background .2s,box-shadow .2s}
+.iq-sc:hover{transform:translateY(-2px)}
+.iq-sc.on{box-shadow:0 0 0 3px rgba(184,154,94,.22)}
+.iq-tri button{transition:transform .15s,background .2s,border-color .2s}
+.iq-tri button:hover{transform:translateY(-1px)}
+.iq-tri button.on{box-shadow:0 0 0 3px rgba(184,154,94,.18)}
+
+.iq-acc-next{position:relative;overflow:hidden}
+.iq-acc-next::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.3),rgba(255,255,255,0));
+  transform:translateX(-105%);transition:transform .65s cubic-bezier(.4,0,.2,1)}
+.iq-acc-next:hover::after{transform:translateX(105%)}
+}
+@media screen and (max-width:640px){
+  header.top.compact{padding:calc(6px + env(safe-area-inset-top,0px)) 12px 8px}
+  header.top.compact h1{font-size:21px}
+  header.top .ys-mark{width:130px;height:130px;left:8px}
+  .ys-prog{margin-top:10px}
+  .ys-prog-top{font-size:13px}
+}
+@media (prefers-reduced-motion: reduce){
+  header.top,header.top h1,.ys-prog-fill,.iq-opts:not(.col):not(.iq-grid2) .iq-opt,.iq-sc,.iq-tri button{transition:none!important}
+  .iq-paper,.iq-acc.open > .iq-acc-b{animation:none!important}
+  .iq-acc-next::after{display:none}
+}
+</style>
+<style id="ys-intake2">
+/* ===== שכבת עיצוב: כותרת בירוק עם זוהר זהב (אפשרות 2) — מסך בלבד ===== */
+@media screen{
+header.top{
+  background:radial-gradient(120% 140% at 50% -30%,#2F6358 0%,#16332D 65%)!important;
+  box-shadow:0 2px 0 #B89A5E;
+}
+header.top::before{background:radial-gradient(130% 130% at 50% -25%,rgba(217,195,148,.14),rgba(22,51,45,0) 62%)}
+header.top .sub{color:#D9C394}
+.ys-prog-top{color:#D9C394}
+.ys-prog-name{color:#D9C394;opacity:1}
+.ys-prog-track{background:rgba(217,195,148,.2)}
+.ys-prog-fill{background:#D9C394}
+.iq-acc > .iq-acc-h .ys-n{background:#B89A5E;color:#16332D;border-color:#B89A5E}
+.iq-acc.open > .iq-acc-h .ys-n{background:#D9C394;color:#16332D;border-color:#D9C394}
+}
+</style>
+<style id="ys-sign-css">
+/* חתימה בתחתית כל דף למטופלים, לפי המפרט, עם אינסטגרם ופייסבוק */
+.ys-sign{max-width:900px;margin:30px auto 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(184,154,94,.18);
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 9px;font-family:'Assistant',sans-serif;font-size:14px;font-weight:400;color:#60736A;text-align:center;background:none}
+.ys-sign-name{color:#293C35;font-weight:600}
+.ys-sign-dot{color:rgba(140,114,64,.5)}
+.ys-sign-site{color:#8C7240;text-decoration:none;border-bottom:1px dotted rgba(140,114,64,.45);padding-bottom:1px;transition:color .2s,border-color .2s}
+.ys-sign-site:hover{color:#B89A5E;border-bottom-style:solid;border-bottom-color:rgba(184,154,94,.7)}
+.ys-sign-social{display:inline-flex;align-items:center;gap:6px;margin-inline-start:4px}
+.ys-sign-ic{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;color:#8C7240;border:1px solid rgba(184,154,94,.35);transition:color .2s,border-color .2s,background .2s}
+.ys-sign-ic:hover{color:#B89A5E;border-color:rgba(184,154,94,.7);background:rgba(184,154,94,.08)}
+.ys-sign-site:focus-visible,.ys-sign-ic:focus-visible{outline:3px solid rgba(184,154,94,.5);outline-offset:3px;border-radius:4px}
+.ys-sign-ic:focus-visible{border-radius:50%}
+@media (max-width:640px){.ys-sign{margin-top:22px;padding-top:12px;font-size:13.5px}.ys-sign-social{flex-basis:100%;justify-content:center;margin:4px 0 0}.ys-sign-ic{width:40px;height:40px}}
+@media (prefers-reduced-motion:reduce){.ys-sign-site,.ys-sign-ic{transition:none}}
+@media print{.ys-sign{margin-top:14px;padding-top:8px;border-top:1px solid #ccc;display:block;text-align:center;font:9pt 'Assistant',sans-serif;color:#333}
+  .ys-sign-name{color:#000;font-weight:600}.ys-sign-site{color:#000;border:0}.ys-sign-social{display:none}}
+.ys-sign{flex-direction:row!important;position:static!important}
+.ys-sign span{display:inline;border:0!important;padding:0!important;margin:0;background:none!important;width:auto!important;font:inherit}
+.ys-sign .ys-sign-name{font-weight:600}
+.ys-sign .ys-sign-social{display:inline-flex!important;margin-inline-start:4px}
+@media (max-width:640px){.ys-sign .ys-sign-social{display:flex!important;flex-basis:100%;justify-content:center;margin:4px 0 0}}
+</style>
 </head>
 <body>
 <header class="top"><h1>שאלון היכרות</h1><div class="sub">לפני המפגש הראשון</div></header>
 <main id="app"></main>
+<footer class="ys-sign">
+  <span class="ys-sign-name">יובל שניר</span>
+  <span class="ys-sign-dot">·</span>
+  <span>רפלקסולוג ומטפל הוליסטי</span>
+  <span class="ys-sign-dot">·</span>
+  <a class="ys-sign-site" href="https://www.yuvalsnir.co.il" target="_blank" rel="noopener" dir="ltr">yuvalsnir.co.il</a>
+  <span class="ys-sign-social">
+    <a class="ys-sign-ic" href="https://www.instagram.com/yuvalsnir.holistic" target="_blank" rel="noopener" aria-label="אינסטגרם"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a>
+    <a class="ys-sign-ic" href="https://www.facebook.com/yuvalsnir.holistic" target="_blank" rel="noopener" aria-label="פייסבוק"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+  </span>
+</footer>
 <div id="toast" role="status" aria-live="polite"></div>
 <script>
 const IQ_EL = {fire:{name:"אש",c:"#A8442B"}, water:{name:"מים",c:"#2F6690"}, air:{name:"אוויר",c:"#A9821F"}, earth:{name:"אדמה",c:"#5C6B3F"}};
@@ -762,14 +937,7 @@ function iqPreNote(){
 }
 iqPreNote();
 </script>
-<style>
-.ys-back{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:950;display:none;align-items:center;gap:6px;
-  height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#2C5F5B;border:1.5px solid #2C5F5B;
-  font:700 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(44,95,91,.12)}
-.ys-back.show{display:inline-flex}
-.ys-back:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
-@media print{.ys-back{display:none!important}}
-</style>
+
 <button class="ys-back" id="ysBack" type="button" aria-label="חזרה">חזרה ›</button>
 <script>
 /* כפתור חזרה אחיד: חוזר ללשונית הקודמת באתר, ואם אין, לעמוד הקודם באתרי הקליניקה */
@@ -795,121 +963,8 @@ iqPreNote();
   update();
 })();
 </script>
-<style id="ys-design">
-/* ===== שכבת עיצוב אחידה (ירוק עמוק וזהב) — מסך בלבד ===== */
-@media screen{
-:root{--forest:#2F6358;--forest-dark:#1F443D;--cream:#F8F8F5;--sage:#AEC6B8;--ink:#293C35;--muted:#60736A;--on:#EEF3F0;--air:#B89A5E}
-header.top{position:sticky;top:0;z-index:50;background:#16332D!important;color:#F7F4EA;padding:calc(24px + env(safe-area-inset-top,0px)) 16px 20px;box-shadow:0 1px 0 rgba(184,154,94,.7)}
-header.top h1{font-size:44px;line-height:1.2;font-weight:700;color:#F7F4EA}
-header.top .sub{color:#AEC6B8;font-size:17px;margin-top:6px}
-main{max-width:900px;padding:26px 16px 56px}
-.paper{border-radius:8px;border:1px solid rgba(184,154,94,.28);box-shadow:0 3px 12px -8px rgba(22,51,45,.25)}
-.iq-intro{font-size:17px;line-height:1.75}
-.iq-q{margin-top:32px}
-.iq-q > h3{color:#16332D;font-weight:700;border-bottom:1px solid rgba(184,154,94,.45);padding-bottom:8px}
-.iq-sub{color:#8C7240}
-.iq-group{color:#8C7240;letter-spacing:.2px}
-.iq-paper input[type=text],.iq-paper textarea,.iq-paper input[type=date]{border-color:rgba(47,99,88,.25);border-radius:8px;min-height:44px}
-.iq-paper input[type=text]:focus,.iq-paper textarea:focus{border-color:#2F6358;box-shadow:0 0 0 3px rgba(184,154,94,.22);outline:none}
-.iq-opts:not(.col):not(.iq-grid2) .iq-opt{border-radius:8px;border-color:rgba(47,99,88,.18);transition:background .2s,border-color .2s}
-.iq-opts:not(.col):not(.iq-grid2) .iq-opt:hover{border-color:rgba(184,154,94,.6)}
-.iq-opts:not(.col):not(.iq-grid2) .iq-opt.on{border-color:#2F6358;background:#EEF3F0}
-.iq-opt input{accent-color:#2F6358}
-.iq-sc{border-color:rgba(47,99,88,.25);transition:background .2s,border-color .2s}
-.iq-sc:hover{border-color:#B89A5E}
-.iq-sc.on{background:#2F6358;border-color:#2F6358}
-.iq-stmt{border-bottom:1px solid rgba(47,99,88,.12)}
-.iq-tri button{border-radius:6px}
-.iq-tri button.on{background:#2F6358;border-color:#2F6358}
-.bm-btn{background:#8A6D3B;border-radius:8px;font-weight:700;min-height:44px;transition:background .2s}
-.bm-btn:hover{background:#755C30}
-.bm-btn.ghost{background:transparent;color:#1F443D;border:1.5px solid #1F443D}
-.bm-btn.ghost:hover{background:#EEF3F0}
-.send{border-top:1px solid rgba(184,154,94,.45);padding-top:22px;margin-top:36px}
-.send h3{color:#16332D}
-#toast{background:#16332D;border:1px solid rgba(217,195,148,.5)}
-.ys-back{background:linear-gradient(180deg,#2F6358,#1F443D)!important;color:#F4EEDF!important;border:1px solid rgba(217,195,148,.45)!important;box-shadow:0 10px 24px -10px rgba(15,36,32,.6)!important}
-}
-@media screen and (max-width:640px){
-  header.top{padding:calc(16px + env(safe-area-inset-top,0px)) 12px 14px}
-  header.top h1{font-size:32px}
-  header.top .sub{font-size:15px}
-  main{padding:20px 8px 90px}
-  .paper{padding:20px 14px}
-  .iq-intro,.iq-stmt .t,.iq-opt{font-size:18px}
-}
-</style>
-<style id="ys-intake">
-/* ===== שכבת עיצוב: כותרת מתקפלת, מד התקדמות, חוויית מילוי ===== */
-@media screen{
-body{background:linear-gradient(180deg,#F8F8F5 0%,#F6F1E7 100%);background-attachment:fixed}
-header.top{position:sticky;top:0;z-index:50;overflow:hidden;transition:padding .28s cubic-bezier(.4,0,.2,1)}
-header.top::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(130% 130% at 50% -25%, rgba(217,195,148,.20), rgba(22,51,45,0) 62%)}
-header.top .ys-mark{position:absolute;top:-34%;left:18px;width:180px;height:180px;opacity:.13;pointer-events:none;z-index:1}
-header.top h1,header.top .sub,header.top .ys-prog{position:relative;z-index:2}
-header.top h1{transition:font-size .28s cubic-bezier(.4,0,.2,1)}
-header.top.compact{padding:calc(8px + env(safe-area-inset-top,0px)) 16px 9px}
-header.top.compact h1{font-size:24px}
-header.top.compact .sub{display:none}
-header.top.compact .ys-prog{margin-top:8px}
 
-.ys-prog{margin:14px auto 0;max-width:560px}
-.ys-prog-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-  font-family:'Assistant',sans-serif;font-size:14px;line-height:1.4;color:#AEC6B8}
-.ys-prog-lab{white-space:nowrap;font-weight:700;letter-spacing:.2px}
-.ys-prog-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#D9C394;opacity:.85}
-.ys-prog-track{margin-top:7px;height:5px;border-radius:999px;background:rgba(217,195,148,.18);overflow:hidden}
-.ys-prog-fill{display:block;height:100%;width:0;border-radius:999px;
-  background:linear-gradient(90deg,#8C7240,#B89A5E 45%,#D9C394);
-  transition:width .5s cubic-bezier(.4,0,.2,1)}
 
-.iq-paper{animation:ys-up .5s cubic-bezier(.4,0,.2,1) both}
-@keyframes ys-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-
-.iq-acc{scroll-margin-top:120px}
-.iq-acc > .iq-acc-h{transition:background .22s,border-color .22s;border-radius:8px}
-.iq-acc > .iq-acc-h:hover{background:rgba(184,154,94,.07)}
-.iq-acc > .iq-acc-h .ys-n{flex-shrink:0;font-family:'Assistant',sans-serif;font-size:13px;font-weight:700;
-  color:#8C7240;background:rgba(184,154,94,.13);border:1px solid rgba(184,154,94,.34);
-  border-radius:999px;padding:1px 9px;min-width:32px;text-align:center;letter-spacing:.4px}
-.iq-acc > .iq-acc-h .ys-tick{display:none;flex-shrink:0;color:#2F6358;font-size:15px;font-weight:800;line-height:1}
-.iq-acc.ys-done > .iq-acc-h .ys-tick{display:inline}
-.iq-acc.open > .iq-acc-h{background:linear-gradient(180deg,rgba(184,154,94,.13),rgba(184,154,94,.02));
-  border-bottom-color:rgba(184,154,94,.5)}
-.iq-acc.open > .iq-acc-h .ys-n{background:#8C7240;color:#F7F4EA;border-color:#8C7240}
-.iq-acc.open > .iq-acc-b{animation:ys-in .3s cubic-bezier(.4,0,.2,1) both}
-@keyframes ys-in{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
-
-.iq-opts:not(.col):not(.iq-grid2) .iq-opt{transition:transform .15s,border-color .2s,background .2s,box-shadow .2s}
-.iq-opts:not(.col):not(.iq-grid2) .iq-opt:hover{transform:translateY(-1px)}
-.iq-opts:not(.col):not(.iq-grid2) .iq-opt.on{box-shadow:0 0 0 3px rgba(184,154,94,.18)}
-.iq-sc{transition:transform .15s,border-color .2s,background .2s,box-shadow .2s}
-.iq-sc:hover{transform:translateY(-2px)}
-.iq-sc.on{box-shadow:0 0 0 3px rgba(184,154,94,.22)}
-.iq-tri button{transition:transform .15s,background .2s,border-color .2s}
-.iq-tri button:hover{transform:translateY(-1px)}
-.iq-tri button.on{box-shadow:0 0 0 3px rgba(184,154,94,.18)}
-
-.iq-acc-next{position:relative;overflow:hidden}
-.iq-acc-next::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.3),rgba(255,255,255,0));
-  transform:translateX(-105%);transition:transform .65s cubic-bezier(.4,0,.2,1)}
-.iq-acc-next:hover::after{transform:translateX(105%)}
-}
-@media screen and (max-width:640px){
-  header.top.compact{padding:calc(6px + env(safe-area-inset-top,0px)) 12px 8px}
-  header.top.compact h1{font-size:21px}
-  header.top .ys-mark{width:130px;height:130px;left:8px}
-  .ys-prog{margin-top:10px}
-  .ys-prog-top{font-size:13px}
-}
-@media (prefers-reduced-motion: reduce){
-  header.top,header.top h1,.ys-prog-fill,.iq-opts:not(.col):not(.iq-grid2) .iq-opt,.iq-sc,.iq-tri button{transition:none!important}
-  .iq-paper,.iq-acc.open > .iq-acc-b{animation:none!important}
-  .iq-acc-next::after{display:none}
-}
-</style>
 <script id="ys-intake">
 /* ===== כותרת מתקפלת בגלילה + מד התקדמות (מסך בלבד, בלי לגעת בתוכן) ===== */
 (function(){
@@ -992,22 +1047,6 @@ header.top.compact .ys-prog{margin-top:8px}
   schedule();
 })();
 </script>
-<style id="ys-intake2">
-/* ===== שכבת עיצוב: כותרת בירוק עם זוהר זהב (אפשרות 2) — מסך בלבד ===== */
-@media screen{
-header.top{
-  background:radial-gradient(120% 140% at 50% -30%,#2F6358 0%,#16332D 65%)!important;
-  box-shadow:0 2px 0 #B89A5E;
-}
-header.top::before{background:radial-gradient(130% 130% at 50% -25%,rgba(217,195,148,.14),rgba(22,51,45,0) 62%)}
-header.top .sub{color:#D9C394}
-.ys-prog-top{color:#D9C394}
-.ys-prog-name{color:#D9C394;opacity:1}
-.ys-prog-track{background:rgba(217,195,148,.2)}
-.ys-prog-fill{background:#D9C394}
-.iq-acc > .iq-acc-h .ys-n{background:#B89A5E;color:#16332D;border-color:#B89A5E}
-.iq-acc.open > .iq-acc-h .ys-n{background:#D9C394;color:#16332D;border-color:#D9C394}
-}
-</style>
+
 </body>
 </html>

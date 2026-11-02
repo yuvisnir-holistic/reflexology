@@ -232,6 +232,29 @@
   .print-head{display:none;}
 </style>
 
+<style id="ys-sign-css">
+/* חתימה בתחתית כל דף למטופלים, לפי המפרט, עם אינסטגרם ופייסבוק */
+.ys-sign{max-width:900px;margin:30px auto 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(184,154,94,.18);
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 9px;font-family:'Assistant',sans-serif;font-size:14px;font-weight:400;color:#60736A;text-align:center;background:none}
+.ys-sign-name{color:#293C35;font-weight:600}
+.ys-sign-dot{color:rgba(140,114,64,.5)}
+.ys-sign-site{color:#8C7240;text-decoration:none;border-bottom:1px dotted rgba(140,114,64,.45);padding-bottom:1px;transition:color .2s,border-color .2s}
+.ys-sign-site:hover{color:#B89A5E;border-bottom-style:solid;border-bottom-color:rgba(184,154,94,.7)}
+.ys-sign-social{display:inline-flex;align-items:center;gap:6px;margin-inline-start:4px}
+.ys-sign-ic{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;color:#8C7240;border:1px solid rgba(184,154,94,.35);transition:color .2s,border-color .2s,background .2s}
+.ys-sign-ic:hover{color:#B89A5E;border-color:rgba(184,154,94,.7);background:rgba(184,154,94,.08)}
+.ys-sign-site:focus-visible,.ys-sign-ic:focus-visible{outline:3px solid rgba(184,154,94,.5);outline-offset:3px;border-radius:4px}
+.ys-sign-ic:focus-visible{border-radius:50%}
+@media (max-width:640px){.ys-sign{margin-top:22px;padding-top:12px;font-size:13.5px}.ys-sign-social{flex-basis:100%;justify-content:center;margin:4px 0 0}.ys-sign-ic{width:40px;height:40px}}
+@media (prefers-reduced-motion:reduce){.ys-sign-site,.ys-sign-ic{transition:none}}
+@media print{.ys-sign{margin-top:14px;padding-top:8px;border-top:1px solid #ccc;display:block;text-align:center;font:9pt 'Assistant',sans-serif;color:#333}
+  .ys-sign-name{color:#000;font-weight:600}.ys-sign-site{color:#000;border:0}.ys-sign-social{display:none}}
+.ys-sign{flex-direction:row!important;position:static!important}
+.ys-sign span{display:inline;border:0!important;padding:0!important;margin:0;background:none!important;width:auto!important;font:inherit}
+.ys-sign .ys-sign-name{font-weight:600}
+.ys-sign .ys-sign-social{display:inline-flex!important;margin-inline-start:4px}
+@media (max-width:640px){.ys-sign .ys-sign-social{display:flex!important;flex-basis:100%;justify-content:center;margin:4px 0 0}}
+</style>
 </head>
 <body>
 
@@ -322,7 +345,17 @@
   </section>
 </main>
 
-<footer>יובל שניר · רפלקסולוג ומטפל הוליסטי · <a href="https://yuvalsnir.co.il" target="_blank" rel="noopener">yuvalsnir.co.il</a></footer>
+<footer class="ys-sign">
+  <span class="ys-sign-name">יובל שניר</span>
+  <span class="ys-sign-dot">·</span>
+  <span>רפלקסולוג ומטפל הוליסטי</span>
+  <span class="ys-sign-dot">·</span>
+  <a class="ys-sign-site" href="https://www.yuvalsnir.co.il" target="_blank" rel="noopener" dir="ltr">yuvalsnir.co.il</a>
+  <span class="ys-sign-social">
+    <a class="ys-sign-ic" href="https://www.instagram.com/yuvalsnir.holistic" target="_blank" rel="noopener" aria-label="אינסטגרם"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a>
+    <a class="ys-sign-ic" href="https://www.facebook.com/yuvalsnir.holistic" target="_blank" rel="noopener" aria-label="פייסבוק"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+  </span>
+</footer>
 
 <div class="floaters no-print">
   <button id="fBack">חזרה</button>
