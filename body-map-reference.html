@@ -4560,6 +4560,16 @@ header{padding-inline:28px;}
   .organ-section p,.subsection .sub-body p,.system-desc,.tool-lead,.ex-txt,.ex-why,.ex-fit,.dg-note,#backgroundView p,#toolsView p,.organ-body p{font-size:18px;}
 }
 
+/* כותרת אחידה בכל האתרים + מובייל: כותרת וכפתור הקליניקה באותה שורה */
+header:not(.compact) h1{font-size:44px!important;line-height:1.2!important;}
+@media(max-width:640px){
+  header:not(.compact) h1{font-size:32px!important;}
+  header{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;}
+  header h1{grid-column:2!important;grid-row:1!important;white-space:nowrap;}
+  .hdr-link{grid-column:3!important;grid-row:1!important;justify-self:end;}
+  header .sub{grid-row:2;}
+}
+
 </style>
 <script>
 /* Luxe layer: illustrated system icons + gentle entrance animations */
