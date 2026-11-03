@@ -183,9 +183,17 @@ details .inner{padding-top:12px}
 @media (max-width:640px){details{padding:0 12px}}
 @media (max-width:899px){main p,blockquote{text-align:right}}
 </style>
+<style>
+.ys-back{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:950;display:none;align-items:center;gap:6px;
+  height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#2C5F5B;border:1.5px solid #2C5F5B;
+  font:700 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(44,95,91,.12)}
+.ys-back.show{display:inline-flex}
+.ys-back:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
+@media print{.ys-back{display:none!important}}
+</style>
 </head><body>
 <header class="top"><p class="eyebrow">על פי כללי ההשקטה של הבעל שם טוב</p><h1><span class="l">יומן השקטה</span><span class="l">ועבודת ההתבוננות</span></h1><p class="sub">כתיבה בבוקר ובערב, ועבודת התבוננות בכוחות הנפש לאורך היום.</p></header>
-<nav class="tabs" aria-label="חלקי המדריך"><div class="row" role="tablist"><button type="button" role="tab" data-t="intro">הקדמה</button><button type="button" role="tab" data-t="journal">היומן</button><button type="button" role="tab" data-t="contemplation">ההתבוננות</button><button type="button" role="tab" data-t="verses">פסוקים</button></div></nav>
+<nav class="tabs" aria-label="חלקי המדריך"><div class="row" role="tablist"><button type="button" role="tab" data-t="intro">הקדמה</button><button type="button" role="tab" data-t="contemplation">ההתבוננות</button><button type="button" role="tab" data-t="journal">היומן</button><button type="button" role="tab" data-t="verses">פסוקים</button></div></nav>
 <main><section class="panel" id="intro" role="tabpanel"><h2>למה יומן השקטה</h2>
 <p class="lead">יסוד כל כללי ההשקטה הוא שבני האדם אחראים למצב הפנימי שלהם. בורא עולם נתן להם בחירה, ולכן אינם קורבנות של רצונותיהם, מחשבותיהם ורגשותיהם, אלא יכולים לטהר אותם ולתת לנשמה להתבטא ברוח, בנפש ובגוף. השקטה ממושכת מביאה מנוחה לרוח ולנפש, ויוצרת שלום בין הנשמה לגוף. זהו מצב של השתוות, שבו אין עוד מלחמה בין כוחות הנפש לבין עצמם ובינם לבין הנשמה.</p>
 <p>כדי להגיע לכך צריך לפתח את מה שנקרא החוש הנשמתי. במשך דורות של גלות פיתחנו היטב את חוש השכל, אבל היכולת להביט פנימה ולראות מה קורה בתוכנו נותרה חלשה. יומן ההשקטה הוא אחד הכלים לפיתוח החוש הזה. טוב שתהיה לכל אדם מחברת שבה הוא כותב את מחשבותיו, ועל ידה יוצאת הפסולת ונקלטות גם הארות חיוביות.</p>
@@ -330,14 +338,7 @@ details .inner{padding-top:12px}
   }, true);
 })();
 </script>
-<style>
-.ys-back{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:950;display:none;align-items:center;gap:6px;
-  height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#2C5F5B;border:1.5px solid #2C5F5B;
-  font:700 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(44,95,91,.12)}
-.ys-back.show{display:inline-flex}
-.ys-back:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
-@media print{.ys-back{display:none!important}}
-</style>
+
 <button class="ys-back" id="ysBack" type="button" aria-label="חזרה">חזרה ›</button>
 <script>
 /* כפתור חזרה אחיד: חוזר ללשונית הקודמת באתר, ואם אין, לעמוד הקודם באתרי הקליניקה */
