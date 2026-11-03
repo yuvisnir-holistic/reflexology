@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta name="theme-color" content="#4A6B57">
+<meta name="theme-color" content="#162B3D">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -221,6 +221,57 @@ body { background:var(--bg); color:var(--text); font-family:'Assistant',sans-ser
   font-family:'Assistant',sans-serif!important;font-size:16.5px!important;font-weight:400!important;letter-spacing:normal!important;opacity:1!important;white-space:nowrap!important}
 #tabnav button,nav.tabs button,.tabnav button,.tab-btn,nav.mainnav button,.tabs .tab{color:#fff!important;padding:8px 16px!important}
 #tabnav button.active,nav.tabs button[aria-selected="true"],.tabnav button.active,.tab-btn.home.active,nav.mainnav button.active,.tabs .tab[aria-selected="true"]{color:#1E4744!important;background:#fff!important}
+</style>
+<style id="ys-shvil">
+/* Approved ocean blue and gold; final head-only design layer. */
+:root{--ys-header:#162B3D;--ys-accent:#2C5373;--gold:#B89A5E;--gold-soft:#D9C394;--gold-deep:#8C7240;--bg:#F8F8F5;--surface:#FFFFFF;--text:#293C35;--text-dim:#60736A;--text-faint:#60736A;--forest:var(--ys-accent);--forest-dark:var(--ys-header);--line:color-mix(in srgb,var(--ys-accent) 16%,var(--surface));--ys-header-text:#F7F4EA;--ys-tab-bg:color-mix(in srgb,var(--surface) 9%,var(--ys-header));--ys-shadow:0 3px 12px -8px color-mix(in srgb,var(--ys-header) 28%,transparent)}
+body{background:var(--bg);color:var(--text)}
+.app{max-width:1000px;padding-bottom:24px}
+.header{background:var(--ys-header)!important;padding:32px 16px 18px;position:static;box-shadow:0 0 0 100vmax var(--ys-header)!important}
+.header-title{font-size:44px;font-weight:700;line-height:1.2;color:var(--ys-header-text);letter-spacing:0}
+.header-sub{color:var(--gold-soft);letter-spacing:0}
+.tabbar-wrap{position:sticky;top:0;background:var(--ys-header)!important;box-shadow:0 0 0 100vmax var(--ys-header)!important;border-bottom:1px solid var(--gold)!important;padding:8px 14px 12px!important}
+.tabbar{background:var(--ys-tab-bg);border-radius:8px;gap:4px;max-width:960px}
+.tab-btn{border-radius:6px;min-width:0;flex:1;padding:8px 12px!important;color:var(--ys-header-text)!important;min-height:44px}
+.tab-btn .tab-label{font-family:'Assistant',sans-serif;font-size:16.5px!important;font-weight:400!important;letter-spacing:0}
+.tab-btn.active,.tab-btn.home.active,.tab-btn.fire.active,.tab-btn.water.active,.tab-btn.sefirah.active{background:var(--surface)!important;color:var(--ys-header)!important}
+.page-content{padding:24px 28px 40px}
+.hero-title,.info-card-title,.section-title,.detail-hero-title,.step-card.open .step-title,.square-btn .square-title{color:var(--ys-accent)!important}
+.section-title{font-size:30px;line-height:1.35}
+.hero-icon{color:var(--gold)}
+.hero-card,.detail-hero{background:transparent!important;box-shadow:none;border-radius:0}
+.squares-wrap{border-radius:8px;border-color:var(--line);box-shadow:var(--ys-shadow)}
+.square-btn .square-icon{color:var(--ys-accent)!important;background:color-mix(in srgb,var(--ys-accent) 8%,var(--surface))!important}
+.square-btn .square-sub{color:var(--text-dim)!important}
+.square-btn:hover{background:var(--bg)!important}
+.step-card{border-bottom-color:var(--line)!important}
+.step-num{color:var(--gold-deep)!important;font-size:16px}
+.step-title{font-size:25px;line-height:1.45}
+.step-header{padding-block:20px}
+.step-body,.hero-desc,.intro-text,.info-card-body,.detail-hero-desc{font-size:18px;line-height:1.85;color:var(--text);text-align:start;text-align-last:start;word-spacing:normal}
+.step-body{padding-bottom:24px}
+.info-card{border-color:var(--line)}
+.back-btn,.scroll-top-btn{color:var(--ys-accent);border-color:var(--ys-accent);border-radius:6px;font-weight:400}
+.section-head{gap:14px;flex-wrap:wrap}
+.ys-practice{margin-bottom:30px;border-bottom:1px solid var(--line);padding-bottom:24px}
+.ys-practice h2{font-family:'Frank Ruhl Libre',serif;font-size:28px;color:var(--ys-accent);margin-bottom:14px}
+.ys-practice-empty{color:var(--text-dim);font-size:17px}
+.ys-save,.ys-remove{font:inherit;font-size:16px;min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;border:1px solid var(--gold);color:var(--ys-accent);background:var(--surface);cursor:pointer}
+.ys-save[aria-pressed="true"]{background:var(--ys-accent);color:var(--ys-header-text);border-color:var(--ys-accent)}
+.ys-save{margin-bottom:24px}
+.ys-save:focus-visible,.ys-remove:focus-visible,.ys-saved summary:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.ys-saved{background:var(--surface);border:1px solid var(--line);border-radius:8px;margin:12px 0;box-shadow:var(--ys-shadow)}
+.ys-saved>summary{cursor:pointer;padding:18px 16px;font-size:21px;font-weight:600;color:var(--ys-accent);line-height:1.5}
+.ys-saved-content{padding:0 16px 20px}
+.ys-saved .detail-hero{padding-inline:0}
+.ys-saved .step-card .step-body{display:block!important;animation:none!important}
+.ys-saved .step-header{cursor:default;padding-left:4px}
+.ys-saved .step-chevron{display:none}
+.ys-remove{margin-top:18px}
+@media(min-width:900px){.step-body,.hero-desc,.intro-text,.info-card-body,.detail-hero-desc{font-size:17px;text-align:justify}}
+@media(max-width:640px){.header{padding:24px 10px 16px}.header-title{font-size:32px}.header-sub{font-size:15px}.page-content{padding:22px 10px 32px}.tabbar-wrap{padding-inline:8px!important}.tab-btn{padding-inline:6px!important}.section-title{font-size:26px}.back-btn{padding-inline:10px}.square-btn{padding:18px 12px;column-gap:10px}.square-title{font-size:22px}.ys-saved-content{padding-inline:10px}.step-title{font-size:23px}.ys-saved>summary{padding-inline:12px;font-size:20px}.ys-practice h2{font-size:26px}.scroll-top-btn{bottom:calc(12px + env(safe-area-inset-bottom,0px))}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{.ys-save,.ys-remove{display:none!important}}
 </style>
 </head>
 <body>
@@ -478,6 +529,56 @@ function toggleStep(headerEl){
       else { window.scrollTo({top:0}); setTimeout(snapshot, 200); }
     }, 0);
   }, true);
+})();
+</script>
+<script id="ys-shvil-practice">
+/* Full-path favorites only: keep sequential exercises and their cautions together. */
+(function(){
+  const KEY='shvil-my-practice';
+  const IDS=['view-karov','view-hashem','view-atzmi'];
+  const sources=IDS.map(id=>document.querySelector('#'+id+' .page-content'));
+  if(sources.some(x=>!x))return;
+  const templates=sources.map(x=>x.cloneNode(true));
+  const home=document.querySelector('#view-home .page-content');if(!home)return;
+  const box=document.createElement('section');box.className='ys-practice';box.id='ysMyPractice';
+  home.prepend(box);
+  let saved=[];
+  try{const data=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(data))saved=[...new Set(data.filter(id=>IDS.includes(id)))];}catch(e){}
+  const buttons=[];
+  function toggle(id){
+    saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];
+    try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+    render();
+  }
+  sources.forEach((source,index)=>{
+    const b=document.createElement('button');b.type='button';b.className='ys-save';
+    b.addEventListener('click',()=>toggle(IDS[index]));
+    source.querySelector('.detail-hero').after(b);buttons.push(b);
+  });
+  function render(){
+    const expanded=new Set([...box.querySelectorAll('details[open]')].map(x=>x.dataset.path));
+    box.replaceChildren();const h=document.createElement('h2');h.textContent='התרגול שלי';box.append(h);
+    buttons.forEach((b,i)=>{const on=saved.includes(IDS[i]);b.setAttribute('aria-pressed',String(on));b.textContent=on?'★ בתרגול שלי':'☆ הוסף את המסלול המלא לתרגול שלי';});
+    if(!saved.length){const p=document.createElement('p');p.className='ys-practice-empty';p.textContent='עדיין לא נבחרו מסלולים.';box.append(p);return;}
+    saved.forEach(id=>{
+      const index=IDS.indexOf(id),clone=templates[index].cloneNode(true);
+      const title=clone.querySelector('.section-title').textContent;
+      clone.querySelector('.section-head').remove();
+      clone.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
+      clone.querySelectorAll('.step-card').forEach(card=>{
+        card.classList.add('open');const old=card.querySelector('.step-header');
+        const heading=document.createElement('div');heading.className='step-header';heading.innerHTML=old.innerHTML;old.replaceWith(heading);
+      });
+      const details=document.createElement('details');details.className='ys-saved';details.dataset.path=id;details.open=expanded.has(id);
+      const summary=document.createElement('summary');summary.textContent=title;details.append(summary);
+      const content=document.createElement('div');content.className='ys-saved-content';
+      content.append(...clone.childNodes);
+      const remove=document.createElement('button');remove.type='button';remove.className='ys-remove';remove.textContent='☆ הסר מהתרגול שלי';
+      remove.addEventListener('click',()=>{toggle(id);box.querySelector('summary')?.focus();});content.append(remove);
+      details.append(content);box.append(details);
+    });
+  }
+  render();
 })();
 </script>
 </body>
