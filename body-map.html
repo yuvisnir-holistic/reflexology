@@ -4531,10 +4531,10 @@ document.getElementById('tabnav').addEventListener('click', e=>{ if(e.target.clo
   const nf = document.getElementById('nefeshView');
   if(nf && !nf.querySelector('.site-link')){
     const desc = nf.querySelector('.system-desc');
-    const html = `<div class="nf-site">${link('avodat-hamidot-vehayesodot.html','לאתר עבודת המידות והיסודות')}</div>`;
+    const html = `<div class="nf-site">${link('yesodot.html','לאתר הכרת היסודות') + ' ' + link('midot.html','לאתר עבודת המידות')}</div>`;
     if(desc) desc.insertAdjacentHTML('afterend', html); else nf.insertAdjacentHTML('afterbegin', html);
   }
-  [['elementsView','avodat-hamidot-vehayesodot.html#yesodot','לעבודת היסודות באתר'],['sefirotView','avodat-hamidot-vehayesodot.html#middot','לעבודת המידות באתר']].forEach(([v,href,label])=>{
+  [['elementsView','yesodot.html#yesodot','לאתר הכרת היסודות'],['sefirotView','midot.html#middot','לאתר עבודת המידות']].forEach(([v,href,label])=>{
     const el = document.getElementById(v); if(!el || el.querySelector(':scope > .nf-site')) return;
     const back = el.querySelector(':scope > .nf-back');
     const html = `<div class="nf-site">${link(href,label)}</div>`;

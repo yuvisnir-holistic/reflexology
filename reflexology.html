@@ -587,11 +587,24 @@ nav.mainnav button{font-weight:400!important;font-size:16.5px}
 /* אוויר מתחת לשורת הלשוניות בכותרת */
 html body .topbar:not(.compact){padding-bottom:23px!important}
 </style>
+<style>
+/* כפתורי מעבר בכותרת: הקליניקה ומפת הגוף, כמו בשני האתרים האחרים */
+.topbar-inner{position:relative}
+.hdr-links{position:absolute;left:28px;top:16px;display:flex;gap:8px;z-index:3}
+.hdr-link{display:inline-flex;align-items:center;padding:6px 13px;border-radius:6px;border:1.5px solid rgba(217,195,148,.45);color:#F7F4EA;text-decoration:none;font:700 .82rem/1.2 'Assistant',sans-serif;transition:background .15s ease;white-space:nowrap}
+.hdr-link:hover{background:rgba(255,255,255,.12)}
+.hdr-link:focus-visible{outline:3px solid rgba(184,154,94,.6);outline-offset:2px}
+@media (max-width:880px){.hdr-links{position:static;width:fit-content;margin:0 0 4px;margin-inline-start:auto}}
+@media (max-width:640px){.hdr-link{min-height:40px;padding:8px 12px}}
+.topbar.compact .hdr-links{display:none}
+@media print{.hdr-links{display:none}}
+</style>
 </head>
 <body>
 
 <div class="topbar">
   <div class="topbar-inner wrap" style="padding-left:0;padding-right:0;">
+<span class="hdr-links"><a class="hdr-link" href="clinic.html">הקליניקה</a><a class="hdr-link" href="body-map.html">מפת הגוף</a></span>
     <button type="button" class="brand" data-nav="view-home">
       <div class="brand-text">
         <b>יובל שניר</b>
