@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta name="theme-color" content="#4A6B57">
+<meta name="theme-color" content="#173A30">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>נשמה ונשימה | יובל שניר</title>
@@ -283,6 +283,29 @@ html,body{overflow-anchor:none}
   font-family:'Assistant',sans-serif!important;font-size:16.5px!important;font-weight:400!important;letter-spacing:normal!important;opacity:1!important;white-space:nowrap!important}
 #tabnav button,nav.tabs button,.tabnav button,.tab-btn,nav.mainnav button,.tabs .tab{color:#fff!important;padding:8px 16px!important}
 #tabnav button.active,nav.tabs button[aria-selected="true"],.tabnav button.active,.tab-btn.home.active,nav.mainnav button.active,.tabs .tab[aria-selected="true"]{color:#1E4744!important;background:#fff!important}
+</style>
+<style id="ys-neshama">
+/* ===== שכבת עיצוב אחידה – נשמה ונשימה (ירוק נשימה עמוק + זהב) ===== */
+:root{--ys-hdr:#173A30;--ys-hdr-2:#0F2A22;--ys-accent:#2F6358;--gold:#B89A5E;--gold-bright:#D9C394;--ink:#293C35;--muted:#60736A;--cream:#F8F8F5;--line:color-mix(in srgb,#2F6358 15%,transparent);--navy:#1F443D}
+body{background:var(--cream);color:var(--ink)}
+header{background:radial-gradient(520px 200px at 50% -30%,rgba(217,195,148,.16),transparent 70%),linear-gradient(170deg,var(--ys-hdr),var(--ys-hdr-2))!important;box-shadow:none!important;position:sticky!important;top:0!important}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold);opacity:.7}
+header:not(.compact) h1{font-size:44px!important;line-height:1.2!important;font-weight:700;color:#F7F4EA;letter-spacing:0}
+header .sub{color:var(--gold-bright)!important}
+.leaf-divider .line{background:var(--gold)}
+#search{border-radius:8px}
+.tabnav{border-radius:8px;background:rgba(255,255,255,.08)}
+.tabnav button{border-radius:6px;font-family:'Assistant',sans-serif;font-weight:400!important;font-size:16.5px;color:#FFFFFF;opacity:1;white-space:nowrap}
+.tabnav button.active{background:#FFFFFF;color:var(--ys-hdr)}
+.intro-card{background:linear-gradient(170deg,var(--ys-hdr),var(--ys-hdr-2));border-radius:8px}
+.intro-card.plain{background:#FFFFFF;border:1px solid var(--line)}
+.card{border-radius:8px;border:1px solid var(--line);box-shadow:0 3px 12px -8px rgba(22,51,45,.25)}
+.card-head h3,.section-heading{color:var(--ys-accent)}
+.card-head .kicker{color:#8C7240}
+b,strong{color:var(--navy)}
+.card-body p,.intro-card p,main p{font-size:18px;line-height:1.8;text-align:start;text-align-last:start}
+@media(min-width:900px){.card-body p,.intro-card p,main p{font-size:17px;text-align:justify}}
+@media(max-width:640px){header:not(.compact) h1{font-size:32px!important}main{padding-inline:10px}.tabnav{flex-wrap:wrap}.tabnav button{flex:1 0 auto;min-height:44px;font-size:15px}}
 </style>
 </head>
 <body>
