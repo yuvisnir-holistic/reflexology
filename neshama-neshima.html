@@ -307,6 +307,16 @@ b,strong{color:var(--navy)}
 @media(min-width:900px){.card-body p,.intro-card p,main p{font-size:17px;text-align:justify}}
 @media(max-width:640px){header:not(.compact) h1{font-size:32px!important}main{padding-inline:10px}.tabnav{flex-wrap:wrap}.tabnav button{flex:1 0 auto;min-height:44px;font-size:15px}}
 </style>
+<style id="ys-mine">
+#myPractice{margin:0 0 22px}
+#myPractice h2{margin:0 0 6px}
+#myPractice .mp-sub{color:var(--muted);margin:0 0 14px;font-size:16px}
+#myPractice .mp-empty{background:var(--cream);border:1px dashed var(--gold);border-radius:14px;padding:16px 18px;color:var(--muted)}
+#myPractice .card{margin-bottom:8px}
+.mp-star{display:inline-flex;align-items:center;gap:6px;margin:14px 0 0;padding:8px 14px;border-radius:999px;border:1px solid var(--gold);background:transparent;color:var(--ys-accent);font:inherit;font-size:15px;cursor:pointer}
+.mp-star.on{background:var(--ys-accent);border-color:var(--ys-accent);color:#fff}
+.mp-star:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
 </head>
 <body>
 <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="צפייה בגדול">
@@ -1871,6 +1881,42 @@ window.addEventListener('scroll', ()=>{
     else if(sameOrigin){ history.back(); }
   });
   update();
+})();
+</script>
+<script id="ys-mine-js">
+/* התרגול שלי: תרגילים שנבחרו בלשונית התרגול מופיעים בראש פתח דבר. נשמר במכשיר הזה בלבד. */
+(function(){
+  const KEY='ns-my-practice';
+  const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];}};
+  const set=a=>{try{localStorage.setItem(KEY,JSON.stringify(a));}catch(e){}};
+  const leaves=()=>[...document.querySelectorAll('#practiceContent .card')].filter(c=>c.querySelector(':scope>.card-head h3')&&!c.querySelector(':scope>.card-body .card'));
+  function sync(){
+    const mine=get();
+    leaves().forEach(c=>{
+      const t=c.querySelector(':scope>.card-head h3').textContent.trim();
+      let b=c.querySelector(':scope>.card-body>.mp-star');
+      if(!b){b=document.createElement('button');b.type='button';b.className='mp-star';
+        b.addEventListener('click',e=>{e.stopPropagation();const m=get();const i=m.indexOf(t);i<0?m.push(t):m.splice(i,1);set(m);sync();});
+        c.querySelector(':scope>.card-body').appendChild(b);}
+      const on=mine.includes(t);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);
+      b.textContent=on?'★ בתרגול שלי':'☆ הוסף לתרגול שלי';
+    });
+    render(mine);
+  }
+  function render(mine){
+    const home=document.getElementById('homeView');if(!home)return;
+    let box=document.getElementById('myPractice');
+    if(!box){box=document.createElement('section');box.id='myPractice';box.className='intro-card plain';home.insertBefore(box,home.firstChild);}
+    const map={};leaves().forEach(c=>map[c.querySelector(':scope>.card-head h3').textContent.trim()]=c);
+    const list=mine.filter(t=>map[t]);
+    box.innerHTML='<h2>התרגול שלי</h2>'+(list.length?'<p class="mp-sub">התרגילים שבחרת. לוחצים על תרגיל כדי לפתוח אותו.</p>':'<div class="mp-empty">עוד לא נבחרו תרגילים. בלשונית "תרגול" לוחצים על "☆ הוסף לתרגול שלי" בתרגיל, והוא יופיע כאן.</div>');
+    list.forEach(t=>{const cl=map[t].cloneNode(true);cl.classList.remove('open');cl.removeAttribute('id');cl.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
+      cl.querySelectorAll('.ns-add').forEach(x=>x.remove());
+      const st=cl.querySelector(':scope>.card-body>.mp-star');if(st){st.addEventListener('click',e=>{e.stopPropagation();set(get().filter(x=>x!==t));sync();});}
+      box.appendChild(cl);});
+  }
+  function start(){sync();const r=document.getElementById('practiceContent');if(r)new MutationObserver(()=>{if(leaves().some(c=>!c.querySelector(':scope>.card-body>.mp-star')))sync();}).observe(r,{childList:true,subtree:true});}
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',start):start();
 })();
 </script>
 </body>
