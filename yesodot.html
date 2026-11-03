@@ -301,8 +301,6 @@ h3.sec::after{content:"";position:absolute;bottom:-1px;inset-inline-start:0;widt
 .ysj-pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
 .ysj-title{font-size:26px;color:var(--forest-dark);margin:10px 0 4px;font-weight:700;line-height:1.3}
 .ysj-lens{font-family:var(--sans);font-size:15px;color:var(--gold-deep)}
-.ysj-ex{margin:12px 0 0;background:var(--elbg,var(--cream-2));border-radius:12px;padding:12px 14px;font-size:17px;line-height:1.75;color:var(--ink)}
-.ysj-ex b{display:block;font-family:var(--sans);font-size:13.5px;color:var(--el,var(--gold-deep));font-weight:700;margin-bottom:2px}
 .ysj-do{margin:14px 0 4px;background:var(--cream);border-radius:12px;padding:12px 14px;font-size:17px;line-height:1.75}
 .ysj-do b{display:block;font-family:var(--sans);font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:2px}
 .ysj-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
@@ -1427,8 +1425,7 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
     const id=ORDER[p.w],w=WEEKS[id],d=w.days[p.i],st=W(id),done=!!(st.days[p.i]&&st.days[p.i].done);
     return `<div class="ysj-today" style="${elv(id)}">
       <div class="ysj-eyebrow"><span class="ysj-pill"><i></i>שבוע ${p.w+1} מתוך 4 · ${w.name}</span><span>יום ${p.i+1} מתוך 7</span></div>
-      <div class="ysj-title">היום: ${d.l}</div>
-      ${d.ex?`<div class="ysj-ex"><b>${d.lens||'ההסבר של היום'}</b>${d.ex}</div>`:(d.lens?`<div class="ysj-lens">${d.lens}</div>`:'')}
+      <div class="ysj-title">היום: ${d.l}</div>${d.lens||d.ex?`<div class="ysj-lens">${d.lens||''}${d.lens&&d.ex?' - ':''}${d.ex||''}</div>`:''}
       ${d.do?`<div class="ysj-do"><b>התרגיל של היום</b>${d.do}</div>`:''}
       ${d.look?`<div class="ysj-do"><b>השאלה שלוקחים איתכם</b>${d.look}</div>`:''}
       <div class="ysj-actions"><button class="btn" id="ysjOpen">לפתוח את היום ולכתוב</button>
