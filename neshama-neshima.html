@@ -1889,7 +1889,7 @@ window.addEventListener('scroll', ()=>{
   const KEY='ns-my-practice';
   const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];}};
   const set=a=>{try{localStorage.setItem(KEY,JSON.stringify(a));}catch(e){}};
-  const leaves=()=>[...document.querySelectorAll('#practiceContent .card')].filter(c=>c.querySelector(':scope>.card-head h3')&&!c.querySelector(':scope>.card-body .card'));
+  const leaves=()=>[...document.querySelectorAll('#practiceContent .card')].filter(c=>c.parentElement.id!=='practiceContent'&&c.querySelector(':scope>.card-head h3')&&!c.querySelector(':scope>.card-body .card .card'));
   function sync(){
     const mine=get();
     leaves().forEach(c=>{
@@ -1897,9 +1897,9 @@ window.addEventListener('scroll', ()=>{
       let b=c.querySelector(':scope>.card-body>.mp-star');
       if(!b){b=document.createElement('button');b.type='button';b.className='mp-star';
         b.addEventListener('click',e=>{e.stopPropagation();const m=get();const i=m.indexOf(t);i<0?m.push(t):m.splice(i,1);set(m);sync();});
-        c.querySelector(':scope>.card-body').appendChild(b);}
+        const bd=c.querySelector(':scope>.card-body');bd.querySelector(':scope>.card')?bd.insertBefore(b,bd.firstChild):bd.appendChild(b);}
       const on=mine.includes(t);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);
-      b.textContent=on?'★ בתרגול שלי':'☆ הוסף לתרגול שלי';
+      b.textContent=on?'★ בתרגול שלי':(c.querySelector(':scope>.card-body .card')?'☆ הוסף את התרגיל המלא לתרגול שלי':'☆ הוסף לתרגול שלי');
     });
     render(mine);
   }
@@ -1911,7 +1911,7 @@ window.addEventListener('scroll', ()=>{
     const list=mine.filter(t=>map[t]);
     box.innerHTML='<h2>התרגול שלי</h2>'+(list.length?'<p class="mp-sub">התרגילים שבחרת. לוחצים על תרגיל כדי לפתוח אותו.</p>':'<div class="mp-empty">עוד לא נבחרו תרגילים. בלשונית "תרגול" לוחצים על "☆ הוסף לתרגול שלי" בתרגיל, והוא יופיע כאן.</div>');
     list.forEach(t=>{const cl=map[t].cloneNode(true);cl.classList.remove('open');cl.removeAttribute('id');cl.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
-      cl.querySelectorAll('.ns-add').forEach(x=>x.remove());
+      cl.querySelectorAll('.ns-add').forEach(x=>x.remove());cl.querySelectorAll('.card .mp-star').forEach(x=>x.remove());
       const st=cl.querySelector(':scope>.card-body>.mp-star');if(st){st.addEventListener('click',e=>{e.stopPropagation();set(get().filter(x=>x!==t));sync();});}
       box.appendChild(cl);});
   }
