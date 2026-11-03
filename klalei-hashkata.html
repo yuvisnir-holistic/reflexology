@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta name="theme-color" content="#4A6B57">
+<meta name="theme-color" content="#151E2E">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -221,6 +221,40 @@ html{font-size:21px}
   font-family:'Assistant',sans-serif!important;font-size:16.5px!important;font-weight:400!important;letter-spacing:normal!important;opacity:1!important;white-space:nowrap!important}
 #tabnav button,nav.tabs button,.tabnav button,.tab-btn,nav.mainnav button,.tabs .tab{color:#fff!important;padding:8px 16px!important}
 #tabnav button.active,nav.tabs button[aria-selected="true"],.tabnav button.active,.tab-btn.home.active,nav.mainnav button.active,.tabs .tab[aria-selected="true"]{color:#1E4744!important;background:#fff!important}
+</style>
+<style id="ys-hashkata">
+/* ===== שכבת עיצוב אחידה – כללי ההשקטה (כחול חצות עמוק + זהב) ===== */
+:root{--ys-hdr:#151E2E;--ys-hdr-2:#0D1420;--ys-accent:#2A3A54;--gold:#B89A5E;--gold-bright:#D9C394;--ink:#293C35;--muted:#5E6878;--cream:#F7F7F4;--forest:#2A3A54;--forest-dark:#1C2840;--line:#E4DFD3;--header:#151E2E}
+body{background:var(--cream);color:var(--ink)}
+header{background:radial-gradient(520px 200px at 50% -30%,rgba(217,195,148,.16),transparent 70%),linear-gradient(170deg,var(--ys-hdr),var(--ys-hdr-2))!important;box-shadow:none!important;position:sticky!important;top:0!important}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold);opacity:.7}
+header:not(.compact) h1{font-size:44px!important;line-height:1.2!important;font-weight:700!important;color:#F7F4EA!important;letter-spacing:0!important}
+header .sub{color:var(--gold-bright)!important}
+.leaf-divider .line,.leaf-divider .dot{background:var(--gold)!important}
+.tabnav{border-radius:8px!important;background:rgba(255,255,255,.08)!important}
+.tabnav button{border-radius:6px!important}
+#tabnav button.active,.tabnav button.active{color:var(--ys-hdr)!important}
+.acc-card,.system-card{border-radius:8px!important;border:1px solid var(--line)!important;box-shadow:0 3px 12px -8px rgba(21,30,46,.3)!important}
+.acc-body .acc-card{border:0!important;border-top:1px solid var(--line)!important;box-shadow:none!important;border-radius:0!important}
+.acc-head h3,.system-card h3,.sys-title h2{color:var(--ys-accent)!important}
+.acc-head .ch-icon,.system-card .icon{color:var(--gold)!important}
+.sys-title h2{font-size:44px;font-weight:700}
+.kli-hero-title{color:var(--ys-accent)}
+b,strong{color:var(--forest-dark)}
+p.lead,.intro-text,.acc-body p{font-size:18px!important;line-height:1.8!important;color:var(--ink)!important;text-align:start!important}
+@media(min-width:900px){p.lead,.intro-text,.acc-body p{font-size:17px!important;text-align:justify!important}.intro-text[style*="center"]{text-align:center!important}}
+@media(max-width:640px){header:not(.compact) h1{font-size:32px!important}.sys-title h2{font-size:32px}main{padding-inline:10px!important}.tabnav{flex-wrap:wrap}.tabnav button{flex:1 0 auto;min-height:44px;font-size:15px!important}}
+</style>
+<style id="ys-mine">
+#myPractice{margin:4px 0 22px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:18px 16px}
+#myPractice h2{margin:0 0 6px;color:var(--ys-accent);font-size:26px}
+#myPractice .mp-sub{color:var(--muted);margin:0 0 12px;font-size:16px}
+#myPractice .mp-empty{border:1px dashed var(--gold);border-radius:8px;padding:14px 16px;color:var(--muted);font-size:16px}
+#myPractice .acc-list{margin-top:4px}
+.mp-star{display:inline-flex;align-items:center;gap:6px;margin:12px 0 4px;padding:8px 14px;border-radius:999px;border:1px solid var(--gold);background:transparent;color:var(--ys-accent);font:inherit;font-size:15px;cursor:pointer}
+.mp-star.on{background:var(--ys-accent);border-color:var(--ys-accent);color:#fff}
+.mp-star:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media print{.mp-star,#myPractice{display:none!important}}
 </style>
 </head>
 <body>
@@ -597,6 +631,44 @@ window.addEventListener('scroll', ()=>{ const h=document.getElementById('hdr'); 
       else { window.scrollTo({top:0}); setTimeout(snapshot, 200); }
     }, 0);
   }, true);
+})();
+</script>
+<script id="ys-mine-js">
+/* התרגול שלי: כל תרגיל באתר אפשר להוסיף לראש דף הבית. נשמר במכשיר הזה בלבד. */
+(function(){
+  const KEY='hashkata-my-practice', TABS=['kelim','mood','hit','psukim','shem'];
+  const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];}};
+  const set=a=>{try{localStorage.setItem(KEY,JSON.stringify(a));}catch(e){}};
+  const title=c=>{const h=c.querySelector(':scope>.acc-head h3');return h?h.textContent.trim():'';};
+  const keyOf=c=>{const p=[];let x=c;while(x&&x.classList){if(x.classList.contains('acc-card'))p.unshift(title(x));x=x.parentElement;}const tab=c.closest('.tab-panel');return (tab?tab.id:'')+'|'+p.join(' › ');};
+  const cards=()=>TABS.flatMap(t=>[...document.querySelectorAll('#tab-'+t+' .acc-card')]).filter(c=>title(c));
+  function sync(){
+    const mine=get();
+    cards().forEach(c=>{
+      const k=keyOf(c), body=c.querySelector(':scope>.acc-body'); if(!body)return;
+      let b=body.querySelector(':scope>.mp-star');
+      if(!b){b=document.createElement('button');b.type='button';b.className='mp-star';
+        b.addEventListener('click',e=>{e.stopPropagation();const m=get();const i=m.indexOf(k);i<0?m.push(k):m.splice(i,1);set(m);sync();});
+        body.insertBefore(b,body.firstChild);}
+      const on=mine.includes(k);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);
+      b.textContent=on?'★ במסך הבית':(body.querySelector('.acc-card')?'☆ הוסף את התרגיל המלא למסך הבית':'☆ הוסף למסך הבית');
+    });
+    render(mine);
+  }
+  function render(mine){
+    const home=document.getElementById('tab-home');if(!home)return;
+    let box=document.getElementById('myPractice');
+    if(!box){box=document.createElement('section');box.id='myPractice';home.insertBefore(box,home.firstChild);}
+    const map={};cards().forEach(c=>map[keyOf(c)]=c);
+    const list=mine.filter(k=>map[k]);
+    box.innerHTML='<h2>התרגול שלי</h2>'+(list.length?'<p class="mp-sub">התרגילים שבחרת. לוחצים על תרגיל כדי לפתוח אותו.</p><div class="acc-list"></div>':'<div class="mp-empty">עוד לא נבחרו תרגילים. בכל תרגיל באתר לוחצים על "☆ הוסף למסך הבית", והוא יופיע כאן.</div>');
+    const wrap=box.querySelector('.acc-list');
+    list.forEach(k=>{const cl=map[k].cloneNode(true);cl.classList.remove('open');cl.removeAttribute('id');cl.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
+      cl.querySelectorAll('.acc-card .mp-star').forEach(x=>x.remove());
+      const st=cl.querySelector(':scope>.acc-body>.mp-star');if(st){st.textContent='★ הסר ממסך הבית';st.addEventListener('click',e=>{e.stopPropagation();set(get().filter(x=>x!==k));sync();});}
+      wrap.appendChild(cl);});
+  }
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',sync):sync();
 })();
 </script>
 </body>
