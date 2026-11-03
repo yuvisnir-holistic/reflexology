@@ -17,9 +17,7 @@
     --fire:#A8442B; --fire-bg:#F3E3DD; --water:#2F6690; --water-bg:#DFE8ED; --air:#A9821F; --air-bg:#F1E9D2; --earth:#5C6B3F; --earth-bg:#E4E7D9;
     --sefirah:#7A5C8E; --sefirah-bg:#E9E2ED; --on:#E7EFEC;
   }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-    --cream:#18201E; --paper:#212B28; --field:#2A3532; --ink:#E9ECE7; --muted:#A9B3AE; --forest:#5FA39C; --forest-dark:#9FD0C9; --sage:#4E6158; --on:#2F4440;
-  }}
+  
   :root[data-theme="dark"]{ --cream:#18201E; --paper:#212B28; --field:#2A3532; --ink:#E9ECE7; --muted:#A9B3AE; --forest:#5FA39C; --forest-dark:#9FD0C9; --sage:#4E6158; --on:#2F4440; }
   :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
   html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:18px;}
@@ -381,6 +379,11 @@ header.top .sub{color:#D9C394}
 /* חתימה: השם במשקל רגיל, ובטלפון רווחים קטנים יותר בין השם, התיאור והאתר */
 .ys-sign .ys-sign-name{font-weight:400!important}
 @media (max-width:640px){.ys-sign{column-gap:5px!important}}
+</style>
+<meta name="color-scheme" content="light">
+<style>
+/* אוויר מתחת לשורת הלשוניות בכותרת, כ־24 פיקסלים */
+html body header.top:not(.compact){padding-bottom:24px!important}
 </style>
 </head>
 <body>

@@ -257,6 +257,12 @@ body{background:var(--bg);color:var(--text)}
 @media(max-width:640px){.header{padding:24px 10px 16px}.header-title{font-size:32px}.header-sub{font-size:15px}.page-content{padding:22px 10px 32px}.tabbar-wrap{padding-inline:8px!important}.tab-btn{padding-inline:6px!important}.section-title{font-size:26px}.back-btn{padding-inline:10px}.square-btn{padding:18px 12px;column-gap:10px}.square-title{font-size:22px}.step-title{font-size:23px}.scroll-top-btn{bottom:calc(12px + env(safe-area-inset-bottom,0px))}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
+<style>
+/* אוויר מתחת לשורת הלשוניות בראש הדף, כ־24 פיקסלים; כשגוללים חוזרים לגובה הרגיל */
+html body .tabbar-wrap{padding-bottom:23px!important;transition:padding-bottom .25s ease}
+html.ys-scrolled body .tabbar-wrap{padding-bottom:12px!important}
+@media (prefers-reduced-motion:reduce){html body .tabbar-wrap{transition:none}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -514,6 +520,10 @@ function toggleStep(headerEl){
     }, 0);
   }, true);
 })();
+</script>
+<script>
+/* כותרת: אוויר נוסף מתחת לשורת הלשוניות בראש הדף, וחזרה לגובה רגיל כשגוללים */
+(function(){const h=document.documentElement; const f=()=>h.classList.toggle("ys-scrolled", window.scrollY>40); addEventListener("scroll",f,{passive:true}); f();})();
 </script>
 </body>
 </html>

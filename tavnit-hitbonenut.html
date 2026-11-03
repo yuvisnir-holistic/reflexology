@@ -207,6 +207,16 @@ summary .chev{border-color:#B89A5E;color:#8C7240}
 
 </style>
 <script>try{var g=new URLSearchParams(location.search).get("g")||localStorage.getItem("tavnit-gender");if(g==="w")document.documentElement.classList.add("gw")}catch(e){}</script>
+<style>
+/* במחשב: טקסט הקריאה קצת קטן יותר, כ־19 פיקסלים */
+@media (min-width:900px){html{font-size:17px!important}}
+</style>
+<style>
+/* אוויר מתחת לשורת הלשוניות בראש הדף, כ־24 פיקסלים; כשגוללים חוזרים לגובה הרגיל */
+html body nav.tabs{padding-bottom:23px!important;transition:padding-bottom .25s ease}
+html.ys-scrolled body nav.tabs{padding-bottom:12px!important}
+@media (prefers-reduced-motion:reduce){html body nav.tabs{transition:none}}
+</style>
 </head>
 <body>
 <header class="top"><div class="g-toggle" role="group" aria-label="לשון פנייה"><button type="button" data-g="m">אתה</button><button type="button" data-g="w">את</button></div><p class="eyebrow">על פי כללי ההשקטה של הבעל שם טוב</p><h1><span class="l">תבנית ההתבוננות</span><span class="l">הכנעה, הבדלה והמתקה</span></h1><p class="sub">דרך מעשית לעצור, להביט פנימה, ולבחור במה להתעכב ולמה לתת לעבור.</p></header>
@@ -380,5 +390,9 @@ document.addEventListener('click', e => {
 function set(g,save){r.classList.toggle('gw',g==='w');bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.g===g?'true':'false')});if(save){try{localStorage.setItem('tavnit-gender',g)}catch(e){}}}
 set(r.classList.contains('gw')?'w':'m',false);
 bs.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.g,true)})});})();
+</script>
+<script>
+/* כותרת: אוויר נוסף מתחת לשורת הלשוניות בראש הדף, וחזרה לגובה רגיל כשגוללים */
+(function(){const h=document.documentElement; const f=()=>h.classList.toggle("ys-scrolled", window.scrollY>40); addEventListener("scroll",f,{passive:true}); f();})();
 </script>
 </body></html>

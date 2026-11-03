@@ -21,15 +21,7 @@
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --teal:#7DB5AE; --teal-dark:#A9D3CD; --cream:#161B1A; --paper:#1F2624;
-    --ink:#ECE6DA; --muted:#9AA8A3; --gold:#D8AE55; --gold-bg:#2E2817; --line:#33403C;
-    --yud:#8FB2E0; --yud-bg:#1E2A3A; --hey1:#E08FA2; --hey1-bg:#3A2228;
-    --vav:#86C3A2; --vav-bg:#1C3027; --hey2:#E0B26A; --hey2-bg:#35291A;
-    --shadow:0 2px 14px rgba(0,0,0,0.35);
-  }
-}
+
 :root[data-theme="dark"]{
   --teal:#7DB5AE; --teal-dark:#A9D3CD; --cream:#161B1A; --paper:#1F2624;
   --ink:#ECE6DA; --muted:#9AA8A3; --gold:#D8AE55; --gold-bg:#2E2817; --line:#33403C;
@@ -370,6 +362,13 @@ textarea{border:1px solid rgba(184,154,94,.4)!important;border-radius:14px!impor
   main li, main .prose p, main .why, main .section-intro, main .lead{font-size:20px!important;line-height:1.75!important}
   main .sources, main .j-private{font-size:17px!important}
 }
+</style>
+<meta name="color-scheme" content="light">
+<style>
+/* אוויר מתחת לשורת הלשוניות בראש הדף, כ־24 פיקסלים; כשגוללים חוזרים לגובה הרגיל */
+html body .tabbar{padding-bottom:24px!important;transition:padding-bottom .25s ease}
+html.ys-scrolled body .tabbar{padding-bottom:12px!important}
+@media (prefers-reduced-motion:reduce){html body .tabbar{transition:none}}
 </style>
 </head>
 <body>
@@ -909,6 +908,10 @@ renderCta();
   });
   update();
 })();
+</script>
+<script>
+/* כותרת: אוויר נוסף מתחת לשורת הלשוניות בראש הדף, וחזרה לגובה רגיל כשגוללים */
+(function(){const h=document.documentElement; const f=()=>h.classList.toggle("ys-scrolled", window.scrollY>40); addEventListener("scroll",f,{passive:true}); f();})();
 </script>
 </body>
 </html>

@@ -191,6 +191,16 @@ details .inner{padding-top:12px}
 .ys-back:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
 @media print{.ys-back{display:none!important}}
 </style>
+<style>
+/* במחשב: טקסט הקריאה קצת קטן יותר, כ־19 פיקסלים */
+@media (min-width:900px){html{font-size:17px!important}}
+</style>
+<style>
+/* אוויר מתחת לשורת הלשוניות בראש הדף, כ־24 פיקסלים; כשגוללים חוזרים לגובה הרגיל */
+html body nav.tabs{padding-bottom:24px!important;transition:padding-bottom .25s ease}
+html.ys-scrolled body nav.tabs{padding-bottom:12px!important}
+@media (prefers-reduced-motion:reduce){html body nav.tabs{transition:none}}
+</style>
 </head><body>
 <header class="top"><p class="eyebrow">מדריך לעבודה פנימית יומיומית</p><h1><span class="l">יומן ההשקטה</span><span class="l">ועבודת ההתבוננות</span></h1><p class="sub">כמה דקות של כתיבה בבוקר ובערב, ורגעים קצרים של עצירה במשך היום.</p></header>
 <nav class="tabs" aria-label="חלקי המדריך"><div class="row" role="tablist"><button type="button" role="tab" data-t="intro">הקדמה</button><button type="button" role="tab" data-t="contemplation">ההתבוננות</button><button type="button" role="tab" data-t="journal">היומן</button><button type="button" role="tab" data-t="strength">משפטי חיזוק</button></div></nav>
@@ -365,5 +375,9 @@ details .inner{padding-top:12px}
   });
   update();
 })();
+</script>
+<script>
+/* כותרת: אוויר נוסף מתחת לשורת הלשוניות בראש הדף, וחזרה לגובה רגיל כשגוללים */
+(function(){const h=document.documentElement; const f=()=>h.classList.toggle("ys-scrolled", window.scrollY>40); addEventListener("scroll",f,{passive:true}); f();})();
 </script>
 </body></html>
