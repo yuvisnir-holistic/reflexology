@@ -351,6 +351,13 @@ textarea{border:1px solid rgba(184,154,94,.4)!important;border-radius:14px!impor
 .later details.tool summary::after{color:var(--teal-dark,#1E4744)!important;border-color:#8C7240!important}
 .later h3,#toolsOpen > .empty,#toolsOpen > :not(details){color:var(--ink)!important}
 </style>
+<style>
+/* ארגז הכלים: רווח אחיד של כחצי סנטימטר בין הכרטיסים, גם בין שורות וגם בין עמודות */
+#toolsOpen:has(details),.later{display:grid!important;grid-template-columns:1fr;gap:18px!important;align-items:start}
+@media (min-width:1000px){#toolsOpen:has(details),.later{grid-template-columns:1fr 1fr}}
+.later h3{grid-column:1 / -1;margin-bottom:0!important}
+#toolsOpen details.tool,.later details.tool{margin:0!important}
+</style>
 </head>
 <body>
 <header class="top">
