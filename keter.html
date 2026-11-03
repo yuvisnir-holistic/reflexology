@@ -28,7 +28,7 @@ body{background:var(--page);color:var(--ink);font-family:var(--serif);font-size:
 
 /* ---------- header ---------- */
 header{position:sticky;top:0;z-index:10;background:var(--g900);color:#fff;
-  padding:calc(16px + env(safe-area-inset-top)) 16px 18px;overflow:hidden}
+  padding:calc(21px + env(safe-area-inset-top)) 16px 24px;overflow:hidden}
 header::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 95% at 50% -32%, rgba(217,195,148,.30), rgba(217,195,148,0) 62%)}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
@@ -40,8 +40,10 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
 .greet{margin:0 0 5px;font:400 15px/1.4 var(--serif);letter-spacing:.02em;color:rgba(217,195,148,.92)}
 .gdot{margin:0 6px;opacity:.45}
 @media (max-width:400px){.greet{font-size:13.5px}.gdot{margin:0 4px}}
-h1{font-weight:400;font-size:32px;line-height:1.2;margin:0 0 14px;color:#fff}
-@media (min-width:641px){h1{font-size:44px}}
+h1{font-weight:400;font-size:34px;line-height:1.2;margin:0 0 8px;color:#fff}
+.tagline{margin:0 0 16px;font:400 14.5px/1.5 var(--serif);letter-spacing:.03em;
+  color:rgba(217,195,148,.82)}
+@media (min-width:641px){h1{font-size:46px}.tagline{font-size:17px;letter-spacing:.05em}}
 .tabs{display:flex;gap:4px;max-width:420px;margin:0 auto;
   background:rgba(255,255,255,.12);border-radius:999px;padding:4px}
 .tab{flex:1 1 0;border:0;background:transparent;color:#fff;font:400 1.14rem var(--serif);
@@ -150,6 +152,7 @@ a.app:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radi
   <div class="hin">
     <p class="greet"><span id="wday"></span><span class="gdot">·</span><span id="hdate"></span><span class="gdot">·</span><span id="gdate"></span></p>
     <h1>אתרי הקליניקה</h1>
+    <p class="tagline">וְחַי בָּהֶם &ndash; רפואת הגוף והנפש</p>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" id="t-me" aria-controls="p-me" aria-selected="true">פנימי</button>
       <button class="tab" role="tab" id="t-pt" aria-controls="p-pt" aria-selected="false">למטופלים</button>
