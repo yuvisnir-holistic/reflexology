@@ -320,6 +320,14 @@ main{max-width:900px!important}
 .verse,.q,.why{border-inline-start:3px solid var(--ys-gold)!important}
 textarea{border:1px solid rgba(184,154,94,.4)!important;border-radius:14px!important}
 @media(max-width:600px){header.top h1{font-size:32px!important}main{padding-inline:14px!important}.week,.tool,.j-card,.pacer,.about{border-radius:14px!important;padding-inline:16px!important}}
+
+/* v3: padding inside cards + tabs matching the other sites */
+.about,.week,.tool,.j-card,.pacer,.letter-card,.notice,.safety{padding:24px 28px!important;box-sizing:border-box}
+.about>*:first-child,.week>*:first-child{margin-top:0}
+.tabbar nav.tabs{display:flex!important;justify-content:center;flex-wrap:nowrap;gap:4px!important;max-width:620px;margin:0 auto!important;padding:4px!important;background:rgba(255,255,255,.06)!important;border:0!important;border-radius:8px!important;box-shadow:none!important;overflow-x:auto}
+.tabbar nav.tabs button{flex:1 1 auto!important;min-width:0;border:0!important;border-radius:6px!important;padding:8px 14px!important;min-height:44px;background:transparent!important;font-family:'Assistant',sans-serif!important;font-weight:400!important;font-size:16.5px!important;color:#fff!important;box-shadow:none!important}
+.tabbar nav.tabs button[aria-selected="true"]{background:#fff!important;color:#173A30!important}
+@media(max-width:600px){.about,.week,.tool,.j-card,.pacer,.letter-card,.notice,.safety{padding:18px 16px!important}.tabbar nav.tabs button{padding:8px 6px!important;font-size:15.5px!important}}
 </style>
 </head>
 <body>
