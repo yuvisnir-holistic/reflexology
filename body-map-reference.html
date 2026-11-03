@@ -1141,11 +1141,23 @@ header:not(.compact) h1{font-size:44px!important;line-height:1.2!important;}
 }
 
 </style>
+<style>
+/* כפתורי מעבר בכותרת: הקליניקה ואבחון רפלקסולוגי */
+.hdr-links{position:absolute;left:14px;top:14px;display:flex;gap:8px;z-index:3}
+@media (min-width:641px){.hdr-links{top:24px;left:28px}}
+@media (max-width:640px){.hdr-links{position:static;grid-column:1 / -1!important;grid-row:1!important;justify-self:end}
+  header:not(.compact) > h1{grid-column:1 / -1!important;grid-row:2!important}
+  header:not(.compact) > .sub{grid-row:3!important}}
+.hdr-links .hdr-link{position:static!important;margin:0!important;grid-column:auto!important;grid-row:auto!important;justify-self:auto!important}
+@media (min-width:641px) and (max-width:880px){.hdr-links{position:static!important;width:fit-content;margin:0 0 10px!important;margin-inline-start:auto!important}}
+header.compact .hdr-links{display:none!important}
+@media print{.hdr-links{display:none!important}}
+</style>
 </head>
 <body>
 
 <header>
-  <a class="hdr-link" href="https://tools.yuvalsnir.co.il/clinic.html" target="_top">הקליניקה</a>
+  <span class="hdr-links"><a class="hdr-link" href="clinic.html" target="_top">הקליניקה</a><a class="hdr-link" href="reflexology.html">אבחון רפלקסולוגי</a></span>
   <h1>מפת הגוף</h1>
     <div class="sub">מסע פנימי אל הגוף והנפש</div>
   <div class="search-wrap">
