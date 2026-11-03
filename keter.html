@@ -37,7 +37,9 @@ header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
   width:min(470px,94%);opacity:.22;pointer-events:none}
 .mark svg{display:block;width:100%;height:auto}
 .hin{position:relative;max-width:900px;margin:0 auto;text-align:center}
-.greet{margin:0 0 3px;font:600 13.5px/1.4 var(--sans);letter-spacing:.02em;color:rgba(217,195,148,.88)}
+.greet{margin:0 0 5px;font:400 15px/1.4 var(--serif);letter-spacing:.02em;color:rgba(217,195,148,.92)}
+.gdot{margin:0 6px;opacity:.45}
+@media (max-width:400px){.greet{font-size:13.5px}.gdot{margin:0 4px}}
 h1{font-weight:400;font-size:32px;line-height:1.2;margin:0 0 14px;color:#fff}
 @media (min-width:641px){h1{font-size:44px}}
 .tabs{display:flex;gap:4px;max-width:420px;margin:0 auto;
@@ -52,7 +54,7 @@ main{flex:1 0 auto;width:100%;max-width:900px;margin:0 auto;padding:26px 16px 30
 .panel[hidden]{display:none}
 .group{margin:0 0 28px}
 .gtitle{display:flex;align-items:center;gap:10px;margin:0 4px 14px;
-  font:700 18px/1.3 var(--sans);color:var(--g900)}
+  font:400 19px/1.3 var(--sans);color:var(--g900);letter-spacing:.01em}
 .gtitle::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
 .gtitle::after{content:"";flex:1;height:1px;
   background:linear-gradient(270deg,rgba(184,154,94,.38),transparent)}
@@ -71,11 +73,11 @@ main{flex:1 0 auto;width:100%;max-width:900px;margin:0 auto;padding:26px 16px 30
 .tile svg.ic-foot{width:34px;height:34px;fill:currentColor;stroke:currentColor;stroke-width:1;stroke-linejoin:round}
 .tile.gold{color:var(--g900);background:linear-gradient(160deg,var(--gold-l),var(--gold))}
 .txt{display:flex;flex-direction:column;gap:2px;min-width:0}
-.name{font:700 16px/1.3 var(--sans);color:var(--ink)}
+.name{font:400 16px/1.3 var(--sans);color:var(--ink)}
 .desc{font:400 14px/1.35 var(--sans);color:var(--muted)}
 .share{flex:none;min-height:34px;padding:4px 14px;border-radius:999px;cursor:pointer;
   border:1.5px solid rgba(184,154,94,.5);background:rgba(217,195,148,.14);
-  color:var(--gold-d);font:700 12.5px var(--sans)}
+  color:var(--gold-d);font:400 12.5px var(--sans)}
 .share:hover{background:rgba(217,195,148,.3);color:var(--g900)}
 @media (min-width:641px){
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
@@ -114,7 +116,7 @@ main{flex:1 0 auto;width:100%;max-width:900px;margin:0 auto;padding:26px 16px 30
 /* ---------- misc ---------- */
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));
   transform:translateX(-50%) translateY(16px);background:var(--g900);color:#fff;
-  padding:10px 22px;border-radius:999px;font:700 .95rem var(--sans);opacity:0;
+  padding:10px 22px;border-radius:999px;font:400 .95rem var(--sans);opacity:0;
   pointer-events:none;transition:opacity .2s,transform .2s;z-index:20}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .tab:focus-visible,.btn:focus-visible,.share:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
@@ -136,7 +138,7 @@ a.app:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radi
 .ys-back{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:950;
   display:none;align-items:center;gap:6px;height:44px;padding:0 18px;border-radius:999px;
   background:#FFFFFF;color:#16332D;border:1.5px solid #16332D;
-  font:700 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(22,51,45,.12)}
+  font:400 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(22,51,45,.12)}
 .ys-back.show{display:inline-flex}
 .ys-back:focus-visible{outline:3px solid #B89A5E;outline-offset:2px}
 @media print{.ys-back{display:none!important}}
@@ -146,7 +148,7 @@ a.app:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radi
 <header>
   <span class="mark" aria-hidden="true"><svg class="mark" viewBox="0 0 512 512" fill="none" stroke="#D9C394" stroke-width="10" stroke-linecap="round"><line x1="256" y1="72" x2="352" y2="124"/><line x1="256" y1="72" x2="160" y2="124"/><line x1="352" y1="124" x2="160" y2="124"/><line x1="352" y1="124" x2="160" y2="226"/><line x1="160" y1="124" x2="352" y2="226"/><line x1="352" y1="226" x2="160" y2="226"/><line x1="352" y1="226" x2="256" y2="282"/><line x1="160" y1="226" x2="256" y2="282"/><line x1="352" y1="226" x2="352" y2="338"/><line x1="160" y1="226" x2="160" y2="338"/><line x1="256" y1="282" x2="352" y2="338"/><line x1="256" y1="282" x2="160" y2="338"/><line x1="256" y1="282" x2="256" y2="392"/><line x1="352" y1="338" x2="256" y2="392"/><line x1="160" y1="338" x2="256" y2="392"/><line x1="256" y1="392" x2="256" y2="462"/><g fill="#16332D"><circle cx="256" cy="72" r="22"/><circle cx="352" cy="124" r="22"/><circle cx="160" cy="124" r="22"/><circle cx="352" cy="226" r="22"/><circle cx="160" cy="226" r="22"/><circle cx="256" cy="282" r="22"/><circle cx="352" cy="338" r="22"/><circle cx="160" cy="338" r="22"/><circle cx="256" cy="392" r="22"/><circle cx="256" cy="462" r="22"/></g></svg></span>
   <div class="hin">
-    <p class="greet" id="greet"></p>
+    <p class="greet"><span id="wday"></span><span class="gdot">·</span><span id="hdate"></span><span class="gdot">·</span><span id="gdate"></span></p>
     <h1>אתרי הקליניקה</h1>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" id="t-me" aria-controls="p-me" aria-selected="true">פנימי</button>
@@ -175,6 +177,84 @@ a.app:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radi
 </footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <button class="ys-back" id="ysBack" type="button" aria-label="חזרה">חזרה ›</button>
+<script>
+/* ---------- לוח שנה עברי ---------- */
+var HB = (function(){
+  var LE = {1:'א',2:'ב',3:'ג',4:'ד',5:'ה',6:'ו',7:'ז',8:'ח',9:'ט',10:'י',20:'כ',30:'ל',40:'מ',50:'נ',60:'ס',70:'ע',80:'פ',90:'צ',100:'ק',200:'ר',300:'ש',400:'ת'};
+  var MN = ['ניסן','אייר','סיון','תמוז','אב','אלול','תשרי','חשון','כסלו','טבת','שבט','אדר','אדר א׳','אדר ב׳'];
+  var WD = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+  function leap(y){ return ((7*y)+1) % 19 < 7; }
+  function elapsedMonths(y){ return Math.floor((235*y - 234) / 19); }
+  function elapsedDays(y){
+    var me = elapsedMonths(y);
+    var pe = 204 + 793*(me % 1080);
+    var he = 5 + 12*me + 793*Math.floor(me/1080) + Math.floor(pe/1080);
+    var cd = 1 + 29*me + Math.floor(he/24);
+    var cp = 1080*(he % 24) + (pe % 1080);
+    var alt = (cp >= 19440 || (cd % 7 === 2 && cp >= 9924 && !leap(y)) ||
+               (cd % 7 === 1 && cp >= 16789 && leap(y-1))) ? cd + 1 : cd;
+    var r = alt % 7;
+    if (r === 0 || r === 3 || r === 5) alt += 1;
+    return alt;
+  }
+  function yearLen(y){ return elapsedDays(y+1) - elapsedDays(y); }
+  function monthLen(y,m){
+    if (m===1||m===3||m===5||m===7||m===11) return 30;
+    if (m===2||m===4||m===6||m===10||m===13) return 29;
+    if (m===12) return leap(y) ? 30 : 29;
+    if (m===8) return yearLen(y) % 10 === 5 ? 30 : 29;
+    if (m===9) return yearLen(y) % 10 === 3 ? 29 : 30;
+    return 0;
+  }
+  function monthsList(y){
+    var m = [7,8,9,10,11,12,13,1,2,3,4,5,6];
+    if (!leap(y)) m.splice(m.indexOf(13),1);
+    return m;
+  }
+  function gregToJDN(y,m,d){
+    var a = Math.floor((14-m)/12), yy = y + 4800 - a, mm = m + 12*a - 3;
+    return d + Math.floor((153*mm+2)/5) + 365*yy + Math.floor(yy/4)
+           - Math.floor(yy/100) + Math.floor(yy/400) - 32045;
+  }
+  function fromGreg(y,m,d){
+    var x = gregToJDN(y,m,d) - 347997;
+    var year = Math.floor(x/365) + 2, first = elapsedDays(year);
+    while (first > x){ year -= 1; first = elapsedDays(year); }
+    var ms = monthsList(year), rem = x - first;
+    for (var i=0;i<ms.length;i++){
+      var L = monthLen(year, ms[i]);
+      if (rem >= L) rem -= L;
+      else return {year:year, month:ms[i], day:rem+1};
+    }
+    return null;
+  }
+  function letters(n){
+    var ones = n % 10, tens = n % 100 - ones, hundreds = n % 1000 - tens - ones;
+    var four = ''; for (var i=0;i<Math.floor(hundreds/400);i++) four += 'ת';
+    var s = four + (LE[hundreds % 400]||'') + (LE[tens]||'') + (LE[ones]||'');
+    return s.replace('יה','טו').replace('יו','טז');
+  }
+  function numeral(n){
+    var l = letters(n);
+    return l.length > 1 ? l.slice(0,-1) + '״' + l.slice(-1) : (l ? l + '׳' : '');
+  }
+  function monthName(y,m){
+    var i = (m < 12 || !leap(y)) ? m - 1 : m;
+    return MN[i] || '';
+  }
+  /* החיבור המלא: "כ״ג חשון תשפ״ז" */
+  function string(date){
+    var h = fromGreg(date.getFullYear(), date.getMonth()+1, date.getDate());
+    if (!h) return '';
+    return numeral(h.day) + ' ' + monthName(h.year, h.month) + ' ' + numeral(h.year % 1000);
+  }
+  function weekdayName(date){ return WD[date.getDay()]; }
+  return {fromGreg:fromGreg, numeral:numeral, monthName:monthName, string:string, weekdayName:weekdayName};
+})();
+if (typeof module !== 'undefined') module.exports = HB;
+
+</script>
 <script>
 const IC = {"users": "<svg viewBox=\"0 0 24 24\"><circle cx=\"9\" cy=\"8\" r=\"3.2\"/><path d=\"M3.4 19.2c0-3.1 2.5-4.8 5.6-4.8s5.6 1.7 5.6 4.8\"/><circle cx=\"17.2\" cy=\"9.4\" r=\"2.4\"/><path d=\"M16 14.6c2.7.3 4.6 1.8 4.6 4.4\"/></svg>", "body": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"4.8\" r=\"2.2\"/><path d=\"M12 7.4v6.2M12 10.2 8 12.6M12 10.2l4 2.4M12 13.6l-2.6 5.2M12 13.6l2.6 5.2\"/></svg>", "sheet": "<svg viewBox=\"0 0 24 24\"><rect x=\"6\" y=\"4.4\" width=\"12\" height=\"16\" rx=\"2.6\"/><path d=\"M9.6 4.4V3.3h4.8v1.1M9 10h6M9 13.4h6M9 16.8h3.4\"/></svg>", "leaf": "<svg viewBox=\"0 0 24 24\"><path d=\"M20 4.2C10.4 4.2 4.4 9 4.4 15c0 3 2 5 5 5 6 0 10.6-6 10.6-15.8Z\"/><path d=\"M4.2 20c3.8-6 8.4-10 13.4-12.2\"/></svg>", "heart": "<svg viewBox=\"0 0 24 24\"><path d=\"M12 20.2s-6.4-4-6.4-8.9a3.7 3.7 0 0 1 6.4-2.6 3.7 3.7 0 0 1 6.4 2.6c0 4.9-6.4 8.9-6.4 8.9Z\"/></svg>", "lungs": "<svg viewBox=\"0 0 24 24\"><path d=\"M12 3.8v7.4\"/><path d=\"M12 11.2c0-3-2.4-4.6-4.9-4.6S3 8.6 3 11.6c0 3 2.4 4.1 4.9 4.1 2.1 0 4.1-1.6 4.1-4.5Z\"/><path d=\"M12 11.2c0-3 2.4-4.6 4.9-4.6s4.1 2 4.1 5c0 3-2.4 4.1-4.9 4.1-2.1 0-4.1-1.6-4.1-4.5Z\"/></svg>", "grid": "<svg viewBox=\"0 0 24 24\"><rect x=\"4\" y=\"4\" width=\"7\" height=\"7\" rx=\"2.2\"/><rect x=\"13\" y=\"4\" width=\"7\" height=\"7\" rx=\"2.2\"/><rect x=\"4\" y=\"13\" width=\"7\" height=\"7\" rx=\"2.2\"/><rect x=\"13\" y=\"13\" width=\"7\" height=\"7\" rx=\"2.2\"/></svg>", "flame": "<svg viewBox=\"0 0 24 24\"><path d=\"M12 3.2c1.6 4.1 5 5.7 5 9.6a5 5 0 0 1-10 0c0-3.9 3.4-5.5 5-9.6Z\"/><path d=\"M12 20a2.6 2.6 0 0 1-2.6-2.6c0-1.6 1.6-2.4 2.6-4 1 1.6 2.6 2.4 2.6 4A2.6 2.6 0 0 1 12 20Z\"/></svg>", "scale": "<svg viewBox=\"0 0 24 24\"><path d=\"M12 4v16M7.2 20h9.6M12 7 6 9.2l3 5.2L12 9.2l3 5.2 3-5.2L12 7\"/></svg>", "wind": "<svg viewBox=\"0 0 24 24\"><path d=\"M3 8h11a3 3 0 1 0-3-3\"/><path d=\"M3 13h15a3 3 0 1 1-3 3\"/><path d=\"M3 18h8\"/></svg>", "cal": "<svg viewBox=\"0 0 24 24\"><rect x=\"4\" y=\"5.4\" width=\"16\" height=\"15.2\" rx=\"2.6\"/><path d=\"M8 3.4v4M16 3.4v4M4 10h16\"/></svg>", "eye": "<svg viewBox=\"0 0 24 24\"><path d=\"M2.6 12S6.2 6 12 6s9.4 6 9.4 6-3.6 6-9.4 6-9.4-6-9.4-6Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>", "book": "<svg viewBox=\"0 0 24 24\"><path d=\"M5 4.6h11.2A2.8 2.8 0 0 1 19 7.4v12.6H7.8A2.8 2.8 0 0 1 5 17.2V4.6Z\"/><path d=\"M5 17.2a2.8 2.8 0 0 1 2.8-2.8H19\"/></svg>", "book2": "<svg viewBox=\"0 0 24 24\"><path d=\"M5 4.6h11.2A2.8 2.8 0 0 1 19 7.4v12.6H7.8A2.8 2.8 0 0 1 5 17.2V4.6Z\"/><path d=\"M5 17.2a2.8 2.8 0 0 1 2.8-2.8H19\"/><path d=\"M12 7.6v5.2M9.6 9.9h4.8\"/></svg>", "foot": "<svg class=\"ic-foot\" viewBox=\"0 0 75 75\"><path d=\"m40.8234863 65.2352982c.1259766-.1367188 3.0976563-3.3808632 3.7539063-7.9531288.2783203-1.9345703.6518555-4.2060547 1.3149414-6.3808594.1210938-.3964844-.1025391-.8154297-.4985352-.9365234-.3950195-.1171875-.8154297.1025391-.9360352.4990234-.6928711 2.2724609-1.0791016 4.6142578-1.3647461 6.6054688-.5874023 4.0878906-3.3325195 7.1054726-3.3291016 7.104496-4.1046104 3.8012695-7.6452065 3.0868378-10.4360371-1.7109413-.2084961-.3583984-.6689453-.4804688-1.0253906-.2714844-.3583984.2080078-.4794922.6669922-.2714844 1.0253906 3.2516061 5.5888328 7.890978 6.5607948 12.7924825 2.0185585z\"/><path d=\"m64.4294434 46.1561928c.3022461-.2822266.3188477-.7568359.0356445-1.0595703l-3.1196289-3.3398438-1.1323242-9.9540997c-.3774414-2.1376953-5.1455078-5.9492188-6.0976563-6.6914063-.3261719-.2539063-.7978516-.1953125-1.0522461.1308594-.2548828.3261719-.1962891.7978516.1298828 1.0527344 2.1787109 1.6992188 5.3388672 4.6113281 5.5361328 5.7226543 1.258236 10.6084138 1.0312424 10.2408792 1.3510743 10.5820314l3.2890625 3.5205078c.2818985.3024368.7570266.3197822 1.0600586.0361328z\"/><path d=\"m24.7336407 40.4452553-7.3779297 4.9501953c-.6953125.546875-1.1889648 1.3222656-1.390625 2.1826172-.4960938 2.1201172-2.3525391 9.2773438-5.4116211 12.3359375-.4748325.4748344-.1306896 1.2802734.5302734 1.2802734.1918945 0 .3837891-.0732422.5302734-.2197266 3.2485352-3.2480469 5.1464844-10.2119141 5.8120117-13.0546875.1259766-.5380859.4223633-1.0039063.8110352-1.3125l7.331543-4.9160156c.3442383-.2304688.4360352-.6962891.2055664-1.0410156-.2314453-.3447266-.6982422-.4365234-1.0405273-.2050781z\"/><path d=\"m21.2531719 49.6005287c.074707.4082031.4638672.6816406.8730469.6025391.1904297-.0341797 4.7387695-.9462891 10.3354511-8.8349609.5029297-.7089844 1.4628906-.9042969 2.1860352-.4404297.7900696.5019531.9841156 1.5721703.409668 2.3164063-2.512207 3.2529297-5.5322285 7.5869141-5.7524433 9.8671875-.7439671 2.6632271-2.2219887 6.4969482-3.7949219 8.8984375-1.905386 2.9083443-2.644104 2.1427879-6.4038086 5.1484413-.7520409.5962906-1.4694042 1.1444778-1.887207 2.015625-.2406387.500946.1304798 1.0742188.6757813 1.0742188.2792969 0 .5478516-.15625.6767578-.4257813.2824898-.5890656.9055119-1.0434265 1.4716797-1.4921875 3.6004753-2.882515 4.5842419-2.2383423 6.7216797-5.4980507 2.0735378-3.1661644 3.9853268-8.8765678 4.0297852-9.5371094.0986328-1.4462891 2.0849628-4.7763672 5.4501972-9.1347656 1.1079597-1.4356384.7454681-3.5187798-.7905273-4.4970703-1.3984375-.8935547-3.2504883-.5253906-4.2163105.8378906-5.1679688 7.2841797-9.3081055 8.2119141-9.387207 8.2275391-.4042971.0771483-.6718752.4667968-.5976565.8720702z\"/><path d=\"m35.8723145 24.29389c.3828125-.1425781.5810547-.5683594.4433594-.9541016-.1396484-.3896484-.5678711-.5966797-.9589844-.4541016-.112793.0400391-2.7617188 1.0371094-2.4008789 5.3730469.0327148.3916016.3608398.6875.746582.6875.4390144 0 .7847862-.3743668.7485352-.8125-.2587891-3.1054687 1.3295898-3.8017578 1.4213867-3.8398437z\"/><path d=\"m37.6237793 47.7050209c.3784561.1822205.8238335.0206795 1.0019531-.3476563 3.4995117-7.2197266-1.0878906-9.7167969-1.1347656-9.7412109-.3637695-.1904297-.8105469-.0488281-1.0048828.3134766-.1938477.3623047-.0556641.8154297.3051758 1.0126953.1367188.0751953 3.3232422 1.9042969.4848633 7.7607422-.1806641.3730469-.0249024.821289.3476562 1.0019531z\"/><path d=\"m62.567627 63.8934975c.1147461.0634766.2382813.0927734.3603516.0927734.7756538 0 1.0372162-1.0365753.3613281-1.4072266-.159668-.0878906-16.0078125-8.9150391-18.4892578-20.8271484-.0185547-.1513672-.46875-3.7197266-1.9501953-6.1279297l-4.340332-5.6621075c-.7294006-.9517403-.5570259-2.3196468.4067383-3.0566406.909668-.6972656 2.2109375-.5683594 2.9628906.2939453 5.3374023 6.1191387 9.1020508 9.3095684 11.1899414 9.4833965.4194336.046875.7758789-.2714844.8100586-.6845703s-.2724609-.7753906-.6850586-.8095703c-1.5913086-.1328125-5.3984375-3.4882793-10.184082-8.975584-1.2705078-1.4570313-3.4692383-1.6777344-5.0087891-.4970703-1.613781 1.2360878-1.9199142 3.5435276-.6821289 5.1582031l4.2963867 5.5976543c1.2651367 2.0644531 1.6914063 5.4287109 1.7055664 5.5234375 2.6333007 12.6552735 18.5693359 21.5273438 19.246582 21.8984376z\"/><path d=\"m49.6315918 15.3026791c-.8427124-1.1633301-2.1375732-1.3007813-2.491333-1.3110352-.2129669-1.8984747-1.822979-3.0135565-3.5840454-2.7006836-.502739-1.4592648-1.989624-2.3560457-3.8642578-1.6140137-.2812195-4.9958391-4.9190445-6.1945038-7.8035297-3.5793457-1.4247093 1.2914076-2.1622734 3.7120066-2.5585938 5.5996094-.1130295.5290737-.4977646 5.4996624-1.2324219 6.4140625-2.8515625 3.5458984-2.1069336 7.6621094-1.4091797 9.7998047.5029297 1.5410156.7363281 3.0546875.6948242 4.4990215l-.2260742 7.7900391c-.012207.4140625.3134766.7587891.7275391.7714844h.0224609c.4038086 0 .7373047-.3212891.7490234-.7285156l.2260742-7.7900391c.046875-1.6171856-.2114258-3.3017559-.7680664-5.006834-.7368164-2.2597656-1.1357422-5.5498047 1.1523438-8.3955078 1.0885258-1.3545761 1.4178638-6.4692688 1.53125-7.0449219.3142471-1.4983807.9566021-3.7624273 2.0986347-4.796875 1.6814308-1.5250206 4.1431274-1.2469969 4.9926758.9824219.7612305 1.9970703.0322266 4.8769531-.605957 6.2226563-.0388794.0820313-.0550537.1679688-.0628662.2532959-.769104-.276001-1.27771-.4417725-1.3814697-.4749756-.3984375-.1259766-.8168945.0898438-.9433594.484375-.1269531.3945313.090332.8173828.484375.9433594 3.8729858 1.2431641 14.0393677 5.3215332 15.4308472 9.4217529-.2521362.609375-.9197998 2.1712646-1.5001831 3.0509033-.2280273.3457031-.1328125.8105469.2128906 1.0390625.3484459.2296276.8131332.1302109 1.0390625-.2128906.8115234-1.2304688 1.7138672-3.4951172 1.7568359-3.6035156.9575119-2.5507813 1.0717773-4.4912109.3383789-5.765625-.4965363-.8621826-1.3698082-1.3802681-2.3210449-1.5041504.0327148-1.1237794-.1981201-2.0439454-.704834-2.74292zm-1.2036133.8955078c.3982544.5629883.6887817 1.7106934.0290527 4.0141602-.6449585-.4682617-1.3366699-.916626-2.0534058-1.3431396.000061-.0003662.0003662-.0007324.0004272-.0010986.7391853-3.8426533.5161896-2.4036961.6751099-3.3758545.0500489.0001219.8586427.0135497 1.348816.7059325zm-3.1572265-2.9628907c.8057442.9405432.2003746 2.4536362-.0615234 3.8574219l-.18573.9956055c-.6323242-.340332-1.2705688-.6633301-1.9016724-.9663086.1816711-1.3625431.4070969-2.9872618.5765991-4.3254395.6100464-.1467285 1.2077637.0119629 1.5723267.4387207zm-6.6323243 1.8212891c.4133301-.87146.8286133-2.2261963.9920044-3.6702881.6032104-.3763428 1.4923706-.7479248 2.1193237-.2037354.3662109.3232422.543457.8818359.4614258 1.4638672l-.513855 3.8167725c-1.1482544-.5115967-2.2261963-.9483643-3.1394653-1.2989502.0264283-.0366211.0605469-.0654297.0805664-.107666zm12.8098145 8.0083008c-.4588623-.6416016-1.0471191-1.2636719-1.7337036-1.8597412.1907349-.5891113.3434448-1.1497803.4460449-1.6724854 1.6358223.3002816 1.6618805 1.9094258 1.2876587 3.5322266z\"/></svg>"};
 
@@ -255,11 +335,13 @@ tabs.forEach(t => t.addEventListener('click', () => {
 }));
 
 (function(){
-  const h = new Date().getHours();
-  const g = h < 5 ? 'לילה טוב' : h < 12 ? 'בוקר טוב' : h < 17 ? 'צהריים טובים' : h < 21 ? 'ערב טוב' : 'לילה טוב';
-  let d = '';
-  try { d = new Intl.DateTimeFormat('he-IL', {weekday:'long', day:'numeric', month:'long'}).format(new Date()); } catch(e){}
-  document.getElementById('greet').textContent = d ? g + ' · ' + d : g;
+  var now = new Date();
+  try { document.getElementById('wday').textContent = 'יום ' + HB.weekdayName(now); } catch(e){}
+  try { document.getElementById('hdate').textContent = HB.string(now); } catch(e){}
+  try {
+    document.getElementById('gdate').textContent =
+      new Intl.DateTimeFormat('he-IL', {day:'numeric', month:'long', year:'numeric'}).format(now);
+  } catch(e){}
 })();
 </script>
 <script>
