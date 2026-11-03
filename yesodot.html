@@ -260,6 +260,104 @@
 .gates{grid-template-columns:1fr!important}
 .endnote{margin-top:22px}
 </style>
+<style id="ys-yesodot">
+/* ys-yesodot design layer: shared green/gold system, element colours kept as accents */
+:root{--forest:#2F6358;--forest-dark:#1F443D;--header:#16332D;--cream:#F8F8F5;--cream-soft:#FFFFFF;--ink:#293C35;--muted:#60736A;
+ --line:rgba(184,154,94,.22);--card-border:rgba(184,154,94,.22);--gold:#B89A5E;--gold-soft:#D9C394;--gold-deep:#8C7240;--cream-2:#F6F1E7;
+ --sefirah:#8C7240;--sefirah-bg:#F6F1E7;--shadow:0 1px 2px rgba(22,51,45,.05),0 8px 24px -14px rgba(22,51,45,.22);--radius:16px}
+html{scroll-behavior:smooth}
+body{background:var(--cream)}
+header{background:radial-gradient(120% 140% at 50% -20%,rgba(217,195,148,.16),transparent 60%),#16332D;padding:30px 16px 8px}
+header h1{font-size:44px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+header .sub{color:var(--gold-soft);font-family:var(--sans);font-size:17px}
+.tabbar{background:#16332D;padding:10px 16px 16px;border-bottom:2px solid var(--gold);box-shadow:0 8px 20px -14px rgba(22,51,45,.6)}
+.tabnav{background:rgba(255,255,255,.09);max-width:520px}
+.tabnav button{font-family:'Assistant',sans-serif;font-size:16.5px;font-weight:400;color:#fff}
+.tabnav button.active{background:#fff;color:#16332D}
+main{max-width:860px;padding:30px 20px 40px}
+.prose p,.lead{font-size:18px;line-height:1.85;text-align:start}
+@media(min-width:900px){.prose p,.lead{font-size:17px;text-align:justify}}
+h2.page{font-size:32px;font-weight:700}
+h3.sec{font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--line);position:relative}
+h3.sec::after{content:"";position:absolute;bottom:-1px;inset-inline-start:0;width:44px;height:2px;background:var(--gold)}
+.card,.gate{box-shadow:var(--shadow);border:1px solid var(--card-border)}
+.btn{background:var(--forest-dark);border-radius:999px;font-family:var(--sans)}
+.btn:hover{background:#16332D}
+:focus-visible{outline:3px solid rgba(184,154,94,.6)}
+.week-head h2{font-size:32px}
+@media(min-width:900px){.week-head h2{font-size:44px}}
+.status{border-color:var(--card-border);background:#fff}
+.today-badge{background:var(--gold-deep)}
+.mine{border:1px solid var(--card-border)}
+/* day strip in week view: clearer done / today states */
+.dchip .c{transition:background .2s,color .2s,box-shadow .2s}
+.dchip.today .c{box-shadow:0 0 0 3px rgba(184,154,94,.45)}
+/* ---- journey: today card ---- */
+.ysj{margin:0 0 26px}
+.ysj-today{position:relative;background:#fff;border:1px solid var(--card-border);border-radius:20px;box-shadow:var(--shadow);padding:22px 22px 20px;overflow:hidden}
+.ysj-today::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:6px;background:var(--el,var(--gold))}
+.ysj-eyebrow{font-family:var(--sans);font-size:14px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ysj-pill{display:inline-flex;align-items:center;gap:6px;background:var(--elbg,var(--cream-2));color:var(--el,var(--gold-deep));border-radius:999px;padding:3px 11px;font-weight:600}
+.ysj-pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.ysj-title{font-size:26px;color:var(--forest-dark);margin:10px 0 4px;font-weight:700;line-height:1.3}
+.ysj-lens{font-family:var(--sans);font-size:15px;color:var(--gold-deep)}
+.ysj-do{margin:14px 0 4px;background:var(--cream);border-radius:12px;padding:12px 14px;font-size:17px;line-height:1.75}
+.ysj-do b{display:block;font-family:var(--sans);font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:2px}
+.ysj-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.ysj-done{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-size:16px;border:1px solid var(--card-border);border-radius:999px;padding:8px 16px;background:#fff;cursor:pointer;color:var(--ink)}
+.ysj-done.on{background:var(--forest-dark);border-color:var(--forest-dark);color:#fff}
+.ysj-done .box{width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.ysj-start h3{margin:0 0 6px;font-size:24px;color:var(--forest-dark)}
+.ysj-start p{margin:0 0 14px;color:var(--muted);font-size:17px;line-height:1.7}
+.ysj-start .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ysj-start input[type=date]{font-size:17px;padding:9px 12px;border:1px solid var(--card-border);border-radius:12px;background:#fff;color:var(--ink);min-height:44px}
+.ysj-link{background:none;border:none;color:var(--gold-deep);font-family:var(--sans);font-size:14.5px;cursor:pointer;text-decoration:underline dotted;padding:6px 2px}
+/* ---- journey path ---- */
+.ysj-path{margin-top:22px}
+.ysj-path h3{font-size:20px;color:var(--forest-dark);margin:0 0 4px;font-weight:600}
+.ysj-path .hint{font-family:var(--sans);font-size:14.5px;color:var(--muted);margin:0 0 12px}
+.ysj-wk{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center;width:100%;text-align:start;background:#fff;border:1px solid var(--card-border);border-radius:16px;padding:14px 16px;margin:0 0 10px;cursor:pointer;font:inherit;color:inherit;position:relative;transition:box-shadow .2s,transform .2s}
+.ysj-wk:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.ysj-wk.cur{border:1.5px solid var(--el);box-shadow:var(--shadow)}
+.ysj-wk.future{opacity:.72}
+.ysj-num{grid-row:span 2;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px;background:var(--elbg);color:var(--el)}
+.ysj-wk.past .ysj-num{background:var(--el);color:#fff}
+.ysj-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.ysj-name{font-size:19px;font-weight:700;color:var(--forest-dark)}
+.ysj-name small{font-family:var(--sans);font-weight:400;font-size:14.5px;color:var(--muted);margin-inline-start:6px}
+.ysj-dates{font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+.ysj-dots{display:flex;gap:6px}
+.ysj-dot{flex:1;max-width:38px;height:8px;border-radius:999px;background:var(--cream-2)}
+.ysj-dot.done{background:var(--el)}
+.ysj-dot.today{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--gold)}
+.ysj-tag{font-family:var(--sans);font-size:12.5px;font-weight:600;background:var(--gold-deep);color:#fff;border-radius:999px;padding:2px 9px}
+.ysj-weekbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-family:var(--sans);font-size:15px;color:var(--muted);margin:10px 0 2px}
+.ysj-weekbar .ysj-pill{font-size:14px}
+@media(max-width:640px){
+ header{padding:22px 14px 6px} header h1{font-size:32px} header .sub{font-size:16px}
+ .tabbar{padding:8px 10px 12px}
+ main{padding:22px 16px 40px}
+ .ysj-today{padding:18px 16px 16px;border-radius:18px}
+ .ysj-title{font-size:23px}
+ .ysj-actions .btn,.ysj-done{flex:1 1 100%;justify-content:center;min-height:46px}
+ .ysj-wk{padding:12px 13px}
+ .ysj-num{width:38px;height:38px;font-size:17px}
+}
+/* signature */
+.ys-sign{max-width:900px;margin:30px auto 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(184,154,94,.18);display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 9px;font-family:'Assistant',sans-serif;font-size:14px;font-weight:400;color:#60736A;text-align:center;background:none}
+.ys-sign-name{color:#293C35;font-weight:600}.ys-sign-dot{color:rgba(140,114,64,.5)}
+.ys-sign-site{color:#8C7240;text-decoration:none;border-bottom:1px dotted rgba(140,114,64,.45);padding-bottom:1px;transition:color .2s,border-color .2s}
+.ys-sign-site:hover{color:#B89A5E;border-bottom-style:solid;border-bottom-color:rgba(184,154,94,.7)}
+.ys-sign-social{display:inline-flex;align-items:center;gap:6px;margin-inline-start:4px}
+.ys-sign-ic{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;color:#8C7240;border:1px solid rgba(184,154,94,.35);transition:color .2s,border-color .2s,background .2s}
+.ys-sign-ic:hover{color:#B89A5E;border-color:rgba(184,154,94,.7);background:rgba(184,154,94,.08)}
+.ys-sign-ic svg{width:18px;height:18px}
+.ys-sign a:focus-visible{outline:3px solid rgba(184,154,94,.5);outline-offset:3px;border-radius:4px}.ys-sign-ic:focus-visible{border-radius:50%}
+@media(max-width:640px){.ys-sign{margin-top:22px;padding-top:12px;font-size:13.5px}.ys-sign-social{flex-basis:100%;justify-content:center;margin:4px 0 0}}
+@media print{.ysj,.ys-sign-social{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ysj-wk{transition:none}}
+</style>
+
 </head>
 <body>
 
@@ -1290,5 +1388,76 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
   window.scrollTo(0,0); setTimeout(()=>window.scrollTo(0,0),50);
 })();
 </script>
+
+<script id="ys-journey">
+/* Additive journey layer: programme start date -> week (element) + day. Uses the original S/W/save/go. */
+(function(){
+  const JK='yesodot-journey-v1', ORDER=['esh','mayim','ruach','afar'];
+  const MON=['בינואר','בפברואר','במרץ','באפריל','במאי','ביוני','ביולי','באוגוסט','בספטמבר','באוקטובר','בנובמבר','בדצמבר'];
+  const getJ=()=>{try{return JSON.parse(localStorage.getItem(JK))||{}}catch(e){return {}}};
+  const setJ=j=>{try{localStorage.setItem(JK,JSON.stringify(j))}catch(e){}};
+  const D=s=>new Date(s+'T00:00:00');
+  const fmt=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const add=(s,n)=>{const d=D(s);d.setDate(d.getDate()+n);return fmt(d)};
+  const diff=s=>Math.round((D(todayStr())-D(s))/864e5);
+  const nice=s=>{const d=D(s);return d.getDate()+' '+MON[d.getMonth()]};
+  const elv=id=>{const c=(WEEKS[id]||{}).cls||'air';return `--el:var(--${c});--elbg:var(--${c}-bg)`};
+  function pos(){const j=getJ();if(!j.start)return null;const d=diff(j.start);
+    if(d<0)return {before:-d};if(d>=28)return {finished:true};return {w:Math.floor(d/7),i:d%7};}
+  function sync(){const j=getJ();if(!j.start)return;let ch=false;
+    ORDER.forEach((id,n)=>{const s=add(j.start,7*n);if(diff(s)>=0&&WEEKS[id]){const st=W(id);if(!st.start){st.start=s;ch=true;}}});
+    const p=pos();if(p&&p.w!=null&&S.current!==ORDER[p.w]){S.current=ORDER[p.w];ch=true;}
+    if(ch)save();}
+  function openDay(id,i){go('week:'+id);setTimeout(()=>{const el=document.getElementById('day-'+i);if(el){el.open=true;el.scrollIntoView({behavior:'smooth',block:'start'});}},60);}
+  function startForm(again){const j=getJ();return `<div class="ysj-today ysj-start">
+      <h3>${again?'שינוי תאריך ההתחלה':'מתחילים את המסע'}</h3>
+      <p>ארבעה שבועות, יסוד אחד בכל שבוע: אש, מים, רוח ועפר. בחרו את היום שבו מתחילים, הכי טוב ביום הטיפול, והאתר יראה לכם בכל יום איפה אתם נמצאים ומה התרגיל של היום.</p>
+      <div class="row"><label class="sr" for="ysjDate" style="position:absolute;width:1px;height:1px;overflow:hidden">תאריך התחלה</label>
+      <input type="date" id="ysjDate" value="${j.start||todayStr()}"><button class="btn" id="ysjGo">${again?'לשמור':'להתחיל'}</button>
+      ${again?'<button class="ysj-link" id="ysjCancel">ביטול</button>':''}</div></div>`;}
+  function todayCard(p){const j=getJ();
+    if(p.before)return `<div class="ysj-today" style="${elv('esh')}"><div class="ysj-eyebrow"><span class="ysj-pill"><i></i>עוד ${p.before===1?'יום אחד':p.before+' ימים'}</span></div>
+      <div class="ysj-title">המסע מתחיל ${nice(j.start)}</div><p class="ysj-lens">השבוע הראשון: יסוד האש. בינתיים אפשר לקרוא על היסודות.</p>
+      <div class="ysj-actions"><button class="btn" data-go="week:esh">להכיר את שבוע האש</button><button class="ysj-link" id="ysjEdit">לשנות תאריך</button></div></div>`;
+    if(p.finished)return `<div class="ysj-today" style="--el:var(--gold)"><div class="ysj-title">סיימתם את ארבעת השבועות</div>
+      <p class="ysj-lens">כל התשובות שלכם שמורות ביומן. אפשר לחזור לכל שבוע, או להתחיל מסע חדש.</p>
+      <div class="ysj-actions"><button class="btn" data-go="journal">ליומן שלי</button><button class="ysj-link" id="ysjEdit">להתחיל מסע חדש</button></div></div>`;
+    const id=ORDER[p.w],w=WEEKS[id],d=w.days[p.i],st=W(id),done=!!(st.days[p.i]&&st.days[p.i].done);
+    return `<div class="ysj-today" style="${elv(id)}">
+      <div class="ysj-eyebrow"><span class="ysj-pill"><i></i>שבוע ${p.w+1} מתוך 4 · ${w.name}</span><span>יום ${p.i+1} מתוך 7</span></div>
+      <div class="ysj-title">היום: ${d.l}</div>${d.lens?`<div class="ysj-lens">${d.lens}</div>`:''}
+      ${d.do?`<div class="ysj-do"><b>התרגיל של היום</b>${d.do}</div>`:''}
+      ${d.look?`<div class="ysj-do"><b>השאלה שלוקחים איתכם</b>${d.look}</div>`:''}
+      <div class="ysj-actions"><button class="btn" id="ysjOpen">לפתוח את היום ולכתוב</button>
+      <button class="ysj-done ${done?'on':''}" id="ysjDone" aria-pressed="${done}"><span class="box">${done?'✓':''}</span>${done?'עשיתי היום':'סמנו שעשיתם'}</button></div></div>`;}
+  function path(p){const j=getJ();
+    return `<div class="ysj-path"><h3>המסלול שלי</h3><p class="hint">כל פס הוא יום. פס מלא הוא יום שסימנתם שעשיתם.</p>`+ORDER.map((id,n)=>{
+      const w=WEEKS[id];if(!w)return '';const st=W(id);const cur=p&&p.w===n,past=p&&(p.finished||(p.w!=null&&n<p.w)),fut=!cur&&!past;
+      const s=j.start?add(j.start,7*n):null;
+      const dots=w.days.map((x,k)=>`<span class="ysj-dot ${st.days[k]&&st.days[k].done?'done':''} ${cur&&k===p.i?'today':''}"></span>`).join('');
+      return `<button class="ysj-wk ${cur?'cur':''} ${past?'past':''} ${fut&&j.start?'future':''}" style="${elv(id)}" data-go="week:${id}" aria-label="שבוע ${n+1}, ${w.name}">
+        <span class="ysj-num">${n+1}</span>
+        <span class="ysj-head"><span class="ysj-name">${w.name}<small>${w.plain}</small></span>${cur?'<span class="ysj-tag">השבוע</span>':(s?`<span class="ysj-dates">${nice(s)} – ${nice(add(s,6))}</span>`:'')}</span>
+        <span class="ysj-dots">${dots}</span></button>`;}).join('')+`</div>`;}
+  function render(){const box=document.getElementById('mineBox');if(!box)return;sync();const j=getJ(),p=pos();
+    box.innerHTML=`<div class="ysj">${j.start&&!render.edit?todayCard(p):startForm(render.edit)}${path(p)}</div>`;
+    const q=s=>box.querySelector(s);
+    q('#ysjGo')&&q('#ysjGo').addEventListener('click',()=>{const v=q('#ysjDate').value;if(!v)return;const old=getJ().start;
+      if(old&&old!==v)ORDER.forEach((id,n)=>{const st=S.weeks[id];if(st&&st.start===add(old,7*n))st.start=null;});
+      setJ({start:v});render.edit=false;sync();save('נשמר');render();});
+    q('#ysjCancel')&&q('#ysjCancel').addEventListener('click',()=>{render.edit=false;render();});
+    q('#ysjEdit')&&q('#ysjEdit').addEventListener('click',()=>{render.edit=true;render();});
+    q('#ysjOpen')&&q('#ysjOpen').addEventListener('click',()=>openDay(ORDER[p.w],p.i));
+    q('#ysjDone')&&q('#ysjDone').addEventListener('click',()=>{const st=W(ORDER[p.w]);const dd=st.days[p.i]||(st.days[p.i]={});dd.done=!dd.done;save(dd.done?'יפה, נשמר':'');render();});
+  }
+  const origHome=renderHome;renderHome=function(){origHome.apply(this,arguments);render();};
+  const origWeek=renderWeek;renderWeek=function(id){origWeek.apply(this,arguments);const n=ORDER.indexOf(id),j=getJ();
+    if(n<0||!j.start)return;const s=add(j.start,7*n),head=document.querySelector('#v-week .week-head');if(!head)return;
+    const bar=document.createElement('div');bar.className='ysj-weekbar no-print';bar.style.cssText=elv(id);
+    bar.innerHTML=`<span class="ysj-pill"><i></i>שבוע ${n+1} מתוך 4</span><span>${nice(s)} – ${nice(add(s,6))}</span>`;head.after(bar);};
+  if(curRoute==='home')render();
+})();
+</script>
+
 </body>
 </html>
