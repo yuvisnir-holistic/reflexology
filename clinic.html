@@ -1091,6 +1091,18 @@ html,body{overflow-anchor:none}
 .new-pt input{width:0;min-width:0}
 .new-pt .bm-btn{flex:0 0 auto;white-space:nowrap}
 </style>
+<style>
+  .ns-link{display:inline-block;margin-top:6px;font-size:0.82rem;color:var(--forest);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+  @media print{ .ns-link{display:none;} }
+</style>
+<style>
+.ys-back{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:950;display:none;align-items:center;gap:6px;
+  height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#2C5F5B;border:1.5px solid #2C5F5B;
+  font:700 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(44,95,91,.12)}
+.ys-back.show{display:inline-flex}
+.ys-back:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
+@media print{.ys-back{display:none!important}}
+</style>
 </head>
 <body>
 <header>
@@ -4111,10 +4123,7 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
   else yscSync();
 })();
 </script>
-<style>
-  .ns-link{display:inline-block;margin-top:6px;font-size:0.82rem;color:var(--forest);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
-  @media print{ .ns-link{display:none;} }
-</style>
+
 <script>
 /* קישור מתרגיל שמקורו באתר נשמה ונשימה אל התרגיל באתר, עם ההסבר המלא */
 (function(){
@@ -4169,14 +4178,7 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
   }, true);
 })();
 </script>
-<style>
-.ys-back{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:950;display:none;align-items:center;gap:6px;
-  height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#2C5F5B;border:1.5px solid #2C5F5B;
-  font:700 16px 'Assistant',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(44,95,91,.12)}
-.ys-back.show{display:inline-flex}
-.ys-back:focus-visible{outline:3px solid #A9821F;outline-offset:2px}
-@media print{.ys-back{display:none!important}}
-</style>
+
 <button class="ys-back" id="ysBack" type="button" aria-label="חזרה">חזרה ›</button>
 <script>
 /* חזרה לפעולה הקודמת: כל מעבר בין מסכים בקליניקה נשמר בהיסטוריה של הדפדפן,
