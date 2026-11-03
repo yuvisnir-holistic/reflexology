@@ -256,6 +256,11 @@ p.lead,.intro-text,.acc-body p{font-size:18px!important;line-height:1.8!importan
 .mp-star:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media print{.mp-star,#myPractice{display:none!important}}
 </style>
+<style id="ys-mine-css2">
+.pasuk-card .mp-star-sm{margin-top:8px;font-size:13px;padding:4px 12px}
+#myPractice .mp-pasuk{margin-bottom:14px}
+#myPractice .mp-pasuk-cat{font-family:'Assistant',sans-serif;font-weight:700;font-size:13px;color:#8C7240;letter-spacing:.4px;margin-bottom:6px}
+</style>
 </head>
 <body>
 <header id="hdr"><h1>כְּלָלֵי הַהַשְׁקָטָה</h1><div class="leaf-divider"><span class="line"></span><span class="dot"></span><span class="line"></span></div><div class="sub">לְמוֹרֵנוּ הַבַּעַל שֵׁם טוֹב זִיע"א</div><nav class="tabnav" id="tabnav" aria-label="חלקי האפליקציה"><button data-tab="home" class="active" onclick="goTab('home')">בית</button><button data-tab="kelim" onclick="goTab('kelim')">כלי העבודה</button><button data-tab="mood" onclick="goTab('mood')">לפי מצב</button><button data-tab="hit" onclick="goTab('hit')">התבוננויות</button><button data-tab="psukim" onclick="goTab('psukim')">פסוקים</button><button data-tab="shem" onclick="goTab('shem')">שם יהו״ה</button><button data-tab="guide" onclick="goTab('guide')">למטפל</button></nav></header>
@@ -636,22 +641,35 @@ window.addEventListener('scroll', ()=>{ const h=document.getElementById('hdr'); 
 <script id="ys-mine-js">
 /* התרגול שלי: כל תרגיל באתר אפשר להוסיף לראש דף הבית. נשמר במכשיר הזה בלבד. */
 (function(){
-  const KEY='hashkata-my-practice', TABS=['kelim','mood','hit','psukim','shem'];
+  const KEY='hashkata-my-practice', TABS=['kelim','mood','hit','shem'];
   const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];}};
   const set=a=>{try{localStorage.setItem(KEY,JSON.stringify(a));}catch(e){}};
   const title=c=>{const h=c.querySelector(':scope>.acc-head h3');return h?h.textContent.trim():'';};
-  const keyOf=c=>{const p=[];let x=c;while(x&&x.classList){if(x.classList.contains('acc-card'))p.unshift(title(x));x=x.parentElement;}const tab=c.closest('.tab-panel');return (tab?tab.id:'')+'|'+p.join(' › ');};
+  const keyOf=c=>{const p=[];let x=c;while(x&&x.classList){if(x.classList.contains('acc-card'))p.unshift(title(x));x=x.parentElement;}const tab=c.closest('.tab-panel');return (tab?tab.id:'')+'|'+p.join(' \u203a ');};
   const cards=()=>TABS.flatMap(t=>[...document.querySelectorAll('#tab-'+t+' .acc-card')]).filter(c=>title(c));
+  /* פסוקים: כפתור נפרד לכל פסוק, לא לכותרת */
+  const verses=()=>[...document.querySelectorAll('#tab-psukim .pasuk-card')];
+  const vkeyOf=v=>{const card=v.closest('.acc-card');const cat=card?title(card):'';const t=v.querySelector('.pasuk-text');return 'tab-psukim|'+cat+'|'+(t?t.textContent.trim():'');};
+  function toggleKey(k){const m=get();const i=m.indexOf(k);i<0?m.push(k):m.splice(i,1);set(m);sync();}
   function sync(){
     const mine=get();
     cards().forEach(c=>{
       const k=keyOf(c), body=c.querySelector(':scope>.acc-body'); if(!body)return;
       let b=body.querySelector(':scope>.mp-star');
       if(!b){b=document.createElement('button');b.type='button';b.className='mp-star';
-        b.addEventListener('click',e=>{e.stopPropagation();const m=get();const i=m.indexOf(k);i<0?m.push(k):m.splice(i,1);set(m);sync();});
+        b.addEventListener('click',e=>{e.stopPropagation();toggleKey(k);});
         body.insertBefore(b,body.firstChild);}
       const on=mine.includes(k);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);
-      b.textContent=on?'★ במסך הבית':(body.querySelector('.acc-card')?'☆ הוסף את התרגיל המלא למסך הבית':'☆ הוסף למסך הבית');
+      b.textContent=on?'\u2605 \u05d1\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea':(body.querySelector('.acc-card')?'\u2606 \u05d4\u05d5\u05e1\u05e3 \u05d0\u05ea \u05d4\u05ea\u05e8\u05d2\u05d9\u05dc \u05d4\u05de\u05dc\u05d0 \u05dc\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea':'\u2606 \u05d4\u05d5\u05e1\u05e3 \u05dc\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea');
+    });
+    verses().forEach(v=>{
+      const k=vkeyOf(v);
+      let b=v.querySelector(':scope>.mp-star');
+      if(!b){b=document.createElement('button');b.type='button';b.className='mp-star mp-star-sm';
+        b.addEventListener('click',e=>{e.stopPropagation();toggleKey(k);});
+        v.appendChild(b);}
+      const on=mine.includes(k);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);
+      b.textContent=on?'\u2605 \u05e0\u05d5\u05e1\u05e3':'\u2606 \u05d4\u05d5\u05e1\u05e3';
     });
     render(mine);
   }
@@ -660,13 +678,28 @@ window.addEventListener('scroll', ()=>{ const h=document.getElementById('hdr'); 
     let box=document.getElementById('myPractice');
     if(!box){box=document.createElement('section');box.id='myPractice';home.insertBefore(box,home.firstChild);}
     const map={};cards().forEach(c=>map[keyOf(c)]=c);
-    const list=mine.filter(k=>map[k]);
-    box.innerHTML='<h2>התרגול שלי</h2>'+(list.length?'<p class="mp-sub">התרגילים שבחרת. לוחצים על תרגיל כדי לפתוח אותו.</p><div class="acc-list"></div>':'<div class="mp-empty">עוד לא נבחרו תרגילים. בכל תרגיל באתר לוחצים על "☆ הוסף למסך הבית", והוא יופיע כאן.</div>');
+    const vmap={};verses().forEach(v=>vmap[vkeyOf(v)]=v);
+    const list=mine.filter(k=>map[k]||vmap[k]);
+    box.innerHTML='<h2>\u05d4\u05ea\u05e8\u05d2\u05d5\u05dc \u05e9\u05dc\u05d9</h2>'+(list.length?'<p class="mp-sub">\u05d4\u05ea\u05e8\u05d2\u05d9\u05dc\u05d9\u05dd \u05d5\u05d4\u05e4\u05e1\u05d5\u05e7\u05d9\u05dd \u05e9\u05d1\u05d7\u05e8\u05ea. \u05dc\u05d5\u05d7\u05e6\u05d9\u05dd \u05e2\u05dc \u05ea\u05e8\u05d2\u05d9\u05dc \u05db\u05d3\u05d9 \u05dc\u05e4\u05ea\u05d5\u05d7 \u05d0\u05d5\u05ea\u05d5.</p><div class="acc-list"></div>':'<div class="mp-empty">\u05e2\u05d5\u05d3 \u05dc\u05d0 \u05e0\u05d1\u05d7\u05e8\u05d5 \u05ea\u05e8\u05d2\u05d9\u05dc\u05d9\u05dd. \u05d1\u05db\u05dc \u05ea\u05e8\u05d2\u05d9\u05dc \u05d0\u05d5 \u05e4\u05e1\u05d5\u05e7 \u05d1\u05d0\u05ea\u05e8 \u05dc\u05d5\u05d7\u05e6\u05d9\u05dd \u05e2\u05dc "\u2606 \u05d4\u05d5\u05e1\u05e3", \u05d5\u05d4\u05d5\u05d0 \u05d9\u05d5\u05e4\u05d9\u05e2 \u05db\u05d0\u05df.</div>');
     const wrap=box.querySelector('.acc-list');
-    list.forEach(k=>{const cl=map[k].cloneNode(true);cl.classList.remove('open');cl.removeAttribute('id');cl.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
-      cl.querySelectorAll('.acc-card .mp-star').forEach(x=>x.remove());
-      const st=cl.querySelector(':scope>.acc-body>.mp-star');if(st){st.textContent='★ הסר ממסך הבית';st.addEventListener('click',e=>{e.stopPropagation();set(get().filter(x=>x!==k));sync();});}
-      wrap.appendChild(cl);});
+    list.forEach(k=>{
+      if(map[k]){
+        const cl=map[k].cloneNode(true);cl.classList.remove('open');cl.removeAttribute('id');cl.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
+        cl.querySelectorAll('.acc-card .mp-star').forEach(x=>x.remove());
+        const st=cl.querySelector(':scope>.acc-body>.mp-star');if(st){st.textContent='\u2605 \u05d4\u05e1\u05e8 \u05de\u05de\u05e1\u05da \u05d4\u05d1\u05d9\u05ea';st.addEventListener('click',e=>{e.stopPropagation();toggleKey(k);});}
+        wrap.appendChild(cl);
+      } else if(vmap[k]){
+        const cat=k.split('|')[1]||'';
+        const cl=vmap[k].cloneNode(true);const st=cl.querySelector('.mp-star');if(st)st.remove();
+        const card=document.createElement('div');card.className='pasuk-card mp-pasuk';
+        if(cat){const c=document.createElement('div');c.className='mp-pasuk-cat';c.textContent=cat;card.appendChild(c);}
+        card.appendChild(cl);
+        const rm=document.createElement('button');rm.type='button';rm.className='mp-star mp-star-sm on';rm.textContent='\u2605 \u05d4\u05e1\u05e8';
+        rm.addEventListener('click',e=>{e.stopPropagation();toggleKey(k);});
+        card.appendChild(rm);
+        wrap.appendChild(card);
+      }
+    });
   }
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',sync):sync();
 })();
