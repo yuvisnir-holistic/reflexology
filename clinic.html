@@ -4286,7 +4286,7 @@ function rdBuild(){ /* גרסה מקובצת */
     return acc;
   }, []); const used = new Set();
   /* כרטיס הסיכום יוצא מהרשימה ומוצג בסוף */
-  const RD_SUM = /סיכום|למפגש הבא|במפגש הבא|לשיחה הבאה/;
+  const RD_SUM = /סיכום|משפט המפה|למפגש הבא|במפגש הבא/;
   const sumCard = cards.find(c=>RD_SUM.test(c.title)); const rest = cards.filter(c=>c!==sumCard);
   const one = (c,i)=>{
     const found = {ex:new Set(), el:new Set(), sf:new Set()};
@@ -4308,10 +4308,12 @@ function rdBuild(){ /* גרסה מקובצת */
   };
   /* קיבוץ הכרטיסים לפי נושא */
   const GROUPS = [
-    {k:'pic',  t:'התמונה והמיקוד', c:'var(--sefirah)', re:/מיקוד|יסוד|ספיר|תמונ|רגש|דפוס|שורש|מבט|כוח|נפש|אבחנ|הבנה|עיקר/},
-    {k:'body', t:'כף הרגל והגוף', c:'var(--earth)', re:/כף הרגל|רגל|גוף|איבר|מגע|טיפול|רפלקס|נקוד|כאב/},
-    {k:'tools',t:'תרגול, קריסטלים וכלים', c:'var(--practice)', re:/תרגיל|תרגול|קריסטל|אבן|אבנים|נשימה|כלי|שמן|מתנה/},
-    {k:'more', t:'הערות נוספות', c:'var(--forest)', re:/.*/}
+    {k:'pic',   t:'אבחנה: יסודות, מידות ומחיצה', c:'var(--sefirah)',  re:/יסוד|מיד|מחיצ|שורש|רגש|דפוס/},
+    {k:'body',  t:'בטיפול: כף הרגל וקריסטלים',   c:'var(--earth)',    re:/כף הרגל|רגל|גוף|איבר|קריסטל|אבנ/},
+    {k:'tools', t:'לבית: תרגילים',               c:'var(--practice)', re:/תרגיל/},
+    {k:'next',  t:'לשיחה ולהמשך',                c:'var(--forest)',   re:/שאלות|שיחה|תוכנית|מפגשים|מיקוד|המשך/},
+    {k:'care',  t:'זהירות ומקורות',              c:'var(--fire)',     re:/זהירות|מקורות/},
+    {k:'more',  t:'הערות נוספות',                c:'#6a756f',         re:/.*/}
   ];
   const buckets = GROUPS.map(g=>({g, items:[]}));
   rest.forEach((c,i)=>{ const b = buckets.find(b=>b.g.re.test(c.title)); b.items.push(one(c,i)); });
