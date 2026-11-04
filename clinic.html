@@ -1116,6 +1116,32 @@ header.compact .hdr-links{display:none!important}
 /* אוויר מתחת לשורת הלשוניות בכותרת, כ־24 פיקסלים */
 html body header:not(.compact){padding-bottom:24px!important}
 </style>
+<style>
+/* החלק למטפל: קבוצות, שורות וסיכום */
+.iq-thera-part{background:#fff!important;border:1px solid rgba(122,92,142,.22);border-radius:8px!important;padding:16px 16px 18px!important}
+.iq-thera-part .iq-tp-h{display:flex;justify-content:space-between;align-items:center;font-size:.9rem!important;margin-bottom:12px!important}
+details.rd-group{border:1px solid rgba(44,95,91,.14);border-radius:8px;margin:0 0 10px;background:#FBFAF6;overflow:hidden}
+details.rd-group > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 14px;font-weight:700;color:var(--forest-dark,#1E4744);font-size:1rem}
+details.rd-group > summary::-webkit-details-marker{display:none}
+details.rd-group > summary::after{content:"";margin-inline-start:auto;width:8px;height:8px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s;opacity:.6}
+details.rd-group[open] > summary::after{transform:rotate(135deg)}
+details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
+.rd-g-dot{width:10px;height:10px;border-radius:50%;background:var(--gc);flex:none}
+.rd-g-n{font-size:.75rem;font-weight:700;color:#6a756f;background:#fff;border:1px solid rgba(44,95,91,.15);border-radius:999px;padding:1px 9px}
+.rd-g-b{padding:2px 14px 8px;background:#fff}
+.rd-g-b .rd-card{border-top:1px solid rgba(44,95,91,.10)!important}
+.rd-g-b .rd-card:first-child{border-top:0!important}
+.rd-g-b .rd-card > summary{color:var(--ink,#293C35)!important;font-weight:700!important;padding:12px 2px!important}
+.rd-g-b .rd-card-b p{margin:0 0 10px;line-height:1.75}
+.rd-g-b .rd-card-b p b{color:var(--forest-dark,#1E4744)}
+.rd-sum{margin-top:16px;border:1px solid rgba(184,154,94,.55);background:#F7F1E4;border-radius:8px;padding:14px 16px}
+.rd-sum-h{font-weight:800;color:#5E4A22;margin-bottom:8px;font-size:1rem}
+.rd-sum p{margin:0 0 10px;line-height:1.75}
+.rd-sum-empty{font-size:.88rem;color:#7a6a45}
+.rd-sum-l{display:block;font-weight:700;color:#5E4A22;font-size:.88rem;margin:6px 0 6px}
+.rd-sum-in{width:100%;min-height:84px;border:1px solid rgba(184,154,94,.6);border-radius:8px;padding:10px 12px;font:inherit;font-size:.95rem;background:#fff;color:var(--ink,#293C35);resize:vertical}
+@media print{details.rd-group{border:0;background:none}details.rd-group > summary{padding:6px 0}.rd-g-b{padding:0}.rd-sum-in{border:0;padding:0;min-height:0}}
+</style>
 </head>
 <body>
 <header>
@@ -4244,6 +4270,76 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
   btn.addEventListener('click', ()=>{ if(NAV.depth > 0 || sameOrigin) history.back(); });
   update();
 })();
+</script>
+<script>
+/* החלק למטפל: כרטיסים מקובצים לפי נושא, וכרטיס סיכום בסוף */
+function rdBuild(){ /* גרסה מקובצת */
+  const p = curP(); const paper = $('iqRead'); if(!p || !paper) return;
+  const box = paper.querySelector('.iq-thera-part'); if(!box) return;
+  if(rdLastP !== p.id){ rdOpen = new Set(); rdOpenEx = new Set(); rdLastP = p.id; }
+  const {th} = iqReadParts(p.reading.text);
+  const recs = readRecs(p); const w = p.weeks[curWi(p)];
+  const cards = rdCards(th).reduce((acc,c)=>{
+    /* "להתחלה" ו"אפשרויות נוספות" הם חלק מכרטיס התרגילים, ולא כרטיסים נפרדים */
+    if(acc.length && /^(להתחלה|אפשרויות נוספות)/.test(c.title.trim()) && /תרגיל/.test(acc[acc.length-1].title)){ acc[acc.length-1].paras.push(`**${c.title}:** `+(c.paras[0]||''), ...c.paras.slice(1)); }
+    else acc.push(c);
+    return acc;
+  }, []); const used = new Set();
+  /* כרטיס הסיכום יוצא מהרשימה ומוצג בסוף */
+  const RD_SUM = /סיכום|למפגש הבא|במפגש הבא|לשיחה הבאה/;
+  const sumCard = cards.find(c=>RD_SUM.test(c.title)); const rest = cards.filter(c=>c!==sumCard);
+  const one = (c,i)=>{
+    const found = {ex:new Set(), el:new Set(), sf:new Set()};
+    const isFoot = /כף הרגל/.test(c.title);
+    let body = c.paras.map(x=>rdLinkify(x, recs, found, isFoot)).join('');
+    const isEx = /תרגיל/.test(c.title), isFocus = /מיקוד/.test(c.title);
+    if(isFoot) body += rdFootExtra(p);
+    if(isFocus && (found.el.size || found.sf.size)){
+      body += `<div class="rd-chips no-print"><span>לתרגילים של:</span>${[...found.el].map(k=>`<button type="button" class="wchip" style="background:${ELEMENTS[k].bg};color:${ELEMENTS[k].color}" onclick="exOpenAt('el','${k}')">יסוד ה${EX_EL_NAMES[k]}</button>`).join('')}${[...found.sf].map(n=>`<button type="button" class="wchip" style="background:var(--sefirah-bg);color:var(--sefirah)" onclick="exOpenAt('sf','${n}')">ספירת ${n}</button>`).join('')}</div>`;
+    }
+    let exIds = [];
+    if(isEx){
+      exIds = (found.ex.size ? [...found.ex] : recs).filter(id=>!used.has(id));
+      exIds.forEach(id=>used.add(id));
+      if(exIds.length) body += `<div class="rd-exs">${exIds.map(id=>rdExHTML(id,w)).join('')}</div>`;
+    }
+    const key = c.title;
+    return `<details class="rd-card" data-card="${escH(key)}" ${rdOpen.has(key)?'open':''} ontoggle="rdCardTog(this)"><summary>${escH(c.title)}${isEx&&exIds.length?`<span class="rd-badge">${exIds.filter(id=>w.items.includes(id)).length} מתוך ${exIds.length} בתרגול</span>`:''}</summary><div class="rd-card-b">${body}</div></details>`;
+  };
+  /* קיבוץ הכרטיסים לפי נושא */
+  const GROUPS = [
+    {k:'pic',  t:'התמונה והמיקוד', c:'var(--sefirah)', re:/מיקוד|יסוד|ספיר|תמונ|רגש|דפוס|שורש|מבט|כוח|נפש|אבחנ|הבנה|עיקר/},
+    {k:'body', t:'כף הרגל והגוף', c:'var(--earth)', re:/כף הרגל|רגל|גוף|איבר|מגע|טיפול|רפלקס|נקוד|כאב/},
+    {k:'tools',t:'תרגול, קריסטלים וכלים', c:'var(--practice)', re:/תרגיל|תרגול|קריסטל|אבן|אבנים|נשימה|כלי|שמן|מתנה/},
+    {k:'more', t:'הערות נוספות', c:'var(--forest)', re:/.*/}
+  ];
+  const buckets = GROUPS.map(g=>({g, items:[]}));
+  rest.forEach((c,i)=>{ const b = buckets.find(b=>b.g.re.test(c.title)); b.items.push(one(c,i)); });
+  const groupsHTML = buckets.filter(b=>b.items.length).map(b=>`<details class="rd-group" data-group="${b.g.k}" style="--gc:${b.g.c}" ${rdOpenG.has(b.g.k)?'open':''} ontoggle="rdGroupTog(this)"><summary><span class="rd-g-dot"></span><span class="rd-g-t">${b.g.t}</span><span class="rd-g-n">${b.items.length}</span></summary><div class="rd-g-b">${b.items.join('')}</div></details>`).join('');
+  /* סיכום ולמפגש הבא */
+  const sumBody = sumCard ? sumCard.paras.map(x=>rdLinkify(x, recs, {ex:new Set(),el:new Set(),sf:new Set()}, false)).join('') : '';
+  const next = (p.reading && p.reading.next) || '';
+  const sumHTML = `<div class="rd-sum"><div class="rd-sum-h">סיכום ולמפגש הבא</div>${sumBody || '<p class="rd-sum-empty no-print">באבחון הזה אין פרק סיכום. באבחונים הבאים, פרק שכותרתו "סיכום ולמפגש הבא" יופיע כאן.</p>'}<label class="rd-sum-l no-print" for="rdNext">מה לדבר במפגש הבא</label><textarea id="rdNext" class="rd-sum-in" placeholder="כמה מילים לעצמך לקראת המפגש הבא" oninput="rdNextSave(this.value)">${escH(next)}</textarea></div>`;
+  const allN = document.querySelectorAll ? 0 : 0;
+  box.innerHTML = `<div class="iq-tp-h">למטפל בלבד<button type="button" class="bm-link no-print rd-all" onclick="rdAll()">פתיחת הכול</button></div>${groupsHTML}${sumHTML}`;
+  rdAllLabel();
+}
+
+let rdOpenG = new Set(), rdNextT = null;
+function rdGroupTog(el){ const k=el.dataset.group; if(el.open){ rdOpenG.add(k); const cs=el.querySelectorAll('details.rd-card'); if(cs.length===1 && !cs[0].open){ cs[0].dataset.accBusy='1'; cs[0].open=true; setTimeout(()=>delete cs[0].dataset.accBusy,60); } } else rdOpenG.delete(k); rdAllLabel(); }
+function rdAllLabel(){ const b=document.querySelector('.rd-all'); if(!b) return; const gs=[...document.querySelectorAll('details.rd-group')]; b.textContent = gs.length && gs.every(g=>g.open) ? 'סגירת הכול' : 'פתיחת הכול'; }
+function rdAll(){
+  const gs=[...document.querySelectorAll('details.rd-group')], cs=[...document.querySelectorAll('details.rd-card')];
+  const openAll = !gs.every(g=>g.open);
+  /* פתיחה של הכול בבת אחת: מסמנים כדי שהאקורדיון לא יסגור את השכנים */
+  [...gs,...cs].forEach(x=>x.dataset.accBusy='1');
+  gs.forEach(g=>g.open=openAll); cs.forEach(c=>c.open=openAll);
+  setTimeout(()=>[...gs,...cs].forEach(x=>delete x.dataset.accBusy),60);
+  rdOpenG = new Set(openAll ? gs.map(g=>g.dataset.group) : []); rdOpen = new Set(openAll ? cs.map(c=>c.dataset.card) : []);
+  setTimeout(rdAllLabel,80);
+}
+function rdNextSave(v){ const p=curP(); if(!p || !p.reading) return; p.reading.next = v; clearTimeout(rdNextT); rdNextT=setTimeout(()=>savePT(),400); }
+function rdCardTog(el){ const k = el.dataset.card; if(el.open) rdOpen.add(k); else rdOpen.delete(k); }
 </script>
 </body>
 </html>
