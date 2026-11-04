@@ -150,6 +150,20 @@ a.app:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radi
 html body .tabs{border-radius:8px!important}
 html body .tabs .tab{border-radius:6px!important}
 </style>
+<style>
+/* טלפון: גופנים, כרטיסים ואייקונים קצת גדולים יותר */
+@media (max-width:640px){
+  header .greet, header .greet span{font-size:15.5px!important}
+  header h1{font-size:38px!important}
+  header .tagline{font-size:16.5px!important}
+  main a.app{min-height:88px!important;padding-top:14px!important;padding-bottom:14px!important}
+  main a.app .tile{width:60px!important;height:60px!important;flex-basis:60px!important}
+  main a.app .tile svg{width:28px!important;height:28px!important}
+  main a.app .name{font-size:18.5px!important}
+  main a.app .desc{font-size:15.5px!important}
+  main .gtitle{font-size:21px!important}
+}
+</style>
 </head>
 <body>
 <header>
