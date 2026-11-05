@@ -1142,6 +1142,27 @@ details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
 .rd-sum-in{width:100%;min-height:84px;border:1px solid rgba(184,154,94,.6);border-radius:8px;padding:10px 12px;font:inherit;font-size:.95rem;background:#fff;color:var(--ink,#293C35);resize:vertical}
 @media print{details.rd-group{border:0;background:none}details.rd-group > summary{padding:6px 0}.rd-g-b{padding:0}.rd-sum-in{border:0;padding:0;min-height:0}}
 </style>
+<style>
+/* טיפולים שנקבעו */
+.ap-box .ap-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 0;border-bottom:1px solid rgba(44,95,91,.10)}
+.ap-box .ap-row:first-of-type{border-top:1px solid rgba(44,95,91,.10)}
+.ap-when b{color:var(--forest-dark,#1E4744)}
+.ap-note{color:#60736A;font-size:.92rem;flex-basis:100%}
+.ap-acts{display:flex;gap:10px;align-items:center;margin-inline-start:auto}
+.ap-cal{font-size:.88rem;font-weight:700;color:#2F6690;text-decoration:none;border:1px solid #2F6690;border-radius:6px;padding:4px 10px;background:#DFE8ED}
+.ap-cal.done{color:#5C6B3F;border-color:#5C6B3F;background:#E4E7D9}
+.ap-del{border:0;background:none;color:#8A9490;font-size:1rem;cursor:pointer;padding:4px 6px}
+.ap-add{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 6px}
+.ap-add #apNote{grid-column:1 / -1}
+.ap-add .bm-btn{grid-column:1 / -1;background:#8A6D3B!important}
+@media (min-width:700px){.ap-add{grid-template-columns:170px 120px 1fr auto}.ap-add #apNote,.ap-add .bm-btn{grid-column:auto}}
+.ap-day{font-size:.82rem;font-weight:700;color:#8C7240;margin:10px 2px 4px}
+.ap-day:first-child{margin-top:0}
+.ysc-appts .ysc-grow{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.ysc-appts .ap-day{padding:0 14px}
+.iq-msg-edit{background:#fff!important;border:1px solid rgba(44,95,91,.35)!important}
+.iq-msg-edit:focus{outline:3px solid rgba(184,154,94,.5)}
+</style>
 </head>
 <body>
 <header>
@@ -1204,6 +1225,7 @@ details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
     <h2 class="ysc-h" id="yscGreet">בוקר טוב, יובל</h2>
     <p class="ysc-date" id="yscDate"></p>
     <div class="ysc-stats" id="yscStats"></div>
+    <div class="ysc-box ysc-appts"><h3>טיפולים קרובים <small id="yscApN"></small></h3><div id="yscAp"></div></div>
     <div class="ysc-box ysc-tasks"><h3>משימות להיום <small id="yscTaskN"></small></h3><div id="yscTask"></div></div>
     <div class="ysc-cols">
       <div class="ysc-box"><h3>לחזור היום <small id="yscDueN"></small></h3><div id="yscDue"></div></div>
@@ -4342,6 +4364,80 @@ function rdAll(){
 }
 function rdNextSave(v){ const p=curP(); if(!p || !p.reading) return; p.reading.next = v; clearTimeout(rdNextT); rdNextT=setTimeout(()=>savePT(),400); }
 function rdCardTog(el){ const k = el.dataset.card; if(el.open) rdOpen.add(k); else rdOpen.delete(k); }
+</script>
+<script>
+/* ===== טיפולים שנקבעו: בכרטיס המטופל, במסך "היום", ויומן גוגל ===== */
+const AP_DAYS = 14;   /* כמה ימים קדימה מוצגים במסך "היום" */
+const AP_LEN = 60;    /* אורך טיפול בדקות, ליומן */
+function apList(p){ if(!Array.isArray(p.appts)) p.appts=[]; return p.appts; }
+function apToday(){ return isoToday(); }
+const apAv = n => (String(n||'').trim()[0] || '•');
+function apDayLbl(iso){
+  const t=apToday(); if(iso===t) return 'היום';
+  const n=new Date(t+'T12:00:00'); n.setDate(n.getDate()+1); const tm=n.toISOString().slice(0,10);
+  if(iso===tm) return 'מחר';
+  return new Date(iso+'T12:00:00').toLocaleDateString('he-IL',{weekday:'long', day:'numeric', month:'long'});
+}
+function apCalUrl(p,a){
+  const pad=x=>String(x).padStart(2,'0'); let d,e,tz='';
+  if(a.time){ const [hh,mm]=a.time.split(':').map(Number); const st=new Date(`${a.date}T${pad(hh)}:${pad(mm)}:00`); const en=new Date(st.getTime()+AP_LEN*60000);
+    const f=x=>x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate())+'T'+pad(x.getHours())+pad(x.getMinutes())+'00'; d=f(st); e=f(en); tz='&ctz=Asia/Jerusalem'; }
+  else { d=a.date.replace(/-/g,''); const n=new Date(a.date+'T12:00:00'); n.setDate(n.getDate()+1); e=n.getFullYear()+pad(n.getMonth()+1)+pad(n.getDate()); }
+  const det=[p.phone?`טלפון: ${p.phone}`:'', a.note?a.note:'', 'כרטיס המטופל: https://tools.yuvalsnir.co.il/clinic.html'].filter(Boolean).join('\n');
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(`טיפול: ${p.name}`)+'&dates='+d+'/'+e+'&details='+encodeURIComponent(det)+tz;
+}
+function apHTML(p){
+  const t=apToday(); const up=apList(p).filter(a=>a.date>=t).sort((x,y)=>(x.date+(x.time||'')).localeCompare(y.date+(y.time||'')));
+  const rows = up.map(a=>`<div class="ap-row">
+      <span class="ap-when"><b>${escH(apDayLbl(a.date))}</b>${a.date!==t && apDayLbl(a.date)!=='מחר' ? '' : ` · ${escH(fmtD(a.date))}`}${a.time?` · ${escH(a.time)}`:''}</span>
+      ${a.note?`<span class="ap-note">${escH(a.note)}</span>`:''}
+      <span class="ap-acts"><a class="ap-cal ${a.cal?'done':''}" href="${apCalUrl(p,a)}" target="_blank" rel="noopener" onclick="apMarkCal('${a.id}')">${a.cal?'✓ ביומן גוגל':'ליומן גוגל'}</a><button type="button" class="ap-del" aria-label="מחיקת הטיפול" onclick="apDel('${a.id}')">✕</button></span>
+    </div>`).join('');
+  return `<div class="f wide ap-box" id="apBox"><span class="f-l">טיפולים שנקבעו</span>
+    ${rows || '<p class="iq-hint" style="margin:0 0 8px">אין טיפול עתידי שנקבע.</p>'}
+    <div class="ap-add"><input class="inp" type="date" id="apDate" aria-label="תאריך הטיפול" min="${t}"><input class="inp" type="time" id="apTime" aria-label="שעה" step="900"><input class="inp" id="apNote" placeholder="הערה, לא חובה" autocomplete="off"><button type="button" class="bm-btn" onclick="apAdd()">קביעת טיפול</button></div>
+    <span class="iq-hint" style="margin:0">הטיפולים הקרובים מופיעים גם במסך "היום". "ליומן גוגל" פותח את היומן עם הפרטים מוכנים, ונשאר רק לשמור.</span></div>`;
+}
+function apInject(){
+  const p=curP(); if(!p) return; const nx=document.getElementById('d_next'); if(!nx) return;
+  const old=document.getElementById('apBox'); if(old) old.remove();
+  nx.closest('.f').insertAdjacentHTML('afterend', apHTML(p));
+}
+function apAdd(){
+  const p=curP(); const date=$('apDate').value; if(!date){ $('apDate').focus(); return; }
+  apList(p).push({id:'a'+Date.now().toString(36), date, time:$('apTime').value||'', note:$('apNote').value.trim(), cal:false});
+  savePT(); apInject(); apRenderToday();
+}
+function apDel(id){ const p=curP(); if(!confirm('למחוק את הטיפול הזה? אם הוספת אותו ליומן גוגל, צריך למחוק אותו גם שם.')) return; p.appts=apList(p).filter(a=>a.id!==id); savePT(); apInject(); apRenderToday(); }
+function apMarkCal(id){ const p=curP(); const a=apList(p).find(x=>x.id===id); if(a){ a.cal=true; savePT(); setTimeout(apInject,300); } }
+function apRenderToday(){
+  const box=document.getElementById('yscAp'); if(!box) return;
+  const t=apToday(); const lim=new Date(t+'T12:00:00'); lim.setDate(lim.getDate()+AP_DAYS); const L=lim.toISOString().slice(0,10);
+  const all=[]; PT.patients.forEach(p=>apList(p).forEach(a=>{ if(a.date>=t && a.date<=L) all.push({p,a}); }));
+  all.sort((x,y)=>(x.a.date+(x.a.time||'99')).localeCompare(y.a.date+(y.a.time||'99')));
+  const n=document.getElementById('yscApN'); if(n) n.textContent=all.length||'';
+  if(!all.length){ box.innerHTML='<p class="ysc-none">אין טיפולים שנקבעו בשבועיים הקרובים. קובעים טיפול בכרטיס המטופל, בלשונית הפרטים.</p>'; return; }
+  let last=''; box.innerHTML=all.map(({p,a})=>{ const h = a.date!==last ? `<div class="ap-day">${escH(apDayLbl(a.date))}${(apDayLbl(a.date)==='היום'||apDayLbl(a.date)==='מחר')?` · ${escH(fmtD(a.date))}`:''}</div>` : ''; last=a.date;
+    return h+`<button class="ysc-row" onclick="openP('${p.id}','details')"><span class="ysc-av">${escH(apAv(p.name))}</span><span class="ysc-grow"><span class="ysc-nm">${escH(p.name)}</span>${a.note?`<span class="ysc-sub">${escH(a.note)}</span>`:''}</span><span class="ysc-tag ${a.date===t?'':''}">${a.time?escH(a.time):'ללא שעה'}</span></button>`; }).join('');
+}
+(function(){
+  const _rd = renderDetails; renderDetails = function(){ _rd.apply(this, arguments); apInject(); };
+  /* מסך "היום" נבנה מחדש בכל כניסה: כשהמספרים שבראשו מתעדכנים, מעדכנים גם את הטיפולים הקרובים */
+  const st=document.getElementById('yscStats'); if(st) new MutationObserver(()=>apRenderToday()).observe(st,{childList:true});
+  try{ apRenderToday(); }catch(e){}
+  /* הודעת השליחה של השאלון: אפשר לערוך אותה לפני השליחה */
+  const _sf = iqSendFull; iqSendFull = function(){
+    _sf.apply(this, arguments);
+    const box=document.getElementById('iqSend'); if(!box) return;
+    const ta=box.querySelector('textarea'); const wa=box.querySelector('a.bm-btn'); if(!ta||!wa) return;
+    ta.removeAttribute('readonly'); ta.id='iqMsg'; ta.classList.add('iq-msg-edit');
+    const base=wa.getAttribute('href').split('?')[0];
+    const upd=()=>{ wa.href = base + '?text=' + encodeURIComponent(ta.value); };
+    ta.addEventListener('input', upd); upd();
+    box.querySelectorAll('button').forEach(b=>{ if(/העתקת/.test(b.textContent)) b.onclick=()=>{ navigator.clipboard.writeText(ta.value); b.textContent='הועתק'; setTimeout(()=>b.textContent='העתקת ההודעה',1500); }; });
+    const hint=document.createElement('p'); hint.className='iq-hint'; hint.style.margin='6px 0 0'; hint.textContent='אפשר לערוך את ההודעה לפני השליחה. השינוי חל רק על השליחה הזו.'; ta.after(hint);
+  };
+})();
 </script>
 </body>
 </html>
