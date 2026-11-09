@@ -385,6 +385,19 @@ header.top .sub{color:#D9C394}
 /* אוויר מתחת לשורת הלשוניות בכותרת, כ־24 פיקסלים */
 html body header.top:not(.compact){padding-bottom:24px!important}
 </style>
+<style>
+/* שאלון מתקדם מקוצר */
+.ys-trim{display:none!important}
+.iq-blank-only.ys-show{display:block!important}
+.iq-group.ys-gate{cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 12px;margin:8px 0 0!important;border:1px solid rgba(184,154,94,.35);border-radius:8px;background:#FBF8F1;font-size:.95rem!important;user-select:none}
+.iq-group.ys-gate::before{content:"";width:7px;height:7px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .2s;margin-inline-end:2px}
+.iq-group.ys-gate.ys-open::before{transform:rotate(-45deg)}
+.iq-group.ys-gate::after{content:attr(data-n);margin-inline-start:auto;font-size:.78rem;font-weight:700;color:#5C6B3F}
+.iq-group.ys-gate.ys-open{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.iq-opts.ys-closed{display:none!important}
+.iq-group.ys-gate + .iq-opts:not(.ys-closed){border:1px solid rgba(184,154,94,.35);border-top:0;border-radius:0 0 8px 8px;padding:6px 10px 8px}
+@media print{.iq-opts.ys-closed{display:grid!important}.iq-group.ys-gate{border:0;background:none;padding:0}.iq-group.ys-gate::before,.iq-group.ys-gate::after{display:none}.ys-gate-hint{display:none}}
+</style>
 </head>
 <body>
 <header class="top"><h1>שאלון היכרות</h1><div class="sub">כדי שנדע במה חשוב להתמקד</div></header>
@@ -1056,5 +1069,90 @@ iqPreNote();
 })();
 </script>
 
+<script>
+/* ===== שאלון מתקדם מקוצר (נובמבר 2026) =====
+   השדות שירדו לא נמחקו מהקוד: הם מוסתרים, כדי שתשובות ישנות ימשיכו להופיע ושהמזהים לא ישתנו. */
+(function(){
+  const HIDE_ITEMS = ['iq_m_why','iq_h_injury','iq_h_scars','iq_l_dreams','iq_l_food','iq_l_sens','iq_c_wish','iq_c_hobby','iq_c_hard','iq_l_stress_other'];
+  const HIDE_RADIOS = ['iq_l_bed','iq_l_wakes','iq_l_plate','iq_l_veg'];
+  const RELABEL = {
+    iq_h_surg: 'ניתוחים, אשפוזים, תאונות, פציעות וצלקות, ואיפה בגוף',
+    iq_c_talent: 'מה תמיד בא לכם בקלות, ומה תמיד היה לכם קשה, יותר מלאחרים?',
+    iq_c_goal: 'מה הייתם רוצים שישתנה בעקבות הטיפולים, ומה לדעתכם צריך להשתנות כדי שזה יקרה?',
+    iq_l_notes: 'רגישות למזון, אם יש, או עוד משהו שתרצו להוסיף כאן',
+    iq_b_durpaper: 'ליד מה שסימנתם: מאז מתי, ואם זה התחיל בעקבות משהו'
+  };
+  const openG = new Set();
+  let busy = false;
+  function itemOf(el){ return el && (el.closest('.iq-item') || el.closest('.iq-field') || el.parentElement); }
+  function apply(root){
+    if(!root || busy) return; busy = true;
+    try{
+      HIDE_ITEMS.forEach(id=>{ const el=root.querySelector('#'+id); const it=itemOf(el); if(it) it.classList.add('ys-trim'); });
+      HIDE_RADIOS.forEach(n=>{ const el=root.querySelector(`input[name="${n}"]`); const it=el && (el.closest('.iq-item') || el.closest('.iq-opts')?.parentElement); if(it) it.classList.add('ys-trim'); });
+      Object.entries(RELABEL).forEach(([id,t])=>{ const el=root.querySelector('#'+id); if(!el) return; const it=itemOf(el); const l=it && (it.querySelector(`label[for="${id}"]`) || it.querySelector('.iq-lbl')); if(l && l.textContent!==t) l.textContent=t; });
+      const anger=root.querySelector('input[data-c="th_anger"]'); if(anger && !anger.checked) anger.closest('label').classList.add('ys-trim');
+      root.querySelectorAll('[data-k="x2_what"],[data-k="x3_what"]').forEach(x=>{ const r=x.closest('.iq-xrow'); if(r && !r.querySelector('input:not([value=""])')) r.classList.add('ys-trim'); });
+      root.querySelectorAll('[data-k="x1_lvl"],[data-k="x2_lvl"],[data-k="x3_lvl"]').forEach(x=>x.classList.add('ys-trim'));
+      root.querySelectorAll('.iq-xhead span:nth-child(4)').forEach(x=>x.classList.add('ys-trim'));
+      root.querySelectorAll('.iq-dur').forEach(x=>{ const ph='ממתי זה התחיל, והאם בעקבות משהו'; if(x.placeholder!==ph){ x.placeholder=ph; x.setAttribute('aria-label',ph); } });
+      /* תלונות נוספות: כל תחום נפתח רק אם יש בו משהו */
+      root.querySelectorAll('.iq-group').forEach(g=>{
+        const box=g.nextElementSibling; if(!box || !box.classList.contains('iq-opts') || !box.querySelector('.iq-bi')) return;
+        const key=g.textContent.trim(); const any=!!box.querySelector('input[type=checkbox]:checked');
+        if(!g.dataset.gate){ g.dataset.gate='1'; g.setAttribute('role','button'); g.tabIndex=0;
+          const tog=()=>{ if(openG.has(key)) openG.delete(key); else openG.add(key); apply(root); };
+          g.addEventListener('click',tog); g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); } });
+        }
+        const open = any || openG.has(key);
+        g.classList.add('ys-gate'); g.classList.toggle('ys-open', open); box.classList.toggle('ys-closed', !open);
+        const n=box.querySelectorAll('input[type=checkbox]:checked').length; g.dataset.n = n ? `${n} סומנו` : '';
+      });
+      const hint=root.querySelector('.iq-group.ys-gate'); if(hint && !root.querySelector('.ys-gate-hint')) hint.insertAdjacentHTML('beforebegin','<p class="iq-hint ys-gate-hint">לחצו על תחום כדי לפתוח אותו. מה שלא רלוונטי לכם, אפשר פשוט לדלג.</p>');
+    } finally { busy = false; }
+  }
+  window.ysTrimApply = apply;
+  window.ysTrimWatch = function(rootSel, enabled){
+    let raf=0;
+    const run=()=>{ if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; const host=document.querySelector(rootSel); if(!host) return; if(enabled && !enabled()) return; apply(host); }); };
+    new MutationObserver(()=>{ if(!busy) run(); }).observe(document.body,{childList:true,subtree:true});
+    run();
+  };
+})();
+
+ysTrimWatch('#app');
+</script>
+<script>
+/* תלונות נוספות: חלוקה לתחומים לפי מערכות הגוף (נובמבר 2026). הפריטים והמזהים לא השתנו, רק הסידור */
+(function(){
+  if(typeof IQ_BODY==='undefined') return;
+  const all={}; IQ_BODY.forEach(g=>g.items.forEach(i=>{ all[i.id]=i; }));
+  /* פריטים חדשים במערכת ההורמונלית (נובמבר 2026), היסודות לפי יובל */
+  [
+    {id:"b_hotflash",label:"גלי חום או הזעות לילה",tags:["fire"]},
+    {id:"b_wgain",label:"עלייה במשקל ונטייה לאגור",tags:["earth"],alt:["water"]},
+    {id:"b_wloss",label:"ירידה במשקל, או קושי לעלות במשקל",tags:["air"],alt:["fire"]},
+    {id:"b_cyclereg",label:"מחזור לא סדיר או משתנה",tags:["air"]},
+    {id:"b_heavybleed",label:"דימום כבד במחזור",tags:["water"]},
+    {id:"b_pms",label:"מתח, עצבנות ורגישות בימים שלפני המחזור",tags:["fire"],alt:["water"]},
+    {id:"b_libido",label:"ירידה בחשק המיני",tags:["earth"]}
+  ].forEach(i=>{ if(!all[i.id]) all[i.id]=i; });
+  const PLAN=[
+    ['ראש ועיניים', ['b_head_hot','b_head_heavy','b_eyes']],
+    ['שינה ואנרגיה', ['b_sleep','b_heavy','b_weak']],
+    ['נשימה, אף וגרון', ['b_shallow','b_exhale','b_breath','b_chest','b_cough','b_colds','b_sinus','b_allergy','b_throat']],
+    ['עור וציפורניים', ['b_rash','b_itch','b_dryskin','b_moist','b_sweat','b_nails']],
+    ['עיכול', ['b_heartburn','b_nausea','b_constip','b_diarr','b_gas','b_ibs','b_slowdig','b_hemo']],
+    ['שתן ונוזלים', ['b_urine','b_edema','b_stones']],
+    ['גב, שרירים ושלד', ['b_neck','b_upback','b_midback','b_lowback','b_knees','b_legheavy','b_armweak','b_tension','b_cramps']],
+    ['לב, דם וחיסון', ['b_bphigh','b_bplow','b_cold','b_iron','b_inflam']],
+    ['מערכת הורמונלית ופוריות', ['b_thyroid','b_hotflash','b_wgain','b_wloss','b_cyclereg','b_heavybleed','b_cycle','b_pms','b_libido']]
+  ];
+  const used=new Set(); const groups=PLAN.map(([name,ids])=>({name, items:ids.filter(id=>all[id]).map(id=>{ used.add(id); return all[id]; })})).filter(g=>g.items.length);
+  const rest=Object.keys(all).filter(id=>!used.has(id)).map(id=>all[id]); if(rest.length) groups.push({name:'עוד', items:rest});
+  IQ_BODY.splice(0, IQ_BODY.length, ...groups);
+})();
+try{ render(); }catch(e){}
+</script>
 </body>
 </html>

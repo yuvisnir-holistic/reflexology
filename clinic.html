@@ -1163,6 +1163,40 @@ details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
 .iq-msg-edit{background:#fff!important;border:1px solid rgba(44,95,91,.35)!important}
 .iq-msg-edit:focus{outline:3px solid rgba(184,154,94,.5)}
 </style>
+<style>
+/* תזכורת למחר */
+.ap-rem{border:1px solid rgba(47,102,144,.35);background:#EEF3F6;border-radius:8px;padding:10px 12px;margin:0 0 12px}
+.ap-rem-h{font-weight:700;color:#2F6690;font-size:.88rem;margin-bottom:6px}
+.ap-rem-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid rgba(47,102,144,.15)}
+.ap-rem-row:first-of-type{border-top:0}
+.ap-rem-btn{font-size:.85rem;font-weight:700;color:#fff;background:#2F6690;border-radius:6px;padding:6px 10px;text-decoration:none;white-space:nowrap}
+.ap-rem-btn.done{background:#E4E7D9;color:#5C6B3F}
+/* תרגיל חדש מהאבחון */
+.rd-newex{display:inline-block;margin-top:6px;font:700 .82rem 'Assistant',sans-serif;color:#fff;background:#8A6D3B;border:0;border-radius:6px;padding:5px 10px;cursor:pointer}
+/* מועדפים */
+.fav-btn{background:none;border:1px solid rgba(184,154,94,.55);color:#8C7240;border-radius:6px;width:36px;height:34px;font-size:1.05rem;line-height:1;cursor:pointer;margin-inline-end:6px;flex:none}
+.fav-btn.on{background:#F4EDDF;color:#B8892E;border-color:#B89A5E}
+.ex-top{align-items:flex-start}
+.ex-top > button.add-btn{flex:none}
+/* קטגוריות לכלים */
+.tool-cat{margin:0 0 10px}
+.tool-cat-h{font-size:.8rem;font-weight:700;color:#8C7240;margin:0 2px 6px}
+.tool-cat-b{display:flex;flex-wrap:wrap;gap:6px}
+#exSrcs:has(.tool-cat){display:block!important}
+</style>
+<style>
+/* שאלון מתקדם מקוצר */
+.ys-trim{display:none!important}
+.iq-blank-only.ys-show{display:block!important}
+.iq-group.ys-gate{cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 12px;margin:8px 0 0!important;border:1px solid rgba(184,154,94,.35);border-radius:8px;background:#FBF8F1;font-size:.95rem!important;user-select:none}
+.iq-group.ys-gate::before{content:"";width:7px;height:7px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .2s;margin-inline-end:2px}
+.iq-group.ys-gate.ys-open::before{transform:rotate(-45deg)}
+.iq-group.ys-gate::after{content:attr(data-n);margin-inline-start:auto;font-size:.78rem;font-weight:700;color:#5C6B3F}
+.iq-group.ys-gate.ys-open{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.iq-opts.ys-closed{display:none!important}
+.iq-group.ys-gate + .iq-opts:not(.ys-closed){border:1px solid rgba(184,154,94,.35);border-top:0;border-radius:0 0 8px 8px;padding:6px 10px 8px}
+@media print{.iq-opts.ys-closed{display:grid!important}.iq-group.ys-gate{border:0;background:none;padding:0}.iq-group.ys-gate::before,.iq-group.ys-gate::after{display:none}.ys-gate-hint{display:none}}
+</style>
 </head>
 <body>
 <header>
@@ -1570,7 +1604,7 @@ function tCopyEx(id){
   const p = curP(), t = getT(id); const ids = tExIds(p,t);
   if(!ids.length){ bmToast('בטיפול הזה עוד אין תרגילים'); return; }
   const first = (p.name||'').trim().split(/\s+/)[0];
-  let txt = `${first ? 'היי '+first+',' : 'היי,'}\nהנה מה שעשינו היום לתרגול בבית. חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.\n\n`;
+  let txt = `${first ? 'היי '+first+',' : 'היי,'}\nאלה התרגילים שבחרתי לך לשבוע הקרוב, לפי מה שעלה במפגש. חמש עד עשר דקות ביום, בזמן קבוע אם אפשר. וביום קשה, מקטינים את התרגיל לדקה אחת ולא מוותרים עליו.\n\n`;
   ids.forEach((x,i)=>{ const e = EXR[x]; txt += `${i+1}. ${e.title}\n${e.why ? 'למה: '+e.why+'\n' : ''}${e.text}\n\n`; });
   const qs = weekQs(ids);
   txt += 'לרישום, ולהביא למפגש הבא:\n' + (qs.length ? qs.join('\n') : 'מה עבד, מה היה קשה, ומה התגלה?');
@@ -2577,7 +2611,7 @@ const IQ_LEAN_SIGNS = ["e_anger","b_heartburn","e_burst","e_fear","e_flood","b_e
 const IQ_LEAN_STMTS = ["s7","s6","s4","s2","s20","s1","s12","s22"];
 const IQ_LEAN_NATURE = ["n2","n3","n5","n7"];
 function iqLeanSigns(){ const all=[...IQ_EMO]; IQ_BODY.forEach(g=>g.items.forEach(i=>all.push(i))); return IQ_LEAN_SIGNS.map(id=>all.find(x=>x.id===id)); }
-function iqMode(p){ if(!p) return 'lean'; return p.intakeMode || (iqHas(p) ? 'full' : 'lean'); }
+function iqMode(p){ if(!p) return 'quick'; return p.intakeMode || (iqHas(p) ? 'full' : 'quick'); }
 function iqSetMode(m){ const p=curP(); p.intakeMode=m; savePT(); renderIntake(); }
 function iqLeanHTML(p){
   let h = "";
@@ -2731,7 +2765,7 @@ function renderIntake(){
     </div>
     <div class="iq-secs no-print" style="max-width:460px">
       <button class="iq-sec ${iqMode(p)==='quick'?'on':''}" onclick="iqSetMode('quick')">שאלון מהיר</button>
-      <button class="iq-sec ${iqMode(p)==='lean'?'on':''}" onclick="iqSetMode('lean')">שאלון</button>
+      ${iqMode(p)==='lean'?`<button class="iq-sec on" onclick="iqSetMode('lean')">שאלון (הגרסה הקודמת)</button>`:''}
       <button class="iq-sec ${iqMode(p)==='full'?'on':''}" onclick="iqSetMode('full')">שאלון מתקדם</button>
     </div>
     <div id="iqSummary"></div>
@@ -2895,7 +2929,7 @@ function iqText(){
   const rl=(name,pairs)=>{ const f=pairs.find(x=>x[0]===S[name]); return f?f[1]:""; };
   const tg=t=>t.tags&&t.tags.length?` [${t.tags.map(e=>IQ_EL[e].name).join("/")}${t.alt&&t.alt.length?`, או: ${t.alt.map(e=>IQ_EL[e].name).join(", ")}`:""}]`:"";
   L.push(iqMode(p)==="lean" ? "שאלון היכרות, לניתוח (אבחון רזה מהקליניקה)" : iqMode(p)==="quick" ? "שאלון היכרות, לניתוח (אבחון מהיר מהקליניקה)" : "שאלון היכרות, לניתוח");
-  L.push(`שם: ${p.name} | גיל: ${v("f_age")} | עיסוק: ${v("f_job")} | תאריך: ${iqFmtDate(v("f_date"))}`);
+  L.push(`שם: ${p.name}${p.gender?` | לשון פנייה: ${p.gender==='f'?'נקבה':'זכר'}`:''} | גיל: ${v("f_age")} | עיסוק: ${v("f_job")} | תאריך: ${iqFmtDate(v("f_date"))}`);
   L.push(`משקל: ${v("f_weight")} | גובה: ${v("f_height")} | לחץ דם: ${v("f_bp")} | דופק: ${v("f_pulse")}`);
   L.push("","התלונה העיקרית");
   L.push(`סוג: ${rl("m_kind",IQ_KIND)}`);
@@ -3464,7 +3498,7 @@ renderIntake = function(){
     </div>
     <div class="iq-secs no-print" style="max-width:600px">
       <button class="iq-sec" onclick="midBack('quick')">שאלון מהיר</button>
-      <button class="iq-sec" onclick="midBack('lean')">שאלון</button>
+      
       <button class="iq-sec" onclick="midBack('full')">שאלון מתקדם</button>
       <button class="iq-sec on">שאלון אמצע</button>
     </div>
@@ -4438,6 +4472,188 @@ function apRenderToday(){
     const hint=document.createElement('p'); hint.className='iq-hint'; hint.style.margin='6px 0 0'; hint.textContent='אפשר לערוך את ההודעה לפני השליחה. השינוי חל רק על השליחה הזו.'; ta.after(hint);
   };
 })();
+</script>
+<script>
+/* ===== תוספות נובמבר 2026: לשון פנייה, תזכורת ליום לפני, תרגיל חדש מהאבחון, קטגוריות ומועדפים בבחירת התרגילים ===== */
+(function(){
+  /* --- לשון פנייה בכרטיס המטופל --- */
+  function gInject(){
+    const p=curP(); const nm=document.getElementById('d_name'); if(!p||!nm) return;
+    const old=document.getElementById('gBox'); if(old) old.remove();
+    const b=(k,l)=>`<button class="${p.gender===k?'on':''}" aria-pressed="${p.gender===k}" onclick="gSet('${k}')">${l}</button>`;
+    nm.closest('.f').insertAdjacentHTML('afterend', `<div class="f" id="gBox"><span class="f-l">לשון פנייה</span><div class="seg" role="group" aria-label="לשון פנייה">${b('m','זכר')}${b('f','נקבה')}</div></div>`);
+  }
+  window.gSet = function(k){ const p=curP(); p.gender = p.gender===k ? '' : k; savePT(); gInject(); };
+  const _rd = renderDetails; renderDetails = function(){ _rd.apply(this, arguments); gInject(); };
+
+  /* --- תזכורת ליום שלפני הטיפול, במסך "היום" --- */
+  window.apRemindMsg = function(p,a){
+    const first=(p.name||'').trim().split(/\s+/)[0];
+    return `היי ${first}, רק מזכיר שנפגשים מחר${a.time?` בשעה ${a.time}`:''}. מחכה לך.`;
+  };
+  const _apr = apRenderToday;
+  apRenderToday = function(){
+    _apr();
+    const box=document.getElementById('yscAp'); if(!box) return;
+    const t=isoToday(); const n=new Date(t+'T12:00:00'); n.setDate(n.getDate()+1); const tm=n.toISOString().slice(0,10);
+    const rows=[]; PT.patients.forEach(p=>apList(p).forEach(a=>{ if(a.date===tm) rows.push({p,a}); }));
+    if(!rows.length) return;
+    rows.sort((x,y)=>(x.a.time||'99').localeCompare(y.a.time||'99'));
+    const html = `<div class="ap-rem"><div class="ap-rem-h">תזכורת למחר</div>${rows.map(({p,a})=>{
+        const ph=iqWaPhone(p.phone); const url=`https://wa.me/${ph}?text=${encodeURIComponent(apRemindMsg(p,a))}`;
+        return `<div class="ap-rem-row"><span><b>${escH(p.name)}</b>${a.time?` · ${escH(a.time)}`:''}</span><a class="ap-rem-btn ${a.rem?'done':''}" href="${url}" target="_blank" rel="noopener" onclick="apRemMark('${p.id}','${a.id}')">${a.rem?'✓ נשלחה תזכורת':'תזכורת בוואטסאפ'}</a></div>`; }).join('')}</div>`;
+    box.insertAdjacentHTML('afterbegin', html);
+  };
+  window.apRemMark = function(pid,aid){ const p=PT.patients.find(x=>x.id===pid); if(!p) return; const a=apList(p).find(x=>x.id===aid); if(a){ a.rem=true; savePT(); setTimeout(apRenderToday,300); } };
+  try{ apRenderToday(); }catch(e){}
+
+  /* --- הצעה לתרגיל חדש מתוך האבחון: פותחת את טופס התרגיל החדש, ממולא --- */
+  window.rdNewEx = function(btn){
+    const raw = btn.closest('p').textContent.replace(/הוספה כתרגיל חדש$/,'').trim();
+    const body = raw.replace(/^[^:]{0,40}תרגיל חדש[^:]{0,20}:\s*/,'');
+    const m = body.match(/["״“”']([^"״“”']{2,60})["״“”']/);
+    const title = m ? m[1].trim() : '';
+    let text = m ? body.replace(m[0],'').replace(/^[\s,.:]+/,'').trim() : body;
+    if(typeof exOpen!=='function') return;
+    exOpen(); myOpen = true; myDraft = {title, text, src:(typeof myDefaultSrc==='function'?myDefaultSrc():'gen'), floor:'guf'}; exRender();
+    const i=document.getElementById('my_t'); if(i){ i.scrollIntoView({block:'center'}); i.focus(); }
+    bmToast('בדקו את השם, הנוסח והשיוך, ושמרו');
+  };
+  function rdNewExButtons(){
+    document.querySelectorAll('.iq-thera-part p').forEach(p=>{
+      if(p.querySelector('.rd-newex')) return;
+      if(p.closest('.rd-ex')) return;
+      const card=p.closest('details.rd-card'); const inCard = card && /תרגיל חדש|הצעה לתרגיל/.test(card.dataset.card||'');
+      if(!inCard && !/תרגיל חדש|הצעה לתרגיל/.test(p.textContent)) return;
+      p.insertAdjacentHTML('beforeend',' <button type="button" class="rd-newex no-print" onclick="rdNewEx(this)">הוספה כתרגיל חדש</button>');
+    });
+  }
+  const _rb = rdBuild; rdBuild = function(){ _rb.apply(this, arguments); rdNewExButtons(); };
+
+  /* --- מועדפים --- */
+  const FAV_KEY='ex-favs';
+  window.exFavs = function(){ try{ return JSON.parse(localStorage.getItem(FAV_KEY)||'[]'); }catch(e){ return []; } };
+  window.exFavToggle = function(id,btn){ const f=exFavs(); const i=f.indexOf(id); if(i<0) f.push(id); else f.splice(i,1); try{ localStorage.setItem(FAV_KEY, JSON.stringify(f)); }catch(e){} if(btn){ const on=i<0; btn.classList.toggle('on',on); btn.textContent=on?'★':'☆'; btn.setAttribute('aria-label', on?'הסרה מהמועדפים':'הוספה למועדפים'); } if(exTab==='fav') exRender(); };
+  const _row = exRow;
+  exRow = function(id, showSrc){
+    const h=_row(id, showSrc); if(!h) return h;
+    const on=exFavs().includes(id);
+    return h.replace('<button class="add-btn', `<button type="button" class="fav-btn ${on?'on':''}" aria-label="${on?'הסרה מהמועדפים':'הוספה למועדפים'}" onclick="exFavToggle('${id}',this)">${on?'★':'☆'}</button><button class="add-btn`);
+  };
+  if(typeof EX_TABS!=='undefined' && !EX_TABS.some(t=>t[0]==='fav')) EX_TABS.unshift(['fav','★ מועדפים']);
+
+  /* --- קטגוריות לכלים --- */
+  const TOOL_CATS = [
+    ['כלי הבעל שם טוב', ['tool-hashkata','tool-pius','tool-pius-bore','tool-pius-atzmi','tool-hachnaa','tool-marot','tool-gadlut','tool-hester','tool-tashlich','tool-hishtavut']],
+    ['נשימה ושקט', ['tool-neshima','tool-dumiya']],
+    ['גוף ואיברים', ['tool-evarim','tool-dibur','tool-guf-neshama','tool-hatara']],
+    ['נפש, דמיון ואמונה', ['tool-medame','tool-emuna','tool-omek','tool-hitmakrut']],
+    ['קריסטלים', ['tool-avanim']]
+  ];
+  const _body = exRenderBody;
+  exRenderBody = function(sel){
+    if(exTab==='fav'){
+      $('exSrcs').innerHTML='';
+      const ids=exFavs().filter(id=>EXR[id]);
+      $('exList').innerHTML = ids.length ? '<p class="ex-lead">התרגילים שסימנת בכוכב. אפשר לסמן כוכב בכל תרגיל, בכל לשונית.</p>'+ids.map(id=>exRow(id,true)).join('') : '<p class="ex-none">עוד אין מועדפים. לחיצה על הכוכב ליד תרגיל מוסיפה אותו לכאן.</p>';
+      return;
+    }
+    _body.apply(this, arguments);
+    if(exTab==='tool'){
+      const srcs=$('exSrcs'); const btns=[...srcs.querySelectorAll('button')]; const keyOf=b=>(b.getAttribute('onclick').match(/'([^']+)'/)||[])[1];
+      const used=new Set(); let html='';
+      TOOL_CATS.forEach(([name,keys])=>{ const bs=btns.filter(b=>keys.includes(keyOf(b))); if(!bs.length) return; bs.forEach(b=>used.add(b)); html+=`<div class="tool-cat"><div class="tool-cat-h">${name}</div><div class="tool-cat-b">${bs.map(b=>b.outerHTML).join('')}</div></div>`; });
+      const rest=btns.filter(b=>!used.has(b)); if(rest.length) html+=`<div class="tool-cat"><div class="tool-cat-h">עוד</div><div class="tool-cat-b">${rest.map(b=>b.outerHTML).join('')}</div></div>`;
+      srcs.innerHTML=html;
+    }
+  };
+  if(typeof exSel!=='undefined' && !exSel.fav) exSel.fav='fav';
+})();
+</script>
+<script>
+/* ===== שאלון מתקדם מקוצר (נובמבר 2026) =====
+   השדות שירדו לא נמחקו מהקוד: הם מוסתרים, כדי שתשובות ישנות ימשיכו להופיע ושהמזהים לא ישתנו. */
+(function(){
+  const HIDE_ITEMS = ['iq_m_why','iq_h_injury','iq_h_scars','iq_l_dreams','iq_l_food','iq_l_sens','iq_c_wish','iq_c_hobby','iq_c_hard','iq_l_stress_other'];
+  const HIDE_RADIOS = ['iq_l_bed','iq_l_wakes','iq_l_plate','iq_l_veg'];
+  const RELABEL = {
+    iq_h_surg: 'ניתוחים, אשפוזים, תאונות, פציעות וצלקות, ואיפה בגוף',
+    iq_c_talent: 'מה תמיד בא לכם בקלות, ומה תמיד היה לכם קשה, יותר מלאחרים?',
+    iq_c_goal: 'מה הייתם רוצים שישתנה בעקבות הטיפולים, ומה לדעתכם צריך להשתנות כדי שזה יקרה?',
+    iq_l_notes: 'רגישות למזון, אם יש, או עוד משהו שתרצו להוסיף כאן',
+    iq_b_durpaper: 'ליד מה שסימנתם: מאז מתי, ואם זה התחיל בעקבות משהו'
+  };
+  const openG = new Set();
+  let busy = false;
+  function itemOf(el){ return el && (el.closest('.iq-item') || el.closest('.iq-field') || el.parentElement); }
+  function apply(root){
+    if(!root || busy) return; busy = true;
+    try{
+      HIDE_ITEMS.forEach(id=>{ const el=root.querySelector('#'+id); const it=itemOf(el); if(it) it.classList.add('ys-trim'); });
+      HIDE_RADIOS.forEach(n=>{ const el=root.querySelector(`input[name="${n}"]`); const it=el && (el.closest('.iq-item') || el.closest('.iq-opts')?.parentElement); if(it) it.classList.add('ys-trim'); });
+      Object.entries(RELABEL).forEach(([id,t])=>{ const el=root.querySelector('#'+id); if(!el) return; const it=itemOf(el); const l=it && (it.querySelector(`label[for="${id}"]`) || it.querySelector('.iq-lbl')); if(l && l.textContent!==t) l.textContent=t; });
+      const anger=root.querySelector('input[data-c="th_anger"]'); if(anger && !anger.checked) anger.closest('label').classList.add('ys-trim');
+      root.querySelectorAll('[data-k="x2_what"],[data-k="x3_what"]').forEach(x=>{ const r=x.closest('.iq-xrow'); if(r && !r.querySelector('input:not([value=""])')) r.classList.add('ys-trim'); });
+      root.querySelectorAll('[data-k="x1_lvl"],[data-k="x2_lvl"],[data-k="x3_lvl"]').forEach(x=>x.classList.add('ys-trim'));
+      root.querySelectorAll('.iq-xhead span:nth-child(4)').forEach(x=>x.classList.add('ys-trim'));
+      root.querySelectorAll('.iq-dur').forEach(x=>{ const ph='ממתי זה התחיל, והאם בעקבות משהו'; if(x.placeholder!==ph){ x.placeholder=ph; x.setAttribute('aria-label',ph); } });
+      /* תלונות נוספות: כל תחום נפתח רק אם יש בו משהו */
+      root.querySelectorAll('.iq-group').forEach(g=>{
+        const box=g.nextElementSibling; if(!box || !box.classList.contains('iq-opts') || !box.querySelector('.iq-bi')) return;
+        const key=g.textContent.trim(); const any=!!box.querySelector('input[type=checkbox]:checked');
+        if(!g.dataset.gate){ g.dataset.gate='1'; g.setAttribute('role','button'); g.tabIndex=0;
+          const tog=()=>{ if(openG.has(key)) openG.delete(key); else openG.add(key); apply(root); };
+          g.addEventListener('click',tog); g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); } });
+        }
+        const open = any || openG.has(key);
+        g.classList.add('ys-gate'); g.classList.toggle('ys-open', open); box.classList.toggle('ys-closed', !open);
+        const n=box.querySelectorAll('input[type=checkbox]:checked').length; g.dataset.n = n ? `${n} סומנו` : '';
+      });
+      const hint=root.querySelector('.iq-group.ys-gate'); if(hint && !root.querySelector('.ys-gate-hint')) hint.insertAdjacentHTML('beforebegin','<p class="iq-hint ys-gate-hint">לחצו על תחום כדי לפתוח אותו. מה שלא רלוונטי לכם, אפשר פשוט לדלג.</p>');
+    } finally { busy = false; }
+  }
+  window.ysTrimApply = apply;
+  window.ysTrimWatch = function(rootSel, enabled){
+    let raf=0;
+    const run=()=>{ if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; const host=document.querySelector(rootSel); if(!host) return; if(enabled && !enabled()) return; apply(host); }); };
+    new MutationObserver(()=>{ if(!busy) run(); }).observe(document.body,{childList:true,subtree:true});
+    run();
+  };
+})();
+
+ysTrimWatch('#iqWrap', ()=>{ try{ return iqMode(curP())==='full'; }catch(e){ return false; } });
+</script>
+<script>
+/* תלונות נוספות: חלוקה לתחומים לפי מערכות הגוף (נובמבר 2026). הפריטים והמזהים לא השתנו, רק הסידור */
+(function(){
+  if(typeof IQ_BODY==='undefined') return;
+  const all={}; IQ_BODY.forEach(g=>g.items.forEach(i=>{ all[i.id]=i; }));
+  /* פריטים חדשים במערכת ההורמונלית (נובמבר 2026), היסודות לפי יובל */
+  [
+    {id:"b_hotflash",label:"גלי חום או הזעות לילה",tags:["fire"]},
+    {id:"b_wgain",label:"עלייה במשקל ונטייה לאגור",tags:["earth"],alt:["water"]},
+    {id:"b_wloss",label:"ירידה במשקל, או קושי לעלות במשקל",tags:["air"],alt:["fire"]},
+    {id:"b_cyclereg",label:"מחזור לא סדיר או משתנה",tags:["air"]},
+    {id:"b_heavybleed",label:"דימום כבד במחזור",tags:["water"]},
+    {id:"b_pms",label:"מתח, עצבנות ורגישות בימים שלפני המחזור",tags:["fire"],alt:["water"]},
+    {id:"b_libido",label:"ירידה בחשק המיני",tags:["earth"]}
+  ].forEach(i=>{ if(!all[i.id]) all[i.id]=i; });
+  const PLAN=[
+    ['ראש ועיניים', ['b_head_hot','b_head_heavy','b_eyes']],
+    ['שינה ואנרגיה', ['b_sleep','b_heavy','b_weak']],
+    ['נשימה, אף וגרון', ['b_shallow','b_exhale','b_breath','b_chest','b_cough','b_colds','b_sinus','b_allergy','b_throat']],
+    ['עור וציפורניים', ['b_rash','b_itch','b_dryskin','b_moist','b_sweat','b_nails']],
+    ['עיכול', ['b_heartburn','b_nausea','b_constip','b_diarr','b_gas','b_ibs','b_slowdig','b_hemo']],
+    ['שתן ונוזלים', ['b_urine','b_edema','b_stones']],
+    ['גב, שרירים ושלד', ['b_neck','b_upback','b_midback','b_lowback','b_knees','b_legheavy','b_armweak','b_tension','b_cramps']],
+    ['לב, דם וחיסון', ['b_bphigh','b_bplow','b_cold','b_iron','b_inflam']],
+    ['מערכת הורמונלית ופוריות', ['b_thyroid','b_hotflash','b_wgain','b_wloss','b_cyclereg','b_heavybleed','b_cycle','b_pms','b_libido']]
+  ];
+  const used=new Set(); const groups=PLAN.map(([name,ids])=>({name, items:ids.filter(id=>all[id]).map(id=>{ used.add(id); return all[id]; })})).filter(g=>g.items.length);
+  const rest=Object.keys(all).filter(id=>!used.has(id)).map(id=>all[id]); if(rest.length) groups.push({name:'עוד', items:rest});
+  IQ_BODY.splice(0, IQ_BODY.length, ...groups);
+})();
+try{ if(document.getElementById('iqWrap') && typeof renderIntake==='function') renderIntake(); }catch(e){}
 </script>
 </body>
 </html>
