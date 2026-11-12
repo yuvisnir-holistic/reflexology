@@ -1378,7 +1378,7 @@ function renderJournal(){
       <div class="body prose">${ans || '<p class="muted">עוד אין תשובות.</p>'}${st.end?`<div class="jend"><div class="dsub">השאלה לסיום השבוע</div><p class="muted" style="margin:0 0 6px">${w.endQ}</p><p style="margin:0">${esc(st.end)}</p></div>`:''}
       <div class="btnrow no-print"><button class="btn small ghost" data-go="week:${id}">לשבוע</button></div></div></details>`;
   }).join('') + `<div class="week-tools no-print"><button class="mini del" id="wipeAll">למחוק את כל מה שנשמר במכשיר</button></div>`;
-  $('#wipeAll').onclick=()=>{ if(confirm('למחוק את כל מה שנשמר כאן, בשבועות של היסודות? אי אפשר לשחזר את זה.')){ Object.keys(S.weeks).forEach(id=>{ if(WEEKS[id]) delete S.weeks[id]; }); if(S.current && WEEKS[S.current]) S.current=null; save('הכול נמחק'); renderJournal(); } };
+  $('#wipeAll').onclick=()=>{ if(confirm('למחוק את כל מה שנשמר כאן, בשבועות של היסודות, כולל תאריך ההתחלה של המסלול? אי אפשר לשחזר את זה.')){ Object.keys(S.weeks).forEach(id=>{ if(WEEKS[id]) delete S.weeks[id]; }); if(S.current && WEEKS[S.current]) S.current=null; try{ localStorage.removeItem('yesodot-journey-v1'); }catch(e){} save('הכול נמחק'); location.reload(); } };
 }
 
 /* ===== חלון הסבר לקווים ===== */
@@ -1481,11 +1481,12 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
     const id=ORDER[p.w],w=WEEKS[id],d=w.days[p.i],st=W(id),done=!!(st.days[p.i]&&st.days[p.i].done);
     return `<div class="ysj-today" style="${elv(id)}">
       <div class="ysj-eyebrow"><span class="ysj-pill"><i></i>שבוע ${p.w+1} מתוך 4 · ${w.name}</span><span>יום ${p.i+1} מתוך 7</span></div>
-      <div class="ysj-title">היום: ${d.l}</div>${d.lens||d.ex?`<div class="ysj-lens">${d.lens||''}${d.lens&&d.ex?' - ':''}${d.ex||''}</div>`:''}
+      <div class="ysj-title">היום: ${d.l}</div>${d.lens||d.ex?`<div class="ysj-lens">${d.lens||''}${d.lens&&d.ex?': ':''}${d.ex||''}</div>`:''}
       ${d.do?`<div class="ysj-do"><b>התרגיל של היום</b>${d.do}</div>`:''}
       ${d.look?`<div class="ysj-do"><b>השאלה שלוקחים איתכם</b>${d.look}</div>`:''}
       <div class="ysj-actions"><button class="btn" id="ysjOpen">לפתוח את היום ולכתוב</button>
-      <button class="ysj-done ${done?'on':''}" id="ysjDone" aria-pressed="${done}"><span class="box">${done?'✓':''}</span>${done?'עשיתי היום':'סמנו שעשיתם'}</button></div></div>`;}
+      <button class="ysj-done ${done?'on':''}" id="ysjDone" aria-pressed="${done}"><span class="box">${done?'✓':''}</span>${done?'עשיתי היום':'סמנו שעשיתם'}</button>
+      <button class="ysj-link" id="ysjReset">להתחיל מחדש</button></div></div>`;}
   function path(p){const j=getJ();
     return `<div class="ysj-path"><h3>המסלול שלי</h3><p class="hint">כל פס הוא יום. פס מלא הוא יום שסימנתם שעשיתם.</p>`+ORDER.map((id,n)=>{
       const w=WEEKS[id];if(!w)return '';const st=W(id);const cur=p&&p.w===n,past=p&&(p.finished||(p.w!=null&&n<p.w)),fut=!cur&&!past;
@@ -1501,6 +1502,9 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
     q('#ysjGo')&&q('#ysjGo').addEventListener('click',()=>{const v=q('#ysjDate').value;if(!v)return;const old=getJ().start;
       if(old&&old!==v)ORDER.forEach((id,n)=>{const st=S.weeks[id];if(st&&st.start===add(old,7*n))st.start=null;});
       setJ({start:v});render.edit=false;sync();save('נשמר');render();});
+    q('#ysjReset')&&q('#ysjReset').addEventListener('click',()=>{if(!confirm('להתחיל את המסלול מחדש? כל מה שכתבתם וסימנתם בשבועות של היסודות יימחק, ותבחרו תאריך התחלה חדש.'))return;
+      ['esh','ruach','mayim','afar'].forEach(id=>{delete S.weeks[id];});if(S.current&&WEEKS[S.current])S.current=null;
+      try{localStorage.removeItem(JK)}catch(e){}save('המסלול אופס');location.reload();});
     q('#ysjCancel')&&q('#ysjCancel').addEventListener('click',()=>{render.edit=false;render();});
     q('#ysjEdit')&&q('#ysjEdit').addEventListener('click',()=>{render.edit=true;render();});
     q('#ysjOpen')&&q('#ysjOpen').addEventListener('click',()=>openDay(ORDER[p.w],p.i));
