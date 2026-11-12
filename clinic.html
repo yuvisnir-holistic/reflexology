@@ -2230,7 +2230,7 @@ function sugAvail(p){ return !!(iqHas(p) || readRecs(p).length || tSugText(linke
 const IQ_SHOW_ALT = true;
 /* ===== שאלון היכרות ואבחון בכרטיס המטופל ===== */
 const IQ_EL = {fire:{name:"אש",c:"#A8442B"}, water:{name:"מים",c:"#2F6690"}, air:{name:"אוויר",c:"#A9821F"}, earth:{name:"אדמה",c:"#5C6B3F"}};
-const IQ_ORDER = ["fire","water","air","earth"];
+const IQ_ORDER = ["fire","air","water","earth"];
 const iqEsc = s => String(s==null?"":s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 const IQ_KIND = [["body","משהו בגוף"],["soul","משהו בנפש, כמו לחץ, עצב או חרדה"],["both","שניהם"]];
@@ -2464,7 +2464,8 @@ const IQ_L2 = {
   l_veg:[["most","כמעט בכל ארוחה"],["daily","פעם ביום"],["rare","לעיתים רחוקות"]],
   l_bowel:[["regular","סדירות"],["irregular","לא סדירות"]],
   l_wakes:[["1","פעם אחת"],["2","פעמיים"],["3","שלוש פעמים ומעלה"]],
-  l_stool:[["soft","רכות"],["normal","רגילות"],["hard","קשות"]]
+  l_stool:[["soft","רכות"],["normal","רגילות"],["hard","קשות"]],
+  l_energy:[["good","טובה לאורך היום"],["dips","יש נפילות במהלך היום"],["low","נמוכה רוב הזמן"]]
 };
 function iqInp(id,label,ph){ return `<div class="iq-item"><label class="iq-lbl" for="iq_${id}">${label}</label><input type="text" id="iq_${id}" data-k="${id}"${ph?` placeholder="${ph}"`:""}></div>`; }
 function iqExtra(){
@@ -2611,7 +2612,7 @@ const IQ_LEAN_SIGNS = ["e_anger","b_heartburn","e_burst","e_fear","e_flood","b_e
 const IQ_LEAN_STMTS = ["s7","s6","s4","s2","s20","s1","s12","s22"];
 const IQ_LEAN_NATURE = ["n2","n3","n5","n7"];
 function iqLeanSigns(){ const all=[...IQ_EMO]; IQ_BODY.forEach(g=>g.items.forEach(i=>all.push(i))); return IQ_LEAN_SIGNS.map(id=>all.find(x=>x.id===id)); }
-function iqMode(p){ if(!p) return 'quick'; return p.intakeMode || (iqHas(p) ? 'full' : 'quick'); }
+function iqMode(p){ if(!p) return 'quick'; const m = p.intakeMode || (iqHas(p) ? 'full' : 'quick'); return m==='lean' ? 'full' : m; /* מי שמילא את השאלון הישן מוצג בשאלון המתקדם */ }
 function iqSetMode(m){ const p=curP(); p.intakeMode=m; savePT(); renderIntake(); }
 function iqLeanHTML(p){
   let h = "";
@@ -2689,8 +2690,8 @@ function iqQuickSigns(){ const all=[...IQ_EMO]; IQ_BODY.forEach(g=>g.items.forEa
 function iqSefMarked(S){ const a=[...IQ_SEF,...IQ_SEF_LEAN].filter(x=>S[x.id]); if(S.q_sef){ const l=IQ_SEF_LEAN.find(x=>x.sf===S.q_sef); a.push({id:"q_sef",label:l?l.label:S.q_sef,sf:S.q_sef,dir:"חוסר או עודף"}); } return a; }
 function iqQuickHTML(p){
   let h = "";
-  h += `<div class="paper-h"><h2>שאלון מהיר</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
-  h += `<p class="iq-hint" style="margin:0 0 6px">שאלון קצר, לכחמש עד עשר דקות.</p>`;
+  h += `<div class="paper-h"><h2>שאלון</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
+  h += `<p class="iq-hint" style="margin:0 0 6px">שאלון קצר, לכעשר דקות.</p>`;
   h += `<section class="iq-q"><h3>פרטים</h3><div class="iq-details" style="grid-template-columns:2fr 1fr 2fr 1.4fr">
     <div><label>שם</label><input type="text" value="${iqBlank?"":iqEsc(p.name)}" readonly tabindex="-1"></div>
     <div><label for="iq_f_age">גיל</label><input type="text" id="iq_f_age" data-k="f_age"></div>
@@ -2709,7 +2710,11 @@ function iqQuickHTML(p){
   h += `</section>`;
   h += `<section class="iq-q"><h3>תלונות נוספות ורקע</h3>`;
   h += iqTA("b_other","תלונות נוספות: מה, ממתי, ואיך טופלו",2);
-  h += iqTA("m_meds","תרופות, ורקע רפואי חשוב כמו ניתוחים ופציעות",1);
+  h += `</section>`;
+  h += `<section class="iq-q"><h3>רקע רפואי ותרופות</h3>`;
+  h += iqTA("m_medical","מחלות ואבחנות רפואיות, ובדיקות אחרונות אם יש",1);
+  h += iqTA("m_meds","תרופות, ויטמינים ותוספי תזונה שלוקחים באופן קבוע",1);
+  h += iqInp("h_surg","ניתוחים, אשפוזים ופציעות, ובאיזו שנה");
   h += `</section>`;
   h += `<section class="iq-q"><h3>מה בולט</h3><p class="iq-hint">שני סימנים לכל יסוד. אפשר לסמן כמה שמתאים.</p>`;
   h += iqChecks(iqQuickSigns(),"col iq-grid2",'data-lim="lean"');
@@ -2723,6 +2728,8 @@ function iqQuickHTML(p){
   h += `<div class="iq-item"><span class="iq-lbl">מעשנים? סיגריות, נרגילה או אחר</span>${iqRadios("l_smoke",IQ_L.l_smoke)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div></div>`;
+  h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div><span class="iq-lbl">והן בדרך כלל</span>${iqRadios("l_stool",IQ_L2.l_stool)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">רמת האנרגיה במהלך היום</span>${iqRadios("l_energy",IQ_L2.l_energy)}</div>`;
   h += `<div class="iq-item">${iqChecks([IQ_SLEEPQ[2]])}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
   h += iqTA("l_notes","הערות, או משהו להוסיף",1);
@@ -2736,6 +2743,19 @@ function iqQuickHTML(p){
   h += `</section>`;
   return h;
 }
+
+/* תשובות מהשאלון הקודם שאין להן מקום בשאלון המתקדם: מוצגות בסופו, רק כשיש בהן תוכן */
+const _iqFormHTMLBase = iqFormHTML;
+iqFormHTML = function(p){
+  let h = _iqFormHTMLBase(p);
+  const S = (p && p.intake) || {};
+  let x = "";
+  if((S.m_medical||"").trim()) x += iqTA("m_medical","אבחנה רפואית ובדיקות",1);
+  const sf = IQ_SEF_LEAN.filter(t=>S[t.id]);
+  if(sf.length) x += `<div class="iq-item"><span class="iq-lbl">בקשרים ובעשייה</span>${iqChecks(sf,"col")}</div>`;
+  if(x) h += `<section class="iq-q"><h3>תשובות נוספות</h3>${x}</section>`;
+  return h;
+};
 
 /* ---- render & bind ---- */
 function iqKindClass(){ const w=document.getElementById('iqForm'); if(!w) return; const k=iqS().m_kind; w.classList.remove('iq-k-body','iq-k-soul','iq-k-both'); if(k) w.classList.add('iq-k-'+k); }
@@ -2764,8 +2784,8 @@ function renderIntake(){
       <div class="sheet-actions" style="margin-top:8px"><button class="bm-btn" onclick="iqImportDo()">ייבוא לכרטיס</button><button class="bm-link" onclick="document.getElementById('iqImport').hidden=true">ביטול</button></div>
     </div>
     <div class="iq-secs no-print" style="max-width:460px">
-      <button class="iq-sec ${iqMode(p)==='quick'?'on':''}" onclick="iqSetMode('quick')">שאלון מהיר</button>
-      ${iqMode(p)==='lean'?`<button class="iq-sec on" onclick="iqSetMode('lean')">שאלון (הגרסה הקודמת)</button>`:''}
+      <button class="iq-sec ${iqMode(p)==='quick'?'on':''}" onclick="iqSetMode('quick')">שאלון</button>
+      
       <button class="iq-sec ${iqMode(p)==='full'?'on':''}" onclick="iqSetMode('full')">שאלון מתקדם</button>
     </div>
     <div id="iqSummary"></div>
@@ -2928,7 +2948,7 @@ function iqText(){
   const p=curP(), S=p.intake||{}, L=[], v=k=>(S[k]||"").trim();
   const rl=(name,pairs)=>{ const f=pairs.find(x=>x[0]===S[name]); return f?f[1]:""; };
   const tg=t=>t.tags&&t.tags.length?` [${t.tags.map(e=>IQ_EL[e].name).join("/")}${t.alt&&t.alt.length?`, או: ${t.alt.map(e=>IQ_EL[e].name).join(", ")}`:""}]`:"";
-  L.push(iqMode(p)==="lean" ? "שאלון היכרות, לניתוח (אבחון רזה מהקליניקה)" : iqMode(p)==="quick" ? "שאלון היכרות, לניתוח (אבחון מהיר מהקליניקה)" : "שאלון היכרות, לניתוח");
+  L.push(iqMode(p)==="lean" ? "שאלון היכרות, לניתוח (אבחון רזה מהקליניקה)" : iqMode(p)==="quick" ? "שאלון היכרות, לניתוח (השאלון הקצר מהקליניקה)" : "שאלון היכרות, לניתוח");
   L.push(`שם: ${p.name}${p.gender?` | לשון פנייה: ${p.gender==='f'?'נקבה':'זכר'}`:''} | גיל: ${v("f_age")} | עיסוק: ${v("f_job")} | תאריך: ${iqFmtDate(v("f_date"))}`);
   L.push(`משקל: ${v("f_weight")} | גובה: ${v("f_height")} | לחץ דם: ${v("f_bp")} | דופק: ${v("f_pulse")}`);
   L.push("","התלונה העיקרית");
@@ -2978,6 +2998,7 @@ function iqText(){
   L.push(`אוכל אהוב: ${v("l_food")}`);
   L.push(`הרגלים: ${IQ_HABITS.filter(x=>S[x.id]).map(x=>x.label).join(", ")}`);
   L.push(`פעילות: ${rl("l_move",IQ_L.l_move)}, טבע: ${rl("l_nature",IQ_L.l_nature)}`);
+  if(S.l_energy) L.push(`אנרגיה במהלך היום: ${rl("l_energy",IQ_L2.l_energy)}`);
   const sts=IQ_STRESS.filter(x=>S[x.id]).map(x=>x.label);
   L.push(`לחץ: ${S.l_stress!==undefined?S.l_stress+"/10":""}${sts.length?" ("+sts.join(", ")+")":""}`);
   L.push(`מקור לחץ אחר: ${v("l_stress_other")}`);
@@ -3497,7 +3518,7 @@ renderIntake = function(){
       ${Object.keys(p.mid||{}).length?`<button class="bm-link danger" onclick="midClear()">ניקוי שאלון האמצע</button>`:''}
     </div>
     <div class="iq-secs no-print" style="max-width:600px">
-      <button class="iq-sec" onclick="midBack('quick')">שאלון מהיר</button>
+      <button class="iq-sec" onclick="midBack('quick')">שאלון</button>
       
       <button class="iq-sec" onclick="midBack('full')">שאלון מתקדם</button>
       <button class="iq-sec on">שאלון אמצע</button>

@@ -1331,7 +1331,7 @@ const ELEMENTS = {
   }
 };
 
-const ELEMENT_ORDER = ["fire","water","air","earth"];
+const ELEMENT_ORDER = ["fire","air","water","earth"];
 
 const SPECIFIC_EMOTIONS = [
   {name:"פחד", element:"water", text:"במובנו הבריא, כוח שמגן עלינו, שומר על ערנות ומראה לנו את הגבולות שלנו. משתקף בעיקר בכליות."},
@@ -3124,7 +3124,7 @@ function jumpToSefirahWeek(n){
 
 /* ===== שאלון היכרות ואבחון בכרטיס המטופל ===== */
 const IQ_EL = {fire:{name:"אש",c:"#A8442B"}, water:{name:"מים",c:"#2F6690"}, air:{name:"אוויר",c:"#A9821F"}, earth:{name:"אדמה",c:"#5C6B3F"}};
-const IQ_ORDER = ["fire","water","air","earth"];
+const IQ_ORDER = ["fire","air","water","earth"];
 const iqEsc = s => String(s==null?"":s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 const IQ_KIND = [["body","משהו בגוף"],["soul","משהו בנפש, כמו לחץ, עצב או חרדה"],["both","שניהם"]];
@@ -4378,7 +4378,7 @@ renderPathologies();
   const nf = `<div id="nefeshView" style="display:none;">
     <p class="system-desc" style="margin-top:6px;">שתי מערכות שבהן קוראים את הנפש: ארבעת היסודות, הטבע של האדם, והספירות, המידות שלו.</p>
     <div class="nf-grid">
-      <button type="button" class="nf-card" onclick="nfOpen('elements')"><h3>יסודות</h3><p>אש, מים, אוויר ואדמה: הטבע שאיתו האדם נולד, מצבי עודף, חוסר ופלישה, והתרגול של כל יסוד.</p>
+      <button type="button" class="nf-card" onclick="nfOpen('elements')"><h3>יסודות</h3><p>אש, אוויר, מים ואדמה: הטבע שאיתו האדם נולד, מצבי עודף, חוסר ופלישה, והתרגול של כל יסוד.</p>
         <div class="nf-dots"><span style="background:var(--fire-bg);color:var(--fire)">אש</span><span style="background:var(--water-bg);color:var(--water)">מים</span><span style="background:var(--air-bg);color:var(--air)">אוויר</span><span style="background:var(--earth-bg);color:var(--earth)">אדמה</span></div></button>
       <button type="button" class="nf-card" onclick="nfOpen('sefirot')"><h3>ספירות</h3><p>עשר הספירות ושלושת הקווים: המידות בנפש, האזורים בגוף של כל ספירה, והתרגול של כל ספירה.</p>
         <div class="nf-dots"><span style="background:var(--sefirah-bg);color:var(--sefirah)">חסד</span><span style="background:var(--sefirah-bg);color:var(--sefirah)">גבורה</span><span style="background:var(--sefirah-bg);color:var(--sefirah)">תפארת</span><span style="background:var(--sefirah-bg);color:var(--sefirah)">ועוד</span></div></button>
