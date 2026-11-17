@@ -1197,6 +1197,30 @@ details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
 .iq-group.ys-gate + .iq-opts:not(.ys-closed){border:1px solid rgba(184,154,94,.35);border-top:0;border-radius:0 0 8px 8px;padding:6px 10px 8px}
 @media print{.iq-opts.ys-closed{display:grid!important}.iq-group.ys-gate{border:0;background:none;padding:0}.iq-group.ys-gate::before,.iq-group.ys-gate::after{display:none}.ys-gate-hint{display:none}}
 </style>
+<style>
+/* ניהול מטופלים */
+.pt-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 12px}
+.pt-filt{display:inline-flex;background:#EEF1EC;border-radius:8px;padding:3px;gap:3px}
+.pt-filt button{border:0;background:none;border-radius:6px;padding:6px 14px;font:400 .95rem 'Assistant',sans-serif;color:var(--ink,#293C35);cursor:pointer}
+.pt-filt button b{font-weight:700;color:#8C7240;margin-inline-start:4px}
+.pt-filt button.on{background:#fff;color:var(--forest-dark,#1E4744);box-shadow:0 1px 4px rgba(22,51,45,.12)}
+.pt-sugg{border:1px dashed rgba(140,114,64,.6);background:#FBF8F1;color:#6E5A30;border-radius:8px;padding:6px 12px;font:600 .88rem 'Assistant',sans-serif;cursor:pointer}
+.pt-acts{position:sticky;top:8px;z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#16332D;color:#fff;border-radius:8px;padding:8px 10px;margin:0 0 10px;box-shadow:0 6px 18px -8px rgba(15,36,32,.6)}
+.pt-acts-n{font-weight:700;margin-inline-end:auto}
+.pt-acts button{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;border-radius:6px;padding:6px 11px;font:600 .88rem 'Assistant',sans-serif;cursor:pointer}
+.pt-acts button.danger{background:#A8442B!important;border-color:#A8442B!important;color:#fff!important}
+.pt-acts button{color:#fff!important}
+.pt-acts button.ghost{background:none;border-color:transparent;text-decoration:underline}
+.pr-chk{flex:none;display:flex;align-items:center;justify-content:center;width:40px;cursor:pointer}
+.pr-chk input{width:20px;height:20px;accent-color:#2F6358;cursor:pointer}
+.pr-row.sel .pr{border-color:#2F6358!important;background:#F2F6F3!important}
+.pr-arch{font-size:.72rem;font-weight:700;color:#6a756f;background:#EEF1EC;border-radius:999px;padding:1px 8px;margin-inline-start:6px}
+.pt-arch-box{margin:10px 0 0;background:#EEF1EC;border-radius:8px;padding:8px 12px;color:#4d5a54;font-size:.92rem}
+.pt-arch-box button,.pt-arch-line button{border:0;background:none;color:#2F6358;font:700 .9rem 'Assistant',sans-serif;text-decoration:underline;cursor:pointer;padding:0}
+.pt-arch-line{margin:8px 0 0;text-align:start}
+.pt-arch-line button{color:#6a756f;font-weight:600}
+@media print{.pt-bar,.pt-acts,.pr-chk,#ptArchBox{display:none!important}}
+</style>
 </head>
 <body>
 <header>
@@ -2725,12 +2749,13 @@ function iqQuickHTML(p){
   h += `</section>`;
   h += `<section class="iq-q"><h3>אורח חיים</h3>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">שעות שינה</span>${iqRadios("l_sleep",IQ_L.l_sleep)}</div><div><span class="iq-lbl">הולכים לישון</span>${iqRadios("l_bed",IQ_L2.l_bed)}</div></div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">איך אתם מתעוררים</span>${iqRadios("l_wake",IQ_L.l_wake)}</div>`;
+  h += `<div class="iq-item"><span class="iq-lbl">בשינה יש</span>${iqChecks(IQ_SLEEPQ)}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">מעשנים? סיגריות, נרגילה או אחר</span>${iqRadios("l_smoke",IQ_L.l_smoke)}</div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">ארוחות</span>${iqRadios("l_meals",IQ_L.l_meals)}</div><div><span class="iq-lbl">שתיית מים</span>${iqRadios("l_water",IQ_L.l_water)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">בצלחת</span>${iqRadios("l_plate",IQ_L2.l_plate)}</div><div><span class="iq-lbl">פעילות גופנית</span>${iqRadios("l_move",IQ_L.l_move)}</div></div>`;
   h += `<div class="iq-item iq-grid2"><div><span class="iq-lbl">יציאות</span>${iqRadios("l_bowel",IQ_L2.l_bowel)}</div><div><span class="iq-lbl">והן בדרך כלל</span>${iqRadios("l_stool",IQ_L2.l_stool)}</div></div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת האנרגיה במהלך היום</span>${iqRadios("l_energy",IQ_L2.l_energy)}</div>`;
-  h += `<div class="iq-item">${iqChecks([IQ_SLEEPQ[2]])}</div>`;
   h += `<div class="iq-item"><span class="iq-lbl">רמת לחץ</span>${iqScale("l_stress","מעט","הרבה")}</div>`;
   h += iqTA("l_notes","הערות, או משהו להוסיף",1);
   h += `</section>`;
@@ -3429,7 +3454,7 @@ function exOpenAt(tab, sel){
 window.addEventListener('beforeprint', ()=>{ document.querySelectorAll('details.rd-card, details.rd-ex').forEach(d=>{ d.dataset.was = d.open?'1':''; d.open = true; }); });
 window.addEventListener('afterprint', ()=>{ document.querySelectorAll('details.rd-card, details.rd-ex').forEach(d=>{ d.open = d.dataset.was==='1'; }); });
 
-/* ===================== שאלון אמצע ===================== */
+/* ===================== שאלון מעקב ===================== */
 const MID_CH = [['much','הקלה משמעותית'],['better','הקלה'],['same','ללא שינוי'],['worse','הרעה במצב']];
 const MID_GEN = [['better','טוב יותר'],['same','ללא שינוי'],['worse','פחות טוב'],['na','לא רלוונטי']];
 const MID_EX = [['yes','עזר'],['some','עזר קצת'],['no','לא עזר'],['skip','לא עשיתי']];
@@ -3443,7 +3468,7 @@ function midScale(key, lo, hi){ const v=(curP().mid||{})[key]; let h=`<div class
 function midSet(k, v, quiet){ const p=midP(); if(v===''||v===null) delete p.mid[k]; else p.mid[k]=v; if(!p.mid.date) p.mid.date=isoToday(); savePT(); if(!quiet) renderIntake(); }
 function midHTML(p){
   const i = p.intake||{}; const m = p.mid||{}; const n = (p.treatments||[]).length;
-  let h = `<div class="paper-h"><h2>שאלון אמצע</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
+  let h = `<div class="paper-h"><h2>שאלון מעקב</h2><span class="paper-brand">יובל שניר, רפלקסולוג ומטפל הוליסטי</span></div>`;
   h += `<p class="iq-hint" style="margin:0 0 10px">${escH(p.name)}, אחרי ${n===1?'טיפול אחד':n+' טיפולים'}. ${m.date?'מולא ב־'+fmtD(m.date)+'.':''} השאלון בודק מה השתנה מאז ההתחלה, מה עזר, ועל מה כדאי להתמקד הלאה.</p>`;
   h += `<section class="iq-q"><h3>התלונה העיקרית</h3>`;
   if((i.m_what||'').trim()) h += `<p class="iq-hint" style="margin:0 0 8px">בהתחלה נכתב: "${escH(i.m_what)}"${i.m_level!==undefined?`, בעוצמה ${escH(String(i.m_level))} מתוך 10`:''}.</p>`;
@@ -3479,7 +3504,7 @@ function midHTML(p){
 function midText(p){
   const m=p.mid||{}; const i=p.intake||{}; const L=[];
   const lab=(pairs,v)=>{ const x=pairs.find(q=>q[0]===v); return x?x[1]:''; };
-  L.push(`ניתוח אמצע: ${p.name}`, `תאריך שאלון האמצע: ${m.date?fmtD(m.date):''} | מספר טיפולים עד עכשיו: ${(p.treatments||[]).length}`, '');
+  L.push(`ניתוח מעקב: ${p.name}`, `תאריך שאלון המעקב: ${m.date?fmtD(m.date):''} | מספר טיפולים עד עכשיו: ${(p.treatments||[]).length}`, '');
   L.push('=== השאלון הראשון ===');
   L.push(iqHas(p) ? iqText() : 'לא מולא שאלון ראשון.');
   L.push('', '=== האבחון הקודם ===', (p.reading&&p.reading.text) ? p.reading.text : 'אין אבחון שמור.');
@@ -3493,7 +3518,7 @@ function midText(p){
     if(t.homework) L.push(`עוד על התרגול: ${t.homework}`); if(t.notes) L.push(`הערות: ${t.notes}`);
     L.push('');
   });
-  L.push('=== שאלון האמצע ===');
+  L.push('=== שאלון המעקב ===');
   if(i.m_what) L.push(`התלונה העיקרית בהתחלה: ${i.m_what}${i.m_level!==undefined?` (עוצמה ${i.m_level}/10)`:''}`);
   L.push(`עכשיו: ${lab(MID_CH,m.change)}${m.level!==undefined?` | עוצמה היום ${m.level}/10`:''}`);
   if(m.what) L.push(`מה השתנה: ${m.what}`);
@@ -3505,30 +3530,30 @@ function midText(p){
   if(m.stress!==undefined) L.push(`רמת לחץ היום: ${m.stress}/10${i.l_stress!==undefined?` (בהתחלה ${i.l_stress}/10)`:''}`);
   return L.join('\n');
 }
-function midCopy(){ const p=curP(); const t=midText(p); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(()=>bmToast('הועתק לניתוח אמצע'), ()=>{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); bmToast('הועתק לניתוח אמצע'); }); }
-function midClear(){ const p=curP(); if(!confirm('לנקות את שאלון האמצע?')) return; p.mid={}; savePT(); renderIntake(); }
+function midCopy(){ const p=curP(); const t=midText(p); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(()=>bmToast('הועתק לניתוח מעקב'), ()=>{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); bmToast('הועתק לניתוח מעקב'); }); }
+function midClear(){ const p=curP(); if(!confirm('לנקות את שאלון המעקב?')) return; p.mid={}; savePT(); renderIntake(); }
 const _renderIntakeMid = renderIntake;
 renderIntake = function(){
   const p = curP(); const wrap = document.getElementById('iqWrap');
   if(!p || !wrap || p.iqView!=='mid'){ _renderIntakeMid.apply(this, arguments); midButton(); return; }
   wrap.className='';
   wrap.innerHTML = `<div class="sheet-actions no-print">
-      <button class="bm-btn" onclick="midCopy()">העתקה לניתוח אמצע</button>
+      <button class="bm-btn" onclick="midCopy()">העתקה לניתוח מעקב</button>
       <button class="bm-btn ghost" onclick="window.print()">הדפסה</button>
-      ${Object.keys(p.mid||{}).length?`<button class="bm-link danger" onclick="midClear()">ניקוי שאלון האמצע</button>`:''}
+      ${Object.keys(p.mid||{}).length?`<button class="bm-link danger" onclick="midClear()">ניקוי שאלון המעקב</button>`:''}
     </div>
     <div class="iq-secs no-print" style="max-width:600px">
       <button class="iq-sec" onclick="midBack('quick')">שאלון</button>
       
       <button class="iq-sec" onclick="midBack('full')">שאלון מתקדם</button>
-      <button class="iq-sec on">שאלון אמצע</button>
+      <button class="iq-sec on">שאלון מעקב</button>
     </div>
     <div class="paper iq-paper" id="iqForm">${midHTML(p)}</div>`;
   if(typeof iqAcc==='function') iqAcc(document.getElementById('iqForm'), true);
 };
 function midBack(m){ const p=curP(); p.iqView=''; p.intakeMode=m; savePT(); renderIntake(); }
 function midOpen(){ const p=curP(); p.iqView='mid'; savePT(); renderIntake(); }
-function midButton(){ const secs=document.querySelector('#iqWrap .iq-secs'); if(secs && !secs.querySelector('.mid-btn')){ secs.style.maxWidth='600px'; secs.insertAdjacentHTML('beforeend','<button class="iq-sec mid-btn" onclick="midOpen()">שאלון אמצע</button>'); } }
+function midButton(){ const secs=document.querySelector('#iqWrap .iq-secs'); if(secs && !secs.querySelector('.mid-btn')){ secs.style.maxWidth='600px'; secs.insertAdjacentHTML('beforeend','<button class="iq-sec mid-btn" onclick="midOpen()">שאלון מעקב</button>'); } }
 
 /* ===== אקורדיון אחיד: פתיחת כרטיס סוגרת את הכרטיס הפתוח שלידו, באנימציה ===== */
 (function(){
@@ -3603,7 +3628,7 @@ function sumText(p, ids){
   ['x1_what','x2_what','x3_what','b_other'].forEach(k=>{ if(i[k]) L.push(`תלונה נוספת: ${i[k]}`); });
   if(i.c_goal) L.push(`מה רצה שישתנה: ${i.c_goal}`);
   if(p.reading && p.reading.text){ const t=p.reading.text; const k=t.indexOf('למטפל בלבד'); L.push('', 'תמצית האבחון:', (k>0?t.slice(k):t).slice(0,1500)); }
-  if(p.mid && Object.keys(p.mid).length) L.push('', 'יש שאלון אמצע: '+((p.mid.change&&({much:'הקלה משמעותית',better:'הקלה',same:'ללא שינוי',worse:'הרעה'})[p.mid.change])||'')+(p.mid.level!==undefined?`, עוצמה ${p.mid.level}/10`:''));
+  if(p.mid && Object.keys(p.mid).length) L.push('', 'יש שאלון מעקב: '+((p.mid.change&&({much:'הקלה משמעותית',better:'הקלה',same:'ללא שינוי',worse:'הרעה'})[p.mid.change])||'')+(p.mid.level!==undefined?`, עוצמה ${p.mid.level}/10`:''));
   L.push('', 'המפגשים שנבחרו:');
   tSorted(p).forEach((t,k)=>{ if(!ids.includes(t.id)) return;
     L.push(`טיפול ${k+1}, ${fmtD(t.date)}`);
@@ -3988,11 +4013,11 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
     const active = LD.leads.filter(l=>LD_ACTIVE.includes(l.status));
     const due = active.filter(l=>l.nextDate && l.nextDate<=t).sort((a,b)=>(a.nextDate||'').localeCompare(b.nextDate||''));
     const wait3 = active.filter(l=> l.nextDate ? yscDays(l.nextDate,t)>=3 : (!l.nextDate && yscDays(l.date||yscIso(new Date(l.created||Date.now())),t)>=3));
-    const gone = PT.patients
+    const gone = PT.patients.filter(p=>!p.archived)
       .map(p=>({ p, last: lastT(p) || p.firstDate || yscIso(new Date(p.created||Date.now())) }))
       .filter(x=>yscDays(x.last,t)>=30)
       .sort((a,b)=>a.last.localeCompare(b.last));
-    const tasks = PT.patients.filter(p=>p.nextDate && p.nextDate<=t).sort((a,b)=>a.nextDate.localeCompare(b.nextDate));
+    const tasks = PT.patients.filter(p=>!p.archived && p.nextDate && p.nextDate<=t).sort((a,b)=>a.nextDate.localeCompare(b.nextDate));
     return { t, active, due, wait3, gone, tasks };
   }
 
@@ -4064,7 +4089,7 @@ if(_migrated) bmToast(`הועברו ${_migrated} מטופלים ממפת הגו�
       [d.due.length, 'לחזור היום', ''],
       [d.wait3.length, 'ממתינים מעל 3 ימים', 'warn'],
       [d.gone.length, 'לא הגיעו מעל חודש', ''],
-      [PT.patients.length, 'מטופלים פעילים', '']
+      [PT.patients.filter(p=>!p.archived).length, 'מטופלים פעילים', '']
     ];
     if($('yscStats')) $('yscStats').innerHTML = stats.map(([n,l,k])=>
       `<div class="ysc-stat ${k}"><b>${n}</b><span>${l}</span></div>`).join('');
@@ -4606,12 +4631,12 @@ function apRenderToday(){
   };
   const openG = new Set();
   let busy = false;
-  function itemOf(el){ return el && (el.closest('.iq-item') || el.closest('.iq-field') || el.parentElement); }
+  function itemOf(el){ return el && (el.closest('.iq-grid2 > div') || el.closest('.iq-item') || el.closest('.iq-field') || el.parentElement); }
   function apply(root){
     if(!root || busy) return; busy = true;
     try{
       HIDE_ITEMS.forEach(id=>{ const el=root.querySelector('#'+id); const it=itemOf(el); if(it) it.classList.add('ys-trim'); });
-      HIDE_RADIOS.forEach(n=>{ const el=root.querySelector(`input[name="${n}"]`); const it=el && (el.closest('.iq-item') || el.closest('.iq-opts')?.parentElement); if(it) it.classList.add('ys-trim'); });
+      HIDE_RADIOS.forEach(n=>{ const el=root.querySelector(`input[name="${n}"]`); const it=el && (el.closest('.iq-grid2 > div') || el.closest('.iq-item') || el.closest('.iq-opts')?.parentElement); if(it) it.classList.add('ys-trim'); });
       Object.entries(RELABEL).forEach(([id,t])=>{ const el=root.querySelector('#'+id); if(!el) return; const it=itemOf(el); const l=it && (it.querySelector(`label[for="${id}"]`) || it.querySelector('.iq-lbl')); if(l && l.textContent!==t) l.textContent=t; });
       const anger=root.querySelector('input[data-c="th_anger"]'); if(anger && !anger.checked) anger.closest('label').classList.add('ys-trim');
       root.querySelectorAll('[data-k="x2_what"],[data-k="x3_what"]').forEach(x=>{ const r=x.closest('.iq-xrow'); if(r && !r.querySelector('input:not([value=""])')) r.classList.add('ys-trim'); });
@@ -4675,6 +4700,92 @@ ysTrimWatch('#iqWrap', ()=>{ try{ return iqMode(curP())==='full'; }catch(e){ ret
   IQ_BODY.splice(0, IQ_BODY.length, ...groups);
 })();
 try{ if(document.getElementById('iqWrap') && typeof renderIntake==='function') renderIntake(); }catch(e){}
+</script>
+<script>
+/* ===== ניהול מטופלים: בחירה מרובה, ארכיון ומחיקה מרובה (נובמבר 2026) ===== */
+(function(){
+  let ptFilter = 'active';            /* active | archive */
+  const ptSel = new Set();
+  const isArch = p => !!p.archived;
+  const ptRowHTML = p => {
+    const n = p.treatments.length, last = lastT(p), on = ptSel.has(p.id);
+    return `<div class="pr-row ${on?'sel':''}"><label class="pr-chk" title="בחירה"><input type="checkbox" ${on?'checked':''} onchange="ptToggleSel('${p.id}',this.checked)" aria-label="בחירת ${escH(p.name)}"></label><button class="pr" onclick="openP('${p.id}')">
+      <span class="pr-l1"><span class="pr-name">${escH(p.name)}</span>${srcTag(p)}${isArch(p)?'<span class="pr-arch">ארכיון</span>':''}</span>
+      <span class="pr-l2">${p.nextStep||p.nextDate?`<span class="ysc-next">${escH(p.nextStep||'')}${p.nextDate?`${p.nextStep?' · ':''}${fmtD(p.nextDate)}`:''}</span>`:''}${n ? `<span>${n===1?'טיפול אחד':n+' טיפולים'}</span>${last?`<span>אחרון ב־${fmtD(last)}</span>`:''}` : '<span>עוד אין טיפולים ביומן</span>'}</span>
+      <span class="pr-flags"><span class="flag ${iqHas(p)?'on':''}">שאלון</span><span class="flag ${hasReading(p)?'on':''}">אבחון</span></span>
+    </button><button class="pr-del" onclick="ptDeleteId('${p.id}')" aria-label="מחיקת ${escH(p.name)}" title="מחיקת המטופל"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg></button></div>`;
+  };
+  /* מי שהגיע פעם אחת ולא חזר חודשיים: מועמדים לארכיון */
+  const oneTimers = () => { const lim=new Date(); lim.setDate(lim.getDate()-60); const L=lim.toISOString().slice(0,10);
+    return PT.patients.filter(p=>!isArch(p) && p.treatments.length<=1 && (lastT(p)||p.firstDate||'') && (lastT(p)||p.firstDate)<L && !(p.appts||[]).some(a=>a.date>=isoToday())); };
+
+  renderList = function(){
+    const q = homeQ.trim().toLowerCase();
+    const all = PT.patients, act = all.filter(p=>!isArch(p)), arc = all.filter(isArch);
+    [...ptSel].forEach(id=>{ if(!getP(id)) ptSel.delete(id); });
+    const base = q ? all : (ptFilter==='archive' ? arc : act);
+    const list = base.filter(p=>!q || p.name.toLowerCase().includes(q)).sort((a,b)=>sortKey(b).localeCompare(sortKey(a)) || b.created-a.created);
+    const nPriv = act.filter(p=>p.source==='private').length, nMov = act.filter(p=>p.source==='movement').length;
+    $('ptCount').textContent = !all.length ? '' :
+      (q ? `נמצאו ${list.length} מתוך ${all.length} מטופלים, כולל הארכיון` :
+       ptFilter==='archive' ? `${arc.length===1?'מטופל אחד':arc.length+' מטופלים'} בארכיון` :
+       `${act.length===1?'מטופל פעיל אחד':act.length+' מטופלים פעילים'}${(nPriv||nMov)?', מתוכם '+[nPriv?nPriv+' פרטי':'',nMov?nMov+' מובמנט/עמית':''].filter(Boolean).join(' ו־'):''}`);
+    const ot = oneTimers();
+    const bar = !all.length ? '' : `<div class="pt-bar">
+      <div class="pt-filt" role="group" aria-label="תצוגה"><button class="${ptFilter==='active'&&!q?'on':''}" onclick="ptSetFilter('active')">פעילים <b>${act.length}</b></button><button class="${ptFilter==='archive'&&!q?'on':''}" onclick="ptSetFilter('archive')">ארכיון <b>${arc.length}</b></button></div>
+      ${ptFilter==='active' && !q && ot.length ? `<button class="pt-sugg" onclick="ptSelectOneTimers()">בחירת ${ot.length===1?'מטופל אחד':ot.length+' מטופלים'} שהגיעו פעם אחת ולא חזרו חודשיים</button>`:''}
+    </div>`;
+    const sel = ptSel.size, selArch = [...ptSel].map(getP).filter(Boolean).every(isArch);
+    const acts = sel ? `<div class="pt-acts"><span class="pt-acts-n">נבחרו ${sel}</span>
+      <button onclick="ptSelAll()">${list.every(p=>ptSel.has(p.id))?'ביטול הבחירה':'בחירת כל הרשימה'}</button>
+      ${selArch ? `<button onclick="ptArchiveSel(false)">החזרה לפעילים</button>` : `<button onclick="ptArchiveSel(true)">העברה לארכיון</button>`}
+      <button class="danger" onclick="ptDeleteSel()">מחיקה</button>
+      <button class="ghost" onclick="ptClearSel()">סגירה</button></div>` : '';
+    if(!all.length){ $('ptList').innerHTML = `<div class="sheet-empty"><p>עוד אין מטופלים. כתבו שם למעלה ולחצו "פתיחת כרטיס", או שחזרו גיבוי מקובץ כאן למטה.</p></div>`; return; }
+    let body;
+    if(!list.length) body = q ? `<p class="ex-none">אין מטופל בשם הזה. אפשר לפתוח כרטיס חדש למעלה.</p>` : (ptFilter==='archive' ? `<p class="ex-none">הארכיון ריק. מטופלים שמעבירים לארכיון לא מופיעים ברשימה הרגילה ובמסך "היום", אבל כל המידע שלהם נשמר.</p>` : `<p class="ex-none">אין מטופלים פעילים. כל המטופלים בארכיון.</p>`);
+    else body = list.map(ptRowHTML).join('');
+    $('ptList').innerHTML = bar + acts + body;
+  };
+  window.ptSetFilter = f => { ptFilter=f; ptSel.clear(); if(homeQ){ homeQ=''; const i=$('homeQ'); if(i) i.value=''; } renderList(); };
+  window.ptToggleSel = (id,on) => { if(on) ptSel.add(id); else ptSel.delete(id); renderList(); };
+  window.ptClearSel = () => { ptSel.clear(); renderList(); };
+  window.ptSelAll = () => {
+    const q = homeQ.trim().toLowerCase(); const base = q ? PT.patients : PT.patients.filter(p=>ptFilter==='archive'?isArch(p):!isArch(p));
+    const list = base.filter(p=>!q || p.name.toLowerCase().includes(q));
+    if(list.every(p=>ptSel.has(p.id))) list.forEach(p=>ptSel.delete(p.id)); else list.forEach(p=>ptSel.add(p.id));
+    renderList();
+  };
+  window.ptSelectOneTimers = () => { ptSel.clear(); oneTimers().forEach(p=>ptSel.add(p.id)); renderList(); };
+  window.ptArchiveSel = arch => {
+    const ps=[...ptSel].map(getP).filter(Boolean); if(!ps.length) return;
+    ps.forEach(p=>{ if(arch){ p.archived=true; p.archivedAt=isoToday(); } else { delete p.archived; delete p.archivedAt; } });
+    ptSel.clear(); savePT(); renderList();
+    bmToast(arch ? `${ps.length===1?ps[0].name+' הועבר':ps.length+' מטופלים הועברו'} לארכיון` : `${ps.length===1?ps[0].name+' חזר':ps.length+' מטופלים חזרו'} לרשימה הפעילה`);
+  };
+  window.ptDeleteSel = () => {
+    const ps=[...ptSel].map(getP).filter(Boolean); if(!ps.length) return;
+    const names = ps.slice(0,8).map(p=>p.name).join(', ') + (ps.length>8?` ועוד ${ps.length-8}`:'');
+    if(!confirm(`למחוק ${ps.length===1?'את '+ps[0].name:ps.length+' מטופלים'}, כולל השאלון, האבחון, יומן הטיפולים והתרגול?\n${ps.length>1?names+'\n':''}אי אפשר לבטל את זה, אלא משחזור גיבוי.${ps.length>1?'\nאם רק רוצים להוריד אותם מהרשימה, עדיף להעביר לארכיון.':''}`)) return;
+    const ids=new Set(ps.map(p=>p.id));
+    PT.patients = PT.patients.filter(p=>!ids.has(p.id)); ptSel.clear(); savePT(); renderList();
+    if(typeof phAll==='function') ids.forEach(id=>phAll(id).then(xs=>xs.forEach(x=>phDelete(x.id))).catch(()=>{}));
+    bmToast(ps.length===1 ? `${ps[0].name} נמחק` : `${ps.length} מטופלים נמחקו`);
+  };
+  /* בכרטיס המטופל: העברה לארכיון והחזרה */
+  window.ptArchiveCur = () => { const p=curP(); if(!p) return; if(p.archived){ delete p.archived; delete p.archivedAt; bmToast(`${p.name} חזר לרשימה הפעילה`); } else { p.archived=true; p.archivedAt=isoToday(); bmToast(`${p.name} הועבר לארכיון`); } savePT(); renderCard(); };
+  const _rc = renderCard;
+  renderCard = function(){
+    _rc.apply(this, arguments);
+    const p=curP(); const head=document.getElementById('cardHead'); if(!p||!head) return;
+    const old=document.getElementById('ptArchBox'); if(old) old.remove();
+    head.insertAdjacentHTML('beforeend', p.archived
+      ? `<div id="ptArchBox" class="pt-arch-box">המטופל בארכיון${p.archivedAt?` מאז ${fmtD(p.archivedAt)}`:''}. <button onclick="ptArchiveCur()">החזרה לפעילים</button></div>`
+      : `<div id="ptArchBox" class="pt-arch-line"><button onclick="ptArchiveCur()">העברה לארכיון</button></div>`);
+  };
+  /* קביעת טיפול למטופל בארכיון מחזירה אותו לפעילים */
+  if(typeof apAdd==='function'){ const _aa=apAdd; apAdd=function(){ const p=curP(); const was=p&&p.archived; _aa.apply(this,arguments); if(was && apList(p).length){ delete p.archived; delete p.archivedAt; savePT(); renderCard(); bmToast(`${p.name} חזר לרשימה הפעילה`); } }; }
+})();
 </script>
 </body>
 </html>

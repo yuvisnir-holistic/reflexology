@@ -1084,12 +1084,12 @@ iqPreNote();
   };
   const openG = new Set();
   let busy = false;
-  function itemOf(el){ return el && (el.closest('.iq-item') || el.closest('.iq-field') || el.parentElement); }
+  function itemOf(el){ return el && (el.closest('.iq-grid2 > div') || el.closest('.iq-item') || el.closest('.iq-field') || el.parentElement); }
   function apply(root){
     if(!root || busy) return; busy = true;
     try{
       HIDE_ITEMS.forEach(id=>{ const el=root.querySelector('#'+id); const it=itemOf(el); if(it) it.classList.add('ys-trim'); });
-      HIDE_RADIOS.forEach(n=>{ const el=root.querySelector(`input[name="${n}"]`); const it=el && (el.closest('.iq-item') || el.closest('.iq-opts')?.parentElement); if(it) it.classList.add('ys-trim'); });
+      HIDE_RADIOS.forEach(n=>{ const el=root.querySelector(`input[name="${n}"]`); const it=el && (el.closest('.iq-grid2 > div') || el.closest('.iq-item') || el.closest('.iq-opts')?.parentElement); if(it) it.classList.add('ys-trim'); });
       Object.entries(RELABEL).forEach(([id,t])=>{ const el=root.querySelector('#'+id); if(!el) return; const it=itemOf(el); const l=it && (it.querySelector(`label[for="${id}"]`) || it.querySelector('.iq-lbl')); if(l && l.textContent!==t) l.textContent=t; });
       const anger=root.querySelector('input[data-c="th_anger"]'); if(anger && !anger.checked) anger.closest('label').classList.add('ys-trim');
       root.querySelectorAll('[data-k="x2_what"],[data-k="x3_what"]').forEach(x=>{ const r=x.closest('.iq-xrow'); if(r && !r.querySelector('input:not([value=""])')) r.classList.add('ys-trim'); });
