@@ -2,6 +2,11 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<script>
+/* קישור העברה ממכשיר אחר: שומרים אותו לפני שהאתר מחליף את הכתובת */
+(function(){ try{ if(location.hash.indexOf('#sync=')===0){ window.__ysSync = location.hash.slice(6); history.replaceState(null,'',location.pathname+location.search); } }catch(e){} })();
+</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#16332D">
@@ -397,6 +402,16 @@ html.ys-scrolled body .tabbar{padding-bottom:12px!important}
 /* לשוניות: פינות כמו בשאר האתרים, 8 לשורה ו־6 ללשונית */
 html body .tabnav{border-radius:8px!important}
 html body .tabnav button{border-radius:6px!important}
+</style>
+<style>
+/* העברה למכשיר אחר */
+.ys-sync{margin:0 0 16px}
+.ys-sync-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.ys-sync-h h4{margin:0}
+.ys-sync-q{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid #8C7240;background:#F4EDDF;color:#6E5A30;font:700 16px/1 'Assistant',sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.ys-sync-q:hover{background:#8C7240;color:#fff}
+.ys-sync-q:focus-visible{outline:3px solid rgba(184,154,94,.6);outline-offset:2px}
+.ys-sync p{margin:0 0 10px}
 </style>
 </head>
 <body>
@@ -1522,6 +1537,72 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
 <script>
 /* כותרת: אוויר נוסף מתחת לשורת הלשוניות בראש הדף, וחזרה לגובה רגיל כשגוללים */
 (function(){const h=document.documentElement; const f=()=>h.classList.toggle("ys-scrolled", window.scrollY>40); addEventListener("scroll",f,{passive:true}); f();})();
+</script>
+<script id="ys-sync">
+/* ===== העברת היומן למכשיר אחר, בלי שרת: כל המידע נמצא בתוך הקישור עצמו ===== */
+(function(){
+  const KEYS=['middot-yesodot-v1','yesodot-journey-v1','midot-journey-v1'];
+  const b64u = bytes => { let s=''; bytes.forEach(b=>s+=String.fromCharCode(b)); return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const unb64u = str => { str=str.replace(/-/g,'+').replace(/_/g,'/'); while(str.length%4) str+='='; const s=atob(str); return Uint8Array.from(s,c=>c.charCodeAt(0)); };
+  async function pack(obj){
+    const raw=new TextEncoder().encode(JSON.stringify(obj));
+    if(window.CompressionStream){ try{ const buf=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer(); return 'z.'+b64u(new Uint8Array(buf)); }catch(e){} }
+    return 'b.'+b64u(raw);
+  }
+  async function unpack(str){
+    const [t,body]=[str.slice(0,1), str.slice(2)]; let bytes=unb64u(body);
+    if(t==='z'){ const buf=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer(); bytes=new Uint8Array(buf); }
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }
+  const read = k => { try{ const v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } };
+  const hasData = st => st && st.weeks && Object.values(st.weeks).some(w=>w.start||w.end||Object.keys(w.days||{}).length);
+  function mergeS(a,b){
+    a=a||{current:null,weeks:{}}; b=b||{current:null,weeks:{}}; const out={current:a.current||b.current||null, weeks:{}};
+    new Set([...Object.keys(a.weeks||{}),...Object.keys(b.weeks||{})]).forEach(id=>{
+      const x=(a.weeks||{})[id]||{days:{}}, y=(b.weeks||{})[id]||{days:{}};
+      const days={}; new Set([...Object.keys(x.days||{}),...Object.keys(y.days||{})]).forEach(k=>{
+        const p=(x.days||{})[k]||{}, q=(y.days||{})[k]||{}; const pa=p.a||'', qa=q.a||'';
+        days[k]=Object.assign({}, q, p, {a: pa.length>=qa.length?pa:qa, done: !!(p.done||q.done)});
+      });
+      const st=[x.start,y.start].filter(Boolean).sort()[0]||null;
+      out.weeks[id]={start:st, practice:(x.practice!=null?x.practice:y.practice!=null?y.practice:null), days, end:((x.end||'').length>=(y.end||'').length?x.end:y.end)||''};
+    });
+    return out;
+  }
+  function showPop(title, html){ const p=document.getElementById('pop'); if(!p) return alert(title); document.getElementById('popT').textContent=title; document.getElementById('popB').innerHTML=html; p.classList.add('show'); document.getElementById('popX').focus(); }
+  const HELP = `<p>כל מה שכתבתם כאן נשמר רק בטלפון או במחשב שבו כתבתם, ולא נשלח לשום מקום. זה שומר על הפרטיות שלכם, אבל זה גם אומר שאם תפתחו את האתר במכשיר אחר, היומן לא יופיע שם.</p>
+    <p>הכפתור יוצר קישור אישי שבתוכו כל מה שכתבתם עד עכשיו. כך מעבירים:</p>
+    <p><b>1.</b> במכשיר שבו כתבתם, לוחצים על "שליחה לעצמי בוואטסאפ" או על "העתקת הקישור", ושולחים את הקישור לעצמכם.<br><b>2.</b> במכשיר השני, פותחים את הקישור.<br><b>3.</b> האתר ישאל אם לטעון את היומן. מאשרים, וזהו.</p>
+    <p>אם כתבתם כבר גם במכשיר השני, שום דבר לא נמחק: שני היומנים מתאחדים.</p>
+    <p>חשוב לדעת: זו העברה חד פעמית, ולא סנכרון קבוע. הכי פשוט לבחור מכשיר אחד ולהמשיך לכתוב רק בו. ובגלל שהקישור מכיל את מה שכתבתם, כדאי לשלוח אותו רק לעצמכם.</p>`;
+  async function makeLink(){
+    const data={}; KEYS.forEach(k=>{ const v=read(k); if(v) data[k]=v; });
+    if(!hasData(data[KEYS[0]])){ toast('עוד אין ביומן מה להעביר'); return null; }
+    return location.origin+location.pathname+'#sync='+await pack({v:1, d:data});
+  }
+  window.ysSyncHelp = () => showPop('העברה למכשיר אחר', HELP);
+  window.ysSyncWA = async () => { const u=await makeLink(); if(!u) return; window.open('https://wa.me/?text='+encodeURIComponent('הקישור להעברת היומן שלי למכשיר אחר:\n'+u),'_blank','noopener'); };
+  window.ysSyncCopy = async () => { const u=await makeLink(); if(!u) return; try{ await navigator.clipboard.writeText(u); toast('הקישור הועתק. שלחו אותו לעצמכם ופתחו אותו במכשיר השני'); }catch(e){ prompt('העתיקו את הקישור:', u); } };
+  /* הקופסה ביומן */
+  const box = `<div class="card ys-sync no-print"><div class="ys-sync-h"><h4>העברה למכשיר אחר</h4><button type="button" class="ys-sync-q" onclick="ysSyncHelp()" aria-label="הסבר על ההעברה למכשיר אחר">?</button></div>
+    <p>היומן נשמר רק במכשיר הזה. כדי להמשיך בטלפון או במחשב אחר, שלחו לעצמכם קישור ופתחו אותו שם.</p>
+    <div class="btnrow"><button class="btn small" onclick="ysSyncWA()">שליחה לעצמי בוואטסאפ</button><button class="btn small ghost" onclick="ysSyncCopy()">העתקת הקישור</button></div></div>`;
+  const j=document.getElementById('journalBox'); if(j) j.insertAdjacentHTML('beforebegin', box);
+  /* קבלת קישור */
+  if(window.__ysSync){
+    unpack(window.__ysSync).then(pkg=>{
+      const inc=pkg && pkg.d || {}; const st=inc[KEYS[0]];
+      const n = st && st.weeks ? Object.values(st.weeks).filter(w=>w.start||w.end||Object.keys(w.days||{}).length).length : 0;
+      if(!n){ toast('הקישור לא מכיל יומן'); return; }
+      if(!confirm(`נמצא יומן ממכשיר אחר, עם ${n===1?'שבוע אחד':n+' שבועות'}. לטעון אותו למכשיר הזה?${hasData(read(KEYS[0]))?'\nמה שכבר כתבתם כאן יישמר, ושני היומנים יתאחדו.':''}`)) return;
+      try{
+        localStorage.setItem(KEYS[0], JSON.stringify(mergeS(read(KEYS[0]), st)));
+        KEYS.slice(1).forEach(k=>{ const cur=read(k); if(inc[k] && (!cur || !Object.keys(cur).length)) localStorage.setItem(k, JSON.stringify(inc[k])); });
+        location.replace(location.pathname+'#journal'); location.reload();
+      }catch(e){ toast('לא הצלחנו לשמור במכשיר הזה'); }
+    }).catch(()=>toast('הקישור לא תקין, או שנחתך בדרך. נסו לשלוח אותו שוב'));
+  }
+})();
 </script>
 </body>
 </html>
