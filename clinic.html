@@ -1221,6 +1221,31 @@ details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
 .pt-arch-line button{color:#6a756f;font-weight:600}
 @media print{.pt-bar,.pt-acts,.pr-chk,#ptArchBox{display:none!important}}
 </style>
+<style>
+/* מסלולים לבית */
+.pg-when{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;color:#5b6660}
+.pg-when .pg-date{font:inherit;font-size:14px;padding:3px 6px;border:1px solid rgba(44,95,91,.25);border-radius:6px;background:#fff;margin-inline-start:4px}
+.pg-ok{font-family:inherit;font-size:13.5px;border:1px solid #7A5C8E;color:#7A5C8E;background:#fff;border-radius:999px;padding:3px 10px;cursor:pointer}
+.tr-prog,#pgBox{border:1px solid rgba(122,92,142,.25);background:#FAF7FC;border-radius:8px;padding:10px 12px}
+.pg-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:6px 0;border-bottom:1px solid rgba(122,92,142,.12)}
+.pg-row:last-of-type{border-bottom:0}
+.pg-name{font-weight:700;color:#5E4675}
+.pg-st{font-size:.9rem;color:#4d5a54}
+.pg-st.on{color:#1E4744;font-weight:600}
+.pg-st.done{color:#8A9490}
+.pg-acts{display:flex;align-items:center;gap:8px;margin-inline-start:auto}
+.pg-btn{border:1px solid #2F6358;background:#2F6358;color:#fff;border-radius:6px;padding:5px 10px;font:700 .85rem 'Assistant',sans-serif;cursor:pointer}
+.pg-btn.done{background:#E4E7D9;color:#5C6B3F;border-color:#5C6B3F}
+.pg-x{border:0;background:none;color:#8A9490;cursor:pointer;font-size:1rem;padding:4px}
+.pg-add{font-size:.88rem!important}
+.pg-tag{color:#5E4675;font-weight:600}
+.pg-modal{position:fixed;inset:0;background:rgba(15,36,32,.45);display:none;align-items:center;justify-content:center;z-index:2000;padding:16px}
+.pg-modal.show{display:flex}
+.pg-card{background:#fff;border-radius:10px;max-width:560px;width:100%;padding:18px;max-height:92vh;overflow:auto}
+.pg-card h3{margin:0 0 6px}
+.pg-card textarea{width:100%;font-size:16px;line-height:1.6}
+@media print{.pg-acts,.pg-add{display:none}}
+</style>
 </head>
 <body>
 <header>
@@ -4594,7 +4619,8 @@ function apRenderToday(){
     ['נשימה ושקט', ['tool-neshima','tool-dumiya']],
     ['גוף ואיברים', ['tool-evarim','tool-dibur','tool-guf-neshama','tool-hatara']],
     ['נפש, דמיון ואמונה', ['tool-medame','tool-emuna','tool-omek','tool-hitmakrut']],
-    ['קריסטלים', ['tool-avanim']]
+    ['קריסטלים', ['tool-avanim']],
+    ['מסלולים לבית', ['tool-maslul']]
   ];
   const _body = exRenderBody;
   exRenderBody = function(sel){
@@ -4785,6 +4811,117 @@ try{ if(document.getElementById('iqWrap') && typeof renderIntake==='function') r
   };
   /* קביעת טיפול למטופל בארכיון מחזירה אותו לפעילים */
   if(typeof apAdd==='function'){ const _aa=apAdd; apAdd=function(){ const p=curP(); const was=p&&p.archived; _aa.apply(this,arguments); if(was && apList(p).length){ delete p.archived; delete p.archivedAt; savePT(); renderCard(); bmToast(`${p.name} חזר לרשימה הפעילה`); } }; }
+})();
+</script>
+<script>
+/* ===== מסלולים לבית: הכרת היסודות ועבודת המידות (נובמבר 2026) ===== */
+(function(){
+  const PROGS = {
+    yesodot: {name:'הכרת היסודות', file:'yesodot.html', ex:'tool-maslul:0', weeks:4, order:['אש','רוח','מים','עפר'], unit:'יסוד'},
+    midot:   {name:'עבודת המידות', file:'midot.html',   ex:'tool-maslul:1', weeks:7, order:['חסד','גבורה','תפארת','נצח','הוד','יסוד','מלכות'], unit:'מידה'}
+  };
+  const typeOfEx = id => Object.keys(PROGS).find(k=>PROGS[k].ex===id);
+  const pl = p => (p.programs = Array.isArray(p.programs) ? p.programs : []);
+  const dd = (a,b) => Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/864e5);
+  window.progStatus = g => {
+    const P=PROGS[g.type]; const d=dd(g.start, isoToday());
+    if(d<0) return {txt:`${g.confirmed===false?'אמור להתחיל':'מתחיל'} ב־${fmtD(g.start)}`, cls:'soon'};
+    if(d>=P.weeks*7) return {txt:`הסתיים ב־${fmtD(new Date(new Date(g.start+'T12:00:00').getTime()+(P.weeks*7-1)*864e5).toISOString().slice(0,10))}`, cls:'done'};
+    const w=Math.floor(d/7), day=d%7;
+    return {txt:`שבוע ${w+1} מתוך ${P.weeks}, ${P.order[w]} · יום ${day+1}${g.confirmed===false?' (משוער)':''}`, cls:'on', w, day};
+  };
+  const link = g => new URL(PROGS[g.type].file+'?start='+g.start, location.href).href;
+  function msg(p,g){
+    const first=(p.name||'').trim().split(/\s+/)[0], f=p.gender==='f', m=p.gender==='m';
+    const G=(mm,ff,pp)=> f?ff:(m?mm:pp);
+        const intro = g.type==='yesodot'
+      ? `כמו שדיברנו, ${G('הנה','הנה','הנה')} הכרת היסודות. ארבעה שבועות, ובכל שבוע ${G('נכיר','נכיר','נכיר')} יסוד אחד: אש, רוח, מים ועפר. בכל יום יש באתר תרגיל קצר ושאלה אחת לערב, כמה דקות ביום.\n\nהמטרה היא להכיר מקרוב את הכוחות שפועלים ${G('בך','בך','בכם')}, ולראות איפה הם מאוזנים ואיפה פחות. ככה נדע על מה כדאי לנו לעבוד יחד.`
+      : `כמו שדיברנו, הנה עבודת המידות. שבעה שבועות, ובכל שבוע מידה אחת, מחסד ועד מלכות. בכל יום יש באתר תרגיל קצר ושאלה אחת לערב, כמה דקות ביום.\n\nאחרי שהכרנו את היסודות, עכשיו ${G('נעבוד','נעבוד','נעבוד')} על הדרך שבה ${G('אתה פוגש','את פוגשת','אתם פוגשים')} את העולם: איך ${G('אתה נותן ושם','את נותנת ושמה','נותנים ושמים')} גבול, ${G('מתמיד ומודה','מתמידה ומודה','מתמידים ומודים')}. כל שבוע מחזק כוח אחד.`;
+    return `${first?'היי '+first+',':'היי,'}\n${intro}\n\nאין צורך להתחיל דווקא היום. ${G('אתה יכול','את יכולה','אפשר')} להתחיל מיום הטיפול, או בעוד יום או יומיים, מתי שנוח ${G('לך','לך','לכם')}. כשתפתח${G('','י','ו')} את הקישור, ${G('תבחר','תבחרי','תבחרו')} את היום שבו ${G('אתה מתחיל','את מתחילה','מתחילים')}, ומשם האתר ילווה ${G('אותך','אותך','אתכם')} יום אחרי יום:\n${link(g)}\n\n${G('ותכתוב','ותכתבי','ותכתבו')} לי מילה כש${G('התחלת','התחלת','התחלתם')}, כדי שאדע איפה ${G('אתה נמצא','את נמצאת','אתם נמצאים')}.\n\nמה ${G('שתכתוב','שתכתבי','שתכתבו')} נשמר רק במכשיר ${G('שלך','שלך','שלכם')}, אז הכי פשוט ${G('לבחור','לבחור','לבחור')} מכשיר אחד ולכתוב רק בו. ${G('תביא','תביאי','תביאו')} את מה שעולה למפגש הבא.`;
+  }
+  function progBox(p, onlyTid){
+    const gs = pl(p).filter(g=>!onlyTid || g.tid===onlyTid);
+    const rows = gs.map(g=>{ const s=progStatus(g); return `<div class="pg-row"><span class="pg-name">${PROGS[g.type].name}</span><span class="pg-st ${s.cls}">${escH(s.txt)}</span>
+      <span class="pg-when"><label>התחיל ב־<input type="date" class="pg-date" value="${escH(g.start)}" aria-label="תאריך ההתחלה של ${PROGS[g.type].name}" onchange="progDate('${g.id}',this.value)"></label>${g.confirmed===false?`<button type="button" class="pg-ok" onclick="progDate('${g.id}','${g.start}')" title="המטופל אישר שהתחיל ביום הזה">✓ זה התאריך</button>`:''}</span>
+      <span class="pg-acts"><button type="button" class="pg-btn ${g.sent?'done':''}" onclick="progSend('${g.id}')">${g.sent?'✓ נשלח · לשלוח שוב':'שליחה בוואטסאפ'}</button><button type="button" class="pg-x" onclick="progDel('${g.id}')" aria-label="הסרת המסלול">✕</button></span></div>`; }).join('');
+    return rows;
+  }
+  window.progAdd = (type, tid) => {
+    const p=curP(); const t = tid ? getT(tid) : null;
+    if(pl(p).some(g=>g.type===type && progStatus(g).cls!=='done')){ bmToast(`${PROGS[type].name} כבר פתוח למטופל`); return; }
+    const start = (t && t.date) || isoToday();
+    pl(p).push({id:'g'+Date.now().toString(36), type, start, tid:tid||null, sent:false, confirmed:false});
+    /* מתועד גם כתרגיל של הטיפול */
+    if(t){ const wi=weekOfTreatment(p,t); const arr = wi>=0 ? p.weeks[wi].items : (t.exIds=t.exIds||[]); if(!arr.includes(PROGS[type].ex)) arr.push(PROGS[type].ex); }
+    savePT(); renderCard(); bmToast(`${PROGS[type].name} נוסף. כשתדע מתי התחיל, אפשר לעדכן את התאריך`);
+  };
+  window.progDate = (id,v) => { const p=curP(); const g=pl(p).find(x=>x.id===id); if(!g||!v) return; g.start=v; g.confirmed=true; savePT(); renderCard(); bmToast(`תאריך ההתחלה עודכן ל־${fmtD(v)}`); };
+  window.progDel = id => { const p=curP(); const g=pl(p).find(x=>x.id===id); if(!g) return; if(!confirm(`להסיר את ${PROGS[g.type].name} מהכרטיס?`)) return; p.programs=pl(p).filter(x=>x!==g); savePT(); renderCard(); };
+  window.progSend = id => {
+    const p=curP(); const g=pl(p).find(x=>x.id===id); if(!g) return;
+    const m=document.getElementById('pgModal'); const ph=iqWaPhone(p.phone);
+    document.getElementById('pgT').textContent=`שליחת ${PROGS[g.type].name} ל${p.name}`;
+    const ta=document.getElementById('pgMsg'); ta.value=msg(p,g);
+    const wa=document.getElementById('pgWa'); const upd=()=>{ wa.href=`https://wa.me/${ph}?text=${encodeURIComponent(ta.value)}`; }; ta.oninput=upd; upd();
+    wa.onclick=()=>{ g.sent=true; savePT(); setTimeout(()=>{ m.classList.remove('show'); renderCard(); },300); };
+    document.getElementById('pgCopy').onclick=()=>{ iqCopyText(ta.value,'ההודעה הועתקה'); g.sent=true; savePT(); };
+    document.getElementById('pgNoPhone').hidden = !!ph;
+    m.classList.add('show'); ta.focus();
+  };
+  document.body.insertAdjacentHTML('beforeend', `<div class="pg-modal no-print" id="pgModal" role="dialog" aria-modal="true" aria-labelledby="pgT" onclick="if(event.target===this)this.classList.remove('show')"><div class="pg-card">
+    <h3 id="pgT"></h3><p class="iq-hint" style="margin:0 0 8px">אפשר לערוך את ההודעה לפני השליחה. המטופל בוחר בעצמו מתי להתחיל, ויום הטיפול מוצע לו כאחת האפשרויות. כשתדע מתי התחיל, עדכן את התאריך בכרטיס.</p>
+    <p class="iq-hint" id="pgNoPhone" style="margin:0 0 8px;color:#A8442B">בכרטיס אין טלפון, אז הוואטסאפ יבקש לבחור איש קשר.</p>
+    <textarea id="pgMsg" class="inp" rows="11"></textarea>
+    <div class="sheet-actions" style="margin-top:10px"><a class="bm-btn" id="pgWa" target="_blank" rel="noopener">שליחה בוואטסאפ</a><button class="bm-btn ghost" id="pgCopy" type="button">העתקת ההודעה</button><button class="bm-link" type="button" onclick="document.getElementById('pgModal').classList.remove('show')">סגירה</button></div></div></div>`);
+
+  /* בכרטיס הטיפול: כפתורים להוספת מסלול, והמסלולים שנפתחו בטיפול הזה */
+  const _tc = tCard;
+  tCard = function(t,n){
+    const h=_tc.apply(this, arguments); const p=curP();
+    const mark='<div class="f tr-practice"><span class="f-l">תרגול עד המפגש הבא</span>';
+    if(!h.includes(mark)) return h;
+    const rows=progBox(p,t.id);
+    const add = Object.keys(PROGS).filter(k=>!pl(p).some(g=>g.type===k && progStatus(g).cls!=='done')).map(k=>`<button type="button" class="bm-btn ghost pg-add" onclick="progAdd('${k}','${t.id}')">+ ${PROGS[k].name}</button>`).join('');
+    return h.replace(mark, `<div class="f tr-prog"><span class="f-l">מסלול לבית</span>${rows}${add?`<div class="sheet-actions no-print" style="margin:6px 0 0">${add}</div>`:''}</div>`+mark);
+  };
+  /* בלשונית הפרטים: כל המסלולים של המטופל ואיפה הוא נמצא */
+  const _rd = renderDetails;
+  renderDetails = function(){
+    _rd.apply(this, arguments); const p=curP(); if(!pl(p).length) return;
+    const old=document.getElementById('pgBox'); if(old) old.remove();
+    const anchor=document.getElementById('apBox') || (document.getElementById('d_next')||{}).closest?.('.f'); if(!anchor) return;
+    anchor.insertAdjacentHTML('afterend', `<div class="f wide" id="pgBox"><span class="f-l">מסלולים לבית</span>${progBox(p)}<span class="iq-hint" style="margin:4px 0 0">השבוע והיום מחושבים לפי תאריך ההתחלה. עד שמעדכנים את היום שבו המטופל באמת התחיל, הם משוערים לפי יום הטיפול.</span></div>`);
+  };
+  /* ברשימת המטופלים: איפה כל אחד נמצא */
+  const _rl = renderList;
+  renderList = function(){
+    _rl.apply(this, arguments);
+    document.querySelectorAll('#ptList .pr-row').forEach(r=>{
+      const b=r.querySelector('button.pr'); const id=(b&&b.getAttribute('onclick')||'').match(/openP\('([^']+)'/); if(!id) return;
+      const p=getP(id[1]); if(!p) return; const g=pl(p).filter(g=>progStatus(g).cls==='on').pop(); if(!g) return;
+      const l2=r.querySelector('.pr-l2'); if(l2 && !l2.querySelector('.pg-tag')) l2.insertAdjacentHTML('afterbegin', `<span class="pg-tag">${PROGS[g.type].name.split(' ')[1]} · שבוע ${progStatus(g).w+1}, ${PROGS[g.type].order[progStatus(g).w]}</span>`);
+    });
+  };
+  /* בחירה של המסלול מתוך בוחר התרגילים פותחת אותו גם ככרטיס מסלול */
+  const _et = exToggle;
+  exToggle = function(id, btn){
+    const type=typeOfEx(id); const before = type ? curWeek().items.includes(id) : null;
+    _et.apply(this, arguments);
+    if(!type) return; const p=curP();
+    if(!before && !pl(p).some(g=>g.type===type && progStatus(g).cls!=='done')){
+      const w=curWeek(); const t=weekLinkedTo(p,w); const start=(t&&t.date)||heToIso(w.date)||isoToday();
+      pl(p).push({id:'g'+Date.now().toString(36), type, start, tid:t?t.id:null, sent:false}); savePT();
+      bmToast(`${PROGS[type].name} נפתח, מתחיל ב־${fmtD(start)}. שולחים מכרטיס הטיפול או מהפרטים`);
+    }
+  };
+  /* בהעתקת התרגילים: לינק למסלול */
+  const _tce = tCopyEx;
+  tCopyEx = function(id){
+    const p=curP(), t=getT(id); const ids=tExIds(p,t); const types=ids.map(typeOfEx).filter(Boolean);
+    if(!types.length) return _tce.apply(this, arguments);
+    const orig=iqCopyText; iqCopyText=function(txt,m){ types.forEach(k=>{ const g=pl(p).find(x=>x.type===k) || {type:k, start:(t.date||isoToday())}; txt=txt.replace(EXR[PROGS[k].ex].text, EXR[PROGS[k].ex].text+'\nהקישור: '+link(g)); }); iqCopyText=orig; return orig(txt,m); };
+    try{ return _tce.apply(this, arguments); } finally { iqCopyText=orig; }
+  };
 })();
 </script>
 </body>

@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <script>
+/* קישור מהקליניקה עם יום הטיפול: ?start=YYYY-MM-DD. לא מתחיל אוטומטית, רק מציע את התאריך. המטופל בוחר מתי להתחיל */
+(function(){ try{
+  const m=location.search.match(/[?&]start=(\d{4}-\d{2}-\d{2})/); if(!m) return;
+  const JK='midot-journey-v1'; let j={}; try{ j=JSON.parse(localStorage.getItem(JK))||{}; }catch(e){}
+  if(!j.start){ j.suggest=m[1]; localStorage.setItem(JK, JSON.stringify(j)); }
+  history.replaceState(null,'',location.pathname+location.hash);
+}catch(e){} })();
+</script>
+
+<script>
 /* קישור העברה ממכשיר אחר: שומרים אותו לפני שהאתר מחליף את הכתובת */
 (function(){ try{ if(location.hash.indexOf('#sync=')===0){ window.__ysSync = location.hash.slice(6); history.replaceState(null,'',location.pathname+location.search); } }catch(e){} })();
 </script>
@@ -325,6 +335,14 @@ h3.sec::after{content:"";position:absolute;bottom:-1px;inset-inline-start:0;widt
 .ysj-start p{margin:0 0 14px;color:var(--muted);font-size:17px;line-height:1.7}
 .ysj-start .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .ysj-start input[type=date]{font-size:17px;padding:9px 12px;border:1px solid var(--card-border);border-radius:12px;background:#fff;color:var(--ink);min-height:44px}
+.ysj-cal{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin:0 0 8px;font-family:var(--sans);font-size:14.5px;color:var(--muted)}
+.ysj-cal span{margin-inline-end:4px}
+.ysj-cal button{font-family:var(--sans);font-size:14.5px;border:1px solid var(--sage);background:#fff;color:var(--ink);border-radius:999px;padding:4px 12px;min-height:32px;cursor:pointer}
+.ysj-cal button.on{background:var(--forest);border-color:var(--forest);color:#fff}
+.ysj-heb{margin:10px 0 0;font-size:16px;color:var(--forest-dark)}
+.ysj-chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.ysj-chip{font-family:var(--sans);font-size:16px;border:1.5px solid var(--sage);background:#fff;color:var(--ink);border-radius:999px;padding:7px 14px;min-height:40px;cursor:pointer}
+.ysj-chip.on{border-color:var(--forest);background:var(--forest);color:#fff}
 .ysj-link{background:none;border:none;color:var(--gold-deep);font-family:var(--sans);font-size:14.5px;cursor:pointer;text-decoration:underline dotted;padding:6px 2px}
 /* ---- journey path ---- */
 .ysj-path{margin-top:22px}
@@ -1263,7 +1281,11 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
   const fmt=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   const add=(s,n)=>{const d=D(s);d.setDate(d.getDate()+n);return fmt(d)};
   const diff=s=>Math.round((D(todayStr())-D(s))/864e5);
-  const nice=s=>{const d=D(s);return d.getDate()+' '+MON[d.getMonth()]};
+  const isHeb=()=>{try{return localStorage.getItem('ys-cal')==='heb'}catch(e){return false}};
+  const gem=n=>{if(n===15)return 'ט״ו';if(n===16)return 'ט״ז';const t=['','י','כ','ל'][Math.floor(n/10)],o=['','א','ב','ג','ד','ה','ו','ז','ח','ט'][n%10],x=t+o;return x.length===1?x+'׳':x.slice(0,-1)+'״'+x.slice(-1)};
+  const hebD=d=>{try{const ps=new Intl.DateTimeFormat('he-IL-u-ca-hebrew',{day:'numeric',month:'long'}).formatToParts(d);const day=+(ps.find(x=>x.type==='day')||{}).value,mo=(ps.find(x=>x.type==='month')||{}).value;if(day&&mo)return gem(day)+' ב'+mo;}catch(e){}return null};
+  const nice=s=>{const d=D(s);if(isHeb()){const h=hebD(d);if(h)return h;}return d.getDate()+' '+MON[d.getMonth()]};
+  const calBar=()=>{const h=isHeb();return `<div class="ysj-cal" role="group" aria-label="סוג התאריכים"><span>תאריכים:</span><button type="button" data-cal="greg" class="${h?'':'on'}" aria-pressed="${!h}">לועזי</button><button type="button" data-cal="heb" class="${h?'on':''}" aria-pressed="${h}">עברי</button></div>`};
   const elv=id=>{const c=ORDER.includes(id)?id:'gold';if(c==='gold')return '--el:var(--gold);--elbg:var(--cream-2)';return `--el:var(--${c});--elbg:var(--${c}-bg)`};
   function pos(){const j=getJ();if(!j.start)return null;const d=diff(j.start);
     if(d<0)return {before:-d};if(d>=49)return {finished:true};return {w:Math.floor(d/7),i:d%7};}
@@ -1272,12 +1294,15 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
     const p=pos();if(p&&p.w!=null&&S.current!==ORDER[p.w]){S.current=ORDER[p.w];ch=true;}
     if(ch)save();}
   function openDay(id,i){go('week:'+id);setTimeout(()=>{const el=document.getElementById('day-'+i);if(el){el.open=true;el.scrollIntoView({behavior:'smooth',block:'start'});}},60);}
-  function startForm(again){const j=getJ();return `<div class="ysj-today ysj-start">
+  function startForm(again){const j=getJ(),t=todayStr(),sg=!again&&j.suggest;
+    const chip=(v,l)=>`<button type="button" class="ysj-chip" data-d="${v}">${l}</button>`;
+    const chips=sg?`<div class="ysj-chips">${j.suggest<t?chip(j.suggest,'מיום הטיפול, '+nice(j.suggest)):''}${chip(t,'מהיום')}${chip(add(t,1),'ממחר')}${chip(add(t,2),'בעוד יומיים')}</div>`:'';
+    return `<div class="ysj-today ysj-start">
       <h3>${again?'שינוי תאריך ההתחלה':'מתחילים את המסע'}</h3>
-      <p>שבעה שבועות, מידה אחת בכל שבוע: חסד, גבורה, תפארת, נצח, הוד, יסוד ומלכות. בחרו את היום שבו מתחילים, הכי טוב ביום הטיפול, והאתר יראה לכם בכל יום איפה אתם נמצאים ומה התרגיל של היום.</p>
+      <p>שבעה שבועות, מידה אחת בכל שבוע: חסד, גבורה, תפארת, נצח, הוד, יסוד ומלכות. ${sg?'אין צורך להתחיל דווקא היום. אפשר מיום הטיפול, מהיום, או בעוד יום או יומיים, מתי שנוח לכם. מהיום שתבחרו, האתר יראה לכם בכל יום איפה אתם נמצאים ומה התרגיל של היום.':'בחרו את היום שבו מתחילים, והאתר יראה לכם בכל יום איפה אתם נמצאים ומה התרגיל של היום.'}</p>${chips}
       <div class="row"><label class="sr" for="ysjDate" style="position:absolute;width:1px;height:1px;overflow:hidden">תאריך התחלה</label>
-      <input type="date" id="ysjDate" value="${j.start||todayStr()}"><button class="btn" id="ysjGo">${again?'לשמור':'להתחיל'}</button>
-      ${again?'<button class="ysj-link" id="ysjCancel">ביטול</button>':''}</div></div>`;}
+      <input type="date" id="ysjDate" value="${j.start||(sg&&j.suggest>=t?j.suggest:t)}"><button class="btn" id="ysjGo">${again?'לשמור':'להתחיל'}</button>
+      ${again?'<button class="ysj-link" id="ysjCancel">ביטול</button>':''}</div>${isHeb()?'<p class="ysj-heb" id="ysjHeb"></p>':''}</div>`;}
   function todayCard(p){const j=getJ();
     if(p.before)return `<div class="ysj-today" style="${elv('chesed')}"><div class="ysj-eyebrow"><span class="ysj-pill"><i></i>עוד ${p.before===1?'יום אחד':p.before+' ימים'}</span></div>
       <div class="ysj-title">המסע מתחיל ${nice(j.start)}</div><p class="ysj-lens">השבוע הראשון: מידת החסד. בינתיים אפשר לקרוא על המידות.</p>
@@ -1292,7 +1317,7 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
       ${d.do?`<div class="ysj-do"><b>התרגיל של היום</b>${d.do}</div>`:''}
       ${d.look?`<div class="ysj-do"><b>השאלה שלוקחים איתכם</b>${d.look}</div>`:''}
       <div class="ysj-actions"><button class="btn" id="ysjOpen">לפתוח את היום ולכתוב</button>
-      <button class="ysj-done ${done?'on':''}" id="ysjDone" aria-pressed="${done}"><span class="box">${done?'✓':''}</span>${done?'עשיתי היום':'סמנו שעשיתם'}</button></div></div>`;}
+      <button class="ysj-done ${done?'on':''}" id="ysjDone" aria-pressed="${done}"><span class="box">${done?'✓':''}</span>${done?'עשיתי היום':'סמנו שעשיתם'}</button>${p.w===0?'<button class="ysj-link" id="ysjEdit">לשנות את יום ההתחלה</button>':''}</div></div>`;}
   function path(p){const j=getJ();
     return `<div class="ysj-path"><h3>המסלול שלי</h3><p class="hint">כל פס הוא יום. פס מלא הוא יום שסימנתם שעשיתם.</p>`+ORDER.map((id,n)=>{
       const w=WEEKS[id];if(!w)return '';const st=W(id);const cur=p&&p.w===n,past=p&&(p.finished||(p.w!=null&&n<p.w)),fut=!cur&&!past;
@@ -1303,11 +1328,14 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
         <span class="ysj-head"><span class="ysj-name">${w.name}<small>${w.plain}</small></span>${cur?'<span class="ysj-tag">השבוע</span>':(s?`<span class="ysj-dates">${nice(s)} – ${nice(add(s,6))}</span>`:'')}</span>
         <span class="ysj-dots">${dots}</span></button>`;}).join('')+`</div>`;}
   function render(){const box=document.getElementById('mineBox');if(!box)return;sync();const j=getJ(),p=pos();
-    box.innerHTML=`<div class="ysj">${j.start&&!render.edit?todayCard(p):startForm(render.edit)}${path(p)}</div>`;
+    box.innerHTML=`<div class="ysj">${calBar()}${j.start&&!render.edit?todayCard(p):startForm(render.edit)}${path(p)}</div>`;
     const q=s=>box.querySelector(s);
     q('#ysjGo')&&q('#ysjGo').addEventListener('click',()=>{const v=q('#ysjDate').value;if(!v)return;const old=getJ().start;
       if(old&&old!==v)ORDER.forEach((id,n)=>{const st=S.weeks[id];if(st&&st.start===add(old,7*n))st.start=null;});
-      setJ({start:v});render.edit=false;sync();save('נשמר');render();});
+      const nj=getJ();nj.start=v;delete nj.suggest;setJ(nj);render.edit=false;sync();save('נשמר');render();});
+    const hb=()=>{const e=q('#ysjHeb'),v=q('#ysjDate')&&q('#ysjDate').value;if(e)e.textContent=v?'בלוח העברי: '+nice(v):'';};hb();q('#ysjDate')&&q('#ysjDate').addEventListener('input',hb);
+    box.querySelectorAll('[data-cal]').forEach(b=>b.addEventListener('click',()=>{try{localStorage.setItem('ys-cal',b.dataset.cal)}catch(e){}render();}));
+    box.querySelectorAll('.ysj-chip').forEach(b=>b.addEventListener('click',()=>{q('#ysjDate').value=b.dataset.d;box.querySelectorAll('.ysj-chip').forEach(x=>x.classList.toggle('on',x===b));hb();}));
     q('#ysjCancel')&&q('#ysjCancel').addEventListener('click',()=>{render.edit=false;render();});
     q('#ysjEdit')&&q('#ysjEdit').addEventListener('click',()=>{render.edit=true;render();});
     q('#ysjOpen')&&q('#ysjOpen').addEventListener('click',()=>openDay(ORDER[p.w],p.i));
@@ -1344,7 +1372,7 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
   const read = k => { try{ const v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } };
   const hasData = st => st && st.weeks && Object.values(st.weeks).some(w=>w.start||w.end||Object.keys(w.days||{}).length);
   function mergeS(a,b){
-    a=a||{current:null,weeks:{}}; b=b||{current:null,weeks:{}}; const out={current:a.current||b.current||null, weeks:{}};
+    a=a||{current:null,weeks:{}}; b=b||{current:null,weeks:{}}; const out=Object.assign({}, b, a, {current:a.current||b.current||null, weeks:{}});
     new Set([...Object.keys(a.weeks||{}),...Object.keys(b.weeks||{})]).forEach(id=>{
       const x=(a.weeks||{})[id]||{days:{}}, y=(b.weeks||{})[id]||{days:{}};
       const days={}; new Set([...Object.keys(x.days||{}),...Object.keys(y.days||{})]).forEach(k=>{
