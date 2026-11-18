@@ -1246,6 +1246,7 @@ details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
 .pg-card textarea{width:100%;font-size:16px;line-height:1.6}
 @media print{.pg-acts,.pg-add{display:none}}
 /* יומן גוגל במסך "היום" */
+.gc-box{margin-bottom:20px}
 .gc-box .gc-in{padding:12px 16px}
 .gc-box p{margin:0 0 10px;color:#4d5a54;line-height:1.6}
 .gc-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 16px;border-bottom:1px solid rgba(47,99,88,.12);font-size:13.5px;color:#60736A}
@@ -1269,6 +1270,31 @@ details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
 .gc-help ol{margin:0;padding:0 30px 12px 14px;line-height:1.75;color:#3d4a45}
 .gc-help code{direction:ltr;unicode-bidi:embed;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:4px;padding:1px 5px;font-size:13px}
 .gc-err{color:#A8442B}
+
+.gc-dayh{display:flex;align-items:center;gap:6px;padding:10px 12px;border-bottom:1px solid rgba(47,99,88,.12);flex-wrap:wrap}
+.gc-dlbl{background:none;border:none;font:inherit;font-weight:700;color:#1E4744;font-size:16px;cursor:pointer;padding:4px 6px;border-radius:6px}
+.gc-dlbl:hover{background:rgba(47,99,88,.07)}
+.gc-nav{width:32px;height:32px;border-radius:50%;border:1px solid rgba(47,99,88,.25);background:#fff;color:#2F6358;font-size:18px;line-height:1;cursor:pointer}
+.gc-calbtn{font-family:inherit;font-size:14px;border:1px solid #2F6358;color:#2F6358;background:#fff;border-radius:999px;padding:5px 14px;cursor:pointer}
+.gc-cal{padding:10px 16px 12px;border-bottom:1px solid rgba(47,99,88,.12)}
+.gc-cal > div{max-width:420px}
+.gc-cal-h{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px}
+.gc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.gc-wd span{text-align:center;font-size:12.5px;color:#8A9490}
+.gc-d{position:relative;height:40px;border:1px solid transparent;border-radius:8px;background:#F7F5EE;font:inherit;font-size:15px;color:#2a3531;cursor:pointer}
+.gc-d:hover{border-color:rgba(47,99,88,.3)}
+.gc-d.tdy{border-color:#B89A5E}
+.gc-d.sel{background:#2F6358;color:#fff;border-color:#2F6358}
+.gc-d i{position:absolute;bottom:2px;inset-inline-start:0;inset-inline-end:0;font-style:normal;font-size:10.5px;color:#8C7240;line-height:1}
+.gc-d.sel i{color:#E9DDBF}
+.gc-cal .gc-lnk{margin-top:8px}
+
+.ysc-more > summary{list-style:none;cursor:pointer;position:relative}
+.ysc-more > summary::-webkit-details-marker{display:none}
+.ysc-more > summary h3{padding-inline-end:44px}
+.ysc-more > summary::after{content:'';position:absolute;inset-inline-end:18px;top:50%;width:9px;height:9px;border-right:2px solid #2F6358;border-bottom:2px solid #2F6358;transform:translateY(-70%) rotate(45deg);transition:transform .2s}
+.ysc-more[open] > summary::after{transform:translateY(-30%) rotate(-135deg)}
+.ysc-more:not([open]) > summary h3{border-bottom:0}
 @media(max-width:640px){.gc-row{flex-wrap:wrap}.gc-time{min-width:auto}.gc-acts{width:100%}}
 </style>
 </head>
@@ -1333,13 +1359,13 @@ details.rd-group[open] > summary{border-bottom:1px solid rgba(44,95,91,.12)}
     <h2 class="ysc-h" id="yscGreet">בוקר טוב, יובל</h2>
     <p class="ysc-date" id="yscDate"></p>
     <div class="ysc-stats" id="yscStats"></div>
-    <div class="ysc-box ysc-appts"><h3>טיפולים קרובים <small id="yscApN"></small></h3><div id="yscAp"></div></div>
     <div class="ysc-box ysc-tasks"><h3>משימות להיום <small id="yscTaskN"></small></h3><div id="yscTask"></div></div>
     <div class="ysc-cols">
       <div class="ysc-box"><h3>לחזור היום <small id="yscDueN"></small></h3><div id="yscDue"></div></div>
       <div class="ysc-box"><h3>לא הגיעו מזמן <small id="yscGoneN"></small></h3><div id="yscGone"></div></div>
     </div>
-    <div class="ysc-box ysc-more"><h3>עוד דברים לטפל בהם <small id="yscMoreN"></small></h3><div id="yscMore"></div></div>
+    <details class="ysc-box ysc-more" id="yscMoreBox" ontoggle="try{localStorage.setItem('ysc-more-open',this.open?'1':'')}catch(e){}"><summary><h3>עוד דברים לטפל בהם <small id="yscMoreN"></small></h3></summary><div id="yscMore"></div></details>
+    <script>try{ if(localStorage.getItem('ysc-more-open')) document.getElementById('yscMoreBox').open=true; }catch(e){}</script>
     <div class="ysc-box ysc-hol" id="yscHolBox"><h3>ברכה לחג בוואטסאפ <small id="yscHolN"></small></h3><div id="yscHol"></div></div>
   </section>
 
@@ -4529,6 +4555,7 @@ function apHTML(p){
     <span class="iq-hint" style="margin:0">הטיפולים הקרובים מופיעים גם במסך "היום". "ליומן גוגל" פותח את היומן עם הפרטים מוכנים, ונשאר רק לשמור.</span></div>`;
 }
 function apInject(){
+  const old0=document.getElementById('apBox'); if(old0) old0.remove(); return; /* הטיפולים נקבעים ביומן גוגל וב־Plannie, ומוצגים בקופסה "היומן" */
   const p=curP(); if(!p) return; const nx=document.getElementById('d_next'); if(!nx) return;
   const old=document.getElementById('apBox'); if(old) old.remove();
   nx.closest('.f').insertAdjacentHTML('afterend', apHTML(p));
@@ -4953,19 +4980,24 @@ try{ if(document.getElementById('iqWrap') && typeof renderIntake==='function') r
 /* ===== יומן גוגל: קריאת הטיפולים של היום ומחר מיומן "קליניקה", והתאמה לכרטיסי המטופלים =====
    המידע עובר ישירות מגוגל לדפדפן הזה ונשמר רק במכשיר. מזהה הלקוח (Client ID) נשמר במכשיר ולא בקובץ. */
 (function(){
-  const CFG='gcal-cfg', TOK='gcal-tok', CACHE='gcal-cache', REM='gcal-rem';
+  const CFG='gcal-cfg', TOK='gcal-tok', CACHE='gcal-cache2', REM='gcal-rem';
   const SCOPE='https://www.googleapis.com/auth/calendar.readonly';
   const ls={ get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } }, set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} } };
-  let ui={setup:false, busy:false, err:'', cals:null};
+  let ui={setup:false, busy:false, err:'', cals:null, sel:null, cal:false};
   const cfg=()=>ls.get(CFG,{});
   const tok=()=>{ const t=ls.get(TOK,null); return t && t.exp>Date.now()+60000 ? t.at : null; };
   const isoD=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const selD=()=>ui.sel||isoD(new Date());
+  const monOf=iso=>iso.slice(0,7);
+  const getM=m=>{ const c=ls.get(CACHE,{}); return c[m]||null; };
+  const putM=(m,v)=>{ const c=ls.get(CACHE,{}); c[m]=v; const keys=Object.keys(c).sort(); while(keys.length>4){ delete c[keys.shift()]; } ls.set(CACHE,c); };
+  const stale=m=>{ const x=getM(m); return !x || Date.now()-x.at>5*60000; };
   const norm=s=>String(s||'').replace(/[֑-ׇ]/g,'').replace(/["'״׳.,:;()\-–_/|]/g,' ').replace(/\s+/g,' ').trim();
 
   /* מי המטופל: שם מלא בכותרת, טלפון בפרטים, ואם אין, שם פרטי שמתאים רק למטופל אחד */
   function match(ev){
-    const title=' '+norm(ev.summary)+' ', txt=(ev.description||'')+' '+(ev.location||'');
-    const digits=txt.replace(/\D/g,'');
+    const raw=norm(ev.summary), title=' '+raw+' '+raw.split(' ').map(w=>w.length>2&&w[0]==='ל'?w.slice(1):w).join(' ')+' ', txt=(ev.description||'')+' '+(ev.summary||'');
+    const digits=txt.replace(/[^\d]/g,'');
     let best=null, bl=0;
     PT.patients.forEach(p=>{ const n=norm(p.name); if(n.length>=2 && n.includes(' ') && title.includes(' '+n+' ') && n.length>bl){ best=p; bl=n.length; } });
     if(best) return {p:best};
@@ -4976,6 +5008,13 @@ try{ if(document.getElementById('iqWrap') && typeof renderIntake==='function') r
     return null;
   }
 
+  function evInfo(e){
+    const ph=((e.summary+' '+e.description).match(/0\d{1,2}[-\s]?\d{3}[-\s]?\d{4}/)||[''])[0].replace(/\D/g,'');
+    let name=e.summary, svc='';
+    if(e.plannie){ const parts=e.summary.split(/\s+-\s+/); name=parts[0]||e.summary; svc=parts.slice(2).join(' - '); }
+    return {ph, name:name.trim(), svc};
+  }
+  window.gcNewP = (name,ph) => { const p=normP({name, phone:ph||'', firstDate:''}); PT.patients.push(p); savePT(); openP(p.id,'details'); bmToast(`נפתח כרטיס ל${p.name}`); };
   function loadGis(){
     return new Promise((res,rej)=>{
       if(window.google && google.accounts && google.accounts.oauth2) return res();
@@ -4999,7 +5038,8 @@ try{ if(document.getElementById('iqWrap') && typeof renderIntake==='function') r
     if(!r.ok){ let m=''; try{ m=(await r.json()).error.message; }catch(e){} throw new Error(r.status+' '+m); }
     return r.json();
   }
-  async function gcFetch(){
+  async function gcFetch(mon){
+    mon = mon || monOf(selD());
     if(!tok()){ gcRender(); return; }
     ui.busy=true; ui.err=''; gcRender();
     try{
@@ -5011,12 +5051,19 @@ try{ if(document.getElementById('iqWrap') && typeof renderIntake==='function') r
         if(!hit){ ui.cals=items; ui.busy=false; ui.setup=true; ui.err='לא מצאתי יומן בשם "קליניקה". בחרו את היומן מהרשימה.'; gcRender(); return; }
         c.calId=hit.id; c.calName=hit.name; ls.set(CFG,c);
       }
-      const d0=new Date(); d0.setHours(0,0,0,0); const d2=new Date(d0); d2.setDate(d2.getDate()+2);
-      const q=`calendars/${encodeURIComponent(c.calId)}/events?singleEvents=true&orderBy=startTime&maxResults=100&timeMin=${encodeURIComponent(d0.toISOString())}&timeMax=${encodeURIComponent(d2.toISOString())}`;
+      const [yy,mm]=mon.split('-').map(Number); const d0=new Date(yy,mm-1,1); const d2=new Date(yy,mm,1);
+      const q=`calendars/${encodeURIComponent(c.calId)}/events?singleEvents=true&orderBy=startTime&maxResults=250&timeMin=${encodeURIComponent(d0.toISOString())}&timeMax=${encodeURIComponent(d2.toISOString())}`;
       const E=await api(q);
-      const evs=(E.items||[]).filter(e=>e.status!=='cancelled').map(e=>({id:e.id, summary:e.summary||'(בלי כותרת)', description:e.description||'', location:e.location||'',
-        start:(e.start&&(e.start.dateTime||e.start.date))||'', allDay:!!(e.start&&e.start.date&&!e.start.dateTime)}));
-      ls.set(CACHE,{at:Date.now(), day:isoD(d0), evs});
+      /* תורים שנקבעו דרך Plannie נכנסים ליומן הראשי, לא ליומן "קליניקה". לוקחים משם רק אותם */
+      let P={items:[]};
+      if(c.calId!=='primary'){ try{ P=await api(q.replace('calendars/'+encodeURIComponent(c.calId)+'/','calendars/primary/')); }catch(e){} }
+      const isPl=e=>/plannie/i.test(((e.organizer||{}).email||'')+' '+(e.description||''));
+      const map=(e,pl)=>({id:e.id, summary:e.summary||'(בלי כותרת)', description:e.description||'', location:e.location||'', plannie:pl,
+        start:(e.start&&(e.start.dateTime||e.start.date))||'', allDay:!!(e.start&&e.start.date&&!e.start.dateTime)});
+      const evs=(E.items||[]).filter(e=>e.status!=='cancelled').map(e=>map(e,isPl(e)))
+        .concat((P.items||[]).filter(e=>e.status!=='cancelled' && isPl(e)).map(e=>map(e,true)))
+        .sort((a,b)=>new Date(a.start)-new Date(b.start));
+      putM(mon,{at:Date.now(), evs});
       ui.busy=false; gcRender();
     }catch(e){
       ui.busy=false;
@@ -5049,60 +5096,84 @@ try{ if(document.getElementById('iqWrap') && typeof renderIntake==='function') r
       <li>מעתיקים את ה־Client ID, המספר הארוך שנגמר ב־<code>apps.googleusercontent.com</code>, ומדביקים אותו כאן. אין צורך ב־Client secret, ולא מדביקים אותו לשום מקום.</li>
       <li>בהתחברות הראשונה גוגל יציג אזהרה שהאפליקציה לא אומתה. זה צפוי, כי זו אפליקציה פרטית שלכם. לוחצים Continue ומאשרים קריאה של היומן.</li></ol></details>`;
   }
-  function rowsHTML(cache){
-    const t=new Date(); const today=isoD(t); const tm=new Date(t); tm.setDate(tm.getDate()+1); const tmr=isoD(tm);
+  function rowsHTML(evsAll, d){
+    const t=new Date(); const tm=new Date(t); tm.setDate(tm.getDate()+1); const tmr=isoD(tm);
     const rem=ls.get(REM,{});
-    const groups=[[today,'היום'],[tmr,'מחר']].map(([d,l])=>{
-      const evs=cache.evs.filter(e=>e.start.slice(0,10)===d);
-      const head=`<div class="ap-day">${l} · ${escH(fmtD(d))}</div>`;
-      if(!evs.length) return head+`<p class="ysc-none" style="padding:6px 16px 10px">אין טיפולים ביומן.</p>`;
-      return head+evs.map(e=>{
+    {
+      const evs=evsAll.filter(e=>e.start.slice(0,10)===d);
+      if(!evs.length) return `<p class="ysc-none">אין טיפולים ביומן ביום הזה.</p>`;
+      return evs.map(e=>{
         const m=match(e); const time=e.allDay?'כל היום':new Date(e.start).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',hour12:false});
-        const who = m ? `<button class="gc-pt" onclick="gcOpenP('${m.p.id}')">${escH(m.p.name)}</button>${m.maybe?'<span class="gc-maybe">לפי השם הפרטי, כדאי לוודא</span>':''}` : `<span class="gc-none">אין כרטיס שמתאים לשם הזה</span>`;
-        const showTitle = !m || norm(e.summary)!==norm(m.p.name);
+        const inf=evInfo(e);
+        const who = m ? `<button class="gc-pt" onclick="gcOpenP('${m.p.id}')">${escH(m.p.name)}</button>${m.maybe?'<span class="gc-maybe">לפי השם הפרטי, כדאי לוודא</span>':''}`
+          : (e.plannie ? `<span class="gc-none">אין עדיין כרטיס <button class="gc-lnk" data-n="${escH(inf.name)}" data-p="${escH(inf.ph)}" onclick="gcNewP(this.dataset.n,this.dataset.p)">+ פתיחת כרטיס</button></span>` : '');
+        const label = e.plannie ? inf.name+(inf.svc?' · '+inf.svc:'')+' · דרך Plannie' : e.summary;
+        const showTitle = !m || norm(e.plannie?inf.name:e.summary)!==norm(m.p.name);
         let acts='';
-        if(d===tmr && m && m.p.phone){
-          const a={time:e.allDay?'':time}; const url=`https://wa.me/${iqWaPhone(m.p.phone)}?text=${encodeURIComponent(apRemindMsg(m.p,a))}`;
+        const rp = m ? m.p : (e.plannie && inf.ph ? {name:inf.name, phone:inf.ph} : null);
+        if(d===tmr && rp && rp.phone){
+          const a={time:e.allDay?'':time}; const url=`https://wa.me/${iqWaPhone(rp.phone)}?text=${encodeURIComponent(apRemindMsg(rp,a))}`;
           acts=`<span class="gc-acts"><a class="gc-wa ${rem[e.id]?'done':''}" href="${url}" target="_blank" rel="noopener" onclick="gcRemMark('${escH(e.id)}')">${rem[e.id]?'✓ נשלחה תזכורת':'תזכורת בוואטסאפ'}</a></span>`;
         }
-        return `<div class="gc-row"><span class="gc-time">${escH(time)}</span><span class="gc-main">${showTitle?`<span class="gc-ttl">${escH(e.summary)}</span>`:''}${who}</span>${acts}</div>`;
+        return `<div class="gc-row"><span class="gc-time">${escH(time)}</span><span class="gc-main">${showTitle?`<span class="gc-ttl">${escH(label)}</span>`:''}${who}</span>${acts}</div>`;
       }).join('');
-    }).join('');
-    return groups;
+    }
   }
+  const HE_DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  function dayLbl(d){ const t=isoD(new Date()), x=new Date(d+'T12:00:00'), tm=new Date(); tm.setDate(tm.getDate()+1);
+    const rel = d===t?'היום':(d===isoD(tm)?'מחר':''); return (rel?rel+', ':'')+'יום '+HE_DAYS[x.getDay()]+' · '+fmtD(d); }
+  function calHTML(){
+    const sel=selD(), mon=monOf(sel), [yy,mm]=mon.split('-').map(Number), first=new Date(yy,mm-1,1), days=new Date(yy,mm,0).getDate();
+    const M=getM(mon), cnt={}; if(M) M.evs.forEach(e=>{ const k=e.start.slice(0,10); cnt[k]=(cnt[k]||0)+1; });
+    const today=isoD(new Date()); let cells='';
+    for(let k=0;k<first.getDay();k++) cells+='<span></span>';
+    for(let d=1; d<=days; d++){ const iso=mon+'-'+String(d).padStart(2,'0');
+      cells+=`<button type="button" class="gc-d ${iso===sel?'sel':''} ${iso===today?'tdy':''}" onclick="gcPick('${iso}')" aria-label="${escH(dayLbl(iso))}${cnt[iso]?', '+cnt[iso]+' ביומן':''}">${d}${cnt[iso]?`<i>${cnt[iso]}</i>`:''}</button>`; }
+    const ttl=first.toLocaleDateString('he-IL',{month:'long', year:'numeric'});
+    return `<div class="gc-cal"><div class="gc-cal-h"><button type="button" class="gc-nav" onclick="gcMon(-1)" aria-label="החודש הקודם">›</button><b>${escH(ttl)}</b><button type="button" class="gc-nav" onclick="gcMon(1)" aria-label="החודש הבא">‹</button></div>
+      <div class="gc-grid gc-wd">${['א','ב','ג','ד','ה','ו','ש'].map(x=>`<span>${x}</span>`).join('')}</div><div class="gc-grid">${cells}</div>
+      ${sel!==today?'<button type="button" class="gc-lnk" onclick="gcPick(null)">חזרה להיום</button>':''}</div>`;
+  }
+  window.gcPick = iso => { ui.sel=iso; ui.cal=false; gcRender(); const m=monOf(selD()); if(tok() && stale(m)) gcFetch(m); };
+  window.gcStep = n => { const x=new Date(selD()+'T12:00:00'); x.setDate(x.getDate()+n); ui.sel=isoD(x); gcRender(); const m=monOf(ui.sel); if(tok() && stale(m)) gcFetch(m); };
+  window.gcMon = n => { const [yy,mm]=monOf(selD()).split('-').map(Number); const x=new Date(yy,mm-1+n,1); const t=new Date();
+    ui.sel = (x.getFullYear()===t.getFullYear() && x.getMonth()===t.getMonth()) ? isoD(t) : isoD(x); gcRender(); const m=monOf(ui.sel); if(tok() && stale(m)) gcFetch(m); };
+  window.gcCal = () => { ui.cal=!ui.cal; gcRender(); };
   function ago(ms){ const m=Math.round((Date.now()-ms)/60000); if(m<1) return 'עכשיו'; if(m<60) return `לפני ${m} דק׳`; const h=Math.round(m/60); return h<24?`לפני ${h} שע׳`:'לפני יותר מיום'; }
   window.gcRender = function(){
     const box=document.getElementById('gcBody'); if(!box) return;
-    const c=cfg(), cache=ls.get(CACHE,null), err=ui.err?`<p class="gc-err">${escH(ui.err)}</p>`:'';
+    const c=cfg(), err=ui.err?`<p class="gc-err">${escH(ui.err)}</p>`:'';
     const n=document.getElementById('gcN');
     if(ui.setup || !c.clientId){
       if(n) n.textContent='';
       const pick = ui.cals ? `<div class="gc-set"><b>באיזה יומן קובעים את הטיפולים?</b>${ui.cals.map(x=>`<button class="bm-btn ghost" style="justify-content:flex-start" onclick="gcPickCal('${escH(x.id)}')">${escH(x.name||x.id)}</button>`).join('')}</div>` : '';
-      box.innerHTML=`<div class="gc-in">${err}${pick || `<p>כאן יופיעו הטיפולים של היום ומחר מיומן "קליניקה" שלך בגוגל, וכל טיפול יתחבר לכרטיס המטופל לפי השם. המידע עובר ישירות מגוגל למכשיר הזה ולא נשמר בשום מקום אחר.</p>
+      box.innerHTML=`<div class="gc-in">${err}${pick || `<p>כאן יופיעו הטיפולים של היום מיומן "קליניקה" שלך בגוגל, ואפשר לבחור כל יום אחר ביומן. כל טיפול יתחבר לכרטיס המטופל לפי השם. המידע עובר ישירות מגוגל למכשיר הזה ולא נשמר בשום מקום אחר.</p>
         <div class="gc-set"><label class="f-l" for="gcId">Client ID מגוגל</label><div class="row"><input class="inp" id="gcId" dir="ltr" autocomplete="off" spellcheck="false" placeholder="1234567890-xxxx.apps.googleusercontent.com" value="${escH(c.clientId||'')}"><button class="bm-btn" onclick="gcSaveId()">שמירה והתחברות</button>${c.clientId?'<button class="bm-link" onclick="gcSetup(false)">ביטול</button>':''}</div></div>${helpHTML()}`}</div>`;
       return;
     }
-    const fresh = cache && cache.day===isoD(new Date());
-    const bar=`<div class="gc-bar"><span>${c.calName?`יומן "${escH(c.calName)}"`:'יומן גוגל'}${fresh?` · עודכן ${ago(cache.at)}`:''}</span><span class="gc-sp"></span>
+    const sel=selD(), M=getM(monOf(sel)), fresh=!!M;
+    const bar=`<div class="gc-bar"><span>${c.calName?`יומן "${escH(c.calName)}" ותורים מ־Plannie`:'יומן גוגל'}${fresh?` · עודכן ${ago(M.at)}`:''}</span><span class="gc-sp"></span>
       <button class="gc-lnk" onclick="gcRefresh()" ${ui.busy?'disabled':''}>${ui.busy?'טוען…':(tok()?'רענון':'התחברות ורענון')}</button><button class="gc-lnk" onclick="gcSetup(true)">הגדרות</button><button class="gc-lnk" onclick="gcOff()">ניתוק</button></div>`;
     if(!fresh){
       if(n) n.textContent='';
-      box.innerHTML=bar+`<div class="gc-in">${err}<p>${ui.busy?'קורא את היומן…':'כדי לראות את הטיפולים של היום ומחר, מתחברים לגוגל. זו לחיצה אחת, וגוגל מבקש אותה מחדש בערך פעם בשעה.'}</p>${ui.busy?'':'<button class="bm-btn" onclick="gcConnect()">התחברות ליומן</button>'}</div>`;
+      box.innerHTML=bar+`<div class="gc-in">${err}<p>${ui.busy?'קורא את היומן…':'כדי לראות את הטיפולים, מתחברים לגוגל. זו לחיצה אחת, וגוגל מבקש אותה מחדש בערך פעם בשעה.'}</p>${ui.busy?'':'<button class="bm-btn" onclick="gcConnect()">התחברות ליומן</button>'}</div>`;
       return;
     }
-    const tc=cache.evs.filter(e=>e.start.slice(0,10)===isoD(new Date())).length;
+    const tc=M.evs.filter(e=>e.start.slice(0,10)===sel).length;
     if(n) n.textContent=tc||'';
-    box.innerHTML=bar+(err?`<div class="gc-in">${err}</div>`:'')+rowsHTML(cache);
+    const head=`<div class="gc-dayh"><button type="button" class="gc-nav" onclick="gcStep(-1)" aria-label="היום הקודם">›</button><button type="button" class="gc-dlbl" onclick="gcCal()" aria-expanded="${ui.cal}">${escH(dayLbl(sel))} <span aria-hidden="true">▾</span></button><button type="button" class="gc-nav" onclick="gcStep(1)" aria-label="היום הבא">‹</button><span class="gc-sp"></span><button type="button" class="gc-calbtn" onclick="gcCal()">${ui.cal?'סגירת היומן':'בחירת יום ביומן'}</button></div>`;
+    box.innerHTML=bar+(err?`<div class="gc-in">${err}</div>`:'')+head+(ui.cal?calHTML():'')+rowsHTML(M.evs, sel);
   };
 
   /* בונים את הקופסה במסך "היום", מעל "טיפולים קרובים" */
-  const ap=document.querySelector('#todayView .ysc-appts');
-  if(ap && !document.getElementById('gcBox')) ap.insertAdjacentHTML('beforebegin', `<div class="ysc-box gc-box" id="gcBox"><h3>מהיומן: היום ומחר <small id="gcN"></small></h3><div id="gcBody"></div></div>`);
+  const ap=document.querySelector('#todayView .ysc-tasks');
+  if(ap && !document.getElementById('gcBox')) ap.insertAdjacentHTML('beforebegin', `<div class="ysc-box gc-box" id="gcBox"><h3>היומן <small id="gcN"></small></h3><div id="gcBody"></div></div>`);
   gcRender();
   /* בכל כניסה למסך "היום": מציירים מחדש, ואם החיבור עדיין בתוקף והמידע ישן מחמש דקות, מרעננים לבד */
   const st=document.getElementById('yscStats');
-  if(st) new MutationObserver(()=>{ gcRender(); const ca=ls.get(CACHE,null); if(tok() && !ui.busy && (!ca || Date.now()-ca.at>5*60000 || ca.day!==isoD(new Date()))) gcFetch(); }).observe(st,{childList:true});
-  if(tok()){ const ca=ls.get(CACHE,null); if(!ca || Date.now()-ca.at>5*60000 || ca.day!==isoD(new Date())) gcFetch(); }
+  if(st) new MutationObserver(()=>{ ui.sel=null; ui.cal=false; gcRender(); const m=monOf(selD()); if(tok() && !ui.busy && stale(m)) gcFetch(m); }).observe(st,{childList:true});
+  if(tok() && stale(monOf(selD()))) gcFetch();
+  try{ localStorage.removeItem('gcal-cache'); }catch(e){}
 })();
 </script>
 </body>
